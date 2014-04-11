@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <ListPreference
+        android:defaultValue="2"
+        android:entries="@array/noofcameras"
+        android:entryValues="@array/noofcameras"
+        android:key="lstgridcamerasperrow"
+        android:summary="Select number of cameras to show in a row"
+        android:title="Cameras Per Row" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="pref_cp_CameraOnlineOfflineAlert"
+        android:summary="Receive an alert whenever a camera goes offline or comes back online"
+        android:title="Camera Online/Offline Alert" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="pref_cp_CameraMDAlert"
+        android:summary="Receive an alert whenever motion is detected on camera"
+        android:title="Camera Motion Detection Alert" />
+
+</PreferenceScreen>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/slidemenu_settings"
+        android:icon="@drawable/ic_action_settings"
+        android:title="Settings">
+    </item>
+    <item
+        android:id="@+id/slidemenu_manage"
+        android:icon="@drawable/ic_person"
+        android:title="Manage Accounts">
+    </item>
+    <item
+        android:id="@+id/slidemenu_about"
+        android:icon="@drawable/ic_action_about"
+        android:title="About">
+    </item>
+    <item
+        android:id="@+id/slidemenu_logout"
+        android:icon="@drawable/ic_navigation_cancel"
+        android:title="Log Out">
+    </item>
+
+</menu>

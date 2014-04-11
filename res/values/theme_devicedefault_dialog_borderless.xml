@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="theme_devicedefault_dialog_borderless" parent="@android:style/Theme.DeviceDefault.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+
+</resources><!--
+  <item name="android:windowIsTranslucent">true</item> 
+    <item name="android:windowBackground">@android:color/transparent</item> 
+    <item name="android:windowContentOverlay">@null</item> 
+    <item name="android:windowNoTitle">true</item> 
+    <item name="android:windowIsFloating">true</item> 
+    <item name="android:backgroundDimEnabled">false</item> 
+ 
+ 
+ <item name="android:windowBackground">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowFrame">@null</item>
+       <item name="android:windowIsTranslucent">true</item> 
+      <item name="android:windowBackground">@color/transparent</item> 
+         
+        
+<style xmlns:android="http://schemas.android.com/apk/res/android" 
+      android:name="CustomStyle" 
+      android::parent="@android:style/Theme.DeviceDefault.Dialog"> 
+      <item 
+          android:name="android:windowBackground">@color/transparent</item> 
+      <item android:name="android:windowContentOverlay">@null</item> 
+    </style> 
+  
+<shape xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:shape="oval">
+
+    <solid android:color="#99000000" />
+
+    <stroke
+        android:width="0dp"
+        android:color="#99000000" />
+
+    
+    <padding
+        android:bottom="14dp"
+        android:left="14dp"
+        android:right="14dp"
+        android:top="14dp" />
+
+</shape>
+-->
+
+
+<!--
+stroke color = 776da8
+
+<corners
+        android:bottomLeftRadius="5dp"
+        android:bottomRightRadius="5dp"
+        android:topLeftRadius="5dp"
+        android:topRightRadius="5dp" />
+-->

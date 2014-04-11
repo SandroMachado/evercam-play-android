@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <io.evercam.android.slidemenu.SlideMenu
+        android:id="@+id/slideMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="vertical" >
+
+        <!--
+            android:background="#ffffff" 
+            android:paddingBottom="5dip"
+            android:paddingTop="5dip"
+        -->
+
+        <io.evercam.android.custom.FlowLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/camsLV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <!-- Child linear layouts will be created and inserted here dynamically -->
+
+        </io.evercam.android.custom.FlowLayout>
+    </ScrollView>
+
+</RelativeLayout>
