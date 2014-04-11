@@ -125,20 +125,7 @@ public class CameraLayout extends LinearLayout
 			// if imange status was loaded on previously and now image is not in
 			// cache, then we need to restart this
 			if (!isImageLodedFromCache
-					&& (this.cam.loadingStatus == ImageLoadingStatus.live_received || this.cam.loadingStatus == ImageLoadingStatus.camba_image_received)) // status
-																																							// will
-																																							// only
-																																							// be
-																																							// live
-																																							// if
-																																							// it
-																																							// was
-																																							// previously
-																																							// found
-																																							// from
-																																							// live
-																																							// or
-																																							// camba
+					&& (this.cam.loadingStatus == ImageLoadingStatus.live_received || this.cam.loadingStatus == ImageLoadingStatus.camba_image_received))
 			this.cam.loadingStatus = ImageLoadingStatus.not_started;
 		}
 		catch (OutOfMemoryError e)
@@ -181,7 +168,7 @@ public class CameraLayout extends LinearLayout
 	}
 
 	// Stop the image laoding process. My be need to end current activity
-	public boolean StopAllActivity()
+	public boolean stopAllActivity()
 	{
 		try
 		{
@@ -367,7 +354,7 @@ public class CameraLayout extends LinearLayout
 	};
 
 	public CameraLayout(Context cont, Camera camera)
-	{// ,String imageReceivedFromValue){
+	{
 		super(cont);
 		context = cont;
 
@@ -445,20 +432,16 @@ public class CameraLayout extends LinearLayout
 				@Override
 				public void onClick(View v)
 				{
-
 					AlertDialog.Builder builder = UIUtils.GetAlertDialogBuilderNoTitle(context);
-					Log.e("sajjad12345", context.toString());
 					final View layout = ((CamerasActivity) context).getLayoutInflater().inflate(
 							R.layout.cameralayout_dialog_liverecordingview, null);
 
-					// layout.setPadding(5, 5, 5, 5);
 					builder.setView(layout);
 
 					builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
 						@Override
 						public void onClick(DialogInterface dialog, int which)
 						{
-							// TODO Auto-generated method stub
 							dialog.cancel();
 						}
 					});
@@ -483,9 +466,7 @@ public class CameraLayout extends LinearLayout
 						@Override
 						public void onClick(View v)
 						{
-							// IVideoViewActivity.StartPlayingVIdeo(context,
-							// cam); // sajjad
-							VideoActivity.StartPlayingVIdeoForCamera(context, cam.getCameraID());
+							VideoActivity.startPlayingVIdeoForCamera(context, cam.getCameraID());
 							dialog.cancel();
 						}
 					});

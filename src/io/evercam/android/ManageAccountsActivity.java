@@ -53,7 +53,7 @@ public class ManageAccountsActivity extends ParentActivity
 
 			try
 			{
-				dbAppUser dbuser = new dbAppUser(ManageAccountsActivity.this);
+				DbAppUser dbuser = new DbAppUser(ManageAccountsActivity.this);
 				AppData.appUsers = dbuser.getAllAppUsers(100);
 				return true;
 			}
@@ -127,7 +127,7 @@ public class ManageAccountsActivity extends ParentActivity
 				Log.i("sajjad", "LongClick{" + user.toString() + "}[" + view.toString() + "]["
 						+ position + "][" + id + "]");
 
-				if (user.getID() < 0) // add new user item
+				if (user.getId() < 0) // add new user item
 				{
 					ShowAddEditUserDialogue(null, null, false, false);
 					return;
@@ -159,7 +159,7 @@ public class ManageAccountsActivity extends ParentActivity
 					@Override
 					public void onClick(View v)
 					{
-						setDefaultUser(user.getID() + "", true, dialog);
+						setDefaultUser(user.getId() + "", true, dialog);
 						ed_dialog_layout.setEnabled(false);
 						ed_dialog_layout.setClickable(false);
 						// dialog.dismiss();
@@ -171,7 +171,7 @@ public class ManageAccountsActivity extends ParentActivity
 					@Override
 					public void onClick(View v)
 					{
-						setDefaultUser(user.getID() + "", false, dialog);
+						setDefaultUser(user.getId() + "", false, dialog);
 						ed_dialog_layout.setEnabled(false);
 						ed_dialog_layout.setClickable(false);
 						// dialog.dismiss();
@@ -184,7 +184,7 @@ public class ManageAccountsActivity extends ParentActivity
 					{
 						try
 						{
-							dbAppUser users = new dbAppUser(ManageAccountsActivity.this);
+							DbAppUser users = new DbAppUser(ManageAccountsActivity.this);
 							users.deleteAppUserForEmail(user.getUserEmail());
 							if (users.getDefaultUsersCount() == 0 && users.getAppUsersCount() > 0)
 							{
@@ -387,7 +387,7 @@ public class ManageAccountsActivity extends ParentActivity
 					{
 						try
 						{
-							io.evercam.android.dal.dbAppUser dbuser = new dbAppUser(
+							io.evercam.android.dal.DbAppUser dbuser = new DbAppUser(
 									ManageAccountsActivity.this);
 							AppUser oldUser = dbuser.getAppUser(Email);
 							int defaultUsersCount = dbuser.getDefaultUsersCount();
@@ -502,14 +502,14 @@ public class ManageAccountsActivity extends ParentActivity
 
 				try
 				{
-					dbAppUser dbuser = new dbAppUser(ManageAccountsActivity.this);
+					DbAppUser dbuser = new DbAppUser(ManageAccountsActivity.this);
 
 					List<AppUser> appUsers = dbuser.getAllActiveAppUsers(1000);
 					AppUser defaultUser = null;
 					for (int i = 0; i < appUsers.size(); i++)
 					{
 						AppUser u = appUsers.get(i);
-						if ((u.getID() + "").equalsIgnoreCase(params[0]))
+						if ((u.getId() + "").equalsIgnoreCase(params[0]))
 						{
 							if (!u.getIsDefault())
 							{

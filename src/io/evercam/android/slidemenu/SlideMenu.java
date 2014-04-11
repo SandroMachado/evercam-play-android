@@ -574,7 +574,7 @@ public class SlideMenu extends LinearLayout
 			{
 				Log.i(TAG, "Started Task RefreshNotificationsTask");
 				this.publishProgress("");
-				io.evercam.android.dal.dbNotifcation helper = new dbNotifcation(
+				io.evercam.android.dal.DbNotifcation helper = new DbNotifcation(
 						SlideMenu.this.getContext());
 				Log.i(TAG, "Going to get Notifications for user [" + AppData.AppUserEmail + "]");
 				menuNotifList.clear();

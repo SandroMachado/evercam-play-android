@@ -30,7 +30,7 @@ public class CustomAdapter extends ArrayAdapter<AppUser>
 		this.entries = entries;
 
 		if (this.entries != null && this.entries.size() > 0
-				&& this.entries.get(this.entries.size() - 1).getID() == -1)
+				&& this.entries.get(this.entries.size() - 1).getId() == -1)
 		{
 			fakeUser = this.entries.get(this.entries.size() - 1);
 		}

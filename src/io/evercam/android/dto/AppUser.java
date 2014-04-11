@@ -3,138 +3,136 @@ package io.evercam.android.dto;
 public class AppUser
 {
 
-	static String TAG = "AppUser";
+	private static String TAG = "AppUser";
 
-	// private variables
-	private int ID;
-	private String UserEmail;
-	private String UserPassword;
-	private String ApiKey;
-	private boolean IsActive;
-	private boolean IsDefault;
+	private int id;
+	private String userEmail;
+	private String userPassword;
+	private String apiKey;
+	private boolean isActive;
+	private boolean isDefault;
 
-	// Empty constructor
 	public AppUser()
 	{
 
 	}
 
 	// constructor
-	public AppUser(int _ID, String _UserEmail, String _UserPassword, String _ApiKey,
-			boolean _IsActive, boolean _IsDefault)
+	public AppUser(int id, String userEmail, String userPassword, String apiKey,
+			boolean isActive, boolean isDefault)
 	{
-		this.ID = _ID;
-		this.UserEmail = _UserEmail;
-		this.UserPassword = _UserPassword;
-		ApiKey = _ApiKey;
-		this.IsActive = _IsActive;
-		this.IsDefault = _IsDefault;
+		this.id = id;
+		this.userEmail = userEmail;
+		this.userPassword = userPassword;
+		this.apiKey = apiKey;
+		this.isActive = isActive;
+		this.isDefault = isDefault;
 	}
 
-	public AppUser(int _ID, String _UserEmail, String _UserPassword, String _ApiKey,
-			int _IsActiveInteger, int _IsDefaultInteger)
+	public AppUser(int _id, String _userEmail, String _userPassword, String _apiKey,
+			int _isActiveInteger, int _isDefaultInteger)
 	{
-		this.ID = _ID;
-		this.UserEmail = _UserEmail;
-		this.UserPassword = _UserPassword;
-		this.ApiKey = _ApiKey;
-		this.IsActive = (_IsActiveInteger == 1);
-		this.IsDefault = (_IsDefaultInteger == 1);
+		this.id = _id;
+		this.userEmail = _userEmail;
+		this.userPassword = _userPassword;
+		this.apiKey = _apiKey;
+		this.isActive = (_isActiveInteger == 1);
+		this.isDefault = (_isDefaultInteger == 1);
 	}
 
-	public int getID()
+	public int getId()
 	{
-		return ID;
+		return id;
 	}
 
 	public String getUserEmail()
 	{
-		return UserEmail;
+		return userEmail;
 	}
 
 	public String getUserPassword()
 	{
-		return UserPassword;
+		return userPassword;
 	}
 
 	public String getApiKey()
 	{
-		return ApiKey;
+		return apiKey;
 	}
 
 	public boolean getIsActive()
 	{
-		return IsActive;
+		return isActive;
 	}
 
 	public int getIsActiveInteger()
 	{
-		return (IsActive ? 1 : 0);
+		return (isActive ? 1 : 0);
 	}
 
 	public boolean getIsDefault()
 	{
-		return IsDefault;
+		return isDefault;
 	}
 
 	public int getIsDefaultInteger()
 	{
-		return (IsDefault ? 1 : 0);
+		return (isDefault ? 1 : 0);
 	}
 
-	public void setID(int _ID)
+	public void setId(int id)
 	{
-		ID = _ID;
+		this.id = id;
 	}
 
-	public void setUserEmail(String _UserEmail)
+	public void setUserEmail(String userEmail)
 	{
-		UserEmail = _UserEmail;
+		this.userEmail = userEmail;
 	}
 
-	public void setUserPassword(String _UserPassword)
+	public void setUserPassword(String userPassword)
 	{
-		UserPassword = _UserPassword;
+		this.userPassword = userPassword;
 	}
 
-	public void setApiKey(String _ApiKey)
+	public void setApiKey(String apiKey)
 	{
-		ApiKey = _ApiKey;
+		this.apiKey = apiKey;
 	}
 
-	public void setIsActive(boolean _IsActive)
+	public void setIsActive(boolean isActive)
 	{
-		IsActive = _IsActive;
+		this.isActive = isActive;
 	}
 
-	public void setIsActiveInteger(int _IsActiveInteger)
+	public void setIsActiveInteger(int isActiveInteger)
 	{
-		IsActive = (_IsActiveInteger == 1);
+		this.isActive = (isActiveInteger == 1);
 	}
 
-	public void setIsDefault(boolean _IsDefault)
+	public void setIsDefault(boolean isDefault)
 	{
-		IsDefault = _IsDefault;
+		this.isDefault = isDefault;
 	}
 
-	public void setIsDefaultInteger(int _IsDefaultInteger)
+	public void setisDefaultInteger(int isDefaultInteger)
 	{
-		IsDefault = (_IsDefaultInteger == 1);
+		this.isDefault = (isDefaultInteger == 1);
 	}
 
 	public String toStringAll()
 	{
-		return "ID[" + ID + "], UserEmail [" + UserEmail + "], UserPassword [" + UserPassword
-				+ "], IsActive [" + IsActive + "], IsDefault [" + IsDefault + "]";
+		return "id[" + id + "], userEmail [" + userEmail + "], userPassword [" + userPassword
+				+ "], isActive [" + isActive + "], isDefault [" + isDefault + "]";
 	}
 
 	@Override
 	public String toString()
 	{
-		// return UserEmail + (IsDefault? " - Default" : ""); // for
+		// return userEmail + (isDefault? " - Default" : ""); // for
 		// arrayadapter
-		return "ID[" + ID + "], UserEmail [" + UserEmail + "], UserPassword [" + UserPassword
-				+ "], IsActive [" + IsActive + "], IsDefault [" + IsDefault + "]";
+		return "id[" + id + "], userEmail [" + userEmail + "], userPassword [" + userPassword
+				+ "], isActive [" + isActive + "], isDefault [" + isDefault + "]";
 	}
 
 }

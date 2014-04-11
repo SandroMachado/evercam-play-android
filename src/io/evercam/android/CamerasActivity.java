@@ -2,7 +2,6 @@ package io.evercam.android;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
-import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -25,9 +24,9 @@ import android.widget.*;
 
 import io.evercam.android.custom.AboutDialog;
 import io.evercam.android.custom.CameraLayout;
-import io.evercam.android.dal.dbAppUser;
-import io.evercam.android.dal.dbCamera;
-import io.evercam.android.dal.dbNotifcation;
+import io.evercam.android.dal.DbAppUser;
+import io.evercam.android.dal.DbCamera;
+import io.evercam.android.dal.DbNotifcation;
 import io.evercam.android.dto.AppUser;
 import io.evercam.android.dto.Camera;
 import io.evercam.android.dto.CameraNotification;
@@ -56,49 +55,27 @@ import android.util.Log;
 public class CamerasActivity extends ParentActivity implements
 		SlideMenuInterface.OnSlideMenuItemClickListener
 {
+	public static CamerasActivity activity = null;
 
-	private static final String TAG = "CamerasActivity"; // TAG is used for
-														// logging. Filter when
-														// searching from logs
-														// in LogCat
-
-	RegisterGCMAlertsServiceTask RegisterTask = null;
-
-	ProgressDialog pdLoading;
-	SlidingDrawer sdDrawer;
-
+	private static final String TAG = "evecamapp";
+	private RegisterGCMAlertsServiceTask RegisterTask = null;
 	private MenuItem refresh;
-
-	private SlideMenu slidemenu;
-
-	private int TotalCamerasInGrid = 0;
-
-	public int slideoutMenuAnimationTime = 255;
-
-	public static CamerasActivity _activity = null;
-
+	private SlideMenu slideMenu;
+	private int totalCamerasInGrid = 0;
+	private int slideoutMenuAnimationTime = 255;
 	private boolean isUsersAccountsActivityStarted = false;
+	private static boolean enableLogs = true; // log for the events or not
+	private static int camerasPerRow = 2;
 
-	static boolean enableLogs = true; // Whether log for the events or not
-
-	public static int camerasperrow = 2; // lstgridcamerasperrow // tells
-											// whether how many cameras are
-											// being shown in one row
-
-	Bundle _savedInstanceState = null; // instance state that tells about the
-										// previous activity instance state
-
-	void addUsersToDropdownActionBar()
+	private void addUsersToDropdownActionBar()
 	{
 		boolean taskStarted = false;
 
 		while (!taskStarted)
 		{
-
 			try
 			{
-
-				StopAllCameraViews();
+				stopAllCameraViews();
 
 				if (AppData.AppUserEmail == null || AppData.AppUserEmail.length() == 0)
 				{
@@ -107,134 +84,7 @@ public class CamerasActivity extends ParentActivity implements
 					return;
 				}
 
-				// Task for loading users from database
-				new AsyncTask<String, String, String[]>(){
-					int defaultUserIndex = 0;
-
-					@Override
-					protected String[] doInBackground(String... arg0)
-					{
-						try
-						{
-							// get database dal class
-							dbAppUser dbuser = new dbAppUser(CamerasActivity.this);
-							AppData.appUsers = dbuser.getAllAppUsers(1000);
-
-							// If it is the first time called when application
-							// has been installed. Then user might be not in
-							// database but in preferences. So we need to add it
-							// to database as well.
-							AppUser old = dbuser.getAppUser(AppData.AppUserEmail);
-							if (old == null)
-							{
-								AppUser user = new AppUser();
-								user.setUserEmail(AppData.AppUserEmail + "");
-								user.setUserPassword(AppData.AppUserPassword + "");
-								user.setApiKey(AppData.cambaApiKey + "");
-								user.setIsActive(true);
-								user.setIsDefault(true);
-								dbuser.addAppUser(user);
-							}
-
-							final String[] userAccounts = new String[AppData.appUsers.size()];
-
-							for (int i = 0; i < AppData.appUsers.size(); i++)
-							{
-								userAccounts[i] = AppData.appUsers.get(i).getUserEmail();
-								if (AppData.appUsers.get(i).getIsDefault()) defaultUserIndex = i;
-							}
-
-							return userAccounts;
-
-						}
-						catch (Exception e)
-						{
-							Log.e(TAG, e.getMessage(), e);
-							if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-						}
-						return null;
-					}
-
-					@Override
-					protected void onPostExecute(String[] userAccounts)
-					{
-						try
-						{
-							ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-									CamerasActivity.this,
-									android.R.layout.simple_spinner_dropdown_item, userAccounts);
-							CamerasActivity.this.getActionBar().setNavigationMode(
-									ActionBar.NAVIGATION_MODE_LIST); // dropdown
-																		// list
-																		// navigation
-																		// for
-																		// the
-																		// action
-																		// bar
-							OnNavigationListener navigationListener = new OnNavigationListener(){
-								@Override
-								public boolean onNavigationItemSelected(int itemPosition,
-										long itemId)
-								{
-									try
-									{
-										// set all current users default to
-										// false
-										for (AppUser u : AppData.appUsers)
-											u.setIsDefault(false);
-
-										// set all db app users as false
-										dbAppUser db = new dbAppUser(CamerasActivity.this);
-										db.updateAllIsDefaultFalse();
-
-										// set selected user's default to true
-										AppUser user = AppData.appUsers.get(itemPosition);
-										user.setIsDefault(true);
-										Commons.setDefaultUserForApp(CamerasActivity.this,
-												user.getUserEmail(), user.getUserPassword(),
-												user.getApiKey(), true);
-										db.updateAppUser(user);
-
-										// load cameras for default user
-										AppData.camesList = new dbCamera(CamerasActivity.this)
-												.getAllCamerasForEmailID(AppData.AppUserEmail, 500);
-										RemoveAllCameraViews();
-										AddAllCameraViews(true);
-
-										// start the task for default user to
-										// refresh data
-										GetUserCamsData task = new GetUserCamsData();
-										task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
-										if (TotalCamerasInGrid == 0 && refresh != null)
-										{
-											refresh.setActionView(null);
-											refresh.setActionView(R.layout.actionbar_indeterminate_progress);
-										}
-
-									}
-									catch (Exception e)
-									{
-										Log.e(TAG, e.getMessage(), e);
-										if (Constants.isAppTrackingEnabled) BugSenseHandler
-												.sendException(e);
-									}
-									return false;
-								}
-							};
-
-							getActionBar().setListNavigationCallbacks(adapter, navigationListener);
-							// getActionBar().setSelectedNavigationItem(-1);
-							getActionBar().setSelectedNavigationItem(defaultUserIndex);
-
-						}
-						catch (Exception e)
-						{
-							Log.e(TAG, e.getMessage(), e);
-							if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-						}
-					}
-
-				}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+				new UserLoadingTask().execute();
 
 				taskStarted = true;
 			}
@@ -252,8 +102,10 @@ public class CamerasActivity extends ParentActivity implements
 	{
 		super.onCreate(savedInstanceState);
 
-		if (Constants.isAppTrackingEnabled) if (Constants.isAppTrackingEnabled) BugSenseHandler
-				.initAndStartSession(this, Constants.bugsense_ApiKey);
+		if (Constants.isAppTrackingEnabled)
+		{
+			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
+		}
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -266,28 +118,29 @@ public class CamerasActivity extends ParentActivity implements
 				this.getActionBar().setIcon(R.drawable.ic_device_access_storage);
 			}
 
-			setContentView(R.layout.camslayoutwithslide); // inflate the cams
-															// screen
-
-			_savedInstanceState = savedInstanceState;
+			setContentView(R.layout.camslayoutwithslide);
 
 			addUsersToDropdownActionBar();
 
-			slidemenu = (SlideMenu) findViewById(R.id.slideMenu);
-			slidemenu.init(this, R.menu.slide, this, slideoutMenuAnimationTime);
+			slideMenu = (SlideMenu) findViewById(R.id.slideMenu);
+			slideMenu.init(this, R.menu.slide, this, slideoutMenuAnimationTime);
 
 			int notificationID = 0;
 			try
 			{
-				_activity = this;
+				activity = this;
 
 				notificationID = this.getIntent().getIntExtra(Constants.GCMNotificationIDString, 0);
 				this.getIntent().putExtra(Constants.GCMNotificationIDString, 0);
 			}
 			catch (Exception e)
 			{
+				e.printStackTrace();
 			}
-			if (notificationID > 0) CamerasActivity.this.onSlideMenuItemClick(notificationID);
+			if (notificationID > 0)
+			{
+				CamerasActivity.this.onSlideMenuItemClick(notificationID);
+			}
 			Log.i(TAG, "notificationID [" + notificationID + "]");
 
 		}
@@ -352,8 +205,8 @@ public class CamerasActivity extends ParentActivity implements
 
 				return true;
 
-			case android.R.id.home: // this is the app icon of the actionbar
-				slidemenu.show();
+			case android.R.id.home:
+				slideMenu.show();
 
 			default:
 				return super.onOptionsItemSelected(item);
@@ -376,25 +229,23 @@ public class CamerasActivity extends ParentActivity implements
 	@Override
 	public void onSlideMenuItemClick(int itemId)
 	{
-
 		try
 		{
 			switch (itemId)
 			{
-			case R.id.slidemenu_logout: // Need to logout and return to the
-										// login activty.
+			case R.id.slidemenu_logout:
 
-				// delete saved username and apssword
+				// delete saved username and password
 				SharedPreferences sharedPrefs = PreferenceManager
 						.getDefaultSharedPreferences(CamerasActivity.this);
 				SharedPreferences.Editor editor = sharedPrefs.edit();
 				editor.putString("AppUserEmail", null);
 				editor.putString("AppUserPassword", null);
 				editor.commit();
-				// start login activity
+
 				startActivity(new Intent(this, MainActivity.class));
 
-				new LogoutActivitiesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+				new LogoutTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 
 				break;
 
@@ -463,14 +314,542 @@ public class CamerasActivity extends ParentActivity implements
 		}
 	}
 
-	class LogoutActivitiesTask extends AsyncTask<String, String, String>
+	@Override
+	public void onRestart()
+	{
+		super.onRestart();
+		try
+		{
+			if (isUsersAccountsActivityStarted)
+			{
+				isUsersAccountsActivityStarted = false;
+				addUsersToDropdownActionBar();
+			}
+
+			int camsOldValue = camerasPerRow;
+			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+			camerasPerRow = Integer.parseInt(sharedPrefs.getString("lstgridcamerasPerRow", "2"));
+
+			if (camsOldValue != camerasPerRow)
+			{
+				removeAllCameraViews();
+				addAllCameraViews(false); // do not reload cameras beacuse it
+											// may be an activity for orentation
+											// changed or notification might
+											// have arrived.
+			}
+
+		}
+		catch (Exception e)
+		{
+			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+		}
+	}
+
+	// Stop All Camera Views
+	private void stopAllCameraViews()
+	{
+		io.evercam.android.custom.FlowLayout camsLineView = (io.evercam.android.custom.FlowLayout) this
+				.findViewById(R.id.camsLV);
+		for (int count = 0; count < camsLineView.getChildCount(); count++)
+		{
+			LinearLayout linearLayout = (LinearLayout) camsLineView.getChildAt(count);
+			CameraLayout cameraLayout = (CameraLayout) linearLayout.getChildAt(0);
+			cameraLayout.stopAllActivity();
+		}
+	}
+
+	boolean resizeCameras()
+	{
+		try
+		{
+			Display display = getWindowManager().getDefaultDisplay();
+			int screen_width = display.getWidth();
+
+			io.evercam.android.custom.FlowLayout camsLineView = (io.evercam.android.custom.FlowLayout) this
+					.findViewById(R.id.camsLV);
+			for (int i = 0; i < camsLineView.getChildCount(); i++)
+			{
+				LinearLayout pview = (LinearLayout) camsLineView.getChildAt(i);
+				CameraLayout cl = (CameraLayout) pview.getChildAt(0); // CameraLayout
+																		// is on
+																		// 0th
+																		// index
+
+				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+						android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+				params.width = ((i + 1 % camerasPerRow == 0) ? (screen_width - (i % camerasPerRow)
+						* (screen_width / camerasPerRow)) : screen_width / camerasPerRow);
+				params.height = (int) (params.width / (1.25));
+				cl.setLayoutParams(params);
+			}
+
+			return true;
+		}
+		catch (Exception e)
+		{
+			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
+			UIUtils.GetAlertDialog(CamerasActivity.this, "Error Occured",
+					Constants.ErrorMessageGeneric).show();
+			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+
+		}
+		return false;
+	}
+
+	// Remove all the cameras so that all activities being performed can be
+	// stopped
+	boolean removeAllCameraViews()
+	{
+		try
+		{
+			stopAllCameraViews();
+
+			io.evercam.android.custom.FlowLayout camsLineView = (io.evercam.android.custom.FlowLayout) this
+					.findViewById(R.id.camsLV);
+			camsLineView.removeAllViews();
+
+			totalCamerasInGrid = 0;
+
+			return true;
+		}
+		catch (Exception e)
+		{
+			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
+			UIUtils.GetAlertDialog(CamerasActivity.this, "Error Occured",
+					Constants.ErrorMessageGeneric).show();
+			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+
+		}
+		return false;
+	}
+
+	// Add all the cameras as per the rules
+	boolean addAllCameraViews(boolean reloadImages)
+	{
+		try
+		{
+			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+			camerasPerRow = Integer.parseInt(sharedPrefs.getString("lstgridcamerasPerRow", ""
+					+ camerasPerRow));
+
+			io.evercam.android.custom.FlowLayout camsLineView = (io.evercam.android.custom.FlowLayout) this
+					.findViewById(R.id.camsLV);
+
+			Display display = getWindowManager().getDefaultDisplay();
+			int screen_width = display.getWidth();
+
+			int index = 0;
+			totalCamerasInGrid = 0;
+			for (Camera camera : AppData.camesList)
+			{
+				LinearLayout cameraListLayout = new LinearLayout(this);
+
+				int indexPlus = index + 1;
+
+				if (reloadImages) camera.loadingStatus = ImageLoadingStatus.not_started;
+				CameraLayout cameraLayout = new CameraLayout(this, camera);
+				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+						android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+				params.width = ((indexPlus % camerasPerRow == 0) ? (screen_width - (index % camerasPerRow)
+						* (screen_width / camerasPerRow))
+						: screen_width / camerasPerRow);
+				params.height = (int) (params.width / (1.25));
+				cameraLayout.setLayoutParams(params);
+
+				cameraListLayout.addView(cameraLayout);
+				camsLineView.addView(cameraListLayout,
+						new io.evercam.android.custom.FlowLayout.LayoutParams(0, 0));
+
+				Log.v(TAG, camera.toString());
+
+				index++;
+				totalCamerasInGrid++;
+			}
+			if (this.getActionBar() != null) this.getActionBar().setHomeButtonEnabled(true);
+
+			startgCMRegisterActions();
+
+			if (refresh != null) refresh.setActionView(null);
+
+			return true;
+		}
+		catch (Exception e)
+		{
+			if (enableLogs) Log.e(TAG, e.toString(), e);
+			UIUtils.GetAlertDialog(CamerasActivity.this, "Error Occured",
+					Constants.ErrorMessageGeneric).show();
+			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+
+		}
+		return false;
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		try
+		{
+			stopGcmRegisterActions();
+			removeAllCameraViews();
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.toString(), e);
+		}
+	}
+
+	boolean mHandleMessageReceiverRegistered = false;
+
+	private final void startgCMRegisterActions()
+	{
+		try
+		{
+			Log.i(TAG, "StartgCMRegisterActions called");
+
+			RegisterTask = new RegisterGCMAlertsServiceTask();
+			RegisterTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+
+			registerReceiver(mHandleMessageReceiver, new IntentFilter("CambaGCMAlert"));
+
+			mHandleMessageReceiverRegistered = true;
+
+			Log.i(TAG,
+					"registerReceiver(mHandleMessageReceiver,new IntentFilter(\"CambaGCMAlert\"));");
+		}
+		catch (Exception e)
+		{
+			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+		}
+
+	}
+
+	private final void stopGcmRegisterActions()
+	{
+
+		Log.i(TAG, "StopGcmRegisterActions called");
+
+		if (mHandleMessageReceiverRegistered) // unregister only if registered
+												// otherwise
+												// illegalArgumentException
+		unregisterReceiver(mHandleMessageReceiver);
+
+	}
+
+	private final BroadcastReceiver mHandleMessageReceiver = new BroadcastReceiver(){
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+
+			Log.i(TAG, "AlertMessage Received ");
+
+			String AlertMessage = intent.getStringExtra("AlertMessage");
+			Log.i(TAG, "AlertMessage [" + AlertMessage + "]");
+
+			String ApiCamera = intent.getStringExtra("ApiCamera");
+			Log.i(TAG, "ApiCamera [" + ApiCamera + "]");
+
+			Camera cam = CambaApiManager.ParseJsonObject(ApiCamera);
+
+		}
+	};
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig)
+	{
+		try
+		{
+			Log.i("sajjadpp", "onConfigurationChanged called");
+
+			super.onConfigurationChanged(newConfig);
+
+			resizeCameras();
+
+		}
+		catch (Exception e)
+		{
+			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+		}
+	}
+
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+
+		if (Constants.isAppTrackingEnabled)
+		{
+			EasyTracker.getInstance().activityStart(this);
+			if (Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
+		}
+	}
+
+	@Override
+	public void onStop()
+	{
+		super.onStop();
+
+		if (Constants.isAppTrackingEnabled)
+		{
+			EasyTracker.getInstance().activityStop(this);
+			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
+		}
+	}
+
+	private class UserLoadingTask extends AsyncTask<String, String, String[]>
+	{
+		int defaultUserIndex = 0;
+
+		@Override
+		protected String[] doInBackground(String... arg0)
+		{
+			try
+			{
+				DbAppUser dbUser = new DbAppUser(CamerasActivity.this);
+				AppData.appUsers = dbUser.getAllAppUsers(1000);
+
+				// If it is the first time called when application
+				// has been installed. Then user might be not in
+				// database but in preferences. So we need to add it
+				// to database as well.
+				AppUser old = dbUser.getAppUser(AppData.AppUserEmail);
+				if (old == null)
+				{
+					AppUser user = new AppUser();
+					user.setUserEmail(AppData.AppUserEmail + "");
+					user.setUserPassword(AppData.AppUserPassword + "");
+					user.setApiKey(AppData.cambaApiKey + "");
+					user.setIsActive(true);
+					user.setIsDefault(true);
+					dbUser.addAppUser(user);
+				}
+
+				final String[] userAccounts = new String[AppData.appUsers.size()];
+
+				for (int i = 0; i < AppData.appUsers.size(); i++)
+				{
+					userAccounts[i] = AppData.appUsers.get(i).getUserEmail();
+					if (AppData.appUsers.get(i).getIsDefault()) defaultUserIndex = i;
+				}
+
+				return userAccounts;
+
+			}
+			catch (Exception e)
+			{
+				Log.e(TAG, e.getMessage(), e);
+				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String[] userAccounts)
+		{
+			try
+			{
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(CamerasActivity.this,
+						android.R.layout.simple_spinner_dropdown_item, userAccounts);
+				CamerasActivity.this.getActionBar().setNavigationMode(
+						ActionBar.NAVIGATION_MODE_LIST);
+				OnNavigationListener navigationListener = new OnNavigationListener(){
+					@Override
+					public boolean onNavigationItemSelected(int itemPosition, long itemId)
+					{
+						try
+						{
+							// set all current users default to false
+							for (AppUser user : AppData.appUsers)
+							{
+								user.setIsDefault(false);
+							}
+
+							// set all db app users as false
+							DbAppUser dbUser = new DbAppUser(CamerasActivity.this);
+							dbUser.updateAllIsDefaultFalse();
+
+							// set selected user's default to true
+							AppUser user = AppData.appUsers.get(itemPosition);
+							user.setIsDefault(true);
+							Commons.setDefaultUserForApp(CamerasActivity.this, user.getUserEmail(),
+									user.getUserPassword(), user.getApiKey(), true);
+							dbUser.updateAppUser(user);
+
+							// load cameras for default user
+							AppData.camesList = new DbCamera(CamerasActivity.this)
+									.getAllCamerasForEmailID(AppData.AppUserEmail, 500);
+							removeAllCameraViews();
+							addAllCameraViews(true);
+
+							// start the task for default user to
+							// refresh data
+							new GetUserCamsData().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+									"");
+							if (totalCamerasInGrid == 0 && refresh != null)
+							{
+								refresh.setActionView(null);
+								refresh.setActionView(R.layout.actionbar_indeterminate_progress);
+							}
+						}
+						catch (Exception e)
+						{
+							Log.e(TAG, e.getMessage(), e);
+							if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+						}
+						return false;
+					}
+				};
+
+				getActionBar().setListNavigationCallbacks(adapter, navigationListener);
+				getActionBar().setSelectedNavigationItem(defaultUserIndex);
+
+			}
+			catch (Exception e)
+			{
+				Log.e(TAG, e.getMessage(), e);
+				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+			}
+		}
+	}
+
+	// This class gets users cameras list from the api with proper login
+	private class GetUserCamsData extends AsyncTask<String, Void, String>
+	{
+		public boolean reload = false;
+
+		@Override
+		protected String doInBackground(String... login)
+		{
+			try
+			{
+				boolean updateDB = false;
+
+				SharedPreferences sharedPrefs = PreferenceManager
+						.getDefaultSharedPreferences(CamerasActivity.this);
+				AppData.AppUserEmail = sharedPrefs.getString("AppUserEmail", null);
+				AppData.AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
+
+				ArrayList<Camera> cambaList = CambaApiManager.getCameraListAndSetKey();
+				for (Camera camera : cambaList)
+				{
+					camera.setUserEmail(AppData.AppUserEmail);
+					Log.v(TAG, camera.toString());
+				}
+
+				for (Camera cam : cambaList)
+				{
+					if (!AppData.camesList.contains(cam))
+					{
+						updateDB = true;
+						break;
+					}
+
+				}
+				if (!updateDB)
+				{
+					for (Camera cam1 : AppData.camesList)
+				{
+					if (!cambaList.contains(cam1))
+					{
+						updateDB = true;
+						break;
+					}
+				}
+				}
+				if (updateDB)
+				{
+					this.reload = true;
+					AppData.camesList = cambaList;
+
+					DbCamera dbcam = new DbCamera(CamerasActivity.this);
+					dbcam.deleteCameraForEmail(AppData.AppUserEmail);
+
+					for (Camera cam : AppData.camesList)
+					{
+						Log.i(TAG, cam.toString());
+						dbcam.addCamera(cam);
+					}
+				}
+			}
+
+			catch (CredentialsException ce)
+			{
+				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(ce);
+				return Constants.ErrorMessageInvalidCredentialsAndLogout;
+
+			}
+			catch (ConnectivityException e)
+			{
+				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+				return Constants.ErrorMessageNoConnectivity;
+			}
+			catch (Exception e)
+			{
+				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+				if (AppData.camesList == null && AppData.camesList.size() == 0) return Constants.ErrorMessageRefreshCamerasWhenNoCamerasExist;
+				else return Constants.ErrorMessageRefreshCamerasWhenCamerasLoadedFromLocalDB;
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(final String result)
+		{
+			if (result == null)
+			{
+				if (this.reload || totalCamerasInGrid != AppData.camesList.size())
+				{
+					CamerasActivity.this.removeAllCameraViews();
+					CamerasActivity.this.addAllCameraViews(true);
+				}
+			}
+			else
+			{
+				if (!CamerasActivity.this.isFinishing()) UIUtils.GetAlertDialog(
+						CamerasActivity.this, "Error Occured", result,
+						new DialogInterface.OnClickListener(){
+							@Override
+							public void onClick(DialogInterface dialog, int which)
+							{
+								dialog.dismiss();
+								// CamerasActivity.this.finish(); // cannot
+								// finish
+								// because if we finish, user will not be able
+								// to login back again.
+								if ((result + "")
+										.equalsIgnoreCase(Constants.ErrorMessageInvalidCredentialsAndLogout))
+								{
+									// delete saved username and apssword
+									SharedPreferences sharedPrefs = PreferenceManager
+											.getDefaultSharedPreferences(CamerasActivity.this);
+									SharedPreferences.Editor editor = sharedPrefs.edit();
+									editor.putString("AppUserEmail", null);
+									editor.putString("AppUserPassword", null);
+									editor.commit();
+
+									startActivity(new Intent(CamerasActivity.this,
+											MainActivity.class));
+									new LogoutTask().executeOnExecutor(
+											AsyncTask.THREAD_POOL_EXECUTOR, "");
+								}
+								if (CamerasActivity.this.refresh != null) CamerasActivity.this.refresh
+										.setActionView(null);
+							}
+						}).show();
+			}
+		}
+	}
+
+	private class LogoutTask extends AsyncTask<String, String, String>
 	{
 		@Override
 		protected String doInBackground(String... params)
 		{
 			try
 			{
-
 				// delete saved username and apssword
 				SharedPreferences sharedPrefs = PreferenceManager
 						.getDefaultSharedPreferences(CamerasActivity.this);
@@ -483,7 +862,7 @@ public class CamerasActivity extends ParentActivity implements
 				GCMRegistrar.setRegisteredOnServer(CamerasActivity.this, false);
 
 				// delete all app users
-				dbAppUser dbu = new dbAppUser(CamerasActivity.this);
+				DbAppUser dbu = new DbAppUser(CamerasActivity.this);
 				List<AppUser> list = dbu.getAllAppUsers(10000);
 				if (list != null && list.size() > 0)
 				{
@@ -498,10 +877,7 @@ public class CamerasActivity extends ParentActivity implements
 				{
 					// get information to be posted for unregister on camba
 					// server request
-					String regId = GCMRegistrar.getRegistrationId(CamerasActivity.this); // registration
-																						// id
-																						// for
-																						// this
+					String regId = GCMRegistrar.getRegistrationId(CamerasActivity.this);
 					String AppUserEmail = null;
 					String AppUserPassword = null;
 					String Operation = null;
@@ -573,7 +949,7 @@ public class CamerasActivity extends ParentActivity implements
 			String message = "";
 			try
 			{
-				dbNotifcation helper = new dbNotifcation(CamerasActivity.this);
+				DbNotifcation helper = new DbNotifcation(CamerasActivity.this);
 
 				CameraNotification notif = helper.getCameraNotification(Integer.parseInt(id[0]));
 				notif.setIsRead(true);
@@ -586,347 +962,6 @@ public class CamerasActivity extends ParentActivity implements
 				message = e.toString();
 			}
 			return message;
-		}
-
-	}
-
-	@Override
-	public void onRestart()
-	{
-		super.onRestart();
-		try
-		{
-			if (isUsersAccountsActivityStarted)
-			{
-				isUsersAccountsActivityStarted = false;
-				addUsersToDropdownActionBar();
-			}
-
-			int camsOldValue = camerasperrow;
-			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-			camerasperrow = Integer.parseInt(sharedPrefs.getString("lstgridcamerasperrow", "2"));
-
-			if (camsOldValue != camerasperrow)
-			{
-				RemoveAllCameraViews();
-				AddAllCameraViews(false); // do not reload cameras beacuse it
-											// may be an activity for orentation
-											// changed or notification might
-											// have arrived.
-			}
-
-		}
-		catch (Exception e)
-		{
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-		}
-	}
-
-	// This will show the progress dialog
-	void ShowLoadingDialog(String message)
-	{
-		if (pdLoading == null) pdLoading = new ProgressDialog(CamerasActivity.this);
-
-		if (!pdLoading.isShowing())
-		{
-			pdLoading.setCancelable(false);
-			pdLoading.show();
-		}
-		pdLoading.setMessage(message);
-	}
-
-	// Stop All Camera Views
-	void StopAllCameraViews()
-	{
-		io.evercam.android.custom.FlowLayout camsLineView = (io.evercam.android.custom.FlowLayout) this
-				.findViewById(R.id.camsLV);
-		for (int i = 0; i < camsLineView.getChildCount(); i++)
-		{
-			LinearLayout pview = (LinearLayout) camsLineView.getChildAt(i);
-			CameraLayout cl = (CameraLayout) pview.getChildAt(0); // CameraLayout
-																	// is on 0th
-																	// index
-			cl.StopAllActivity();
-		}
-
-	}
-
-	boolean resizeCameras()
-	{
-		try
-		{
-
-			Display display = getWindowManager().getDefaultDisplay();
-			int screen_width = display.getWidth();
-
-			io.evercam.android.custom.FlowLayout camsLineView = (io.evercam.android.custom.FlowLayout) this
-					.findViewById(R.id.camsLV);
-			for (int i = 0; i < camsLineView.getChildCount(); i++)
-			{
-				LinearLayout pview = (LinearLayout) camsLineView.getChildAt(i);
-				CameraLayout cl = (CameraLayout) pview.getChildAt(0); // CameraLayout
-																		// is on
-																		// 0th
-																		// index
-
-				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
-						android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-				params.width = ((i + 1 % camerasperrow == 0) ? (screen_width - (i % camerasperrow)
-						* (screen_width / camerasperrow)) : screen_width / camerasperrow);
-				params.height = (int) (params.width / (1.25));
-				cl.setLayoutParams(params);
-			}
-
-			return true;
-		}
-		catch (Exception e)
-		{
-			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.GetAlertDialog(CamerasActivity.this, "Error Occured",
-					Constants.ErrorMessageGeneric).show();
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-
-		}
-		return false;
-	}
-
-	// Remove all the cameras so that all activites being performed can be
-	// stopped
-	boolean RemoveAllCameraViews()
-	{
-		try
-		{
-
-			StopAllCameraViews();
-
-			io.evercam.android.custom.FlowLayout camsLineView = (io.evercam.android.custom.FlowLayout) this
-					.findViewById(R.id.camsLV);
-			camsLineView.removeAllViews();
-
-			TotalCamerasInGrid = 0;
-
-			return true;
-		}
-		catch (Exception e)
-		{
-			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.GetAlertDialog(CamerasActivity.this, "Error Occured",
-					Constants.ErrorMessageGeneric).show();
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-
-		}
-		return false;
-	}
-
-	// Add all the cameras as per the rules
-	boolean AddAllCameraViews(boolean reloadImages)
-	{
-		try
-		{
-
-			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-			camerasperrow = Integer.parseInt(sharedPrefs.getString("lstgridcamerasperrow", ""
-					+ camerasperrow));
-
-			io.evercam.android.custom.FlowLayout camsLineView = (io.evercam.android.custom.FlowLayout) this
-					.findViewById(R.id.camsLV);
-
-			Display display = getWindowManager().getDefaultDisplay();
-			int screen_width = display.getWidth();
-
-			int index = 0;
-			TotalCamerasInGrid = 0;
-			for (Camera caml : AppData.camesList)
-			{
-				LinearLayout pview = new LinearLayout(this);
-
-				int j = index + 1;
-
-				if (reloadImages) caml.loadingStatus = ImageLoadingStatus.not_started;
-				CameraLayout cl = new CameraLayout(this, caml);// ,imageReceivedFrom);
-				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
-						android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-				params.width = ((j % camerasperrow == 0) ? (screen_width - (index % camerasperrow)
-						* (screen_width / camerasperrow)) : screen_width / camerasperrow);
-				params.height = (int) (params.width / (1.25));
-				cl.setLayoutParams(params);
-
-				pview.addView(cl);
-				camsLineView.addView(pview, new io.evercam.android.custom.FlowLayout.LayoutParams(
-						0, 0));
-
-				Log.i("sajjad", caml.toString());
-
-				index++;
-				TotalCamerasInGrid++;
-			}
-
-			_savedInstanceState = null; // it will be set again when oncreate is
-										// called again.
-
-			if (this.getActionBar() != null) this.getActionBar().setHomeButtonEnabled(true);
-
-			StartgCMRegisterActions();
-
-			if (refresh != null) refresh.setActionView(null);
-
-			return true;
-		}
-		catch (Exception e)
-		{
-			if (enableLogs) Log.e(TAG, e.toString(), e);
-			UIUtils.GetAlertDialog(CamerasActivity.this, "Error Occured",
-					Constants.ErrorMessageGeneric).show();
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-
-		}
-		return false;
-	}
-
-	@Override
-	protected void onDestroy()
-	{
-		super.onDestroy();
-		try
-		{
-			StopGcmRegisterActions();
-			RemoveAllCameraViews();
-		}
-		catch (Exception e)
-		{
-			Log.e(TAG, e.toString(), e);
-		}
-	}
-
-	// This class gets users cameras list from the api with proper login
-	private class GetUserCamsData extends AsyncTask<String, Void, String>
-	{
-		public boolean reload = false;
-
-		@Override
-		protected String doInBackground(String... login)
-		{
-			try
-			{
-				boolean updateDB = false;
-
-				SharedPreferences sharedPrefs = PreferenceManager
-						.getDefaultSharedPreferences(CamerasActivity.this);
-				AppData.AppUserEmail = sharedPrefs.getString("AppUserEmail", null);
-				AppData.AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
-
-				ArrayList<Camera> cambaList = CambaApiManager.getCameraListAndSetKey();
-				for (Camera cam : cambaList)
-				{
-					cam.setUserEmail(AppData.AppUserEmail);
-					Log.i("sajjad125", cam.toString());
-				}
-
-				for (Camera cam : cambaList)
-				{
-					if (!AppData.camesList.contains(cam))
-					{
-						updateDB = true;
-						break;
-					}
-
-				}
-				if (!updateDB) for (Camera cam1 : AppData.camesList)
-				{
-					if (!cambaList.contains(cam1))
-					{
-						updateDB = true;
-						break;
-					}
-				}
-				if (updateDB)
-				{
-					this.reload = true;
-					AppData.camesList = cambaList;
-
-					dbCamera dbcam = new dbCamera(CamerasActivity.this);
-					dbcam.deleteCameraForEmail(AppData.AppUserEmail); // delete
-																		// all
-																		// with
-																		// the
-																		// email
-
-					for (Camera cam : AppData.camesList)
-					{
-						Log.i(TAG, cam.toString());
-						dbcam.addCamera(cam);
-					}
-				}
-
-			}
-
-			catch (CredentialsException ce)
-			{
-				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(ce);
-				return Constants.ErrorMessageInvalidCredentialsAndLogout;
-
-			}
-			catch (ConnectivityException e)
-			{
-				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-				return Constants.ErrorMessageNoConnectivity;
-			}
-			catch (Exception e)
-			{
-				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-				if (AppData.camesList == null && AppData.camesList.size() == 0) return Constants.ErrorMessageRefreshCamerasWhenNoCamerasExist;
-				else return Constants.ErrorMessageRefreshCamerasWhenCamerasLoadedFromLocalDB;
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(final String result)
-		{
-			if (result == null)
-			{
-				if (this.reload || TotalCamerasInGrid != AppData.camesList.size())
-				{
-					CamerasActivity.this.RemoveAllCameraViews();
-					CamerasActivity.this.AddAllCameraViews(true);
-
-				}
-			}
-			else
-			{
-				if (!CamerasActivity.this.isFinishing()) UIUtils.GetAlertDialog(CamerasActivity.this,
-						"Error Occured", result, new DialogInterface.OnClickListener(){
-							@Override
-							public void onClick(DialogInterface dialog, int which)
-							{
-								dialog.dismiss();
-								// CamerasActivity.this.finish(); // cannot finish
-								// because if we finish, user will not be able
-								// to login back again.
-								if ((result + "")
-										.equalsIgnoreCase(Constants.ErrorMessageInvalidCredentialsAndLogout))
-								{
-									// delete saved username and apssword
-									SharedPreferences sharedPrefs = PreferenceManager
-											.getDefaultSharedPreferences(CamerasActivity.this);
-									SharedPreferences.Editor editor = sharedPrefs.edit();
-									editor.putString("AppUserEmail", null);
-									editor.putString("AppUserPassword", null);
-									editor.commit();
-
-									startActivity(new Intent(CamerasActivity.this, MainActivity.class));
-									new LogoutActivitiesTask().executeOnExecutor(
-											AsyncTask.THREAD_POOL_EXECUTOR, "");
-								}
-								if (CamerasActivity.this.refresh != null) CamerasActivity.this.refresh
-										.setActionView(null);
-							}
-						}).show();
-
-			}
-
 		}
 	}
 
@@ -944,9 +979,9 @@ public class CamerasActivity extends ParentActivity implements
 				GCMRegistrar.checkManifest(CamerasActivity.this);
 				Log.i(TAG, "Manifest Checked");
 				String regId = GCMRegistrar.getRegistrationId(CamerasActivity.this); // registration
-																					// id
-																					// for
-																					// this
+																						// id
+																						// for
+																						// this
 				String AppUserEmail = null;
 				String AppUserPassword = null;
 				String Operation = null;
@@ -992,18 +1027,7 @@ public class CamerasActivity extends ParentActivity implements
 					return "Device registered successfully on GCM Server. It will be registered on camba server shortly.";
 
 				}
-				else if (!GCMRegistrar.isRegisteredOnServer(CamerasActivity.this)) // Registered
-																				// on
-																				// GCM
-																				// Server
-																				// and
-																				// now
-																				// going
-																				// to
-																				// register
-																				// on
-																				// Camba
-																				// Server
+				else if (!GCMRegistrar.isRegisteredOnServer(CamerasActivity.this))
 				{
 					if (CambaApiManager.registerDeviceForUsername(AppUserEmail, AppUserPassword,
 							regId, Operation, BlueToothName, Manufacturer, Model, SerialNo, ImeiNo,
@@ -1015,7 +1039,6 @@ public class CamerasActivity extends ParentActivity implements
 					{
 						return "Device failed to register on Camba server.";
 					}
-
 				}
 				else
 				{
@@ -1032,7 +1055,6 @@ public class CamerasActivity extends ParentActivity implements
 					// "Device is already registered on GCM Server with ID ["+regId+"] but was unable to register on camba server.";
 					return regId;
 				}
-
 			}
 			catch (Exception e)
 			{
@@ -1051,104 +1073,6 @@ public class CamerasActivity extends ParentActivity implements
 		@Override
 		protected void onPostExecute(String result)
 		{
-		}
-
-	}
-
-	boolean mHandleMessageReceiverRegistered = false;
-
-	private final void StartgCMRegisterActions()
-	{
-		try
-		{
-			Log.i(TAG, "StartgCMRegisterActions called");
-
-			RegisterTask = new RegisterGCMAlertsServiceTask();
-			RegisterTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
-
-			registerReceiver(mHandleMessageReceiver, new IntentFilter("CambaGCMAlert"));
-
-			mHandleMessageReceiverRegistered = true;
-
-			Log.i(TAG,
-					"registerReceiver(mHandleMessageReceiver,new IntentFilter(\"CambaGCMAlert\"));");
-		}
-		catch (Exception e)
-		{
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-		}
-
-	}
-
-	private final void StopGcmRegisterActions()
-	{
-
-		Log.i(TAG, "StopGcmRegisterActions called");
-
-		if (mHandleMessageReceiverRegistered) // unregister only if registered
-												// otherwise
-												// illegalArgumentException
-		unregisterReceiver(mHandleMessageReceiver);
-
-	}
-
-	private final BroadcastReceiver mHandleMessageReceiver = new BroadcastReceiver(){
-		@Override
-		public void onReceive(Context context, Intent intent)
-		{
-
-			Log.i(TAG, "AlertMessage Received ");
-
-			String AlertMessage = intent.getStringExtra("AlertMessage");
-			Log.i(TAG, "AlertMessage [" + AlertMessage + "]");
-
-			String ApiCamera = intent.getStringExtra("ApiCamera");
-			Log.i(TAG, "ApiCamera [" + ApiCamera + "]");
-
-			Camera cam = CambaApiManager.ParseJsonObject(ApiCamera);
-
-		}
-	};
-
-	@Override
-	public void onConfigurationChanged(Configuration newConfig)
-	{
-		try
-		{
-			Log.i("sajjadpp", "onConfigurationChanged called");
-
-			super.onConfigurationChanged(newConfig);
-
-			resizeCameras();
-
-		}
-		catch (Exception e)
-		{
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-		}
-	}
-
-	@Override
-	public void onStart()
-	{
-		super.onStart();
-
-		if (Constants.isAppTrackingEnabled)
-		{
-			EasyTracker.getInstance().activityStart(this);
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
-		}
-	}
-
-	@Override
-	public void onStop()
-	{
-		super.onStop();
-
-		if (Constants.isAppTrackingEnabled)
-		{
-			EasyTracker.getInstance().activityStop(this);
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
 		}
 	}
 }

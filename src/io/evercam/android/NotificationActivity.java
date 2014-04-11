@@ -1,6 +1,6 @@
 package io.evercam.android;
 
-import io.evercam.android.dal.dbNotifcation;
+import io.evercam.android.dal.DbNotifcation;
 import io.evercam.android.dto.CameraNotification;
 import io.evercam.android.ivideo.IVideoViewActivity;
 import io.evercam.android.rvideo.RVideoViewActivity;
@@ -85,7 +85,7 @@ public class NotificationActivity extends Activity
 			setContentView(R.layout.notificationactivitylayout);
 
 			// db
-			io.evercam.android.dal.dbNotifcation handler = new dbNotifcation(
+			io.evercam.android.dal.DbNotifcation handler = new DbNotifcation(
 					NotificationActivity.this);
 			notif = handler.getCameraNotification(NotificationID);
 			Log.i(TAG, notif.toString());

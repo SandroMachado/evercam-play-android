@@ -10,7 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class dbCamera extends DatabaseMaster
+public class DbCamera extends DatabaseMaster
 {
 
 	// Cameras table name
@@ -77,7 +77,7 @@ public class dbCamera extends DatabaseMaster
 	// i:nil="true"
 	// /><Status>Offline</Status><UseCredentials>true</UseCredentials><VideoRecording>false</VideoRecording></ApiCamera><ApiCamera><AccessMethod>Manual</AccessMethod><AlarmLevel>5</AlarmLevel><AudioUrl></AudioUrl><BaseUrl>http://87.213.54.234:6100/</BaseUrl><BrowserUrl>http://camba.tv/cameraview.aspx?c=bwcqmqyr</BrowserUrl><
 
-	public dbCamera(Context context)
+	public DbCamera(Context context)
 	{
 		super(context);
 	}

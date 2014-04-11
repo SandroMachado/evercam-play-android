@@ -5,21 +5,16 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * 
- * @author RAW
+/*
+ * Container of views that it shows in a flow. If can not fit in a row, 
+ * it will put the view in next line.
  */
-
-// Container of views that it shows in a flow. If cant fit in a row, it will put
-// the view in next line
 public class FlowLayout extends ViewGroup
 {
-
-	private int line_height;
+	private int lineHeight;
 
 	public static class LayoutParams extends ViewGroup.LayoutParams
 	{
-
 		public final int horizontal_spacing;
 		public final int vertical_spacing;
 
@@ -56,7 +51,7 @@ public class FlowLayout extends ViewGroup
 				- getPaddingRight();
 		int height = MeasureSpec.getSize(heightMeasureSpec) - getPaddingTop() - getPaddingBottom();
 		final int count = getChildCount();
-		int line_height = 0;
+		int lineHeight = 0;
 
 		int xpos = getPaddingLeft();
 		int ypos = getPaddingTop();
@@ -80,30 +75,30 @@ public class FlowLayout extends ViewGroup
 				child.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.AT_MOST),
 						childHeightMeasureSpec);
 				final int childw = child.getMeasuredWidth();
-				line_height = Math
-						.max(line_height, child.getMeasuredHeight() + lp.vertical_spacing);
+				lineHeight = Math
+						.max(lineHeight, child.getMeasuredHeight() + lp.vertical_spacing);
 
 				if (xpos + childw > width)
 				{
 					xpos = getPaddingLeft();
-					ypos += line_height;
+					ypos += lineHeight;
 				}
 
 				xpos += childw + lp.horizontal_spacing;
 			}
 		}
-		this.line_height = line_height;
+		this.lineHeight = lineHeight;
 
 		if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.UNSPECIFIED)
 		{
-			height = ypos + line_height;
+			height = ypos + lineHeight;
 
 		}
 		else if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.AT_MOST)
 		{
-			if (ypos + line_height < height)
+			if (ypos + lineHeight < height)
 			{
-				height = ypos + line_height;
+				height = ypos + lineHeight;
 			}
 		}
 		setMeasuredDimension(width, height);
@@ -144,7 +139,7 @@ public class FlowLayout extends ViewGroup
 				if (xpos + childw > width)
 				{
 					xpos = getPaddingLeft();
-					ypos += line_height;
+					ypos += lineHeight;
 				}
 				child.layout(xpos, ypos, xpos + childw, ypos + childh);
 				xpos += childw + lp.horizontal_spacing;

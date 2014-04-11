@@ -10,7 +10,7 @@ import android.webkit.URLUtil;
 public class Camera
 {
 
-	static final String TAG = "Camera";
+	private static final String TAG = "Camera";
 
 	int ID;
 	private int CameraID;

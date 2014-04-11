@@ -10,7 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class dbNotifcation extends DatabaseMaster
+public class DbNotifcation extends DatabaseMaster
 {
 
 	// CameraNotifications table name
@@ -28,7 +28,7 @@ public class dbNotifcation extends DatabaseMaster
 	public static final String KEY_RecordingViewURL = "RecordingViewURL";
 	public static final String KEY_IsRead = "IsRead";
 
-	public dbNotifcation(Context context)
+	public DbNotifcation(Context context)
 	{
 		super(context);
 	}

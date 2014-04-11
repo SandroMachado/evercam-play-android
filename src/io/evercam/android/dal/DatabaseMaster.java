@@ -19,9 +19,9 @@ public class DatabaseMaster extends SQLiteOpenHelper
 	@Override
 	public void onCreate(SQLiteDatabase db)
 	{
-		new dbNotifcation(this.context).onCreateCustom(db);
-		new dbCamera(this.context).onCreateCustom(db);
-		new dbAppUser(this.context).onCreateCustom(db);
+		new DbNotifcation(this.context).onCreateCustom(db);
+		new DbCamera(this.context).onCreateCustom(db);
+		new DbAppUser(this.context).onCreateCustom(db);
 	}
 
 	@Override

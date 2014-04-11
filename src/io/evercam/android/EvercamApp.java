@@ -6,7 +6,7 @@ import org.acra.annotation.ReportsCrashes;
 import android.app.Application;
 
 @ReportsCrashes(formKey = "", // This is required for backward compatibility but
-								// not used
+// not used
 formUri = "http://www.bugsense.com/api/acra?api_key="
 		+ io.evercam.android.utils.Constants.bugsense_ApiKey)
 public class EvercamApp extends Application

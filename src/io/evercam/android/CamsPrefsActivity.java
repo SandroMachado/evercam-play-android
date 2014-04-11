@@ -11,15 +11,15 @@ import com.google.analytics.tracking.android.EasyTracker;
 
 public class CamsPrefsActivity extends PreferenceActivity
 {
-	private static String LOGTAG = "cams_activity_preferences";
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 
-		if (Constants.isAppTrackingEnabled) if (Constants.isAppTrackingEnabled) BugSenseHandler
-				.initAndStartSession(this, Constants.bugsense_ApiKey);
+		if (Constants.isAppTrackingEnabled)
+		{
+			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
+		}
 
 		try
 		{

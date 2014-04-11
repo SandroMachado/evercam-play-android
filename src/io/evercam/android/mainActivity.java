@@ -40,7 +40,7 @@ public class MainActivity extends Activity
 			}
 
 			setContentView(R.layout.mainactivitylayout);
-			
+
 			if (isReleaseNotePageShowed())
 			{
 				startApplication();
@@ -68,7 +68,8 @@ public class MainActivity extends Activity
 			{
 				try
 				{
-					UIUtils.GetAlertDialog(MainActivity.this, getString(R.string.msg_network_not_connected),
+					UIUtils.GetAlertDialog(MainActivity.this,
+							getString(R.string.msg_network_not_connected),
 							getString(R.string.msg_try_network_again),
 							new DialogInterface.OnClickListener(){
 								@Override
@@ -88,29 +89,31 @@ public class MainActivity extends Activity
 			else
 			{
 
-			// get the username and password saved in application and pass to
-			// CambaApiManager so that they can be used at the time of login
-			// authentication
+				// get the username and password saved in application and pass
+				// to
+				// CambaApiManager so that they can be used at the time of login
+				// authentication
 				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-			
-			AppData.AppUserEmail = sharedPrefs.getString("AppUserEmail", null);
-			AppData.AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
-			// if username and password not found, pass the same to login
-			// activity
-			if (AppData.AppUserEmail == null || AppData.AppUserEmail.equals("")
-					|| AppData.AppUserPassword == null || AppData.AppUserPassword.equals(""))
-			{
-				Log.v("evercamapp", "fields are empty");
-				Intent login = new Intent(MainActivity.this, LoginActivity.class);
-				startActivityForResult(login, LoginActivity.loginVerifyRequestCode);
-			}
-			else
-			// username password found. pass to cams activity and verify if the
-			// username password is valid and get the cameras data
-			{
-				Log.v("evercamapp", "start camera activity");
-				startCamerasActivity();
-			}
+
+				AppData.AppUserEmail = sharedPrefs.getString("AppUserEmail", null);
+				AppData.AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
+				// if username and password not found, pass the same to login
+				// activity
+				if (AppData.AppUserEmail == null || AppData.AppUserEmail.equals("")
+						|| AppData.AppUserPassword == null || AppData.AppUserPassword.equals(""))
+				{
+					Log.v("evercamapp", "fields are empty");
+					Intent login = new Intent(MainActivity.this, LoginActivity.class);
+					startActivityForResult(login, LoginActivity.loginVerifyRequestCode);
+				}
+				else
+				// username password found. pass to cams activity and verify if
+				// the
+				// username password is valid and get the cameras data
+				{
+					Log.v("evercamapp", "start camera activity");
+					startCamerasActivity();
+				}
 			}
 		}
 		catch (Exception ex)
@@ -146,7 +149,6 @@ public class MainActivity extends Activity
 		}
 	}
 
-	// start the cameras activity
 	private void startCamerasActivity()
 	{
 		int notificationID = 0;
@@ -166,11 +168,11 @@ public class MainActivity extends Activity
 		{
 		}
 
-		if (CamerasActivity._activity != null)
+		if (CamerasActivity.activity != null)
 		{
 			try
 			{
-				CamerasActivity._activity.finish();
+				CamerasActivity.activity.finish();
 			}
 			catch (Exception e)
 			{
@@ -209,7 +211,7 @@ public class MainActivity extends Activity
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
 		}
 	}
-	
+
 	private boolean isReleaseNotePageShowed()
 	{
 		int versionCode = 0;
@@ -226,6 +228,6 @@ public class MainActivity extends Activity
 		{
 			Log.e("evercamapp", e.getMessage());
 		}
-		return ((isReleaseNotesShown && versionCode!=0 )?true:false);
+		return ((isReleaseNotesShown && versionCode != 0) ? true : false);
 	}
 }

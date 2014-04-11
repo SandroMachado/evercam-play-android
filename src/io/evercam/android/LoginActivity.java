@@ -4,7 +4,7 @@ import io.evercam.API;
 import io.evercam.ApiKeyPair;
 import io.evercam.EvercamException;
 import io.evercam.User;
-import io.evercam.android.dal.dbAppUser;
+import io.evercam.android.dal.DbAppUser;
 import io.evercam.android.dto.AppUser;
 import io.evercam.android.dto.Camera;
 import io.evercam.android.utils.AppData;
@@ -15,24 +15,21 @@ import io.evercam.android.utils.PropertyReader;
 
 import java.util.ArrayList;
 
-import com.bugsense.trace.BugSenseHandler;
-
-import io.evercam.android.R;
-
-import com.google.analytics.tracking.android.EasyTracker;
-
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-
-import android.content.SharedPreferences;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.bugsense.trace.BugSenseHandler;
+import com.google.analytics.tracking.android.EasyTracker;
 
 public class LoginActivity extends ParentActivity
 {
@@ -59,10 +56,10 @@ public class LoginActivity extends ParentActivity
 		super.onCreate(savedInstanceState);
 
 		launchBugsense();
-		
+
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.login);
-		
+
 		setEvercamDeveloperKeypair();
 
 		Button btnLogin = (Button) findViewById(R.id.btnLogin);
@@ -145,7 +142,7 @@ public class LoginActivity extends ParentActivity
 			loginTask.execute();
 		}
 	}
-	
+
 	public class LoginTask extends AsyncTask<Void, Void, Boolean>
 	{
 		private String errorMessage = "";
@@ -178,21 +175,25 @@ public class LoginActivity extends ParentActivity
 
 			if (success)
 			{
-				try{
-					AppData.AppUserEmail =  "liuting.du@mhlabs.net";
-					AppData.AppUserPassword =  "kangtaooo";
-				String cambaAPiKey = CambaApiManager.getCambaKey(AppData.AppUserEmail, AppData.AppUserPassword);
-				AppData.cambaApiKey = cambaAPiKey;
-				AppData.camesList = new ArrayList<Camera>(); // clear all cameras
-				
-					dbAppUser dbuser = new dbAppUser(LoginActivity.this);
-//					delete the old user if already exisits
-					if( dbuser.getAppUser("liuting.du@mhlabs.net") != null)
+				try
+				{
+					AppData.AppUserEmail = "liuting.du@mhlabs.net";
+					AppData.AppUserPassword = "kangtaooo";
+					String cambaAPiKey = CambaApiManager.getCambaKey(AppData.AppUserEmail,
+							AppData.AppUserPassword);
+					AppData.cambaApiKey = cambaAPiKey;
+					AppData.camesList = new ArrayList<Camera>(); // clear all
+																	// cameras
+
+					DbAppUser dbuser = new DbAppUser(LoginActivity.this);
+					// delete the old user if already exisits
+					if (dbuser.getAppUser("liuting.du@mhlabs.net") != null)
 					{
 						dbuser.deleteAppUserForEmail("liuting.du@mhlabs.net");
 					}
-					dbuser.updateAllIsDefaultFalse(); // set all users as non default
-					
+					dbuser.updateAllIsDefaultFalse(); // set all users as non
+														// default
+
 					// adding new logged in users
 					AppUser newUser = new AppUser();
 					newUser.setUserEmail("liuting.du@mhlabs.net");
@@ -201,12 +202,13 @@ public class LoginActivity extends ParentActivity
 					newUser.setIsActive(true);
 					newUser.setIsDefault(true);
 					dbuser.addAppUser(newUser);
-				SharedPreferences.Editor editor = sharedPrefs.edit(); 
-				editor.putString("AppUserEmail", AppData.AppUserEmail); 
-				editor.putString("AppUserPassword", AppData.AppUserPassword); 
-				editor.commit(); 
-				
-				}catch(Exception e)
+					SharedPreferences.Editor editor = sharedPrefs.edit();
+					editor.putString("AppUserEmail", AppData.AppUserEmail);
+					editor.putString("AppUserPassword", AppData.AppUserPassword);
+					editor.commit();
+
+				}
+				catch (Exception e)
 				{
 					e.printStackTrace();
 				}
@@ -215,7 +217,8 @@ public class LoginActivity extends ParentActivity
 			}
 			else
 			{
-				Toast toast = Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT);
+				Toast toast = Toast.makeText(getApplicationContext(), errorMessage,
+						Toast.LENGTH_SHORT);
 				toast.setGravity(Gravity.CENTER, 0, 0);
 				toast.show();
 				passwordEdit.setText(null);
@@ -253,7 +256,7 @@ public class LoginActivity extends ParentActivity
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
 		}
 	}
-	
+
 	private void launchBugsense()
 	{
 		if (Constants.isAppTrackingEnabled)
@@ -261,23 +264,23 @@ public class LoginActivity extends ParentActivity
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
 	}
-	
+
 	private void showProgressDialog()
 	{
-		progressDialog = new ProgressDialog(LoginActivity.this); 
+		progressDialog = new ProgressDialog(LoginActivity.this);
 		progressDialog.setMessage(getString(R.string.login_progress_signing_in));
-		progressDialog.setCanceledOnTouchOutside(false); //can not be canceled
+		progressDialog.setCanceledOnTouchOutside(false); // can not be canceled
 		progressDialog.show();
 	}
-	
+
 	private void dismissProgressDialog()
 	{
-		if (progressDialog != null && progressDialog.isShowing()) 
+		if (progressDialog != null && progressDialog.isShowing())
 		{
 			progressDialog.dismiss();
 		}
 	}
-	
+
 	private void setEvercamDeveloperKeypair()
 	{
 		PropertyReader propertyReader = new PropertyReader(getApplicationContext());
@@ -285,7 +288,7 @@ public class LoginActivity extends ParentActivity
 		developerAppID = propertyReader.getPropertyStr(PropertyReader.KEY_API_ID);
 		API.setDeveloperKeyPair(developerAppKey, developerAppID);
 	}
-	
+
 	private void finishLoginActivity()
 	{
 		setResult(loginResultSuccessCode);

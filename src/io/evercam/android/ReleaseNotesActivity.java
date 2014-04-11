@@ -34,7 +34,7 @@ public class ReleaseNotesActivity extends ParentActivity
 		if (Constants.isAppTrackingEnabled) if (Constants.isAppTrackingEnabled) BugSenseHandler
 				.initAndStartSession(this, Constants.bugsense_ApiKey);
 
-		setContentView(R.layout.release_notes_activity_layout); 
+		setContentView(R.layout.release_notes_activity_layout);
 
 		try
 		{

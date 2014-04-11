@@ -15,7 +15,7 @@
  */
 package io.evercam.android;
 
-import io.evercam.android.dal.dbNotifcation;
+import io.evercam.android.dal.DbNotifcation;
 import io.evercam.android.dto.CameraNotification;
 import io.evercam.android.utils.CLog;
 import io.evercam.android.utils.CambaApiManager;
@@ -373,7 +373,7 @@ public class GCMIntentService extends GCMBaseIntentService
 			{
 				intent.putExtra("GCMMethod", "onMessage");
 
-				dbNotifcation db = new dbNotifcation(context);
+				DbNotifcation db = new DbNotifcation(context);
 				synchronized (this)
 				{ // only one
 					if (db.getCameraNotificationCount(notif) == 0)

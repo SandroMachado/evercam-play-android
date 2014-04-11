@@ -64,8 +64,6 @@ import com.bugsense.trace.BugSenseHandler;
 import io.evercam.android.R;
 import com.google.analytics.tracking.android.EasyTracker;
 
-//import com.camba.killruddery.VideoViewCustom;
-
 public class VideoActivity extends ParentActivity implements
 		SlideMenuInterface.OnSlideMenuItemClickListener,SurfaceHolder.Callback,IVideoPlayer
 {
@@ -174,7 +172,7 @@ public class VideoActivity extends ParentActivity implements
 
 	boolean end = false; // whether to end this activity or not
 
-	public void addCamsToDropdownActionBar()
+	public void addCamerasToDropdownActionBar()
 	{
 
 		new AsyncTask<String, String, String[]>(){
@@ -185,19 +183,17 @@ public class VideoActivity extends ParentActivity implements
 			protected String[] doInBackground(String... params)
 			{
 
-				ArrayList<String> Cams = new ArrayList<String>();
+				ArrayList<String> cameras = new ArrayList<String>();
 
 				for (int i = 0; i < AppData.camesList.size(); i++)
 				{
 					if (!AppData.camesList.get(i).getStatus().equalsIgnoreCase("Offline"))
 					{
 						ActiveCamers.add(AppData.camesList.get(i));
-						Cams.add(AppData.camesList.get(i).getName());
-						if (AppData.camesList.get(i).getCameraID() == startingCameraID) defaultCamIndex = Cams
+						cameras.add(AppData.camesList.get(i).getName());
+						if (AppData.camesList.get(i).getCameraID() == startingCameraID) defaultCamIndex = cameras
 								.size() - 1;
-
 					}
-
 				}
 
 				/*
@@ -253,10 +249,10 @@ public class VideoActivity extends ParentActivity implements
 				 * //
 				 */
 
-				String[] cameras = new String[Cams.size()];
-				Cams.toArray(cameras);
+				String[] cameraArray = new String[cameras.size()];
+				cameras.toArray(cameraArray);
 
-				return cameras;
+				return cameraArray;
 			}
 
 			@Override
@@ -267,10 +263,7 @@ public class VideoActivity extends ParentActivity implements
 					ArrayAdapter<String> adapter = new ArrayAdapter<String>(VideoActivity.this,
 							android.R.layout.simple_spinner_dropdown_item, CamsList);
 					VideoActivity.this.getActionBar().setNavigationMode(
-							ActionBar.NAVIGATION_MODE_LIST); // dropdown list
-																// navigation
-																// for the
-																// action bar
+							ActionBar.NAVIGATION_MODE_LIST); 
 					OnNavigationListener navigationListener = new OnNavigationListener(){
 						@Override
 						public boolean onNavigationItemSelected(int itemPosition, long itemId)
@@ -316,7 +309,7 @@ public class VideoActivity extends ParentActivity implements
 
 	}
 
-	public static boolean StartPlayingVIdeoForCamera(Context context, int camID)
+	public static boolean startPlayingVIdeoForCamera(Context context, int camID)
 	{
 		startingCameraID = camID;
 		Intent i = new Intent(context, VideoActivity.class);
@@ -689,10 +682,9 @@ public class VideoActivity extends ParentActivity implements
 
 			myProgressView = ((ProgressView) iView.findViewById(R.id.ivprogressspinner1));
 
-			addCamsToDropdownActionBar();
+			addCamerasToDropdownActionBar();
 
-			if (!Commons.isOnline(this)) // check whether the network is
-											// available or not?
+			if (!Commons.isOnline(this)) 
 			{
 				try
 				{
@@ -806,14 +798,12 @@ public class VideoActivity extends ParentActivity implements
 					if (!paused && !end) // video is currently playing. Now we
 											// need to pause video
 					{
-
 						VideoActivity.this.getActionBar().show();
 						ivMediaPlayer.setImageResource(android.R.drawable.ic_media_pause);
 
 						ivMediaPlayer.setVisibility(View.VISIBLE);
 
 						startMediaPlayerAnimation();
-
 					}
 
 				}
@@ -1501,8 +1491,6 @@ public class VideoActivity extends ParentActivity implements
 	{
 		try
 		{
-			Log.i("sajjadpp", "onConfigurationChanged called");
-
 			super.onConfigurationChanged(newConfig);
 
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
@@ -1769,26 +1757,12 @@ public class VideoActivity extends ParentActivity implements
 
 			MRLCamba rhs = (MRLCamba) obj;
 			return this.MRL.equalsIgnoreCase(rhs.MRL);
-
 		}
-
 	}
 
 	@Override
 	public void onSlideMenuItemClick(int itemId)
 	{
-
-		VideoActivity.StartPlayingVIdeoForCamera(VideoActivity.this, itemId);
-
-		// for(Camera caml : AppData.camesList)
-		// {
-		// if(caml.getCameraID() == itemId && caml.getCameraID() !=
-		// camera.getCameraID())
-		// {
-		// VideoActivity.StartPlayingVIdeoForCamera(VideoActivity.this,
-		// caml.getCameraID());
-		// return;
-		// }
-		// }
+		VideoActivity.startPlayingVIdeoForCamera(VideoActivity.this, itemId);
 	}
 }

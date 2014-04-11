@@ -11,46 +11,40 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class dbAppUser extends DatabaseMaster
+public class DbAppUser extends DatabaseMaster
 {
+	private static final String TABLE_APP_USER = "appuser";
 
-	// AppUsers table name
+	// Users Table Columns names
+	public static final String KEY_ID = "id";
+	public static final String KEY_EMAIL = "useremail";
+	public static final String KEY_PASSWORD = "userpassword";
+	public static final String KEY_API_KEY = "userapikey";
+	public static final String KEY_IS_ACTIVE = "isactive";
+	public static final String KEY_IS_DEFAULT = "isdefault";
 
-	private static final String TABLE_AppUser = "AppUser";
-
-	// AppUsers Table Columns names
-	public static final String KEY_ID = "_id";
-	public static final String KEY_UserEmail = "UserEmail";
-	public static final String KEY_UserPassword = "UserPassword";
-	public static final String Key_ApiKey = "ApiKey";
-	public static final String KEY_IsActive = "IsActive";
-	public static final String KEY_IsDefault = "IsDefault";
-
-	public dbAppUser(Context context)
+	public DbAppUser(Context context)
 	{
-
 		super(context);
 	}
 
 	// Creating Tables
 	public void onCreateCustom(SQLiteDatabase db)
 	{
-		String CREATE_TABLE_AppUsers = "CREATE TABLE " + TABLE_AppUser + "(" + KEY_ID
-				+ " INTEGER PRIMARY KEY autoincrement" + "," + KEY_UserEmail + " TEXT UNIQUE" + ","
-				+ KEY_UserPassword + " TEXT" + "," + Key_ApiKey + " TEXT" + "," + KEY_IsActive
-				+ " INTEGER" + "," + KEY_IsDefault + " INTEGER"
+		String createUserTableQuery = "CREATE TABLE " + TABLE_APP_USER + "(" + KEY_ID
+				+ " INTEGER PRIMARY KEY autoincrement" + "," + KEY_EMAIL + " TEXT UNIQUE" + ","
+				+ KEY_PASSWORD + " TEXT" + "," + KEY_API_KEY + " TEXT" + "," + KEY_IS_ACTIVE
+				+ " INTEGER" + "," + KEY_IS_DEFAULT + " INTEGER"
 
 				+ ")";
-		db.execSQL(CREATE_TABLE_AppUsers);
+		db.execSQL(createUserTableQuery);
 	}
 
 	// Upgrading database
 	public void onUpgradeCustom(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
-		// Drop older table if existed
-		db.execSQL("DROP TABLE IF EXISTS " + TABLE_AppUser);
 
-		// Create tables again
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_APP_USER);
 		onCreateCustom(db);
 	}
 
@@ -60,21 +54,20 @@ public class dbAppUser extends DatabaseMaster
 	 * @throws Exception
 	 */
 
-	// Adding new AppUser
 	public void addAppUser(AppUser user) throws Exception
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 
-		values.put(KEY_UserEmail, user.getUserEmail());
-		values.put(KEY_UserPassword, Crypto.encrypt(user.getUserPassword()));
-		values.put(Key_ApiKey, user.getApiKey());
-		values.put(KEY_IsActive, user.getIsActiveInteger());
-		values.put(KEY_IsDefault, user.getIsDefaultInteger());
+		values.put(KEY_EMAIL, user.getUserEmail());
+		values.put(KEY_PASSWORD, Crypto.encrypt(user.getUserPassword()));
+		values.put(KEY_API_KEY, user.getApiKey());
+		values.put(KEY_IS_ACTIVE, user.getIsActiveInteger());
+		values.put(KEY_IS_DEFAULT, user.getIsDefaultInteger());
 
 		// Inserting Row
-		db.insert(TABLE_AppUser, null, values);
+		db.insert(TABLE_APP_USER, null, values);
 		db.close(); // Closing database connection
 
 	}
@@ -85,14 +78,13 @@ public class dbAppUser extends DatabaseMaster
 		AppUser user = null;
 		SQLiteDatabase db = this.getReadableDatabase();
 
-		Cursor cursor = db.query(TABLE_AppUser, new String[] { KEY_ID, KEY_UserEmail,
-				KEY_UserPassword, Key_ApiKey, KEY_IsActive, KEY_IsDefault }, KEY_UserEmail + "=?",
+		Cursor cursor = db.query(TABLE_APP_USER, new String[] { KEY_ID, KEY_EMAIL,
+				KEY_PASSWORD, KEY_API_KEY, KEY_IS_ACTIVE, KEY_IS_DEFAULT }, KEY_EMAIL + "=?",
 				new String[] { email }, null, null, null, null);
 		if (cursor != null)
 		{
 			if (cursor.moveToFirst())
 			{
-
 				user = new AppUser(Integer.parseInt(cursor.getString(0)), cursor.getString(1),
 						Crypto.decrypt(cursor.getString(2)), cursor.getString(3),
 						Integer.parseInt(cursor.getString(4)),
@@ -105,14 +97,14 @@ public class dbAppUser extends DatabaseMaster
 		return user;
 	}
 
-	public AppUser getAppUserByID(int _idobj) throws NumberFormatException, Exception
+	public AppUser getAppUserByID(int userId) throws NumberFormatException, Exception
 	{
 		AppUser user = null;
 		SQLiteDatabase db = this.getReadableDatabase();
 
-		Cursor cursor = db.query(TABLE_AppUser, new String[] { KEY_ID, KEY_UserEmail,
-				KEY_UserPassword, Key_ApiKey, KEY_IsActive, KEY_IsDefault }, KEY_ID + "=?",
-				new String[] { _idobj + "" }, null, null, null, null);
+		Cursor cursor = db.query(TABLE_APP_USER, new String[] { KEY_ID, KEY_EMAIL,
+				KEY_PASSWORD, KEY_API_KEY, KEY_IS_ACTIVE, KEY_IS_DEFAULT }, KEY_ID + "=?",
+				new String[] { userId + "" }, null, null, null, null);
 		if (cursor != null)
 		{
 			if (cursor.moveToFirst())
@@ -133,22 +125,15 @@ public class dbAppUser extends DatabaseMaster
 	public int getMaxID()
 	{
 		int latestID = 0;
-		// Select All Query
-		String selectQuery = "SELECT  max(" + KEY_ID + ") FROM " + TABLE_AppUser;// +
-																					// " order by "
-																					// +
-																					// KEY_ID
-																					// +
-																					// " desc";
+
+		String selectQuery = "SELECT  max(" + KEY_ID + ") FROM " + TABLE_APP_USER;
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
 		if (cursor.moveToFirst())
 		{
-
 			latestID = Integer.parseInt(cursor.getString(0));
-
 		}
 
 		cursor.close();
@@ -157,19 +142,18 @@ public class dbAppUser extends DatabaseMaster
 		return latestID;
 	}
 
-	// Getting All AppUsers
 	public List<AppUser> getAllAppUsers(int maxRecords) throws NumberFormatException, Exception
 	{
-		List<AppUser> AppUserList = new ArrayList<AppUser>();
+		List<AppUser> appUserList = new ArrayList<AppUser>();
 		// Select All Query
-		String selectQuery = "SELECT  * FROM " + TABLE_AppUser + " order by " + KEY_UserEmail
+		String selectQuery = "SELECT  * FROM " + TABLE_APP_USER + " order by " + KEY_EMAIL
 				+ " asc";
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
-		// looping through all rows and adding to list
-		int i = 0;
+		// loop through all rows and adding to list
+		int count = 0;
 		if (cursor.moveToFirst())
 		{
 
@@ -180,16 +164,15 @@ public class dbAppUser extends DatabaseMaster
 						cursor.getString(3), Integer.parseInt(cursor.getString(4)),
 						Integer.parseInt(cursor.getString(5)));
 
-				// Adding AppUser to list
-				AppUserList.add(user);
-				i++;
-			} while (cursor.moveToNext() && (maxRecords == 0 || i < maxRecords));
+				appUserList.add(user);
+				count++;
+			} while (cursor.moveToNext() && (maxRecords == 0 || count < maxRecords));
 
 		}
 
 		cursor.close();
 		db.close();
-		return AppUserList;
+		return appUserList;
 	}
 
 	public List<AppUser> getAllActiveAppUsers(int maxRecords) throws NumberFormatException,
@@ -197,15 +180,15 @@ public class dbAppUser extends DatabaseMaster
 	{
 
 		List<AppUser> AppUserList = new ArrayList<AppUser>();
-		// Select All Query
-		String selectQuery = "SELECT  * FROM " + TABLE_AppUser + " where " + KEY_IsActive
+
+		String selectQuery = "SELECT  * FROM " + TABLE_APP_USER + " where " + KEY_IS_ACTIVE
 				+ " = 1 order by " + KEY_ID + " desc";
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
 		// looping through all rows and adding to list
-		int i = 0;
+		int count = 0;
 		if (cursor.moveToFirst())
 		{
 
@@ -216,10 +199,9 @@ public class dbAppUser extends DatabaseMaster
 						cursor.getString(3), Integer.parseInt(cursor.getString(4)),
 						Integer.parseInt(cursor.getString(5)));
 
-				// Adding AppUser to list
 				AppUserList.add(user);
-				i++;
-			} while (cursor.moveToNext() && (maxRecords == 0 || i < maxRecords));
+				count++;
+			} while (cursor.moveToNext() && (maxRecords == 0 || count < maxRecords));
 
 		}
 
@@ -235,15 +217,15 @@ public class dbAppUser extends DatabaseMaster
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(KEY_UserEmail, user.getUserEmail());
-		values.put(KEY_UserPassword, Crypto.encrypt(user.getUserPassword()));
-		values.put(Key_ApiKey, user.getApiKey());
-		values.put(KEY_IsActive, user.getIsActiveInteger());
-		values.put(KEY_IsDefault, user.getIsDefaultInteger());
+		values.put(KEY_EMAIL, user.getUserEmail());
+		values.put(KEY_PASSWORD, Crypto.encrypt(user.getUserPassword()));
+		values.put(KEY_API_KEY, user.getApiKey());
+		values.put(KEY_IS_ACTIVE, user.getIsActiveInteger());
+		values.put(KEY_IS_DEFAULT, user.getIsDefaultInteger());
 
 		// updating row
-		int return_value = db.update(TABLE_AppUser, values, KEY_ID + " = ?",
-				new String[] { String.valueOf(user.getID()) });
+		int return_value = db.update(TABLE_APP_USER, values, KEY_ID + " = ?",
+				new String[] { String.valueOf(user.getId()) });
 		db.close();
 		return return_value;
 	}
@@ -254,9 +236,9 @@ public class dbAppUser extends DatabaseMaster
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(KEY_IsDefault, 0);
+		values.put(KEY_IS_DEFAULT, 0);
 		// updating rows
-		int return_value = db.update(TABLE_AppUser, values, KEY_IsDefault + " = ?",
+		int return_value = db.update(TABLE_APP_USER, values, KEY_IS_DEFAULT + " = ?",
 				new String[] { "1" }); // update teh isdefault with 0 at all
 										// places where isdefault is 1
 		db.close();
@@ -267,14 +249,14 @@ public class dbAppUser extends DatabaseMaster
 	public void deleteAppUser(AppUser user)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
-		db.delete(TABLE_AppUser, KEY_ID + " = ?", new String[] { String.valueOf(user.getID()) });
+		db.delete(TABLE_APP_USER, KEY_ID + " = ?", new String[] { String.valueOf(user.getId()) });
 		db.close();
 	}
 
 	public void deleteAppUserForEmail(String Email)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
-		db.delete(TABLE_AppUser, " upper(" + KEY_UserEmail + ") = upper(?)",
+		db.delete(TABLE_APP_USER, " upper(" + KEY_EMAIL + ") = upper(?)",
 				new String[] { String.valueOf(Email) });
 		db.close();
 	}
@@ -283,7 +265,7 @@ public class dbAppUser extends DatabaseMaster
 	public int getAppUsersCount()
 	{
 
-		String countQuery = "SELECT  * FROM " + TABLE_AppUser;
+		String countQuery = "SELECT  * FROM " + TABLE_APP_USER;
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(countQuery, null);
 
@@ -298,7 +280,7 @@ public class dbAppUser extends DatabaseMaster
 	public int getDefaultUsersCount()
 	{
 
-		String countQuery = "SELECT  * FROM " + TABLE_AppUser + " where " + KEY_IsDefault + "=1";
+		String countQuery = "SELECT  * FROM " + TABLE_APP_USER + " where " + KEY_IS_DEFAULT + "=1";
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(countQuery, null);
 
