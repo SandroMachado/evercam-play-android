@@ -262,7 +262,7 @@ public class GCMIntentService extends GCMBaseIntentService
 		Notification notification = new Notification(icon, message, when);
 		String title = context.getString(R.string.app_name);
 
-		Intent notificationIntent = new Intent(context, mainActivity.class);
+		Intent notificationIntent = new Intent(context, MainActivity.class);
 		if (intent != null) notificationIntent.putExtras(intent.getExtras());
 		notificationIntent.setAction("GCM");
 		// set intent so it does not start a new activity

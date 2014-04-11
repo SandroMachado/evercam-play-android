@@ -1,6 +1,6 @@
 package io.evercam.android.custom;
 
-import io.evercam.android.CamsActivity;
+import io.evercam.android.CamerasActivity;
 import io.evercam.android.dto.*;
 import io.evercam.android.rvideo.RVideoViewActivity;
 import io.evercam.android.utils.CambaApiManager;
@@ -448,7 +448,7 @@ public class CameraLayout extends LinearLayout
 
 					AlertDialog.Builder builder = UIUtils.GetAlertDialogBuilderNoTitle(context);
 					Log.e("sajjad12345", context.toString());
-					final View layout = ((CamsActivity) context).getLayoutInflater().inflate(
+					final View layout = ((CamerasActivity) context).getLayoutInflater().inflate(
 							R.layout.cameralayout_dialog_liverecordingview, null);
 
 					// layout.setPadding(5, 5, 5, 5);

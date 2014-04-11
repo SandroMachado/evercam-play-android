@@ -6,18 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseMaster extends SQLiteOpenHelper
 {
-
-	// All Static variables
-	// Database Version
-
-	/*
-	 * version 1 Tables creation
-	 */
-
-	private static final int DATABASE_VERSION = 17;
-
-	// Database Name
-	private static final String DATABASE_NAME = "CambaData";
+	private static final int DATABASE_VERSION = 1;
+	private static final String DATABASE_NAME = "evercamdata";
 	private Context context = null;
 
 	public DatabaseMaster(Context context)
@@ -26,7 +16,6 @@ public class DatabaseMaster extends SQLiteOpenHelper
 		this.context = context;
 	}
 
-	// Creating Tables
 	@Override
 	public void onCreate(SQLiteDatabase db)
 	{
@@ -35,30 +24,9 @@ public class DatabaseMaster extends SQLiteOpenHelper
 		new dbAppUser(this.context).onCreateCustom(db);
 	}
 
-	// Upgrading database
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
-		if (oldVersion < 14)
-		{
-			new dbNotifcation(context).onUpgradeCustom(db, oldVersion, newVersion); // new
-																					// version
-																					// =
-																					// 14
-		}
-		if (oldVersion < 17)
-		{
-			new dbCamera(context).onUpgradeCustom(db, oldVersion, newVersion); // new
-																				// version
-																				// =
-																				// 17
-		}
-		if (newVersion < 14)
-		{
-			new dbAppUser(context).onUpgradeCustom(db, oldVersion, newVersion); // new
-																				// version
-																				// =
-																				// 14
-		}
+
 	}
 }

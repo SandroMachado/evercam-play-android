@@ -53,11 +53,11 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class CamsActivity extends ParentActivity implements
+public class CamerasActivity extends ParentActivity implements
 		SlideMenuInterface.OnSlideMenuItemClickListener
 {
 
-	private static final String TAG = "CamsActivity"; // TAG is used for
+	private static final String TAG = "CamerasActivity"; // TAG is used for
 														// logging. Filter when
 														// searching from logs
 														// in LogCat
@@ -75,7 +75,7 @@ public class CamsActivity extends ParentActivity implements
 
 	public int slideoutMenuAnimationTime = 255;
 
-	public static CamsActivity _activity = null;
+	public static CamerasActivity _activity = null;
 
 	private boolean isUsersAccountsActivityStarted = false;
 
@@ -102,8 +102,8 @@ public class CamsActivity extends ParentActivity implements
 
 				if (AppData.AppUserEmail == null || AppData.AppUserEmail.length() == 0)
 				{
-					startActivity(new Intent(this, mainActivity.class));
-					CamsActivity.this.finish();
+					startActivity(new Intent(this, MainActivity.class));
+					CamerasActivity.this.finish();
 					return;
 				}
 
@@ -117,7 +117,7 @@ public class CamsActivity extends ParentActivity implements
 						try
 						{
 							// get database dal class
-							dbAppUser dbuser = new dbAppUser(CamsActivity.this);
+							dbAppUser dbuser = new dbAppUser(CamerasActivity.this);
 							AppData.appUsers = dbuser.getAllAppUsers(1000);
 
 							// If it is the first time called when application
@@ -161,9 +161,9 @@ public class CamsActivity extends ParentActivity implements
 						try
 						{
 							ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-									CamsActivity.this,
+									CamerasActivity.this,
 									android.R.layout.simple_spinner_dropdown_item, userAccounts);
-							CamsActivity.this.getActionBar().setNavigationMode(
+							CamerasActivity.this.getActionBar().setNavigationMode(
 									ActionBar.NAVIGATION_MODE_LIST); // dropdown
 																		// list
 																		// navigation
@@ -184,19 +184,19 @@ public class CamsActivity extends ParentActivity implements
 											u.setIsDefault(false);
 
 										// set all db app users as false
-										dbAppUser db = new dbAppUser(CamsActivity.this);
+										dbAppUser db = new dbAppUser(CamerasActivity.this);
 										db.updateAllIsDefaultFalse();
 
 										// set selected user's default to true
 										AppUser user = AppData.appUsers.get(itemPosition);
 										user.setIsDefault(true);
-										Commons.setDefaultUserForApp(CamsActivity.this,
+										Commons.setDefaultUserForApp(CamerasActivity.this,
 												user.getUserEmail(), user.getUserPassword(),
 												user.getApiKey(), true);
 										db.updateAppUser(user);
 
 										// load cameras for default user
-										AppData.camesList = new dbCamera(CamsActivity.this)
+										AppData.camesList = new dbCamera(CamerasActivity.this)
 												.getAllCamerasForEmailID(AppData.AppUserEmail, 500);
 										RemoveAllCameraViews();
 										AddAllCameraViews(true);
@@ -287,7 +287,7 @@ public class CamsActivity extends ParentActivity implements
 			catch (Exception e)
 			{
 			}
-			if (notificationID > 0) CamsActivity.this.onSlideMenuItemClick(notificationID);
+			if (notificationID > 0) CamerasActivity.this.onSlideMenuItemClick(notificationID);
 			Log.i(TAG, "notificationID [" + notificationID + "]");
 
 		}
@@ -295,7 +295,7 @@ public class CamsActivity extends ParentActivity implements
 		{
 			if (enableLogs) Log.e(TAG, e.toString(), e);
 			UIUtils.GetAlertDialog(
-					CamsActivity.this,
+					CamerasActivity.this,
 					"Error Occured",
 					Constants.ErrorMessageGeneric + e.toString() + "::"
 							+ Log.getStackTraceString(e)).show();
@@ -386,13 +386,13 @@ public class CamsActivity extends ParentActivity implements
 
 				// delete saved username and apssword
 				SharedPreferences sharedPrefs = PreferenceManager
-						.getDefaultSharedPreferences(CamsActivity.this);
+						.getDefaultSharedPreferences(CamerasActivity.this);
 				SharedPreferences.Editor editor = sharedPrefs.edit();
 				editor.putString("AppUserEmail", null);
 				editor.putString("AppUserPassword", null);
 				editor.commit();
 				// start login activity
-				startActivity(new Intent(this, mainActivity.class));
+				startActivity(new Intent(this, MainActivity.class));
 
 				new LogoutActivitiesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 
@@ -404,7 +404,7 @@ public class CamsActivity extends ParentActivity implements
 					@Override
 					public void run()
 					{
-						startActivity(new Intent(CamsActivity.this, AboutDialog.class));
+						startActivity(new Intent(CamerasActivity.this, AboutDialog.class));
 					}
 				}, slideoutMenuAnimationTime);
 
@@ -416,7 +416,7 @@ public class CamsActivity extends ParentActivity implements
 					@Override
 					public void run()
 					{
-						startActivity(new Intent(CamsActivity.this, CamsPrefsActivity.class));
+						startActivity(new Intent(CamerasActivity.this, CamsPrefsActivity.class));
 					}
 				}, slideoutMenuAnimationTime);
 
@@ -428,7 +428,7 @@ public class CamsActivity extends ParentActivity implements
 					@Override
 					public void run()
 					{
-						startActivity(new Intent(CamsActivity.this, ManageAccountsActivity.class));
+						startActivity(new Intent(CamerasActivity.this, ManageAccountsActivity.class));
 						isUsersAccountsActivityStarted = true;
 					}
 				}, slideoutMenuAnimationTime);
@@ -443,7 +443,7 @@ public class CamsActivity extends ParentActivity implements
 					@Override
 					public void run()
 					{
-						Intent i = new Intent(new Intent(CamsActivity.this,
+						Intent i = new Intent(new Intent(CamerasActivity.this,
 								NotificationActivity.class));
 						startActivity(i);
 					}
@@ -473,17 +473,17 @@ public class CamsActivity extends ParentActivity implements
 
 				// delete saved username and apssword
 				SharedPreferences sharedPrefs = PreferenceManager
-						.getDefaultSharedPreferences(CamsActivity.this);
+						.getDefaultSharedPreferences(CamerasActivity.this);
 				SharedPreferences.Editor editor = sharedPrefs.edit();
 				editor.putString("AppUserEmail", null);
 				editor.putString("AppUserPassword", null);
 				editor.commit();
 
 				// Un register from gcm server
-				GCMRegistrar.setRegisteredOnServer(CamsActivity.this, false);
+				GCMRegistrar.setRegisteredOnServer(CamerasActivity.this, false);
 
 				// delete all app users
-				dbAppUser dbu = new dbAppUser(CamsActivity.this);
+				dbAppUser dbu = new dbAppUser(CamerasActivity.this);
 				List<AppUser> list = dbu.getAllAppUsers(10000);
 				if (list != null && list.size() > 0)
 				{
@@ -498,7 +498,7 @@ public class CamsActivity extends ParentActivity implements
 				{
 					// get information to be posted for unregister on camba
 					// server request
-					String regId = GCMRegistrar.getRegistrationId(CamsActivity.this); // registration
+					String regId = GCMRegistrar.getRegistrationId(CamerasActivity.this); // registration
 																						// id
 																						// for
 																						// this
@@ -560,7 +560,7 @@ public class CamsActivity extends ParentActivity implements
 		@Override
 		protected void onPostExecute(String result)
 		{
-			CamsActivity.this.finish();
+			CamerasActivity.this.finish();
 
 		}
 	}
@@ -573,7 +573,7 @@ public class CamsActivity extends ParentActivity implements
 			String message = "";
 			try
 			{
-				dbNotifcation helper = new dbNotifcation(CamsActivity.this);
+				dbNotifcation helper = new dbNotifcation(CamerasActivity.this);
 
 				CameraNotification notif = helper.getCameraNotification(Integer.parseInt(id[0]));
 				notif.setIsRead(true);
@@ -625,7 +625,7 @@ public class CamsActivity extends ParentActivity implements
 	// This will show the progress dialog
 	void ShowLoadingDialog(String message)
 	{
-		if (pdLoading == null) pdLoading = new ProgressDialog(CamsActivity.this);
+		if (pdLoading == null) pdLoading = new ProgressDialog(CamerasActivity.this);
 
 		if (!pdLoading.isShowing())
 		{
@@ -683,7 +683,7 @@ public class CamsActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.GetAlertDialog(CamsActivity.this, "Error Occured",
+			UIUtils.GetAlertDialog(CamerasActivity.this, "Error Occured",
 					Constants.ErrorMessageGeneric).show();
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 
@@ -711,7 +711,7 @@ public class CamsActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.GetAlertDialog(CamsActivity.this, "Error Occured",
+			UIUtils.GetAlertDialog(CamerasActivity.this, "Error Occured",
 					Constants.ErrorMessageGeneric).show();
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 
@@ -777,7 +777,7 @@ public class CamsActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			if (enableLogs) Log.e(TAG, e.toString(), e);
-			UIUtils.GetAlertDialog(CamsActivity.this, "Error Occured",
+			UIUtils.GetAlertDialog(CamerasActivity.this, "Error Occured",
 					Constants.ErrorMessageGeneric).show();
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 
@@ -813,7 +813,7 @@ public class CamsActivity extends ParentActivity implements
 				boolean updateDB = false;
 
 				SharedPreferences sharedPrefs = PreferenceManager
-						.getDefaultSharedPreferences(CamsActivity.this);
+						.getDefaultSharedPreferences(CamerasActivity.this);
 				AppData.AppUserEmail = sharedPrefs.getString("AppUserEmail", null);
 				AppData.AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
 
@@ -846,7 +846,7 @@ public class CamsActivity extends ParentActivity implements
 					this.reload = true;
 					AppData.camesList = cambaList;
 
-					dbCamera dbcam = new dbCamera(CamsActivity.this);
+					dbCamera dbcam = new dbCamera(CamerasActivity.this);
 					dbcam.deleteCameraForEmail(AppData.AppUserEmail); // delete
 																		// all
 																		// with
@@ -889,20 +889,20 @@ public class CamsActivity extends ParentActivity implements
 			{
 				if (this.reload || TotalCamerasInGrid != AppData.camesList.size())
 				{
-					CamsActivity.this.RemoveAllCameraViews();
-					CamsActivity.this.AddAllCameraViews(true);
+					CamerasActivity.this.RemoveAllCameraViews();
+					CamerasActivity.this.AddAllCameraViews(true);
 
 				}
 			}
 			else
 			{
-				if (!CamsActivity.this.isFinishing()) UIUtils.GetAlertDialog(CamsActivity.this,
+				if (!CamerasActivity.this.isFinishing()) UIUtils.GetAlertDialog(CamerasActivity.this,
 						"Error Occured", result, new DialogInterface.OnClickListener(){
 							@Override
 							public void onClick(DialogInterface dialog, int which)
 							{
 								dialog.dismiss();
-								// CamsActivity.this.finish(); // cannot finish
+								// CamerasActivity.this.finish(); // cannot finish
 								// because if we finish, user will not be able
 								// to login back again.
 								if ((result + "")
@@ -910,17 +910,17 @@ public class CamsActivity extends ParentActivity implements
 								{
 									// delete saved username and apssword
 									SharedPreferences sharedPrefs = PreferenceManager
-											.getDefaultSharedPreferences(CamsActivity.this);
+											.getDefaultSharedPreferences(CamerasActivity.this);
 									SharedPreferences.Editor editor = sharedPrefs.edit();
 									editor.putString("AppUserEmail", null);
 									editor.putString("AppUserPassword", null);
 									editor.commit();
 
-									startActivity(new Intent(CamsActivity.this, mainActivity.class));
+									startActivity(new Intent(CamerasActivity.this, MainActivity.class));
 									new LogoutActivitiesTask().executeOnExecutor(
 											AsyncTask.THREAD_POOL_EXECUTOR, "");
 								}
-								if (CamsActivity.this.refresh != null) CamsActivity.this.refresh
+								if (CamerasActivity.this.refresh != null) CamerasActivity.this.refresh
 										.setActionView(null);
 							}
 						}).show();
@@ -939,11 +939,11 @@ public class CamsActivity extends ParentActivity implements
 			String TAG = "RegisterTask";
 			try
 			{
-				GCMRegistrar.checkDevice(CamsActivity.this);
+				GCMRegistrar.checkDevice(CamerasActivity.this);
 				Log.i(TAG, "Device Checked");
-				GCMRegistrar.checkManifest(CamsActivity.this);
+				GCMRegistrar.checkManifest(CamerasActivity.this);
 				Log.i(TAG, "Manifest Checked");
-				String regId = GCMRegistrar.getRegistrationId(CamsActivity.this); // registration
+				String regId = GCMRegistrar.getRegistrationId(CamerasActivity.this); // registration
 																					// id
 																					// for
 																					// this
@@ -963,7 +963,7 @@ public class CamsActivity extends ParentActivity implements
 				{
 
 					SharedPreferences sharedPrefs = PreferenceManager
-							.getDefaultSharedPreferences(CamsActivity.this);
+							.getDefaultSharedPreferences(CamerasActivity.this);
 					AppUserEmail = sharedPrefs.getString("AppUserEmail", null);
 					AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
 					Operation = "1";
@@ -988,11 +988,11 @@ public class CamsActivity extends ParentActivity implements
 				if (regId.equals(""))
 				{ // New Registration on GCM Server
 					// Automatically registers application on startup.
-					GCMRegistrar.register(CamsActivity.this, Constants.GCM_SENDER_ID);
+					GCMRegistrar.register(CamerasActivity.this, Constants.GCM_SENDER_ID);
 					return "Device registered successfully on GCM Server. It will be registered on camba server shortly.";
 
 				}
-				else if (!GCMRegistrar.isRegisteredOnServer(CamsActivity.this)) // Registered
+				else if (!GCMRegistrar.isRegisteredOnServer(CamerasActivity.this)) // Registered
 																				// on
 																				// GCM
 																				// Server
@@ -1026,7 +1026,7 @@ public class CamsActivity extends ParentActivity implements
 					CambaApiManager.registerDeviceForUsername(AppUserEmail, AppUserPassword, regId,
 							Operation, BlueToothName, Manufacturer, Model, SerialNo, ImeiNo,
 							Fingureprint, MacAddress, AppVersion);
-					GCMRegistrar.setRegisteredOnServer(CamsActivity.this, true);
+					GCMRegistrar.setRegisteredOnServer(CamerasActivity.this, true);
 
 					// return
 					// "Device is already registered on GCM Server with ID ["+regId+"] but was unable to register on camba server.";

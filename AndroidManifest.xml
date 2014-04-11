@@ -88,7 +88,7 @@
         
         
         <activity
-            android:name=".mainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/ThemeActivitySplash" >
 			   
@@ -132,7 +132,7 @@
         <activity android:name=".ManageAccountsActivity" >
         </activity>
         <activity
-            android:name=".CamsActivity"
+            android:name=".CamerasActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTop" >

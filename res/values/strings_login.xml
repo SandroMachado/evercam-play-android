@@ -1,7 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-  <string name="username">Username</string>  
-  <string name="password">Password</string>  
-    
+
+    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_sign_up">Sign Up</string>
+
+    <!-- Login Strings -->
+    <string name="prompt_email">Evercam Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in_with_evercam"><b>Sign in</b> with Evercam</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_forgot_password">Recover lost password</string>
+    <string name="login_progress_signing_in">Signing in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_username">Invalid username</string>
+    <string name="error_invalid_password">Invalid password</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_username_required">Username required</string>
+    <string name="error_password_required">Password required</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="create_account">Create Account</string>
+
+    <!-- Sign Up Strings -->
+    <string name="login_progress_signing_up">Signing up</string>
+    <string name="forename">Forename:</string>
+    <string name="firstName">First Name</string>
+    <string name="lastname:">Lastname:</string>
+    <string name="lastName">Last Name</string>
+    <string name="username:">Username:</string>
+    <string name="username">Username</string>
+    <string name="email:">Email:</string>
+    <string name="email">Email</string>
+    <string name="password:">Password:</string>
+    <string name="password">Password</string>
+    <string name="re_password">Confirm Password</string>
+    <string name="country:">Country:</string>
+    <string name="spinnerFistItem">Please select</string>
+
+    <!-- Sign Up Message -->
+    <string name="countryNotSelected">Please select a country!</string>
+    <string name="invalidEmail">Invalid Email address!</string>
+    <string name="passwordNotMatch">Two different password!</string>
+    <string name="please_use_username">Please sign in with your Evercam USERNAME, NOT Email address.</string>
+    <string name="confirmSignUp">Congratulations, now you can sign in with your Evercam account.</string>
+
 </resources>

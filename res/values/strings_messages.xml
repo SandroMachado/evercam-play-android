@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="msg_network_not_connected">Network not connected</string>
+    <string name="msg_try_network_again">Please connect to internet and try again</string>
+
+</resources>

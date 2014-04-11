@@ -10,26 +10,22 @@ import io.evercam.android.R;
 import com.google.analytics.tracking.android.EasyTracker;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
-// Main starting activity. Checks whether user should login first or load the cameras straight away
-public class mainActivity extends Activity
+/*
+ * Main starting activity. Checks whether user should login first or load the cameras straight away
+ * */
+public class MainActivity extends Activity
 {
-
-	static String debugValues = ""; // values of variables while debugging saved
-									// into it
-	static final String TAG = "mainActivity"; // Log tag being used to filter in
-												// LogCat
-	static boolean enableLogs = true;
-
-	TestingTask testing = null;
+	private static final String TAG = "MainActivity";
+	private static boolean enableLogs = true;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -38,60 +34,33 @@ public class mainActivity extends Activity
 		{
 			super.onCreate(savedInstanceState);
 
-			if (Constants.isAppTrackingEnabled) if (Constants.isAppTrackingEnabled) BugSenseHandler
-					.initAndStartSession(this, Constants.bugsense_ApiKey);
-
-			this.setContentView(R.layout.mainactivitylayout);
-			Log.i(TAG, "onCreate of MainActivity ");
-
-			// **********//Debugging comments
-			// testing = new TestingTask();
-			// testing.execute("");
-			// Boolean msg = true;
-			// if(msg == true)
-			// {
-			// Log.i(TAG,
-			// "Exiting from main application without startig login activity");
-			// return;
-			// }
-			// ###########END Debugging
-
-			int vcode = 0;
-			boolean isReleaseNotesShown = false;
-			try
+			if (Constants.isAppTrackingEnabled)
 			{
-				PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-				vcode = pInfo.versionCode;
-				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-				isReleaseNotesShown = sharedPrefs.getBoolean(
-						this.getString(R.string.is_release_notes_shown) + vcode, false);
-
-			}
-			catch (Exception e)
-			{
+				BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 			}
 
-			if (vcode > 0 && isReleaseNotesShown)
+			setContentView(R.layout.mainactivitylayout);
+			
+			if (isReleaseNotePageShowed())
 			{
-				startActivityWork();
+				startApplication();
 			}
 			else
 			{
-				Intent act = new Intent(mainActivity.this, ReleaseNotesActivity.class);
-				startActivity(act);
+				Intent notesIntent = new Intent(MainActivity.this, ReleaseNotesActivity.class);
+				startActivity(notesIntent);
 				this.finish();
 			}
 
 		}
 		catch (Exception ex)
 		{
-			UIUtils.GetAlertDialog(mainActivity.this, "Error Occured", ex.toString()).show();
+			UIUtils.GetAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
 			if (enableLogs) Log.i(TAG, Log.getStackTraceString(ex));
 		}
-
 	}
 
-	private void startActivityWork()
+	private void startApplication()
 	{
 		try
 		{
@@ -99,14 +68,14 @@ public class mainActivity extends Activity
 			{
 				try
 				{
-					UIUtils.GetAlertDialog(mainActivity.this, "Network not connected",
-							"Please connect to internet and try again",
+					UIUtils.GetAlertDialog(MainActivity.this, getString(R.string.msg_network_not_connected),
+							getString(R.string.msg_try_network_again),
 							new DialogInterface.OnClickListener(){
 								@Override
 								public void onClick(DialogInterface dialog, int which)
 								{
 									dialog.dismiss();
-									mainActivity.this.finish();
+									MainActivity.this.finish();
 								}
 							}).show();
 					return;
@@ -116,33 +85,37 @@ public class mainActivity extends Activity
 					if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(ex);
 				}
 			}
+			else
+			{
 
 			// get the username and password saved in application and pass to
 			// CambaApiManager so that they can be used at the time of login
 			// authentication
-			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+			
 			AppData.AppUserEmail = sharedPrefs.getString("AppUserEmail", null);
 			AppData.AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
-
 			// if username and password not found, pass the same to login
 			// activity
-			if (AppData.AppUserEmail == null || AppData.AppUserEmail == ""
-					|| AppData.AppUserPassword == null || AppData.AppUserPassword == "")
+			if (AppData.AppUserEmail == null || AppData.AppUserEmail.equals("")
+					|| AppData.AppUserPassword == null || AppData.AppUserPassword.equals(""))
 			{
-				Intent login = new Intent(mainActivity.this, LoginActivity.class);
+				Log.v("evercamapp", "fields are empty");
+				Intent login = new Intent(MainActivity.this, LoginActivity.class);
 				startActivityForResult(login, LoginActivity.loginVerifyRequestCode);
 			}
 			else
 			// username password found. pass to cams activity and verify if the
 			// username password is valid and get the cameras data
 			{
-				startCamsActivity();
+				Log.v("evercamapp", "start camera activity");
+				startCamerasActivity();
 			}
-
+			}
 		}
 		catch (Exception ex)
 		{
-			UIUtils.GetAlertDialog(mainActivity.this, "Error Occured", ex.toString()).show();
+			UIUtils.GetAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
 			if (enableLogs) Log.i(TAG, Log.getStackTraceString(ex));
 		}
 
@@ -159,22 +132,22 @@ public class mainActivity extends Activity
 			if (requestCode == LoginActivity.loginVerifyRequestCode
 					&& resultCode == LoginActivity.loginResultSuccessCode)
 			{
-				startCamsActivity();
+				startCamerasActivity();
 			}
 			else
 			{
-				mainActivity.this.finish();
+				MainActivity.this.finish();
 			}
 		}
 		catch (Exception ex)
 		{
-			UIUtils.GetAlertDialog(mainActivity.this, "Error Occured", ex.toString()).show();
+			UIUtils.GetAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(ex);
 		}
 	}
 
 	// start the cameras activity
-	private void startCamsActivity()
+	private void startCamerasActivity()
 	{
 		int notificationID = 0;
 		try
@@ -193,11 +166,11 @@ public class mainActivity extends Activity
 		{
 		}
 
-		if (CamsActivity._activity != null)
+		if (CamerasActivity._activity != null)
 		{
 			try
 			{
-				CamsActivity._activity.finish();
+				CamerasActivity._activity.finish();
 			}
 			catch (Exception e)
 			{
@@ -205,14 +178,11 @@ public class mainActivity extends Activity
 			}
 		}
 
-		Intent i = new Intent(this, CamsActivity.class);
+		Intent i = new Intent(this, CamerasActivity.class);
 		i.putExtra(Constants.GCMNotificationIDString, notificationID);
 		this.startActivity(i);
 
-		// this.startActivity(new
-		// Intent(this,io.evercam.android.rtspvideo.RTSPVideoViewActivity.class));
-
-		mainActivity.this.finish();
+		MainActivity.this.finish();
 
 	}
 
@@ -239,38 +209,23 @@ public class mainActivity extends Activity
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
 		}
 	}
-
-	// ********************** TESTING *******************************
-	// Check whether connected to Internet or not
-
-	// Task used for testing only. Only at the time of debugging
-	private class TestingTask extends AsyncTask<String, String, String>
+	
+	private boolean isReleaseNotePageShowed()
 	{
-		@Override
-		protected String doInBackground(String... arg0)
+		int versionCode = 0;
+		boolean isReleaseNotesShown = false;
+		try
 		{
-			try
-			{
-				// TODO: put the code that you want to test here
-
-				return null;
-
-			}
-
-			catch (Exception ex)
-			{
-				// UIUtils.GetAlertDialog(mainActivity.this,
-				// "Error Occured In Task", ex.toString() ).show();
-				Log.e(TAG, ex.getMessage() + "::" + Log.getStackTraceString(ex) + "_::");
-			}
-			return null;
+			PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			versionCode = packageInfo.versionCode;
+			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+			isReleaseNotesShown = sharedPrefs.getBoolean(
+					this.getString(R.string.is_release_notes_shown) + versionCode, false);
 		}
-
-		@Override
-		public void onPostExecute(String status)
+		catch (NameNotFoundException e)
 		{
-
+			Log.e("evercamapp", e.getMessage());
 		}
+		return ((isReleaseNotesShown && versionCode!=0 )?true:false);
 	}
-	// ###################### TESTING ###############################
 }

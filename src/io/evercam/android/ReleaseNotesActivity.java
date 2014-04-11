@@ -82,8 +82,8 @@ public class ReleaseNotesActivity extends ParentActivity
 					+ vcode, true);
 			editor.commit();
 
-			Intent act = new Intent(ReleaseNotesActivity.this, mainActivity.class);
-			startActivity(act);
+			Intent intent = new Intent(ReleaseNotesActivity.this, MainActivity.class);
+			startActivity(intent);
 
 			ReleaseNotesActivity.this.finish();
 		}
