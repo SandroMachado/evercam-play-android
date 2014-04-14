@@ -94,14 +94,15 @@ public class MainActivity extends Activity
 				// to
 				// CambaApiManager so that they can be used at the time of login
 				// authentication
-				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+			//	SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-				AppData.AppUserEmail = sharedPrefs.getString("AppUserEmail", null);
-				AppData.AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
+//				AppData.AppUserEmail = sharedPrefs.getString("AppUserEmail", null);
+//				AppData.AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
 				// if username and password not found, pass the same to login
 				// activity
-				if (AppData.AppUserEmail == null || AppData.AppUserEmail.equals("")
-						|| AppData.AppUserPassword == null || AppData.AppUserPassword.equals(""))
+//				if (AppData.AppUserEmail == null || AppData.AppUserEmail.equals("")
+//						|| AppData.AppUserPassword == null || AppData.AppUserPassword.equals(""))
+				if(AppData.defaultUser == null)
 				{
 					Intent login = new Intent(MainActivity.this, LoginActivity.class);
 					startActivityForResult(login, LoginActivity.loginVerifyRequestCode);

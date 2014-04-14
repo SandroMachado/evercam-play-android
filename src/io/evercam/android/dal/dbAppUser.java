@@ -57,7 +57,7 @@ public class DbAppUser extends DatabaseMaster
 	 * @throws Exception
 	 */
 
-	public void addAppUser(AppUser user) throws Exception
+	public void addAppUser(AppUser user)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 
@@ -107,6 +107,41 @@ public class DbAppUser extends DatabaseMaster
 				user = new AppUser(Integer.parseInt(cursor.getString(0)), cursor.getString(1),cursor.getString(2),
 						Crypto.decrypt(cursor.getString(3)), cursor.getString(4),cursor.getString(5),cursor.getString(6),
 						Integer.parseInt(cursor.getString(7)));
+			}
+			cursor.close();
+		}
+		db.close();
+
+		return user;
+	}
+	
+	public AppUser getAppUserByUsername(String username)
+	{
+		AppUser user = null;
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(TABLE_APP_USER, new String[] { KEY_ID, KEY_EMAIL,KEY_USERNAME,
+				KEY_PASSWORD, KEY_API_KEY, KEY_API_ID, KEY_COUNTRY, KEY_IS_DEFAULT }, KEY_USERNAME + "=?",
+				new String[] { username}, null, null, null, null);
+		if (cursor != null)
+		{
+			if (cursor.moveToFirst())
+			{
+				try
+				{
+					user = new AppUser(Integer.parseInt(cursor.getString(0)), cursor.getString(1),cursor.getString(2),
+							Crypto.decrypt(cursor.getString(3)), cursor.getString(4),cursor.getString(5),cursor.getString(6),
+							Integer.parseInt(cursor.getString(7)));
+				}
+				catch (NumberFormatException e)
+				{
+					Log.e("evercamapp", e.getMessage());
+				}
+				catch (Exception e)
+				{
+					Log.e("evercamapp", "DepryptUsername:" + e.getMessage());
+					e.printStackTrace();
+				}
 			}
 			cursor.close();
 		}
@@ -215,7 +250,7 @@ public class DbAppUser extends DatabaseMaster
 	}
 
 	// Updating single AppUser
-	public int updateAllIsDefaultFalse() throws Exception
+	public int updateAllIsDefaultFalse()
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 
@@ -236,11 +271,19 @@ public class DbAppUser extends DatabaseMaster
 		db.close();
 	}
 
-	public void deleteAppUserForEmail(String Email)
+	public void deleteAppUserByEmail(String email)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.delete(TABLE_APP_USER, " upper(" + KEY_EMAIL + ") = upper(?)",
-				new String[] { String.valueOf(Email) });
+				new String[] { String.valueOf(email) });
+		db.close();
+	}
+	
+	public void deleteAppUserByUsername(String username)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.delete(TABLE_APP_USER, " upper(" + KEY_USERNAME + ") = upper(?)",
+				new String[] { String.valueOf(username) });
 		db.close();
 	}
 

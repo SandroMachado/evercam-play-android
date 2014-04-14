@@ -7,7 +7,6 @@ import io.evercam.android.exceptions.ConnectivityException;
 import io.evercam.android.exceptions.CredentialsException;
 import io.evercam.android.utils.AppData;
 import io.evercam.android.utils.CLog;
-import io.evercam.android.utils.CambaApiManager;
 import io.evercam.android.utils.Commons;
 import io.evercam.android.utils.Constants;
 import io.evercam.android.utils.UIUtils;
@@ -183,22 +182,22 @@ public class ManageAccountsActivity extends ParentActivity
 						try
 						{
 							DbAppUser users = new DbAppUser(ManageAccountsActivity.this);
-							users.deleteAppUserForEmail(user.getEmail());
+							users.deleteAppUserByEmail(user.getEmail());
 							if (users.getDefaultUsersCount() == 0 && users.getAppUsersCount() > 0)
 							{
 								int maxid = users.getMaxID();
 								AppUser user = users.getAppUserByID(maxid);
 								user.setIsDefault(true);
 								users.updateAppUser(user);
-
-								Commons.setDefaultUserForApp(ManageAccountsActivity.this,
-										user.getEmail(), user.getPassword(),
-										user.getApiKey(), true);
+//
+//								Commons.setDefaultUserForApp(ManageAccountsActivity.this,
+//										user.getEmail(), user.getPassword(),
+//										user.getApiKey(), true);
 							}
 							else if (users.getAppUsersCount() == 0)
 							{
-								Commons.setDefaultUserForApp(ManageAccountsActivity.this, null,
-										null, null, true);
+//								Commons.setDefaultUserForApp(ManageAccountsActivity.this, null,
+//										null, null, true);
 							}
 							new ShowAllAccounts().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
 									"");
@@ -331,34 +330,33 @@ public class ManageAccountsActivity extends ParentActivity
 		protected String doInBackground(String... values)
 		{
 
-			try
-			{
-				key = CambaApiManager.getCambaKey(Email, Password);
-				// key = "sajjad";
-			}
-			catch (CredentialsException ce)
-			{
-				Log.e(TAG,
-						"Login Error: Server returned:" + ce.toString() + "::" + ce.getServerHtml(),
-						ce);
-				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(ce);
-				return ce.getMessage();
-
-			}
-			catch (ConnectivityException ce)
-			{
-				Log.e(TAG,
-						"Login Error: Server returned:" + ce.toString() + "::" + ce.getServerHtml(),
-						ce);
-				CLog.email(ManageAccountsActivity.this, ce.getMessage(), ce);
-				return ce.getMessage();
-			}
-			catch (Exception e)
-			{
-				Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e), e);
-				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-				return Constants.ErrorMessageGeneric;
-			}
+//			try
+//			{
+//				key = CambaApiManager.getCambaKey(Email, Password);
+//			}
+//			catch (CredentialsException ce)
+//			{
+//				Log.e(TAG,
+//						"Login Error: Server returned:" + ce.toString() + "::" + ce.getServerHtml(),
+//						ce);
+//				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(ce);
+//				return ce.getMessage();
+//
+//			}
+//			catch (ConnectivityException ce)
+//			{
+//				Log.e(TAG,
+//						"Login Error: Server returned:" + ce.toString() + "::" + ce.getServerHtml(),
+//						ce);
+//				CLog.email(ManageAccountsActivity.this, ce.getMessage(), ce);
+//				return ce.getMessage();
+//			}
+//			catch (Exception e)
+//			{
+//				Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e), e);
+//				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+//				return Constants.ErrorMessageGeneric;
+//			}
 			return null;
 
 		}
@@ -391,7 +389,7 @@ public class ManageAccountsActivity extends ParentActivity
 							int defaultUsersCount = dbuser.getDefaultUsersCount();
 							if (oldUser != null)
 							{
-								dbuser.deleteAppUserForEmail(Email);
+								dbuser.deleteAppUserByEmail(Email);
 								if (oldUser.getIsDefault() || defaultUsersCount == 0) isDefault = true;
 							}
 							else if (defaultUsersCount == 0)
@@ -408,9 +406,9 @@ public class ManageAccountsActivity extends ParentActivity
 							if (isDefault)
 							{
 								dbuser.updateAllIsDefaultFalse();
-								Commons.setDefaultUserForApp(ManageAccountsActivity.this,
-										newUser.getEmail(), newUser.getPassword(),
-										newUser.getApiKey(), true);
+//								Commons.setDefaultUserForApp(ManageAccountsActivity.this,
+//										newUser.getEmail(), newUser.getPassword(),
+//										newUser.getApiKey(), true);
 							}
 							dbuser.addAppUser(newUser);
 						}
@@ -519,9 +517,9 @@ public class ManageAccountsActivity extends ParentActivity
 						}
 
 					}
-					Commons.setDefaultUserForApp(ManageAccountsActivity.this,
-							defaultUser.getEmail(), defaultUser.getPassword(),
-							defaultUser.getApiKey(), false);
+//					Commons.setDefaultUserForApp(ManageAccountsActivity.this,
+//							defaultUser.getEmail(), defaultUser.getPassword(),
+//							defaultUser.getApiKey(), false);
 
 					AppData.appUsers = dbuser.getAllActiveAppUsers(1000);
 

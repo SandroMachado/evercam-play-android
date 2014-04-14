@@ -8,9 +8,7 @@ import io.evercam.android.dal.DbAppUser;
 import io.evercam.android.dto.AppUser;
 import io.evercam.android.dto.Camera;
 import io.evercam.android.utils.AppData;
-import io.evercam.android.utils.CambaApiManager;
 import io.evercam.android.utils.Constants;
-import io.evercam.android.utils.PrefsManager;
 import io.evercam.android.utils.PropertyReader;
 
 import java.util.ArrayList;
@@ -146,7 +144,8 @@ public class LoginActivity extends ParentActivity
 
 	public class LoginTask extends AsyncTask<Void, Void, Boolean>
 	{
-		private String errorMessage = "";
+		private String errorMessage = "LoginTaskMessage";
+		private AppUser newUser = null;
 
 		@Override
 		protected Boolean doInBackground(Void... params)
@@ -156,9 +155,16 @@ public class LoginActivity extends ParentActivity
 				ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(username, password);
 				String userApiKey = userKeyPair.getApiKey();
 				String userApiId = userKeyPair.getApiId();
-				PrefsManager.saveEvercamUserKeyPair(sharedPrefs, userApiKey, userApiId);
 				API.setUserKeyPair(userApiKey, userApiId);
 				User evercamUser = new User(username);
+				newUser = new AppUser();
+				newUser.setUsername(username);
+				newUser.setPassword(password);
+				newUser.setIsDefault(true);
+				newUser.setCountry(evercamUser.getCountry());
+				newUser.setEmail(evercamUser.getEmail());
+				newUser.setApiKey(userApiKey);
+				newUser.setApiId(userApiId);
 				return true;
 			}
 			catch (EvercamException e)
@@ -176,46 +182,34 @@ public class LoginActivity extends ParentActivity
 
 			if (success)
 			{
-				try
-				{
-					AppData.AppUserEmail = "liuting.du@mhlabs.net";
-					AppData.AppUserPassword = "kangtaooo";
-					String cambaAPiKey = CambaApiManager.getCambaKey(AppData.AppUserEmail,
-							AppData.AppUserPassword);
-					AppData.cambaApiKey = cambaAPiKey;
-					AppData.camesList = new ArrayList<Camera>(); // clear all
-																	// cameras
-					Log.v("evercamapp", "app data done");
-					DbAppUser dbuser = new DbAppUser(LoginActivity.this);
-					// delete the old user if already exisits
-					if (dbuser.getAppUser("liuting.du@mhlabs.net") != null)
-					{
-						dbuser.deleteAppUserForEmail("liuting.du@mhlabs.net");
-					}
-					dbuser.updateAllIsDefaultFalse(); // set all users as non
-														// default
+				DbAppUser dbUser = new DbAppUser(LoginActivity.this);
 
-					// adding new logged in users
-					AppUser newUser = new AppUser();
-					newUser.setEmail("liuting.du@mhlabs.net");
-					newUser.setPassword("kangtaooo");
-					newUser.setApiKey(cambaAPiKey);
-					newUser.setIsDefault(true);
-					dbuser.addAppUser(newUser);
-					SharedPreferences.Editor editor = sharedPrefs.edit();
-					editor.putString("AppUserEmail", AppData.AppUserEmail);
-					editor.putString("AppUserPassword", AppData.AppUserPassword);
-					editor.commit();
-				}
-				catch (Exception e)
+				if (dbUser.getAppUserByUsername(newUser.getUsername()) != null)
 				{
-					Log.v("evercamapp", "Save user data while signing in:");
-					if (Constants.isAppTrackingEnabled) 
-					{
-						BugSenseHandler.sendException(e);
-					}
+					dbUser.deleteAppUserByUsername(newUser.getUsername());
 				}
+				dbUser.updateAllIsDefaultFalse();
+
+				dbUser.addAppUser(newUser);
+				AppData.defaultUser = newUser;
 				finishLoginActivity();
+
+				// AppData.camesList = new ArrayList<Camera>(); // clear all
+				// // cameras
+				// SharedPreferences.Editor editor = sharedPrefs.edit();
+				// editor.putString("AppUserEmail", AppData.AppUserEmail);
+				// editor.putString("AppUserPassword", AppData.AppUserPassword);
+				// editor.commit();
+				// }
+				// catch (Exception e)
+				// {
+				// Log.v("evercamapp", "Save user data while signing in:");
+				// if (Constants.isAppTrackingEnabled)
+				// {
+				// BugSenseHandler.sendException(e);
+				// }
+				// }
+
 			}
 			else
 			{

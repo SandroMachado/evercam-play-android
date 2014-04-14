@@ -9,11 +9,17 @@ import java.util.List;
 public final class AppData
 {
 
-	public static ArrayList<Camera> camesList = new ArrayList<Camera>();
+	public static ArrayList<Camera> cameraList = new ArrayList<Camera>();
 	public static List<AppUser> appUsers;
 
-	public static String AppUserEmail = null;
-	public static String AppUserPassword = null;
-	public static String cambaApiKey;
+	public static AppUser defaultUser = null;
+//	public static String default = null;
+//	public static String cambaApiKey;
 
+	public void reset()
+	{
+		cameraList.clear();
+		appUsers = null;
+		defaultUser = null;
+	}
 }

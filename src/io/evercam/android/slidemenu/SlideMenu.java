@@ -576,12 +576,9 @@ public class SlideMenu extends LinearLayout
 				this.publishProgress("");
 				io.evercam.android.dal.DbNotifcation helper = new DbNotifcation(
 						SlideMenu.this.getContext());
-				Log.i(TAG, "Going to get Notifications for user [" + AppData.AppUserEmail + "]");
-				menuNotifList.clear();
+
 				List<CameraNotification> notiflist = helper.getAllCameraNotificationsForEmailID(
-						AppData.AppUserEmail, 100);
-				Log.i(TAG, "Total notifcations received [" + AppData.AppUserEmail + "] for ["
-						+ notiflist.size() + "]");
+						AppData.defaultUser.getEmail(), 100);
 				for (CameraNotification notif : notiflist)
 				{
 					Log.i(TAG, notif.toString());

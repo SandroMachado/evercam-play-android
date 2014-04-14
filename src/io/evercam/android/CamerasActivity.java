@@ -24,7 +24,6 @@ import android.widget.*;
 
 import io.evercam.android.custom.AboutDialog;
 import io.evercam.android.custom.CameraLayout;
-import io.evercam.android.custom.MyCameraLayout;
 import io.evercam.android.dal.DbAppUser;
 import io.evercam.android.dal.DbCamera;
 import io.evercam.android.dal.DbNotifcation;
@@ -37,7 +36,6 @@ import io.evercam.android.exceptions.ConnectivityException;
 import io.evercam.android.exceptions.CredentialsException;
 import io.evercam.android.slidemenu.*;
 import io.evercam.android.utils.AppData;
-import io.evercam.android.utils.CambaApiManager;
 import io.evercam.android.utils.Commons;
 import io.evercam.android.utils.Constants;
 import io.evercam.android.utils.UIUtils;
@@ -139,7 +137,7 @@ public class CamerasActivity extends ParentActivity implements
 
 			refresh = menu.findItem(R.id.menurefresh);
 
-			if (refresh != null && (AppData.camesList == null || AppData.camesList.size() == 0))
+			if (refresh != null && (AppData.cameraList == null || AppData.cameraList.size() == 0))
 			{
 				refresh.setActionView(null);
 				refresh.setActionView(R.layout.actionbar_indeterminate_progress);
@@ -165,16 +163,16 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			switch (item.getItemId())
 			{
-			case R.id.menurefresh: // need to refresh the application
-				if (refresh != null) refresh
-						.setActionView(R.layout.actionbar_indeterminate_progress);
-
-				GetUserCamsData task = new GetUserCamsData();
-				task.reload = true; // be default do not refesh until there is
-									// any change in cameras in database
-				task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
-
-				return true;
+//			case R.id.menurefresh: // need to refresh the application
+//				if (refresh != null) refresh
+//						.setActionView(R.layout.actionbar_indeterminate_progress);
+//
+//				GetUserCamsData task = new GetUserCamsData();
+//				task.reload = true; // be default do not refesh until there is
+//									// any change in cameras in database
+//				task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+//
+//				return true;
 
 			case android.R.id.home:
 				slideMenu.show();
@@ -328,7 +326,7 @@ public class CamerasActivity extends ParentActivity implements
 			{
 				stopAllCameraViews();
 
-				if (AppData.AppUserEmail == null || AppData.AppUserEmail.length() == 0)
+				if (AppData.defaultUser == null)
 				{
 					startActivity(new Intent(this, MainActivity.class));
 					CamerasActivity.this.finish();
@@ -450,7 +448,7 @@ public class CamerasActivity extends ParentActivity implements
 							int indexPlus = index + 1;
 			
 							if (reloadImages) camera.loadingStatus = ImageLoadingStatus.not_started;
-							MyCameraLayout cameraLayout = new MyCameraLayout(this, camera);
+							CameraLayout cameraLayout = new CameraLayout(this, camera);
 							LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 									android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 									android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -573,7 +571,7 @@ public class CamerasActivity extends ParentActivity implements
 			String ApiCamera = intent.getStringExtra("ApiCamera");
 			Log.i(TAG, "ApiCamera [" + ApiCamera + "]");
 
-			Camera cam = CambaApiManager.ParseJsonObject(ApiCamera);
+	//		Camera cam = CambaApiManager.ParseJsonObject(ApiCamera);
 
 		}
 	};
@@ -636,16 +634,16 @@ public class CamerasActivity extends ParentActivity implements
 				// has been installed. Then user might be not in
 				// database but in preferences. So we need to add it
 				// to database as well.
-				AppUser old = dbUser.getAppUser(AppData.AppUserEmail);
-				if (old == null)
-				{
-					AppUser user = new AppUser();
-					user.setEmail(AppData.AppUserEmail + "");
-					user.setPassword(AppData.AppUserPassword + "");
-					user.setApiKey(AppData.cambaApiKey + "");
-					user.setIsDefault(true);
-					dbUser.addAppUser(user);
-				}
+//				AppUser old = dbUser.getAppUser(AppData.AppUserEmail);
+//				if (old == null)
+//				{
+//					AppUser user = new AppUser();
+//					user.setEmail(AppData.AppUserEmail + "");
+//					user.setPassword(AppData.AppUserPassword + "");
+//					user.setApiKey(AppData.cambaApiKey + "");
+//					user.setIsDefault(true);
+//					dbUser.addAppUser(user);
+//				}
 
 				final String[] userAccounts = new String[AppData.appUsers.size()];
 
@@ -694,21 +692,21 @@ public class CamerasActivity extends ParentActivity implements
 							// set selected user's default to true
 							AppUser user = AppData.appUsers.get(itemPosition);
 							user.setIsDefault(true);
-							Commons.setDefaultUserForApp(CamerasActivity.this, user.getEmail(),
-									user.getPassword(), user.getApiKey(), true);
+//							Commons.setDefaultUserForApp(CamerasActivity.this, user.getEmail(),
+//									user.getPassword(), user.getApiKey(), true);
 							dbUser.updateAppUser(user);
 
 							Log.v("evercamapp", "use default user:" + user.getEmail());
 							// load cameras for default user
-							AppData.camesList = new DbCamera(CamerasActivity.this)
-									.getAllCamerasForEmailID(AppData.AppUserEmail, 500);
+							AppData.cameraList = new DbCamera(CamerasActivity.this)
+									.getAllCamerasForEmailID(AppData.defaultUser.getEmail(), 500);
 							removeAllCameraViews();
 							addAllCameraViews(true);
 
 							// start the task for default user to
 							// refresh data
-							new GetUserCamsData().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-									"");
+//							new GetUserCamsData().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+//									"");
 							if (totalCamerasInGrid == 0 && refresh != null)
 							{
 								refresh.setActionView(null);
@@ -740,132 +738,132 @@ public class CamerasActivity extends ParentActivity implements
 	}
 
 	// This class gets users cameras list from the api with proper login
-	private class GetUserCamsData extends AsyncTask<String, Void, String>
-	{
-		public boolean reload = false;
-
-		@Override
-		protected String doInBackground(String... login)
-		{
-			try
-			{
-				boolean updateDB = false;
-
-				SharedPreferences sharedPrefs = PreferenceManager
-						.getDefaultSharedPreferences(CamerasActivity.this);
-				AppData.AppUserEmail = sharedPrefs.getString("AppUserEmail", null);
-				AppData.AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
-
-				ArrayList<Camera> cambaList = CambaApiManager.getCameraListAndSetKey();
-				for (Camera camera : cambaList)
-				{
-					camera.setUserEmail(AppData.AppUserEmail);
-					Log.v(TAG, camera.toString());
-				}
-
-				for (Camera cam : cambaList)
-				{
-					if (!AppData.camesList.contains(cam))
-					{
-						updateDB = true;
-						break;
-					}
-
-				}
-				if (!updateDB)
-				{
-					for (Camera cam1 : AppData.camesList)
-				{
-					if (!cambaList.contains(cam1))
-					{
-						updateDB = true;
-						break;
-					}
-				}
-				}
-				if (updateDB)
-				{
-					this.reload = true;
-					AppData.camesList = cambaList;
-
-					DbCamera dbcam = new DbCamera(CamerasActivity.this);
-					dbcam.deleteCameraForEmail(AppData.AppUserEmail);
-
-					for (Camera cam : AppData.camesList)
-					{
-						Log.i(TAG, cam.toString());
-						dbcam.addCamera(cam);
-					}
-				}
-			}
-
-			catch (CredentialsException ce)
-			{
-				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(ce);
-				return Constants.ErrorMessageInvalidCredentialsAndLogout;
-
-			}
-			catch (ConnectivityException e)
-			{
-				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-				return Constants.ErrorMessageNoConnectivity;
-			}
-			catch (Exception e)
-			{
-				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-				if (AppData.camesList == null && AppData.camesList.size() == 0) return Constants.ErrorMessageRefreshCamerasWhenNoCamerasExist;
-				else return Constants.ErrorMessageRefreshCamerasWhenCamerasLoadedFromLocalDB;
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(final String result)
-		{
-			if (result == null)
-			{
-				if (this.reload || totalCamerasInGrid != AppData.camesList.size())
-				{
-					CamerasActivity.this.removeAllCameraViews();
-					CamerasActivity.this.addAllCameraViews(true);
-				}
-			}
-			else
-			{
-				if (!CamerasActivity.this.isFinishing()) UIUtils.GetAlertDialog(
-						CamerasActivity.this, "Error Occured", result,
-						new DialogInterface.OnClickListener(){
-							@Override
-							public void onClick(DialogInterface dialog, int which)
-							{
-								dialog.dismiss();
-								// CamerasActivity.this.finish(); // cannot
-								// finish
-								// because if we finish, user will not be able
-								// to login back again.
-								if ((result + "")
-										.equalsIgnoreCase(Constants.ErrorMessageInvalidCredentialsAndLogout))
-								{
-									// delete saved username and apssword
-									SharedPreferences sharedPrefs = PreferenceManager
-											.getDefaultSharedPreferences(CamerasActivity.this);
-									SharedPreferences.Editor editor = sharedPrefs.edit();
-									editor.putString("AppUserEmail", null);
-									editor.putString("AppUserPassword", null);
-									editor.commit();
-
-									startActivity(new Intent(CamerasActivity.this,
-											MainActivity.class));
-									new LogoutTask().executeOnExecutor(
-											AsyncTask.THREAD_POOL_EXECUTOR, "");
-								}
-								if (CamerasActivity.this.refresh != null) CamerasActivity.this.refresh
-										.setActionView(null);
-							}
-						}).show();
-			}
-		}
-	}
+//	private class GetUserCamsData extends AsyncTask<String, Void, String>
+//	{
+//		public boolean reload = false;
+//
+//		@Override
+//		protected String doInBackground(String... login)
+//		{
+//			try
+//			{
+//				boolean updateDB = false;
+//
+//				SharedPreferences sharedPrefs = PreferenceManager
+//						.getDefaultSharedPreferences(CamerasActivity.this);
+////				AppData.AppUserEmail = sharedPrefs.getString("AppUserEmail", null);
+////				AppData.AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
+//
+//				ArrayList<Camera> cambaList = CambaApiManager.getCameraListAndSetKey();
+//				for (Camera camera : cambaList)
+//				{
+//					camera.setUserEmail(AppData.AppUserEmail);
+//					Log.v(TAG, camera.toString());
+//				}
+//
+//				for (Camera cam : cambaList)
+//				{
+//					if (!AppData.camesList.contains(cam))
+//					{
+//						updateDB = true;
+//						break;
+//					}
+//
+//				}
+//				if (!updateDB)
+//				{
+//					for (Camera cam1 : AppData.camesList)
+//				{
+//					if (!cambaList.contains(cam1))
+//					{
+//						updateDB = true;
+//						break;
+//					}
+//				}
+//				}
+//				if (updateDB)
+//				{
+//					this.reload = true;
+//					AppData.cameraList = cambaList;
+//
+//					DbCamera dbcam = new DbCamera(CamerasActivity.this);
+//					dbcam.deleteCameraForEmail(AppData.defaultUser.getEmail());
+//
+//					for (Camera cam : AppData.cameraList)
+//					{
+//						Log.i(TAG, cam.toString());
+//						dbcam.addCamera(cam);
+//					}
+//				}
+//			}
+//
+//			catch (CredentialsException ce)
+//			{
+//				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(ce);
+//				return Constants.ErrorMessageInvalidCredentialsAndLogout;
+//
+//			}
+//			catch (ConnectivityException e)
+//			{
+//				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+//				return Constants.ErrorMessageNoConnectivity;
+//			}
+//			catch (Exception e)
+//			{
+//				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+//				if (AppData.camesList == null && AppData.camesList.size() == 0) return Constants.ErrorMessageRefreshCamerasWhenNoCamerasExist;
+//				else return Constants.ErrorMessageRefreshCamerasWhenCamerasLoadedFromLocalDB;
+//			}
+//			return null;
+//		}
+//
+//		@Override
+//		protected void onPostExecute(final String result)
+//		{
+//			if (result == null)
+//			{
+//				if (this.reload || totalCamerasInGrid != AppData.camesList.size())
+//				{
+//					CamerasActivity.this.removeAllCameraViews();
+//					CamerasActivity.this.addAllCameraViews(true);
+//				}
+//			}
+//			else
+//			{
+//				if (!CamerasActivity.this.isFinishing()) UIUtils.GetAlertDialog(
+//						CamerasActivity.this, "Error Occured", result,
+//						new DialogInterface.OnClickListener(){
+//							@Override
+//							public void onClick(DialogInterface dialog, int which)
+//							{
+//								dialog.dismiss();
+//								// CamerasActivity.this.finish(); // cannot
+//								// finish
+//								// because if we finish, user will not be able
+//								// to login back again.
+//								if ((result + "")
+//										.equalsIgnoreCase(Constants.ErrorMessageInvalidCredentialsAndLogout))
+//								{
+//									// delete saved username and apssword
+//									SharedPreferences sharedPrefs = PreferenceManager
+//											.getDefaultSharedPreferences(CamerasActivity.this);
+//									SharedPreferences.Editor editor = sharedPrefs.edit();
+//									editor.putString("AppUserEmail", null);
+//									editor.putString("AppUserPassword", null);
+//									editor.commit();
+//
+//									startActivity(new Intent(CamerasActivity.this,
+//											MainActivity.class));
+//									new LogoutTask().executeOnExecutor(
+//											AsyncTask.THREAD_POOL_EXECUTOR, "");
+//								}
+//								if (CamerasActivity.this.refresh != null) CamerasActivity.this.refresh
+//										.setActionView(null);
+//							}
+//						}).show();
+//			}
+//		}
+//	}
 
 	private class LogoutTask extends AsyncTask<String, String, String>
 	{
@@ -892,7 +890,7 @@ public class CamerasActivity extends ParentActivity implements
 				{
 					for (AppUser user : list)
 					{
-						dbu.deleteAppUserForEmail(user.getEmail());
+						dbu.deleteAppUserByEmail(user.getEmail());
 					}
 				}
 
@@ -937,13 +935,13 @@ public class CamerasActivity extends ParentActivity implements
 
 					for (AppUser user : list)
 					{
-						dbu.deleteAppUserForEmail(user.getEmail());
+						dbu.deleteAppUserByEmail(user.getEmail());
 						AppUserEmail = user.getEmail();
 						try
 						{
-							CambaApiManager.registerDeviceForUsername(AppUserEmail,
-									AppUserPassword, regId, Operation, BlueToothName, Manufacturer,
-									Model, SerialNo, ImeiNo, Fingureprint, MacAddress, AppVersion);
+//							CambaApiManager.registerDeviceForUsername(AppUserEmail,
+//									AppUserPassword, regId, Operation, BlueToothName, Manufacturer,
+//									Model, SerialNo, ImeiNo, Fingureprint, MacAddress, AppVersion);
 						}
 						catch (Exception e)
 						{
@@ -1053,26 +1051,22 @@ public class CamerasActivity extends ParentActivity implements
 				}
 				else if (!GCMRegistrar.isRegisteredOnServer(CamerasActivity.this))
 				{
-					if (CambaApiManager.registerDeviceForUsername(AppUserEmail, AppUserPassword,
-							regId, Operation, BlueToothName, Manufacturer, Model, SerialNo, ImeiNo,
-							Fingureprint, MacAddress, AppVersion))
-					{
-						return "Device successfully registerd on GCM Server and Camba Server.";
-					}
-					else
-					{
-						return "Device failed to register on Camba server.";
-					}
+//					if (CambaApiManager.registerDeviceForUsername(AppUserEmail, AppUserPassword,
+//							regId, Operation, BlueToothName, Manufacturer, Model, SerialNo, ImeiNo,
+//							Fingureprint, MacAddress, AppVersion))
+//					{
+//						return "Device successfully registerd on GCM Server and Camba Server.";
+//					}
+//					else
+//					{
+//						return "Device failed to register on Camba server.";
+//					}
 				}
 				else
 				{
-
-					Log.i(TAG, "Already registered on Camba Server for Alerts against DeviceID ["
-							+ regId + "], Username [" + AppData.AppUserEmail + "]");
-
-					CambaApiManager.registerDeviceForUsername(AppUserEmail, AppUserPassword, regId,
-							Operation, BlueToothName, Manufacturer, Model, SerialNo, ImeiNo,
-							Fingureprint, MacAddress, AppVersion);
+//					CambaApiManager.registerDeviceForUsername(AppUserEmail, AppUserPassword, regId,
+//							Operation, BlueToothName, Manufacturer, Model, SerialNo, ImeiNo,
+//							Fingureprint, MacAddress, AppVersion);
 					GCMRegistrar.setRegisteredOnServer(CamerasActivity.this, true);
 
 					// return

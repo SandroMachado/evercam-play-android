@@ -162,13 +162,13 @@ public class IVideoViewActivity extends ParentActivity implements
 				// TODO Auto-generated method stub
 				ArrayList<String> Cams = new ArrayList<String>();
 
-				for (int i = 0; i < AppData.camesList.size(); i++)
+				for (int i = 0; i < AppData.cameraList.size(); i++)
 				{
-					if (!AppData.camesList.get(i).getStatus().equalsIgnoreCase("Offline"))
+					if (!AppData.cameraList.get(i).getStatus().equalsIgnoreCase("Offline"))
 					{
-						ActiveCamers.add(AppData.camesList.get(i));
-						Cams.add(AppData.camesList.get(i).getName());
-						if (AppData.camesList.get(i).getCameraID() == camera.getCameraID()) defaultCamIndex = Cams
+						ActiveCamers.add(AppData.cameraList.get(i));
+						Cams.add(AppData.cameraList.get(i).getName());
+						if (AppData.cameraList.get(i).getCameraID() == camera.getCameraID()) defaultCamIndex = Cams
 								.size() - 1;
 
 					}
@@ -241,7 +241,7 @@ public class IVideoViewActivity extends ParentActivity implements
 
 	public static boolean StartPlayingVIdeoForCamera(Context context, int camID)
 	{
-		if (AppData.camesList != null) for (Camera cam : AppData.camesList)
+		if (AppData.cameraList != null) for (Camera cam : AppData.cameraList)
 		{
 			if (cam.getCameraID() == camID)
 			{
@@ -1556,7 +1556,7 @@ public class IVideoViewActivity extends ParentActivity implements
 	public void onSlideMenuItemClick(int itemId)
 	{
 
-		for (Camera caml : AppData.camesList)
+		for (Camera caml : AppData.cameraList)
 		{
 			if (caml.getCameraID() == itemId && caml.getCameraID() != camera.getCameraID())
 			{

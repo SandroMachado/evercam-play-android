@@ -253,7 +253,7 @@ public class CambaRecordingApiManager
 			get.setHeader("Accept", "application/xml");
 			get.setHeader("User-Agent", "Apache-HttpClient/4.1 (java 1.5)");
 
-			get.setHeader("Authorization", "Basic " + AppData.cambaApiKey);
+			get.setHeader("Authorization", "Basic " + AppData.defaultUser.getApiKey());
 
 			// get.setHeader("Host", "localhost");
 

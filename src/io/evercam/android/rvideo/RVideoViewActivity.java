@@ -158,12 +158,12 @@ public class RVideoViewActivity extends ParentActivity
 				// TODO Auto-generated method stub
 				ArrayList<String> Cams = new ArrayList<String>();
 
-				for (int i = 0; i < AppData.camesList.size(); i++)
+				for (int i = 0; i < AppData.cameraList.size(); i++)
 				{
 
-					Cams.add(AppData.camesList.get(i).getName());
+					Cams.add(AppData.cameraList.get(i).getName());
 
-					if (AppData.camesList.get(i).getCameraID() == camera.getCameraID()) defaultCamIndex = Cams
+					if (AppData.cameraList.get(i).getCameraID() == camera.getCameraID()) defaultCamIndex = Cams
 							.size() - 1;
 
 				}
@@ -195,7 +195,7 @@ public class RVideoViewActivity extends ParentActivity
 							try
 							{
 
-								RVideoViewActivity.camera = AppData.camesList.get(itemPosition);
+								RVideoViewActivity.camera = AppData.cameraList.get(itemPosition);
 								//
 								//
 								SetImageAttributesAndLoadImage();
@@ -249,7 +249,7 @@ public class RVideoViewActivity extends ParentActivity
 
 	public static boolean StartPlayingVIdeoForCamera(Context context, int camID, String time)
 	{
-		if (AppData.camesList != null) for (Camera cam : AppData.camesList)
+		if (AppData.cameraList != null) for (Camera cam : AppData.cameraList)
 		{
 			if (cam.getCameraID() == camID)
 			{

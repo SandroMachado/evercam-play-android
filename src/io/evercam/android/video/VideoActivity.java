@@ -185,13 +185,13 @@ public class VideoActivity extends ParentActivity implements
 
 				ArrayList<String> cameras = new ArrayList<String>();
 
-				for (int i = 0; i < AppData.camesList.size(); i++)
+				for (int i = 0; i < AppData.cameraList.size(); i++)
 				{
-					if (!AppData.camesList.get(i).getStatus().equalsIgnoreCase("Offline"))
+					if (!AppData.cameraList.get(i).getStatus().equalsIgnoreCase("Offline"))
 					{
-						ActiveCamers.add(AppData.camesList.get(i));
-						cameras.add(AppData.camesList.get(i).getName());
-						if (AppData.camesList.get(i).getCameraID() == startingCameraID) defaultCamIndex = cameras
+						ActiveCamers.add(AppData.cameraList.get(i));
+						cameras.add(AppData.cameraList.get(i).getName());
+						if (AppData.cameraList.get(i).getCameraID() == startingCameraID) defaultCamIndex = cameras
 								.size() - 1;
 					}
 				}
