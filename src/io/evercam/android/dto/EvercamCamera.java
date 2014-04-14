@@ -1,14 +1,20 @@
 package io.evercam.android.dto;
 
+import io.evercam.EvercamException;
+
 import java.util.ArrayList;
 
 import org.apache.http.cookie.Cookie;
+
+import android.util.Log;
 
 public class EvercamCamera
 {
 	public ImageLoadingStatus loadingStatus = ImageLoadingStatus.not_started;
 	public ArrayList<Cookie> cookies = null;
 	
+	private final String TAG = "evercamapp-EvercamCamera";
+	private io.evercam.Camera camera;
 	private String cameraId;
 	private String snapshotUrl;
 	private String name;
@@ -16,19 +22,61 @@ public class EvercamCamera
 	private String username;
 	private String password;
 	
+	public EvercamCamera(io.evercam.Camera camera)
+	{
+		this.camera = camera;
+	}
+	
 	public String getCameraId()
 	{
-		return "liutingdu93662";
+		try
+		{
+			return camera.getId();
+		}
+		catch (EvercamException e)
+		{
+			Log.e(TAG,e.getMessage());
+		}
+		return "";
 	}
 	
 	public String getName()
 	{
-		return "RemembranceCam";
+		try
+		{
+			return camera.getName();
+		}
+		catch (EvercamException e)
+		{
+			Log.e(TAG,e.getMessage());
+		}
+		return "";
 	}
 	
-	public String getSnapshotUrl()
+	public String getInternalSnapshotUrl()
 	{
-		return "http://89.101.225.158:8101/Streaming/channels/1/picture";
+		try
+		{
+			camera.getJpgExternalFullUrl();
+		}
+		catch (EvercamException e)
+		{
+			Log.e(TAG,e.getMessage());
+		}
+		return "";
+	}
+	
+	public String getExternalSnapshotUrl()
+	{
+		try
+		{
+			camera.getJpgExternalFullUrl();
+		}
+		catch (EvercamException e)
+		{
+			Log.e(TAG,e.getMessage());
+		}
+		return "";
 	}
 	
 	public String getStatus()

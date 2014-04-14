@@ -423,7 +423,7 @@ public class CameraLayout extends LinearLayout
 //					String ImageUrl = ((evercamCamera.getLowResolutionSnapshotUrl() != null && URLUtil
 //							.isValidUrl(evercamCamera.getLowResolutionSnapshotUrl())) ? evercamCamera
 //							.getLowResolutionSnapshotUrl() : evercamCamera.getCameraImageUrl());
-					String imageUrl = evercamCamera.getSnapshotUrl();
+					String imageUrl = evercamCamera.getExternalSnapshotUrl();
 					liveImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
 							new String[] { imageUrl });
 				}

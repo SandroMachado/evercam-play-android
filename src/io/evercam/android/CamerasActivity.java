@@ -35,6 +35,7 @@ import io.evercam.android.dto.ImageLoadingStatus;
 import io.evercam.android.exceptions.ConnectivityException;
 import io.evercam.android.exceptions.CredentialsException;
 import io.evercam.android.slidemenu.*;
+import io.evercam.android.tasks.LoadCameraListTask;
 import io.evercam.android.utils.AppData;
 import io.evercam.android.utils.Commons;
 import io.evercam.android.utils.Constants;
@@ -426,7 +427,7 @@ public class CamerasActivity extends ParentActivity implements
 	}
 
 	// Add all the cameras as per the rules
-	boolean addAllCameraViews(boolean reloadImages)
+	public boolean addAllCameraViews(boolean reloadImages)
 	{
 		try
 		{
@@ -442,53 +443,32 @@ public class CamerasActivity extends ParentActivity implements
 
 			int index = 0;
 			totalCamerasInGrid = 0;
-			EvercamCamera camera = new EvercamCamera();
-			LinearLayout cameraListLayout = new LinearLayout(this);
 			
-							int indexPlus = index + 1;
+			for(EvercamCamera evercamCamera: AppData.evercamCameraList)
+			{
+				Log.v("evercamapp", "init camera"+ evercamCamera.getName() );
+				LinearLayout cameraListLayout = new LinearLayout(this);
+				
+				int indexPlus = index + 1;
+
+				if (reloadImages) evercamCamera.loadingStatus = ImageLoadingStatus.not_started;
+				CameraLayout cameraLayout = new CameraLayout(this, evercamCamera);
+				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+						android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+				params.width = ((indexPlus % camerasPerRow == 0) ? (screen_width - (index % camerasPerRow)
+						* (screen_width / camerasPerRow))
+						: screen_width / camerasPerRow);
+				params.height = (int) (params.width / (1.25));
+				cameraLayout.setLayoutParams(params);
+
+				cameraListLayout.addView(cameraLayout);
+				camsLineView.addView(cameraListLayout,
+						new io.evercam.android.custom.FlowLayout.LayoutParams(0, 0));
+				index++;
+				totalCamerasInGrid++;
+			}
 			
-							if (reloadImages) camera.loadingStatus = ImageLoadingStatus.not_started;
-							CameraLayout cameraLayout = new CameraLayout(this, camera);
-							LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-									android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
-									android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-							params.width = ((indexPlus % camerasPerRow == 0) ? (screen_width - (index % camerasPerRow)
-									* (screen_width / camerasPerRow))
-									: screen_width / camerasPerRow);
-							params.height = (int) (params.width / (1.25));
-							cameraLayout.setLayoutParams(params);
-			
-							cameraListLayout.addView(cameraLayout);
-							camsLineView.addView(cameraListLayout,
-									new io.evercam.android.custom.FlowLayout.LayoutParams(0, 0));
-							index++;
-							totalCamerasInGrid++;
-//			for (Camera camera : AppData.camesList)
-//			{
-//				LinearLayout cameraListLayout = new LinearLayout(this);
-//
-//				int indexPlus = index + 1;
-//
-//				if (reloadImages) camera.loadingStatus = ImageLoadingStatus.not_started;
-//				CameraLayout cameraLayout = new CameraLayout(this, camera);
-//				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-//						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
-//						android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-//				params.width = ((indexPlus % camerasPerRow == 0) ? (screen_width - (index % camerasPerRow)
-//						* (screen_width / camerasPerRow))
-//						: screen_width / camerasPerRow);
-//				params.height = (int) (params.width / (1.25));
-//				cameraLayout.setLayoutParams(params);
-//
-//				cameraListLayout.addView(cameraLayout);
-//				camsLineView.addView(cameraListLayout,
-//						new io.evercam.android.custom.FlowLayout.LayoutParams(0, 0));
-//
-//				Log.v(TAG, camera.toString());
-//
-//				index++;
-//				totalCamerasInGrid++;
-//			}
 			if (this.getActionBar() != null) this.getActionBar().setHomeButtonEnabled(true);
 
 			startgCMRegisterActions();
@@ -581,8 +561,6 @@ public class CamerasActivity extends ParentActivity implements
 	{
 		try
 		{
-			Log.i("sajjadpp", "onConfigurationChanged called");
-
 			super.onConfigurationChanged(newConfig);
 
 			resizeCameras();
@@ -703,10 +681,8 @@ public class CamerasActivity extends ParentActivity implements
 							removeAllCameraViews();
 							addAllCameraViews(true);
 
-							// start the task for default user to
-							// refresh data
-//							new GetUserCamsData().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-//									"");
+							// start the task for default user to refresh camera list
+							new LoadCameraListTask(AppData.defaultUser, CamerasActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 							if (totalCamerasInGrid == 0 && refresh != null)
 							{
 								refresh.setActionView(null);

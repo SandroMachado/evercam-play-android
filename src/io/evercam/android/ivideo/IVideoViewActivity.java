@@ -159,7 +159,6 @@ public class IVideoViewActivity extends ParentActivity implements
 			@Override
 			protected String[] doInBackground(String... params)
 			{
-				// TODO Auto-generated method stub
 				ArrayList<String> Cams = new ArrayList<String>();
 
 				for (int i = 0; i < AppData.cameraList.size(); i++)
