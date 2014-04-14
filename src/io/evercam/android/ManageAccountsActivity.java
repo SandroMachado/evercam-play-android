@@ -46,11 +46,9 @@ public class ManageAccountsActivity extends ParentActivity
 
 	public class ShowAllAccounts extends AsyncTask<String, String, Boolean>
 	{
-
 		@Override
 		protected Boolean doInBackground(String... params)
 		{
-
 			try
 			{
 				DbAppUser dbuser = new DbAppUser(ManageAccountsActivity.this);
@@ -129,7 +127,7 @@ public class ManageAccountsActivity extends ParentActivity
 
 				if (user.getId() < 0) // add new user item
 				{
-					ShowAddEditUserDialogue(null, null, false, false);
+					showAddEditUserDialogue(null, null, false, false);
 					return;
 				}
 
@@ -185,7 +183,7 @@ public class ManageAccountsActivity extends ParentActivity
 						try
 						{
 							DbAppUser users = new DbAppUser(ManageAccountsActivity.this);
-							users.deleteAppUserForEmail(user.getUserEmail());
+							users.deleteAppUserForEmail(user.getEmail());
 							if (users.getDefaultUsersCount() == 0 && users.getAppUsersCount() > 0)
 							{
 								int maxid = users.getMaxID();
@@ -194,7 +192,7 @@ public class ManageAccountsActivity extends ParentActivity
 								users.updateAppUser(user);
 
 								Commons.setDefaultUserForApp(ManageAccountsActivity.this,
-										user.getUserEmail(), user.getUserPassword(),
+										user.getEmail(), user.getPassword(),
 										user.getApiKey(), true);
 							}
 							else if (users.getAppUsersCount() == 0)
@@ -221,7 +219,7 @@ public class ManageAccountsActivity extends ParentActivity
 					public void onClick(View v)
 					{
 						dialog.dismiss();
-						ShowAddEditUserDialogue(user.getUserEmail(), user.getUserPassword(),
+						showAddEditUserDialogue(user.getEmail(), user.getPassword(),
 								user.getIsDefault(), true);
 					}
 				});
@@ -232,7 +230,7 @@ public class ManageAccountsActivity extends ParentActivity
 
 	}
 
-	void ShowAddEditUserDialogue(String _email, String _password, boolean _isdefault,
+	private void showAddEditUserDialogue(String _email, String _password, boolean _isdefault,
 			boolean _isedit)
 	{
 		final View dialog_layout = getLayoutInflater().inflate(
@@ -380,7 +378,7 @@ public class ManageAccountsActivity extends ParentActivity
 			}
 			else
 			{
-				new AsyncTask<String, String, String>() //
+				new AsyncTask<String, String, String>()
 				{
 					@Override
 					protected String doInBackground(String... params)
@@ -403,23 +401,21 @@ public class ManageAccountsActivity extends ParentActivity
 
 							// adding new user
 							AppUser newUser = new AppUser();
-							newUser.setUserEmail(Email);
-							newUser.setUserPassword(Password);
+							newUser.setEmail(Email);
+							newUser.setPassword(Password);
 							newUser.setApiKey(key);
-							newUser.setIsActive(true);
 							newUser.setIsDefault(isDefault);
 							if (isDefault)
 							{
 								dbuser.updateAllIsDefaultFalse();
 								Commons.setDefaultUserForApp(ManageAccountsActivity.this,
-										newUser.getUserEmail(), newUser.getUserPassword(),
+										newUser.getEmail(), newUser.getPassword(),
 										newUser.getApiKey(), true);
 							}
 							dbuser.addAppUser(newUser);
 						}
 						catch (Exception e12)
 						{
-							Log.e("sajjad", e12.getMessage(), e12);
 							if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e12);
 						}
 
@@ -433,7 +429,6 @@ public class ManageAccountsActivity extends ParentActivity
 						ad.dismiss();
 					}
 				}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
-
 			}
 		}
 	}
@@ -472,7 +467,7 @@ public class ManageAccountsActivity extends ParentActivity
 			{
 			case R.id.menu_account_add:
 				// careate add account dialoge
-				ShowAddEditUserDialogue(null, null, false, false);
+				showAddEditUserDialogue(null, null, false, false);
 				return true;
 			case android.R.id.home:
 				this.finish();
@@ -498,8 +493,6 @@ public class ManageAccountsActivity extends ParentActivity
 			@Override
 			protected String doInBackground(String... params)
 			{
-				// TODO Auto-generated method stub
-
 				try
 				{
 					DbAppUser dbuser = new DbAppUser(ManageAccountsActivity.this);
@@ -527,7 +520,7 @@ public class ManageAccountsActivity extends ParentActivity
 
 					}
 					Commons.setDefaultUserForApp(ManageAccountsActivity.this,
-							defaultUser.getUserEmail(), defaultUser.getUserPassword(),
+							defaultUser.getEmail(), defaultUser.getPassword(),
 							defaultUser.getApiKey(), false);
 
 					AppData.appUsers = dbuser.getAllActiveAppUsers(1000);

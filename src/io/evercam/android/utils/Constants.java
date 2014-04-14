@@ -5,7 +5,7 @@ public final class Constants
 
 	public static final boolean isOfflineDebugging = false;
 
-	public static final boolean isAppTrackingEnabled = false;
+	public static final boolean isAppTrackingEnabled = true;
 
 	public static final String bugsense_ApiKey = "3e67cb9a";
 

@@ -24,12 +24,14 @@ import android.widget.*;
 
 import io.evercam.android.custom.AboutDialog;
 import io.evercam.android.custom.CameraLayout;
+import io.evercam.android.custom.MyCameraLayout;
 import io.evercam.android.dal.DbAppUser;
 import io.evercam.android.dal.DbCamera;
 import io.evercam.android.dal.DbNotifcation;
 import io.evercam.android.dto.AppUser;
 import io.evercam.android.dto.Camera;
 import io.evercam.android.dto.CameraNotification;
+import io.evercam.android.dto.EvercamCamera;
 import io.evercam.android.dto.ImageLoadingStatus;
 import io.evercam.android.exceptions.ConnectivityException;
 import io.evercam.android.exceptions.CredentialsException;
@@ -64,38 +66,7 @@ public class CamerasActivity extends ParentActivity implements
 	private int totalCamerasInGrid = 0;
 	private int slideoutMenuAnimationTime = 255;
 	private boolean isUsersAccountsActivityStarted = false;
-	private static boolean enableLogs = true; // log for the events or not
 	private static int camerasPerRow = 2;
-
-	private void addUsersToDropdownActionBar()
-	{
-		boolean taskStarted = false;
-
-		while (!taskStarted)
-		{
-			try
-			{
-				stopAllCameraViews();
-
-				if (AppData.AppUserEmail == null || AppData.AppUserEmail.length() == 0)
-				{
-					startActivity(new Intent(this, MainActivity.class));
-					CamerasActivity.this.finish();
-					return;
-				}
-
-				new UserLoadingTask().execute();
-
-				taskStarted = true;
-			}
-			catch (Exception e)
-			{
-				Log.e(TAG, e.getMessage(), e);
-				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-			}
-		}
-
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -146,7 +117,7 @@ public class CamerasActivity extends ParentActivity implements
 		}
 		catch (Exception e)
 		{
-			if (enableLogs) Log.e(TAG, e.toString(), e);
+			Log.e(TAG, e.toString(), e);
 			UIUtils.GetAlertDialog(
 					CamerasActivity.this,
 					"Error Occured",
@@ -174,12 +145,12 @@ public class CamerasActivity extends ParentActivity implements
 				refresh.setActionView(R.layout.actionbar_indeterminate_progress);
 			}
 
-			if (enableLogs) Log.i(TAG, "Options Activity Started in onPrepareOptionsMenu event");
+			Log.i(TAG, "Options Activity Started in onPrepareOptionsMenu event");
 			return true;
 		}
 		catch (Exception ex)
 		{
-			if (enableLogs) Log.e(TAG, ex.toString());
+			Log.e(TAG, ex.toString());
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(ex);
 		}
 		return true;
@@ -346,6 +317,37 @@ public class CamerasActivity extends ParentActivity implements
 		}
 	}
 
+
+	private void addUsersToDropdownActionBar()
+	{
+		boolean taskStarted = false;
+
+		while (!taskStarted)
+		{
+			try
+			{
+				stopAllCameraViews();
+
+				if (AppData.AppUserEmail == null || AppData.AppUserEmail.length() == 0)
+				{
+					startActivity(new Intent(this, MainActivity.class));
+					CamerasActivity.this.finish();
+					return;
+				}
+
+				new UserLoadingTask().execute();
+
+				taskStarted = true;
+			}
+			catch (Exception e)
+			{
+				Log.e(TAG, e.getMessage(), e);
+				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+			}
+		}
+
+	}
+	
 	// Stop All Camera Views
 	private void stopAllCameraViews()
 	{
@@ -389,7 +391,7 @@ public class CamerasActivity extends ParentActivity implements
 		}
 		catch (Exception e)
 		{
-			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
+			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
 			UIUtils.GetAlertDialog(CamerasActivity.this, "Error Occured",
 					Constants.ErrorMessageGeneric).show();
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
@@ -416,7 +418,7 @@ public class CamerasActivity extends ParentActivity implements
 		}
 		catch (Exception e)
 		{
-			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
+			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
 			UIUtils.GetAlertDialog(CamerasActivity.this, "Error Occured",
 					Constants.ErrorMessageGeneric).show();
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
@@ -442,32 +444,53 @@ public class CamerasActivity extends ParentActivity implements
 
 			int index = 0;
 			totalCamerasInGrid = 0;
-			for (Camera camera : AppData.camesList)
-			{
-				LinearLayout cameraListLayout = new LinearLayout(this);
-
-				int indexPlus = index + 1;
-
-				if (reloadImages) camera.loadingStatus = ImageLoadingStatus.not_started;
-				CameraLayout cameraLayout = new CameraLayout(this, camera);
-				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
-						android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-				params.width = ((indexPlus % camerasPerRow == 0) ? (screen_width - (index % camerasPerRow)
-						* (screen_width / camerasPerRow))
-						: screen_width / camerasPerRow);
-				params.height = (int) (params.width / (1.25));
-				cameraLayout.setLayoutParams(params);
-
-				cameraListLayout.addView(cameraLayout);
-				camsLineView.addView(cameraListLayout,
-						new io.evercam.android.custom.FlowLayout.LayoutParams(0, 0));
-
-				Log.v(TAG, camera.toString());
-
-				index++;
-				totalCamerasInGrid++;
-			}
+			EvercamCamera camera = new EvercamCamera();
+			LinearLayout cameraListLayout = new LinearLayout(this);
+			
+							int indexPlus = index + 1;
+			
+							if (reloadImages) camera.loadingStatus = ImageLoadingStatus.not_started;
+							MyCameraLayout cameraLayout = new MyCameraLayout(this, camera);
+							LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+									android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+									android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+							params.width = ((indexPlus % camerasPerRow == 0) ? (screen_width - (index % camerasPerRow)
+									* (screen_width / camerasPerRow))
+									: screen_width / camerasPerRow);
+							params.height = (int) (params.width / (1.25));
+							cameraLayout.setLayoutParams(params);
+			
+							cameraListLayout.addView(cameraLayout);
+							camsLineView.addView(cameraListLayout,
+									new io.evercam.android.custom.FlowLayout.LayoutParams(0, 0));
+							index++;
+							totalCamerasInGrid++;
+//			for (Camera camera : AppData.camesList)
+//			{
+//				LinearLayout cameraListLayout = new LinearLayout(this);
+//
+//				int indexPlus = index + 1;
+//
+//				if (reloadImages) camera.loadingStatus = ImageLoadingStatus.not_started;
+//				CameraLayout cameraLayout = new CameraLayout(this, camera);
+//				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+//						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+//						android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+//				params.width = ((indexPlus % camerasPerRow == 0) ? (screen_width - (index % camerasPerRow)
+//						* (screen_width / camerasPerRow))
+//						: screen_width / camerasPerRow);
+//				params.height = (int) (params.width / (1.25));
+//				cameraLayout.setLayoutParams(params);
+//
+//				cameraListLayout.addView(cameraLayout);
+//				camsLineView.addView(cameraListLayout,
+//						new io.evercam.android.custom.FlowLayout.LayoutParams(0, 0));
+//
+//				Log.v(TAG, camera.toString());
+//
+//				index++;
+//				totalCamerasInGrid++;
+//			}
 			if (this.getActionBar() != null) this.getActionBar().setHomeButtonEnabled(true);
 
 			startgCMRegisterActions();
@@ -478,7 +501,7 @@ public class CamerasActivity extends ParentActivity implements
 		}
 		catch (Exception e)
 		{
-			if (enableLogs) Log.e(TAG, e.toString(), e);
+			Log.e(TAG, e.toString(), e);
 			UIUtils.GetAlertDialog(CamerasActivity.this, "Error Occured",
 					Constants.ErrorMessageGeneric).show();
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
@@ -508,8 +531,6 @@ public class CamerasActivity extends ParentActivity implements
 	{
 		try
 		{
-			Log.i(TAG, "StartgCMRegisterActions called");
-
 			RegisterTask = new RegisterGCMAlertsServiceTask();
 			RegisterTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 
@@ -619,10 +640,9 @@ public class CamerasActivity extends ParentActivity implements
 				if (old == null)
 				{
 					AppUser user = new AppUser();
-					user.setUserEmail(AppData.AppUserEmail + "");
-					user.setUserPassword(AppData.AppUserPassword + "");
+					user.setEmail(AppData.AppUserEmail + "");
+					user.setPassword(AppData.AppUserPassword + "");
 					user.setApiKey(AppData.cambaApiKey + "");
-					user.setIsActive(true);
 					user.setIsDefault(true);
 					dbUser.addAppUser(user);
 				}
@@ -631,7 +651,7 @@ public class CamerasActivity extends ParentActivity implements
 
 				for (int i = 0; i < AppData.appUsers.size(); i++)
 				{
-					userAccounts[i] = AppData.appUsers.get(i).getUserEmail();
+					userAccounts[i] = AppData.appUsers.get(i).getEmail();
 					if (AppData.appUsers.get(i).getIsDefault()) defaultUserIndex = i;
 				}
 
@@ -674,10 +694,11 @@ public class CamerasActivity extends ParentActivity implements
 							// set selected user's default to true
 							AppUser user = AppData.appUsers.get(itemPosition);
 							user.setIsDefault(true);
-							Commons.setDefaultUserForApp(CamerasActivity.this, user.getUserEmail(),
-									user.getUserPassword(), user.getApiKey(), true);
+							Commons.setDefaultUserForApp(CamerasActivity.this, user.getEmail(),
+									user.getPassword(), user.getApiKey(), true);
 							dbUser.updateAppUser(user);
 
+							Log.v("evercamapp", "use default user:" + user.getEmail());
 							// load cameras for default user
 							AppData.camesList = new DbCamera(CamerasActivity.this)
 									.getAllCamerasForEmailID(AppData.AppUserEmail, 500);
@@ -697,7 +718,10 @@ public class CamerasActivity extends ParentActivity implements
 						catch (Exception e)
 						{
 							Log.e(TAG, e.getMessage(), e);
-							if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+							if (Constants.isAppTrackingEnabled) 
+							{
+								BugSenseHandler.sendException(e);
+							}
 						}
 						return false;
 					}
@@ -868,7 +892,7 @@ public class CamerasActivity extends ParentActivity implements
 				{
 					for (AppUser user : list)
 					{
-						dbu.deleteAppUserForEmail(user.getUserEmail());
+						dbu.deleteAppUserForEmail(user.getEmail());
 					}
 				}
 
@@ -913,8 +937,8 @@ public class CamerasActivity extends ParentActivity implements
 
 					for (AppUser user : list)
 					{
-						dbu.deleteAppUserForEmail(user.getUserEmail());
-						AppUserEmail = user.getUserEmail();
+						dbu.deleteAppUserForEmail(user.getEmail());
+						AppUserEmail = user.getEmail();
 						try
 						{
 							CambaApiManager.registerDeviceForUsername(AppUserEmail,
@@ -1058,7 +1082,7 @@ public class CamerasActivity extends ParentActivity implements
 			}
 			catch (Exception e)
 			{
-				if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
+				Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
 				message = e.toString();
 				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 			}
@@ -1068,11 +1092,6 @@ public class CamerasActivity extends ParentActivity implements
 						"Error", new Exception(Log.getStackTraceString(e)));
 			}
 			return message;
-		}
-
-		@Override
-		protected void onPostExecute(String result)
-		{
 		}
 	}
 }

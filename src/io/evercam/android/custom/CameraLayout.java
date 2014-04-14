@@ -34,7 +34,6 @@ import android.widget.*;
 
 public class CameraLayout extends LinearLayout
 {
-
 	private static final String TAG = "CameraLayout";
 
 	RelativeLayout camview; // layout for the image and controls showing on
@@ -360,7 +359,6 @@ public class CameraLayout extends LinearLayout
 
 		try
 		{
-
 			cam = camera;
 			if (enableLogs) Log.i(TAG, "create activity called for camera [" + cam.getCameraID()
 					+ ":" + cam.getName() + "]");

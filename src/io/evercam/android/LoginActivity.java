@@ -21,6 +21,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -184,7 +185,7 @@ public class LoginActivity extends ParentActivity
 					AppData.cambaApiKey = cambaAPiKey;
 					AppData.camesList = new ArrayList<Camera>(); // clear all
 																	// cameras
-
+					Log.v("evercamapp", "app data done");
 					DbAppUser dbuser = new DbAppUser(LoginActivity.this);
 					// delete the old user if already exisits
 					if (dbuser.getAppUser("liuting.du@mhlabs.net") != null)
@@ -196,23 +197,24 @@ public class LoginActivity extends ParentActivity
 
 					// adding new logged in users
 					AppUser newUser = new AppUser();
-					newUser.setUserEmail("liuting.du@mhlabs.net");
-					newUser.setUserPassword("kangtaooo");
+					newUser.setEmail("liuting.du@mhlabs.net");
+					newUser.setPassword("kangtaooo");
 					newUser.setApiKey(cambaAPiKey);
-					newUser.setIsActive(true);
 					newUser.setIsDefault(true);
 					dbuser.addAppUser(newUser);
 					SharedPreferences.Editor editor = sharedPrefs.edit();
 					editor.putString("AppUserEmail", AppData.AppUserEmail);
 					editor.putString("AppUserPassword", AppData.AppUserPassword);
 					editor.commit();
-
 				}
 				catch (Exception e)
 				{
-					e.printStackTrace();
+					Log.v("evercamapp", "Save user data while signing in:");
+					if (Constants.isAppTrackingEnabled) 
+					{
+						BugSenseHandler.sendException(e);
+					}
 				}
-
 				finishLoginActivity();
 			}
 			else

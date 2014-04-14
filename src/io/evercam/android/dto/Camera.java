@@ -9,13 +9,12 @@ import android.webkit.URLUtil;
 
 public class Camera
 {
-
 	private static final String TAG = "Camera";
 
 	int ID;
 	private int CameraID;
 
-	String UserEmail;
+	private String UserEmail;
 
 	public ImageLoadingStatus loadingStatus = ImageLoadingStatus.not_started;
 

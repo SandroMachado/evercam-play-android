@@ -36,7 +36,7 @@ public class CustomAdapter extends ArrayAdapter<AppUser>
 		}
 		else
 		{
-			this.fakeUser = new AppUser(-1, "", "", "", true, false);
+			this.fakeUser = new AppUser(-1, "", "", "", "","","",false);
 			this.entries.add(fakeUser); // add at the end
 		}
 		this.activity = a;
@@ -61,7 +61,7 @@ public class CustomAdapter extends ArrayAdapter<AppUser>
 
 		if (custom != null && custom != fakeUser)
 		{
-			((TextView) v.findViewById(textviewid)).setText(custom.getUserEmail()
+			((TextView) v.findViewById(textviewid)).setText(custom.getEmail()
 					+ (custom.getIsDefault() ? " - Default" : ""));
 		}
 

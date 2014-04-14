@@ -479,15 +479,15 @@ public class Commons
 		return Drawable.createFromStream(input, "src");
 	}
 
-	private static String getB64AuthKey(String login, String pass) throws IllegalArgumentException,
-			Exception
-	{
-
-		String source = login + ":" + pass;
-		String ret;
-		ret = Base64.encodeToString(source.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
-		return ret;
-	}
+//	private static String getB64AuthKey(String login, String pass) throws IllegalArgumentException,
+//			Exception
+//	{
+//
+//		String source = login + ":" + pass;
+//		String ret;
+//		ret = Base64.encodeToString(source.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
+//		return ret;
+//	}
 
 	public static void setDefaultUserForApp(Context cont, String email, String password,
 			String apiKey, boolean clearCamsList)

@@ -2,15 +2,14 @@ package io.evercam.android.dto;
 
 public class AppUser
 {
-
-	private static String TAG = "AppUser";
-
 	private int id;
-	private String userEmail;
-	private String userPassword;
-	private String apiKey;
-	private boolean isActive;
+	private String email;
+	private String username;
+	private String password;
+	private String country;
 	private boolean isDefault;
+	private String apiKey;
+	private String apiId;
 
 	public AppUser()
 	{
@@ -18,26 +17,61 @@ public class AppUser
 	}
 
 	// constructor
-	public AppUser(int id, String userEmail, String userPassword, String apiKey,
-			boolean isActive, boolean isDefault)
+	public AppUser(int id, String email, String password, String apiKey, String apiId,String country,
+			String username, boolean isDefault)
 	{
 		this.id = id;
-		this.userEmail = userEmail;
-		this.userPassword = userPassword;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+		this.country = country;
 		this.apiKey = apiKey;
-		this.isActive = isActive;
+		this.apiId = apiId;
 		this.isDefault = isDefault;
 	}
 
-	public AppUser(int _id, String _userEmail, String _userPassword, String _apiKey,
-			int _isActiveInteger, int _isDefaultInteger)
+	public AppUser(int id, String email, String password, String apiKey, String apiId,String country,
+			String username,
+			int isDefaultInteger)
 	{
-		this.id = _id;
-		this.userEmail = _userEmail;
-		this.userPassword = _userPassword;
-		this.apiKey = _apiKey;
-		this.isActive = (_isActiveInteger == 1);
-		this.isDefault = (_isDefaultInteger == 1);
+		this.id = id;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+		this.country = country;
+		this.apiKey = apiKey;
+		this.apiId = apiId;
+		this.isDefault = (isDefaultInteger == 1);
+	}
+
+	public String getUsername()
+	{
+		return username;
+	}
+
+	public String getCountry()
+	{
+		return country;
+	}
+
+	public String getApiId()
+	{
+		return apiId;
+	}
+
+	public void setUsername(String username)
+	{
+		this.username = username;
+	}
+
+	public void setCountry(String country)
+	{
+		this.country = country;
+	}
+
+	public void setApiId(String apiId)
+	{
+		this.apiId = apiId;
 	}
 
 	public int getId()
@@ -45,29 +79,19 @@ public class AppUser
 		return id;
 	}
 
-	public String getUserEmail()
+	public String getEmail()
 	{
-		return userEmail;
+		return email;
 	}
 
-	public String getUserPassword()
+	public String getPassword()
 	{
-		return userPassword;
+		return password;
 	}
 
 	public String getApiKey()
 	{
 		return apiKey;
-	}
-
-	public boolean getIsActive()
-	{
-		return isActive;
-	}
-
-	public int getIsActiveInteger()
-	{
-		return (isActive ? 1 : 0);
 	}
 
 	public boolean getIsDefault()
@@ -85,29 +109,19 @@ public class AppUser
 		this.id = id;
 	}
 
-	public void setUserEmail(String userEmail)
+	public void setEmail(String email)
 	{
-		this.userEmail = userEmail;
+		this.email = email;
 	}
 
-	public void setUserPassword(String userPassword)
+	public void setPassword(String password)
 	{
-		this.userPassword = userPassword;
+		this.password = password;
 	}
 
 	public void setApiKey(String apiKey)
 	{
 		this.apiKey = apiKey;
-	}
-
-	public void setIsActive(boolean isActive)
-	{
-		this.isActive = isActive;
-	}
-
-	public void setIsActiveInteger(int isActiveInteger)
-	{
-		this.isActive = (isActiveInteger == 1);
 	}
 
 	public void setIsDefault(boolean isDefault)
@@ -122,17 +136,17 @@ public class AppUser
 
 	public String toStringAll()
 	{
-		return "id[" + id + "], userEmail [" + userEmail + "], userPassword [" + userPassword
-				+ "], isActive [" + isActive + "], isDefault [" + isDefault + "]";
+		return "id[" + id + "], email [" + email + "], password [" + password
+				+ "], isDefault [" + isDefault + "]";
 	}
 
 	@Override
 	public String toString()
 	{
-		// return userEmail + (isDefault? " - Default" : ""); // for
+		// return email + (isDefault? " - Default" : ""); // for
 		// arrayadapter
-		return "id[" + id + "], userEmail [" + userEmail + "], userPassword [" + userPassword
-				+ "], isActive [" + isActive + "], isDefault [" + isDefault + "]";
+		return "id[" + id + "], email [" + email + "], password [" + password
+				+ "], isDefault [" + isDefault + "]";
 	}
 
 }

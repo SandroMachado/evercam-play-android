@@ -20,11 +20,12 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
 /*
- * Main starting activity. Checks whether user should login first or load the cameras straight away
+ * Main starting activity. 
+ * Checks whether user should login first or load the cameras straight away
  * */
 public class MainActivity extends Activity
 {
-	private static final String TAG = "MainActivity";
+	private static final String TAG = "evercamapp";
 	private static boolean enableLogs = true;
 
 	@Override
@@ -102,7 +103,6 @@ public class MainActivity extends Activity
 				if (AppData.AppUserEmail == null || AppData.AppUserEmail.equals("")
 						|| AppData.AppUserPassword == null || AppData.AppUserPassword.equals(""))
 				{
-					Log.v("evercamapp", "fields are empty");
 					Intent login = new Intent(MainActivity.this, LoginActivity.class);
 					startActivityForResult(login, LoginActivity.loginVerifyRequestCode);
 				}
@@ -111,7 +111,6 @@ public class MainActivity extends Activity
 				// the
 				// username password is valid and get the cameras data
 				{
-					Log.v("evercamapp", "start camera activity");
 					startCamerasActivity();
 				}
 			}
