@@ -14,99 +14,147 @@ public class EvercamCamera
 	public ArrayList<Cookie> cookies = null;
 	
 	private final String TAG = "evercamapp-EvercamCamera";
-	private io.evercam.Camera camera;
 	private String cameraId;
-	private String snapshotUrl;
+	private String externalSnapshotUrl;
+	private String internalSnapshotUrl;
 	private String name;
 	private String status;
 	private String username;
 	private String password;
+	private String timezone;
+	private String model;
+	private String vendor;
+	private String owner;
 	
-	public EvercamCamera(io.evercam.Camera camera)
+	public EvercamCamera()
 	{
-		this.camera = camera;
+		
 	}
 	
-	public String getCameraId()
+	public EvercamCamera convertFromEvercam(io.evercam.Camera camera)
 	{
 		try
 		{
-			return camera.getId();
+			cameraId = camera.getId();
+			name = camera.getName();
+			username = camera.getCameraUsername();
+			password = camera.getCameraPassword();
+			externalSnapshotUrl = camera.getJpgExternalFullUrl();		
+			internalSnapshotUrl = camera.getJpgInternalFullUrl();
+			timezone = camera.getTimezone();
+			model = camera.getModel();
+			vendor = camera.getVendor();
+			owner = camera.getOwner();
 		}
 		catch (EvercamException e)
 		{
 			Log.e(TAG,e.getMessage());
 		}
-		return "";
-	}
-	
-	public String getName()
-	{
-		try
-		{
-			return camera.getName();
-		}
-		catch (EvercamException e)
-		{
-			Log.e(TAG,e.getMessage());
-		}
-		return "";
-	}
-	
-	public String getInternalSnapshotUrl()
-	{
-		try
-		{
-			return camera.getJpgExternalFullUrl();
-		}
-		catch (EvercamException e)
-		{
-			Log.e(TAG,e.getMessage());
-		}
-		return "";
-	}
-	
-	public String getExternalSnapshotUrl()
-	{
-		try
-		{
-			return camera.getJpgExternalFullUrl();
-		}
-		catch (EvercamException e)
-		{
-			Log.e(TAG,e.getMessage());
-		}
-		return "";
+		return this;
 	}
 	
 	public String getStatus()
 	{
 		return "Active";
 	}
-	
+
+	public String getCameraId()
+	{
+		return cameraId;
+	}
+
+	public String getExternalSnapshotUrl()
+	{
+		return externalSnapshotUrl;
+	}
+
+	public String getInternalSnapshotUrl()
+	{
+		return internalSnapshotUrl;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
 	public String getUsername()
 	{
-		try
-		{
-			return camera.getCameraUsername();
-		}
-		catch (EvercamException e)
-		{
-			Log.e(TAG,e.getMessage());
-		}
-		return "";
+		return username;
 	}
-	
+
 	public String getPassword()
 	{
-		try
-		{
-			return camera.getCameraPassword();
-		}
-		catch (EvercamException e)
-		{
-			Log.e(TAG,e.getMessage());
-		}
-		return "";
+		return password;
+	}
+
+	public String getTimezone()
+	{
+		return timezone;
+	}
+
+	public String getModel()
+	{
+		return model;
+	}
+
+	public String getVendor()
+	{
+		return vendor;
+	}
+
+	public String getOwner()
+	{
+		return owner;
+	}
+
+	public void setCameraId(String cameraId)
+	{
+		this.cameraId = cameraId;
+	}
+
+	public void setExternalSnapshotUrl(String externalSnapshotUrl)
+	{
+		this.externalSnapshotUrl = externalSnapshotUrl;
+	}
+
+	public void setInternalSnapshotUrl(String internalSnapshotUrl)
+	{
+		this.internalSnapshotUrl = internalSnapshotUrl;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	public void setUsername(String username)
+	{
+		this.username = username;
+	}
+
+	public void setPassword(String password)
+	{
+		this.password = password;
+	}
+
+	public void setTimezone(String timezone)
+	{
+		this.timezone = timezone;
+	}
+
+	public void setModel(String model)
+	{
+		this.model = model;
+	}
+
+	public void setVendor(String vendor)
+	{
+		this.vendor = vendor;
+	}
+
+	public void setOwner(String owner)
+	{
+		this.owner = owner;
 	}
 }

@@ -130,7 +130,7 @@ public class CamerasActivity extends ParentActivity implements
 
 			refresh = menu.findItem(R.id.menurefresh);
 
-			if (refresh != null && (AppData.cameraList == null || AppData.cameraList.size() == 0))
+			if (refresh != null && (AppData.evercamCameraList == null || AppData.evercamCameraList.size() == 0))
 			{
 				refresh.setActionView(null);
 				refresh.setActionView(R.layout.actionbar_indeterminate_progress);
@@ -655,8 +655,8 @@ public class CamerasActivity extends ParentActivity implements
 
 							Log.v("evercamapp", "use default user:" + user.getEmail());
 							// load cameras for default user
-							AppData.cameraList = new DbCamera(CamerasActivity.this)
-									.getAllCamerasForEmailID(AppData.defaultUser.getEmail(), 500);
+//							AppData.cameraList = new DbCamera(CamerasActivity.this)
+//									.getAllCamerasForEmailID(AppData.defaultUser.getEmail(), 500);
 							removeAllCameraViews();
 							addAllCameraViews(true);
 
@@ -723,7 +723,6 @@ public class CamerasActivity extends ParentActivity implements
 //						updateDB = true;
 //						break;
 //					}
-//
 //				}
 //				if (!updateDB)
 //				{

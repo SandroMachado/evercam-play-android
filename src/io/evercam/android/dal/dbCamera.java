@@ -54,29 +54,6 @@ public class DbCamera extends DatabaseMaster
 
 	public static final String Key_UtcOffset = "UtcOffset";
 
-	// <ArrayOfApiCamera xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-	// xmlns="http://schemas.datacontract.org/2004/07/StopMotion.Business.Entities"><ApiCamera><AccessMethod>Manual</AccessMethod><AlarmLevel>5</AlarmLevel><AudioUrl></AudioUrl><BaseUrl>http://93.107.43.164:8082/</BaseUrl><BrowserUrl>http://camba.tv/cameraview.aspx?c=esewekxn</BrowserUrl><CameraGroup>DCF</CameraGroup><CameraImageUrl>http://93.107.43.164:8082/snapshot.jpg</CameraImageUrl><CameraMake>Y-Cam</CameraMake><CameraModel>Black
-	// SD</CameraModel><CameraPassword>mehcam4mehcam</CameraPassword><CameraStatusIntVal>3</CameraStatusIntVal><CameraTimeZone>GMT
-	// Standard
-	// Time</CameraTimeZone><CameraUserName>admin</CameraUserName><Code>esewekxn</Code><H264Url></H264Url><HistoryDays>90</HistoryDays><Id>105</Id><IsMdEnabled>true</IsMdEnabled><LocalIpPort>192.168.3.115:8082</LocalIpPort><LowResolutionSnapshotUrl>http://93.107.43.164:8082/snapshot1.jpg</LowResolutionSnapshotUrl><MjpgUrl>http://93.107.43.164:8082/stream.jpg</MjpgUrl><MobileUrl>rtsp://93.107.43.164:8082/live_3gpp.sdp</MobileUrl><Mpeg4Url>rtsp://93.107.43.164:8082/live_mpeg4.sdp</Mpeg4Url><Name>Aughrim
-	// Office</Name><OfflineTime>2013-01-31T14:49:44.717</OfflineTime><RtspPort>8082</RtspPort><RtspUrl
-	// i:nil="true"
-	// /><Status>Offline</Status><UseCredentials>true</UseCredentials><VideoRecording>false</VideoRecording></ApiCamera><ApiCamera><AccessMethod>Manual</AccessMethod><AlarmLevel>7</AlarmLevel><AudioUrl></AudioUrl><BaseUrl>http://149.5.42.145:11214/</BaseUrl><BrowserUrl>http://camba.tv/cameraview.aspx?c=qasodset</BrowserUrl><CameraGroup>DCC</CameraGroup><CameraImageUrl>http://149.5.42.145:11214/axis-cgi/jpg/image.cgi?resolution=640x480</CameraImageUrl><CameraMake>Axis</CameraMake><CameraModel>Q
-	// Series</CameraModel><CameraPassword>mehcam</CameraPassword><CameraStatusIntVal>1</CameraStatusIntVal><CameraTimeZone>GMT
-	// Standard
-	// Time</CameraTimeZone><CameraUserName>camba</CameraUserName><Code>qasodset</Code><H264Url>rtsp://149.5.42.145:11214/axis-media/media.amp?resolution=640x360</H264Url><HistoryDays>1</HistoryDays><Id>758</Id><IsMdEnabled>false</IsMdEnabled><LocalIpPort>192.168.0.214:80</LocalIpPort><LowResolutionSnapshotUrl>http://149.5.42.145:11214/axis-cgi/jpg/image.cgi?resolution=cif</LowResolutionSnapshotUrl><MjpgUrl>http://149.5.42.145:11214/axis-cgi/mjpg/video.cgi</MjpgUrl><MobileUrl>rtsp://149.5.42.145:10214/axis-media/media.amp?resolution=QCIF</MobileUrl><Mpeg4Url
-	// i:nil="true" /><Name>Herbst Mast PTZ MJ</Name><OfflineTime i:nil="true"
-	// /><RtspPort>10214</RtspPort><RtspUrl i:nil="true"
-	// /><Status>Active</Status><UseCredentials>true</UseCredentials><VideoRecording>false</VideoRecording></ApiCamera><ApiCamera><AccessMethod>Manual</AccessMethod><AlarmLevel>5</AlarmLevel><AudioUrl></AudioUrl><BaseUrl>http://87.213.54.234:6010/</BaseUrl><BrowserUrl>http://camba.tv/cameraview.aspx?c=bhlkubut</BrowserUrl><CameraGroup>DCF</CameraGroup><CameraImageUrl>http://87.213.54.234:6010/Streaming/Channels/1/picture</CameraImageUrl><CameraMake>Hikvision</CameraMake><CameraModel>Other</CameraModel><CameraPassword>12345</CameraPassword><CameraStatusIntVal>3</CameraStatusIntVal><CameraTimeZone>GMT
-	// Standard
-	// Time</CameraTimeZone><CameraUserName>admin</CameraUserName><Code>bhlkubut</Code><H264Url>rtsp://87.213.54.234:6010/h264/ch1/main/av_stream</H264Url><HistoryDays>1</HistoryDays><Id>2048</Id><IsMdEnabled>false</IsMdEnabled><LocalIpPort
-	// i:nil="true" /><LowResolutionSnapshotUrl i:nil="true" /><MjpgUrl
-	// i:nil="true"
-	// /><MobileUrl>rtsp://87.213.54.234:6010/h264/ch1/main/av_stream</MobileUrl><Mpeg4Url>rtsp://87.213.54.234:6010/mpeg4/ch1/main/av_stream</Mpeg4Url><Name>Hikvision
-	// 1.3</Name><OfflineTime>2012-11-20T10:46:52.317</OfflineTime><RtspPort>554</RtspPort><RtspUrl
-	// i:nil="true"
-	// /><Status>Offline</Status><UseCredentials>true</UseCredentials><VideoRecording>false</VideoRecording></ApiCamera><ApiCamera><AccessMethod>Manual</AccessMethod><AlarmLevel>5</AlarmLevel><AudioUrl></AudioUrl><BaseUrl>http://87.213.54.234:6100/</BaseUrl><BrowserUrl>http://camba.tv/cameraview.aspx?c=bwcqmqyr</BrowserUrl><
-
 	public DbCamera(Context context)
 	{
 		super(context);

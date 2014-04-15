@@ -41,7 +41,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void,Boolean>
 			ArrayList<EvercamCamera> evercamCameras = new ArrayList<EvercamCamera>();
 			for(io.evercam.Camera camera : cameras)
 			{
-				evercamCameras.add(new EvercamCamera(camera));
+				evercamCameras.add(new EvercamCamera().convertFromEvercam(camera));
 			}
 			AppData.evercamCameraList = evercamCameras;
 			return true;

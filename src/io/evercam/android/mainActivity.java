@@ -144,7 +144,6 @@ public class MainActivity extends Activity
 			if (Constants.isAppTrackingEnabled)
 			{
 				BugSenseHandler.sendException(ex);
-
 			}
 		}
 	}
