@@ -17,6 +17,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void,Boolean>
 {
 	private AppUser user;
 	private CamerasActivity camerasActivity;
+	private String TAG = "evercamapp-LoadCameraListTask";
 
 	public LoadCameraListTask(AppUser user, CamerasActivity camerasActivity)
 	{
@@ -35,6 +36,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void,Boolean>
 	{
 		try
 		{
+			Log.v(TAG, user.getUsername());
 			ArrayList<Camera> cameras = User.getCameras(user.getUsername());
 			ArrayList<EvercamCamera> evercamCameras = new ArrayList<EvercamCamera>();
 			for(io.evercam.Camera camera : cameras)
@@ -46,7 +48,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void,Boolean>
 		}
 		catch (EvercamException e)
 		{
-			Log.e("evercamapp", "LoadCameraList: " + e.getMessage());
+			Log.e(TAG, e.getMessage());
 		}
 		return false;
 	}

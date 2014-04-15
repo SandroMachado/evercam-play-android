@@ -6,12 +6,10 @@ import io.evercam.EvercamException;
 import io.evercam.User;
 import io.evercam.android.dal.DbAppUser;
 import io.evercam.android.dto.AppUser;
-import io.evercam.android.dto.Camera;
 import io.evercam.android.utils.AppData;
 import io.evercam.android.utils.Constants;
+import io.evercam.android.utils.PrefsManager;
 import io.evercam.android.utils.PropertyReader;
-
-import java.util.ArrayList;
 
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
@@ -19,7 +17,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -32,11 +29,8 @@ import com.google.analytics.tracking.android.EasyTracker;
 
 public class LoginActivity extends ParentActivity
 {
-	public static final int loginVerifyRequestCode = 5; // code of the request
-														// being sent to this
-														// activity
-	public static int loginResultSuccessCode = 5; // code of the success for the
-													// above request code
+	public static final int loginVerifyRequestCode = 5; 
+	public static int loginResultSuccessCode = 5;
 
 	private EditText usernameEdit;
 	private EditText passwordEdit;
@@ -46,7 +40,7 @@ public class LoginActivity extends ParentActivity
 	private SharedPreferences sharedPrefs;
 	private String developerAppKey;
 	private String developerAppID;
-
+	private String TAG = "evercamapp-LoginActivity";
 	private ProgressDialog progressDialog;
 
 	@Override
@@ -192,24 +186,10 @@ public class LoginActivity extends ParentActivity
 
 				dbUser.addAppUser(newUser);
 				AppData.defaultUser = newUser;
+				PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
 				finishLoginActivity();
 
-				// AppData.camesList = new ArrayList<Camera>(); // clear all
-				// // cameras
-				// SharedPreferences.Editor editor = sharedPrefs.edit();
-				// editor.putString("AppUserEmail", AppData.AppUserEmail);
-				// editor.putString("AppUserPassword", AppData.AppUserPassword);
-				// editor.commit();
-				// }
-				// catch (Exception e)
-				// {
-				// Log.v("evercamapp", "Save user data while signing in:");
-				// if (Constants.isAppTrackingEnabled)
-				// {
-				// BugSenseHandler.sendException(e);
-				// }
-				// }
-
+				// AppData.camesList = new ArrayList<Camera>(); 
 			}
 			else
 			{
@@ -237,7 +217,9 @@ public class LoginActivity extends ParentActivity
 		if (Constants.isAppTrackingEnabled)
 		{
 			EasyTracker.getInstance().activityStart(this);
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
+			if (Constants.isAppTrackingEnabled)
+				{BugSenseHandler.startSession(this);
+				}
 		}
 	}
 
@@ -249,7 +231,9 @@ public class LoginActivity extends ParentActivity
 		if (Constants.isAppTrackingEnabled)
 		{
 			EasyTracker.getInstance().activityStop(this);
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
+			if (Constants.isAppTrackingEnabled)
+				{BugSenseHandler.closeSession(this);
+				}
 		}
 	}
 

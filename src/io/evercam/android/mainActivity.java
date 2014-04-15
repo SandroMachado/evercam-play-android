@@ -1,8 +1,11 @@
 package io.evercam.android;
 
+import io.evercam.android.dal.DbAppUser;
+import io.evercam.android.dto.AppUser;
 import io.evercam.android.utils.AppData;
 import io.evercam.android.utils.Commons;
 import io.evercam.android.utils.Constants;
+import io.evercam.android.utils.PrefsManager;
 import io.evercam.android.utils.UIUtils;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -25,8 +28,7 @@ import android.util.Log;
  * */
 public class MainActivity extends Activity
 {
-	private static final String TAG = "evercamapp";
-	private static boolean enableLogs = true;
+	private static final String TAG = "evercamapp-MainActivity";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -57,7 +59,7 @@ public class MainActivity extends Activity
 		catch (Exception ex)
 		{
 			UIUtils.GetAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
-			if (enableLogs) Log.i(TAG, Log.getStackTraceString(ex));
+			Log.e(TAG, Log.getStackTraceString(ex));
 		}
 	}
 
@@ -90,27 +92,21 @@ public class MainActivity extends Activity
 			else
 			{
 
-				// get the username and password saved in application and pass
-				// to
-				// CambaApiManager so that they can be used at the time of login
-				// authentication
-			//	SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+				String defaultEmail = PrefsManager.getUserEmail(sharedPrefs);
+				if (defaultEmail != null)
+				{
+					DbAppUser dbUser = new DbAppUser(this);
+					AppUser defaultUser = dbUser.getAppUser(defaultEmail);
+					AppData.defaultUser = defaultUser;
+				}
 
-//				AppData.AppUserEmail = sharedPrefs.getString("AppUserEmail", null);
-//				AppData.AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
-				// if username and password not found, pass the same to login
-				// activity
-//				if (AppData.AppUserEmail == null || AppData.AppUserEmail.equals("")
-//						|| AppData.AppUserPassword == null || AppData.AppUserPassword.equals(""))
-				if(AppData.defaultUser == null)
+				if (AppData.defaultUser == null)
 				{
 					Intent login = new Intent(MainActivity.this, LoginActivity.class);
 					startActivityForResult(login, LoginActivity.loginVerifyRequestCode);
 				}
 				else
-				// username password found. pass to cams activity and verify if
-				// the
-				// username password is valid and get the cameras data
 				{
 					startCamerasActivity();
 				}
@@ -119,12 +115,12 @@ public class MainActivity extends Activity
 		catch (Exception ex)
 		{
 			UIUtils.GetAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
-			if (enableLogs) Log.i(TAG, Log.getStackTraceString(ex));
+			Log.e(TAG, Log.getStackTraceString(ex));
 		}
 
 	}
 
-	// login activity result. perform the acction according to result...
+	// login activity result. perform the action according to result...
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
@@ -145,7 +141,11 @@ public class MainActivity extends Activity
 		catch (Exception ex)
 		{
 			UIUtils.GetAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(ex);
+			if (Constants.isAppTrackingEnabled)
+			{
+				BugSenseHandler.sendException(ex);
+
+			}
 		}
 	}
 
@@ -159,9 +159,6 @@ public class MainActivity extends Activity
 
 			if (strNotificationID != null && !strNotificationID.equals("")) notificationID = Integer
 					.parseInt(strNotificationID);
-
-			Log.i(TAG, "main activitiy strNotificationID [" + strNotificationID
-					+ "], notificationID [" + notificationID + "]");
 
 		}
 		catch (Exception e)
@@ -196,7 +193,11 @@ public class MainActivity extends Activity
 		if (Constants.isAppTrackingEnabled)
 		{
 			EasyTracker.getInstance().activityStart(this);
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
+			if (Constants.isAppTrackingEnabled)
+			{
+				BugSenseHandler.startSession(this);
+
+			}
 		}
 	}
 
@@ -208,7 +209,10 @@ public class MainActivity extends Activity
 		if (Constants.isAppTrackingEnabled)
 		{
 			EasyTracker.getInstance().activityStop(this);
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
+			if (Constants.isAppTrackingEnabled)
+			{
+				BugSenseHandler.closeSession(this);
+			}
 		}
 	}
 
@@ -226,7 +230,7 @@ public class MainActivity extends Activity
 		}
 		catch (NameNotFoundException e)
 		{
-			Log.e("evercamapp", e.getMessage());
+			Log.e(TAG, e.getMessage());
 		}
 		return ((isReleaseNotesShown && versionCode != 0) ? true : false);
 	}

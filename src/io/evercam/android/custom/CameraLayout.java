@@ -21,7 +21,6 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 import android.view.*;
-import android.webkit.URLUtil;
 import android.widget.*;
 
 public class CameraLayout extends LinearLayout
@@ -31,13 +30,11 @@ public class CameraLayout extends LinearLayout
 	private RelativeLayout cameraRelativeLayout;
 	private Context context;
 	private EvercamCamera evercamCamera;
-	private DownloadLiveImageTask liveImageTask; // task to download image from
-													// camera
+	private DownloadLiveImageTask liveImageTask; 
 	private DownloadLiveImageTask liveImageTaskLocal;
 	// private DownloadLatestTask latestTask; // tsk to download image from
 	// camba
 	// website
-	private static boolean enableLogs = false;
 
 	private boolean end = false; // tells whether application has ended or not.
 									// If it is
@@ -184,13 +181,16 @@ public class CameraLayout extends LinearLayout
 		}
 		catch (OutOfMemoryError e)
 		{
-			if (enableLogs) Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+			Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
 		}
 		catch (Exception e)
 		{
-			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
+			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
 			UIUtils.GetAlertDialog(context, "Exception", e.toString()).show();
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+			if (Constants.isAppTrackingEnabled)
+			{
+				BugSenseHandler.sendException(e);
+			}
 
 		}
 	}
@@ -233,8 +233,10 @@ public class CameraLayout extends LinearLayout
 					cameraRelativeLayout.setBackgroundDrawable(drawable);
 
 					isImageLodedFromCache = true;
-					if (enableLogs) Log.i(TAG, "laodimagefromcache image loaded for camera ["
-							+ evercamCamera.getCameraId() + ":" + evercamCamera.getName() + "].");
+					Log.i(TAG,
+							"laodimagefromcache image loaded for camera ["
+									+ evercamCamera.getCameraId() + ":" + evercamCamera.getName()
+									+ "].");
 					setlayoutForImageLoadedFromCache();
 					return true;
 				}
@@ -247,11 +249,9 @@ public class CameraLayout extends LinearLayout
 						ds += ". File Physically Exists with size [" + file.length() + "]";
 						file.delete();
 					}
-					if (enableLogs) Log.e(
-							TAG,
-							"laodimagefromcache drawable d1 is null for camera ["
-									+ evercamCamera.getCameraId() + ":" + evercamCamera.getName()
-									+ "]." + ds);
+					Log.e(TAG, "laodimagefromcache drawable d1 is null for camera ["
+							+ evercamCamera.getCameraId() + ":" + evercamCamera.getName() + "]."
+							+ ds);
 				}
 			}
 
@@ -263,13 +263,16 @@ public class CameraLayout extends LinearLayout
 		catch (OutOfMemoryError e)
 		{
 			isImageLodedFromCache = false;
-			if (enableLogs) Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+			Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
 			return false;
 		}
 		catch (Exception e)
 		{
-			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
+			if (Constants.isAppTrackingEnabled)
+			{
+				BugSenseHandler.sendException(e);
+			}
 		}
 
 		return false;
@@ -283,10 +286,6 @@ public class CameraLayout extends LinearLayout
 		{
 			boolean isLoaded = loadImageFromCache();
 			isImageLodedFromCache = isLoaded;
-			if (isLoaded)
-			{
-				Log.v(TAG, "cache file loaded");
-			}
 
 			if (!end)
 			{
@@ -319,7 +318,11 @@ public class CameraLayout extends LinearLayout
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+			if (Constants.isAppTrackingEnabled)
+			{
+				BugSenseHandler.sendException(e);
+
+			}
 		}
 		return true;
 	}
@@ -396,7 +399,6 @@ public class CameraLayout extends LinearLayout
 		}
 		else
 		{
-
 			for (int i = 0; i < cameraRelativeLayout.getChildCount(); i++)
 			{
 				cameraRelativeLayout.getChildAt(i).setVisibility(View.GONE);
@@ -472,7 +474,7 @@ public class CameraLayout extends LinearLayout
 			}
 			catch (OutOfMemoryError e)
 			{
-				if (enableLogs) Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+				Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
 				try
 				{
 					handler.postDelayed(LoadImageRunnable, 5000);
@@ -484,9 +486,15 @@ public class CameraLayout extends LinearLayout
 			}
 			catch (Exception e)
 			{
-				if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-				if (!end) handler.postDelayed(LoadImageRunnable, 5000);
-				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+				Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
+				if (!end)
+				{
+					handler.postDelayed(LoadImageRunnable, 5000);
+				}
+				if (Constants.isAppTrackingEnabled)
+				{
+					BugSenseHandler.sendException(e);
+				}
 			}
 		}
 	};
@@ -495,13 +503,6 @@ public class CameraLayout extends LinearLayout
 	{
 		this.setBackgroundColor(Color.GRAY);
 		cameraRelativeLayout.getBackground().setAlpha(50);
-
-		// LinearLayout grey = new LinearLayout(context);
-		// grey.setLayoutParams(new
-		// LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-		// grey.setBackgroundColor(Color.parseColor("#808080"));
-		// grey.setAlpha((float) 0.8);
-		// cameraRelativeLayout.addView(grey);
 	}
 
 	private class DownloadLiveImageTask extends AsyncTask<String, Void, String>
@@ -529,7 +530,6 @@ public class CameraLayout extends LinearLayout
 					{
 						String extCachePath = context.getExternalFilesDir(null) + "/"
 								+ evercamCamera.getCameraId() + ".jpg";
-						Log.v(TAG, "ext cache path" + extCachePath);
 						File extfile = new File(extCachePath);
 						if (drawable != null)
 						{
@@ -551,7 +551,6 @@ public class CameraLayout extends LinearLayout
 
 					String pathString = context.getCacheDir() + "/" + evercamCamera.getCameraId()
 							+ ".jpg";
-					Log.v(TAG, "pathString" + pathString);
 					File file = new File(pathString);
 
 					if (drawable != null)
@@ -662,9 +661,7 @@ public class CameraLayout extends LinearLayout
 					if (liveImageTask.isTaskended
 							&& CameraLayout.this.evercamCamera.loadingStatus != ImageLoadingStatus.live_received)
 					{
-						Log.v(TAG, "set as not received");
 						CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_not_received;
-
 					}
 					if (liveImageTask.isTaskended)
 					{
@@ -675,9 +672,9 @@ public class CameraLayout extends LinearLayout
 			catch (Exception e)
 			{
 				if (Constants.isAppTrackingEnabled)
-					{BugSenseHandler.sendException(e);
-					
-					}
+				{
+					BugSenseHandler.sendException(e);
+				}
 			}
 		}
 	}

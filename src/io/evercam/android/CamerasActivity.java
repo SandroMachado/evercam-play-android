@@ -10,7 +10,6 @@ import android.os.Handler;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -28,20 +27,15 @@ import io.evercam.android.dal.DbAppUser;
 import io.evercam.android.dal.DbCamera;
 import io.evercam.android.dal.DbNotifcation;
 import io.evercam.android.dto.AppUser;
-import io.evercam.android.dto.Camera;
 import io.evercam.android.dto.CameraNotification;
 import io.evercam.android.dto.EvercamCamera;
 import io.evercam.android.dto.ImageLoadingStatus;
-import io.evercam.android.exceptions.ConnectivityException;
-import io.evercam.android.exceptions.CredentialsException;
 import io.evercam.android.slidemenu.*;
 import io.evercam.android.tasks.LoadCameraListTask;
 import io.evercam.android.utils.AppData;
-import io.evercam.android.utils.Commons;
 import io.evercam.android.utils.Constants;
 import io.evercam.android.utils.UIUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -58,7 +52,7 @@ public class CamerasActivity extends ParentActivity implements
 {
 	public static CamerasActivity activity = null;
 
-	private static final String TAG = "evecamapp";
+	private static final String TAG = "evecamapp-CamerasActivity";
 	private RegisterGCMAlertsServiceTask RegisterTask = null;
 	private MenuItem refresh;
 	private SlideMenu slideMenu;
@@ -111,8 +105,6 @@ public class CamerasActivity extends ParentActivity implements
 			{
 				CamerasActivity.this.onSlideMenuItemClick(notificationID);
 			}
-			Log.i(TAG, "notificationID [" + notificationID + "]");
-
 		}
 		catch (Exception e)
 		{
@@ -124,7 +116,6 @@ public class CamerasActivity extends ParentActivity implements
 							+ Log.getStackTraceString(e)).show();
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 		}
-
 	}
 
 	@Override
@@ -148,7 +139,10 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception ex)
 		{
 			Log.e(TAG, ex.toString());
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(ex);
+			if (Constants.isAppTrackingEnabled) 
+				{
+				BugSenseHandler.sendException(ex);
+				}
 		}
 		return true;
 	}

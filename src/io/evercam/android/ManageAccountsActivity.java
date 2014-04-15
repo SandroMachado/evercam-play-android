@@ -3,11 +3,7 @@ package io.evercam.android;
 import io.evercam.android.custom.CustomAdapter;
 import io.evercam.android.dal.*;
 import io.evercam.android.dto.AppUser;
-import io.evercam.android.exceptions.ConnectivityException;
-import io.evercam.android.exceptions.CredentialsException;
 import io.evercam.android.utils.AppData;
-import io.evercam.android.utils.CLog;
-import io.evercam.android.utils.Commons;
 import io.evercam.android.utils.Constants;
 import io.evercam.android.utils.UIUtils;
 

@@ -39,10 +39,8 @@ import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
-import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
 
