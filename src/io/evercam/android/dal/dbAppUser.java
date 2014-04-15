@@ -15,6 +15,7 @@ import android.util.Log;
 public class DbAppUser extends DatabaseMaster
 {
 	private static final String TABLE_APP_USER = "appuser";
+	private final String TAG = "evercamapp-DbAppUser";
 
 	// Users Table Columns names
 	public static final String KEY_ID = "id";
@@ -135,11 +136,11 @@ public class DbAppUser extends DatabaseMaster
 				}
 				catch (NumberFormatException e)
 				{
-					Log.e("evercamapp", e.getMessage());
+					Log.e(TAG, e.getMessage());
 				}
 				catch (Exception e)
 				{
-					Log.e("evercamapp", "DepryptUsername:" + e.getMessage());
+					Log.e(TAG, "DepryptUsername:" + e.getMessage());
 					e.printStackTrace();
 				}
 			}
@@ -217,7 +218,6 @@ public class DbAppUser extends DatabaseMaster
 		int count = 0;
 		if (cursor.moveToFirst())
 		{
-
 			do
 			{
 				AppUser user = new AppUser(Integer.parseInt(cursor.getString(0)), cursor.getString(1),cursor.getString(2),
@@ -226,7 +226,6 @@ public class DbAppUser extends DatabaseMaster
 				AppUserList.add(user);
 				count++;
 			} while (cursor.moveToNext() && (maxRecords == 0 || count < maxRecords));
-
 		}
 
 		cursor.close();
@@ -329,7 +328,7 @@ public class DbAppUser extends DatabaseMaster
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			Log.e("evercamapp", e.getMessage());
+			Log.e(TAG, e.getMessage());
 		}
 		return values;
 	}

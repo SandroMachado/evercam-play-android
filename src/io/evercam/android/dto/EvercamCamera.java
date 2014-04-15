@@ -57,7 +57,7 @@ public class EvercamCamera
 	{
 		try
 		{
-			camera.getJpgExternalFullUrl();
+			return camera.getJpgExternalFullUrl();
 		}
 		catch (EvercamException e)
 		{
@@ -70,7 +70,7 @@ public class EvercamCamera
 	{
 		try
 		{
-			camera.getJpgExternalFullUrl();
+			return camera.getJpgExternalFullUrl();
 		}
 		catch (EvercamException e)
 		{
@@ -86,11 +86,27 @@ public class EvercamCamera
 	
 	public String getUsername()
 	{
-		return "admin";
+		try
+		{
+			return camera.getCameraUsername();
+		}
+		catch (EvercamException e)
+		{
+			Log.e(TAG,e.getMessage());
+		}
+		return "";
 	}
 	
 	public String getPassword()
 	{
-		return "12345";
+		try
+		{
+			return camera.getCameraPassword();
+		}
+		catch (EvercamException e)
+		{
+			Log.e(TAG,e.getMessage());
+		}
+		return "";
 	}
 }

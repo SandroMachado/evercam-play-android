@@ -16,7 +16,6 @@ public class AppUser
 
 	}
 
-	// constructor
 	public AppUser(int id, String email, String password, String apiKey, String apiId,String country,
 			String username, boolean isDefault)
 	{

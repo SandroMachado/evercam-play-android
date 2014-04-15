@@ -143,8 +143,6 @@ public class CamerasActivity extends ParentActivity implements
 				refresh.setActionView(null);
 				refresh.setActionView(R.layout.actionbar_indeterminate_progress);
 			}
-
-			Log.i(TAG, "Options Activity Started in onPrepareOptionsMenu event");
 			return true;
 		}
 		catch (Exception ex)
@@ -446,7 +444,6 @@ public class CamerasActivity extends ParentActivity implements
 			
 			for(EvercamCamera evercamCamera: AppData.evercamCameraList)
 			{
-				Log.v("evercamapp", "init camera"+ evercamCamera.getName() );
 				LinearLayout cameraListLayout = new LinearLayout(this);
 				
 				int indexPlus = index + 1;
@@ -550,9 +547,6 @@ public class CamerasActivity extends ParentActivity implements
 
 			String ApiCamera = intent.getStringExtra("ApiCamera");
 			Log.i(TAG, "ApiCamera [" + ApiCamera + "]");
-
-	//		Camera cam = CambaApiManager.ParseJsonObject(ApiCamera);
-
 		}
 	};
 

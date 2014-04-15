@@ -26,30 +26,30 @@ import android.widget.*;
 
 public class CameraLayout extends LinearLayout
 {
-	private static final String TAG = "evercamapp";
+	private static final String TAG = "evercamapp-CameraLayout";
 
-	private RelativeLayout cameraRelativeLayout; // layout for the image and controls showing on
-							// screen
+	private RelativeLayout cameraRelativeLayout;
 	private Context context;
-	private EvercamCamera evercamCamera; 
-	private DownloadLiveImageTask  liveImageTask; // task to download image from camera
-	private DownloadLiveImageTask  liveImageTaskLocal; 
-//	private DownloadLatestTask latestTask; // tsk to download image from camba
-												// website
-	private static boolean enableLogs = false; 
+	private EvercamCamera evercamCamera;
+	private DownloadLiveImageTask liveImageTask; // task to download image from
+													// camera
+	private DownloadLiveImageTask liveImageTaskLocal;
+	// private DownloadLatestTask latestTask; // tsk to download image from
+	// camba
+	// website
+	private static boolean enableLogs = false;
 
-	private boolean end = false; // tells whether application has ended or not. If it is
-							// true, all tasks must end and no further
-							// processing should be done in any thread.
+	private boolean end = false; // tells whether application has ended or not.
+									// If it is
+	// true, all tasks must end and no further
+	// processing should be done in any thread.
 	private ProgressView loadingAnimation = null;
-	private TextView imageMessage = null; // message being displayed on the camera. It
-									// is status message.
+	private TextView imageMessage = null;
 	private boolean isImageLodedFromCache = false;
 
 	// Handler for the handling the next request. It will call the image loading
 	// thread so that it can proceed with next step.
 	private final Handler handler = new Handler();
-	
 
 	public CameraLayout(Context context, EvercamCamera camera)
 	{
@@ -111,68 +111,74 @@ public class CameraLayout extends LinearLayout
 			ivMessageParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 			ivMessageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 			imageMessage.setLayoutParams(ivMessageParams);
-			imageMessage.setText("Connecting...");
+			imageMessage.setText(R.string.connecting);
 			imageMessage.setGravity(Gravity.CENTER);
 			cameraRelativeLayout.addView(imageMessage);
 
 			cameraRelativeLayout.setClickable(true);
-//			cameraRelativeLayout.setOnClickListener(new View.OnClickListener(){
-//				@Override
-//				public void onClick(View v)
-//				{
-//					AlertDialog.Builder builder = UIUtils.GetAlertDialogBuilderNoTitle(CameraLayout.this.context);
-//					final View layout = ((CamerasActivity) CameraLayout.this.context).getLayoutInflater().inflate(
-//							R.layout.cameralayout_dialog_liverecordingview, null);
-//
-//					builder.setView(layout);
-//
-//					builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-//						@Override
-//						public void onClick(DialogInterface dialog, int which)
-//						{
-//							dialog.cancel();
-//						}
-//					});
-//
-//					final AlertDialog dialog = builder.create();
-//
-//					Button btnLive = (Button) layout
-//							.findViewById(R.id.cameralayout_dialog_btn_live);
-//					btnLive.setEnabled(true);
-//					btnLive.getCompoundDrawables()[0].setAlpha(255);
-//
-//					if (evercamCamera.getStatus().equalsIgnoreCase("Offline"))
-//					{
-//						btnLive.setText("Offline");
-//
-//						btnLive.setEnabled(false);
-//						btnLive.getCompoundDrawables()[0].setAlpha(100);
-//
-//					}
-//
-//					btnLive.setOnClickListener(new OnClickListener(){
-//						@Override
-//						public void onClick(View v)
-//						{
-//							VideoActivity.startPlayingVIdeoForCamera(CameraLayout.this.context, evercamCamera.getCameraID());
-//							dialog.cancel();
-//						}
-//					});
-//
-//					Button btnRecorded = (Button) layout
-//							.findViewById(R.id.cameralayout_dialog_btn_recored);
-//					btnRecorded.setOnClickListener(new OnClickListener(){
-//						@Override
-//						public void onClick(View v)
-//						{
-//							RVideoViewActivity.StartPlayingVIdeo(CameraLayout.this.context, evercamCamera, null);
-//							dialog.cancel();
-//						}
-//					});
-//
-//					dialog.show();
-//				}
-//			});
+			// cameraRelativeLayout.setOnClickListener(new
+			// View.OnClickListener(){
+			// @Override
+			// public void onClick(View v)
+			// {
+			// AlertDialog.Builder builder =
+			// UIUtils.GetAlertDialogBuilderNoTitle(CameraLayout.this.context);
+			// final View layout = ((CamerasActivity)
+			// CameraLayout.this.context).getLayoutInflater().inflate(
+			// R.layout.cameralayout_dialog_liverecordingview, null);
+			//
+			// builder.setView(layout);
+			//
+			// builder.setNegativeButton("Cancel", new
+			// DialogInterface.OnClickListener(){
+			// @Override
+			// public void onClick(DialogInterface dialog, int which)
+			// {
+			// dialog.cancel();
+			// }
+			// });
+			//
+			// final AlertDialog dialog = builder.create();
+			//
+			// Button btnLive = (Button) layout
+			// .findViewById(R.id.cameralayout_dialog_btn_live);
+			// btnLive.setEnabled(true);
+			// btnLive.getCompoundDrawables()[0].setAlpha(255);
+			//
+			// if (evercamCamera.getStatus().equalsIgnoreCase("Offline"))
+			// {
+			// btnLive.setText("Offline");
+			//
+			// btnLive.setEnabled(false);
+			// btnLive.getCompoundDrawables()[0].setAlpha(100);
+			//
+			// }
+			//
+			// btnLive.setOnClickListener(new OnClickListener(){
+			// @Override
+			// public void onClick(View v)
+			// {
+			// VideoActivity.startPlayingVIdeoForCamera(CameraLayout.this.context,
+			// evercamCamera.getCameraID());
+			// dialog.cancel();
+			// }
+			// });
+			//
+			// Button btnRecorded = (Button) layout
+			// .findViewById(R.id.cameralayout_dialog_btn_recored);
+			// btnRecorded.setOnClickListener(new OnClickListener(){
+			// @Override
+			// public void onClick(View v)
+			// {
+			// RVideoViewActivity.StartPlayingVIdeo(CameraLayout.this.context,
+			// evercamCamera, null);
+			// dialog.cancel();
+			// }
+			// });
+			//
+			// dialog.show();
+			// }
+			// });
 
 			loadImage();
 		}
@@ -195,15 +201,16 @@ public class CameraLayout extends LinearLayout
 	{
 		try
 		{
-			String cachePath = context.getCacheDir().getAbsolutePath() + "/" + evercamCamera.getCameraId()
-					+ ".jpg";
+			String cachePath = context.getCacheDir().getAbsolutePath() + "/"
+					+ evercamCamera.getCameraId() + ".jpg";
 			File cachefile = new File(cachePath);
 
 			String extCachePath = null;
 			File extfile = null;
 			try
 			{
-				extCachePath = context.getExternalFilesDir(null) + "/" + evercamCamera.getCameraId() + ".jpg";
+				extCachePath = context.getExternalFilesDir(null) + "/"
+						+ evercamCamera.getCameraId() + ".jpg";
 				extfile = new File(extCachePath);
 			}
 			catch (Exception e)
@@ -212,19 +219,22 @@ public class CameraLayout extends LinearLayout
 
 			if (cachefile.exists() || (extfile != null && extfile.exists()))
 			{
-				Drawable d1 = null;
-				if (cachefile.exists()) d1 = Drawable.createFromPath(cachePath);
-				else d1 = Drawable.createFromPath(extCachePath);
+				Drawable drawable = null;
+				if (cachefile.exists())
+				{
+					drawable = Drawable.createFromPath(cachePath);
+				}
+				else drawable = Drawable.createFromPath(extCachePath);
 
-				if (d1 != null) // whether image was downloaded properly or not
+				if (drawable != null) // whether image was downloaded properly
+										// or not
 				{
 					cameraRelativeLayout.setVisibility(View.VISIBLE);
-					cameraRelativeLayout.setBackgroundDrawable(d1);
+					cameraRelativeLayout.setBackgroundDrawable(drawable);
 
 					isImageLodedFromCache = true;
-					if (enableLogs) Log.i(TAG,
-							"laodimagefromcache image loaded for camera [" + evercamCamera.getCameraId()
-									+ ":" + evercamCamera.getName() + "].");
+					if (enableLogs) Log.i(TAG, "laodimagefromcache image loaded for camera ["
+							+ evercamCamera.getCameraId() + ":" + evercamCamera.getName() + "].");
 					setlayoutForImageLoadedFromCache();
 					return true;
 				}
@@ -240,15 +250,15 @@ public class CameraLayout extends LinearLayout
 					if (enableLogs) Log.e(
 							TAG,
 							"laodimagefromcache drawable d1 is null for camera ["
-									+ evercamCamera.getCameraId() + ":" + evercamCamera.getName() + "]." + ds);
+									+ evercamCamera.getCameraId() + ":" + evercamCamera.getName()
+									+ "]." + ds);
 				}
 			}
 
 			// if imange status was loaded on previously and now image is not in
 			// cache, then we need to restart this
 			if (!isImageLodedFromCache
-					&& (this.evercamCamera.loadingStatus == ImageLoadingStatus.live_received || this.evercamCamera.loadingStatus == ImageLoadingStatus.camba_image_received))
-			this.evercamCamera.loadingStatus = ImageLoadingStatus.not_started;
+					&& (this.evercamCamera.loadingStatus == ImageLoadingStatus.live_received || this.evercamCamera.loadingStatus == ImageLoadingStatus.camba_image_received)) this.evercamCamera.loadingStatus = ImageLoadingStatus.not_started;
 		}
 		catch (OutOfMemoryError e)
 		{
@@ -273,18 +283,23 @@ public class CameraLayout extends LinearLayout
 		{
 			boolean isLoaded = loadImageFromCache();
 			isImageLodedFromCache = isLoaded;
+			if (isLoaded)
+			{
+				Log.v(TAG, "cache file loaded");
+			}
 
 			if (!end)
 			{
 				handler.postDelayed(LoadImageRunnable, 0);
-				if (enableLogs) Log.i(TAG,
-						"handler posted after cache for camera [" + evercamCamera.toString() + "]");
 			}
 		}
 		catch (Exception e)
 		{
-			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
+			if (Constants.isAppTrackingEnabled)
+			{
+				BugSenseHandler.sendException(e);
+			}
 		}
 
 	}
@@ -294,17 +309,16 @@ public class CameraLayout extends LinearLayout
 	{
 		try
 		{
-			if (enableLogs) Log.i(TAG, "StopAllActivity called. end = true. [" + evercamCamera.toString()
-					+ "]");
 			end = true;
 			if (liveImageTask != null && liveImageTask.getStatus() != AsyncTask.Status.FINISHED) liveImageTask
 					.cancel(true);
-//			if (latestTask != null && latestTask.getStatus() != AsyncTask.Status.FINISHED) latestTask
-//					.cancel(true);
+			// if (latestTask != null && latestTask.getStatus() !=
+			// AsyncTask.Status.FINISHED) latestTask
+			// .cancel(true);
 		}
 		catch (Exception e)
 		{
-			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
+			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 		}
 		return true;
@@ -312,14 +326,13 @@ public class CameraLayout extends LinearLayout
 
 	// Image loaded form cache and now set the controls appearence and text
 	// accordingly
-	void setlayoutForImageLoadedFromCache()
+	private void setlayoutForImageLoadedFromCache()
 	{
 		if (cameraRelativeLayout.indexOfChild(loadingAnimation) >= 0)
 		{
 			loadingAnimation.setVisibility(View.GONE);
 			cameraRelativeLayout.removeView(loadingAnimation);
 		}
-
 	}
 
 	// Image loaded form camera and now set the controls appearence and text
@@ -332,7 +345,8 @@ public class CameraLayout extends LinearLayout
 		{
 			loadingAnimation.setVisibility(View.GONE);
 			cameraRelativeLayout.removeView(loadingAnimation);
-			if (cameraRelativeLayout.indexOfChild(imageMessage) >= 0) cameraRelativeLayout.removeView(imageMessage);
+			if (cameraRelativeLayout.indexOfChild(imageMessage) >= 0) cameraRelativeLayout
+					.removeView(imageMessage);
 		}
 
 		handler.removeCallbacks(LoadImageRunnable);
@@ -393,7 +407,8 @@ public class CameraLayout extends LinearLayout
 
 		}
 
-		if ((evercamCamera.getStatus() + "").contains("Active")) imageMessage.setText("Unable to Connect.");
+		if ((evercamCamera.getStatus() + "").contains("Active")) imageMessage
+				.setText("Unable to Connect.");
 		else imageMessage.setText(evercamCamera.getStatus() + "");
 
 		imageMessage.setTextColor(Color.RED);
@@ -410,20 +425,26 @@ public class CameraLayout extends LinearLayout
 			{
 				if (end) return;
 
-				if (enableLogs) Log.i(TAG, "Timer event called for camera + " + evercamCamera.toString()
-						+ ":: Loading Status:" + evercamCamera.loadingStatus);
+				Log.v(TAG, "Loading Status:" + evercamCamera.loadingStatus);
 
 				if (evercamCamera.loadingStatus == ImageLoadingStatus.not_started)
 				{
-//					liveImageTaskLocal = new DownloadLiveImageTask ();
-//					liveImageTaskLocal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-//							new String[] { evercamCamera.getLowResSnapshotLocalURLforCameraPlaying() });
+					// liveImageTaskLocal = new DownloadLiveImageTask ();
+					// liveImageTaskLocal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+					// new String[] {
+					// evercamCamera.getLowResSnapshotLocalURLforCameraPlaying()
+					// });
 
-					liveImageTask = new DownloadLiveImageTask ();
-//					String ImageUrl = ((evercamCamera.getLowResolutionSnapshotUrl() != null && URLUtil
-//							.isValidUrl(evercamCamera.getLowResolutionSnapshotUrl())) ? evercamCamera
-//							.getLowResolutionSnapshotUrl() : evercamCamera.getCameraImageUrl());
+					liveImageTask = new DownloadLiveImageTask();
+					// String ImageUrl =
+					// ((evercamCamera.getLowResolutionSnapshotUrl() != null &&
+					// URLUtil
+					// .isValidUrl(evercamCamera.getLowResolutionSnapshotUrl()))
+					// ? evercamCamera
+					// .getLowResolutionSnapshotUrl() :
+					// evercamCamera.getCameraImageUrl());
 					String imageUrl = evercamCamera.getExternalSnapshotUrl();
+
 					liveImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
 							new String[] { imageUrl });
 				}
@@ -434,9 +455,10 @@ public class CameraLayout extends LinearLayout
 				}
 				else if (evercamCamera.loadingStatus == ImageLoadingStatus.live_not_received)
 				{
-//					latestTask = new DownloadLatestTask();
-//					latestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-//							new Integer[] { evercamCamera.getCameraId() });
+					// latestTask = new DownloadLatestTask();
+					// latestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+					// new Integer[] { evercamCamera.getCameraId() });
+					setlayoutForNoImageReceived();
 				}
 				else if (evercamCamera.loadingStatus == ImageLoadingStatus.camba_image_received)
 				{
@@ -486,28 +508,36 @@ public class CameraLayout extends LinearLayout
 	{
 		public boolean isTaskended = false;
 
+		// Save image to external cache folder and return file path.
 		@Override
 		protected String doInBackground(String... urls)
 		{
-			for (String url1 : urls)
+			for (String url : urls)
 			{
 				try
 				{
 					ArrayList<Cookie> cookies = new ArrayList<Cookie>();
-					Drawable d = Commons.getDrawablefromUrlAuthenticated1(url1,
-							evercamCamera.getUsername(), evercamCamera.getPassword(), cookies, 15000);
-					if (cookies.size() > 0) evercamCamera.cookies = cookies;
+					Drawable drawable = Commons.getDrawablefromUrlAuthenticated1(url,
+							evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
+							15000);
+					if (cookies.size() > 0)
+					{
+						evercamCamera.cookies = cookies;
+					}
 
 					try
-					// save image to external cache folder for cache
 					{
 						String extCachePath = context.getExternalFilesDir(null) + "/"
 								+ evercamCamera.getCameraId() + ".jpg";
+						Log.v(TAG, "ext cache path" + extCachePath);
 						File extfile = new File(extCachePath);
-						if (d != null)
+						if (drawable != null)
 						{
-							Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
-							if (extfile.exists()) extfile.delete();
+							Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+							if (extfile.exists())
+							{
+								extfile.delete();
+							}
 							extfile.createNewFile();
 							FileOutputStream fos = new FileOutputStream(extfile);
 							bitmap.compress(CompressFormat.PNG, 0, fos);
@@ -516,14 +546,17 @@ public class CameraLayout extends LinearLayout
 					}
 					catch (Exception e)
 					{
+						Log.e(TAG, Log.getStackTraceString(e));
 					}
 
-					String pathString = context.getCacheDir() + "/" + evercamCamera.getCameraId() + ".jpg";
+					String pathString = context.getCacheDir() + "/" + evercamCamera.getCameraId()
+							+ ".jpg";
+					Log.v(TAG, "pathString" + pathString);
 					File file = new File(pathString);
 
-					if (d != null)
+					if (drawable != null)
 					{
-						Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
+						Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
 
 						if (file.exists())
 						{
@@ -544,33 +577,35 @@ public class CameraLayout extends LinearLayout
 					else if (file.exists())
 					{
 						file.delete();
-						if (enableLogs) Log.e(
-								TAG,
+						Log.e(TAG,
 								"File Error" + "::"
 										+ "Unable to get the full file for the camera ["
-										+ evercamCamera.getCameraId() + ":" + evercamCamera.getName()
+										+ evercamCamera.getCameraId() + ":"
+										+ evercamCamera.getName()
 										+ "]. File Deleted. File was empty.");
 						return null;
 					}
 					else
 					{
-						if (enableLogs) Log.e(
-								TAG,
+						Log.e(TAG,
 								"File Error" + "::"
 										+ "Unable to get the full file for the camera ["
-										+ evercamCamera.getCameraId() + ":" + evercamCamera.getName() + "]");
+										+ evercamCamera.getCameraId() + ":"
+										+ evercamCamera.getName() + "]");
 						return null;
 					}
 				}
 				catch (OutOfMemoryError e)
 				{
-					if (enableLogs) Log.e(TAG,
-							e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+					Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
 					return null;
 				}
 				catch (Exception e)
 				{
-					if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+					if (Constants.isAppTrackingEnabled)
+					{
+						BugSenseHandler.sendException(e);
+					}
 				}
 			}
 			return null;
@@ -583,27 +618,30 @@ public class CameraLayout extends LinearLayout
 			{
 				if (result != null && !end)
 				{
-					Drawable d = Drawable.createFromPath(result);
-					if (d != null && d.getIntrinsicWidth() > 0 && d.getIntrinsicHeight() > 0)
+					Drawable drawable = Drawable.createFromPath(result);
+					if (drawable != null && drawable.getIntrinsicWidth() > 0
+							&& drawable.getIntrinsicHeight() > 0)
 					{
-						cameraRelativeLayout.setBackgroundDrawable(d);
+						Log.v(TAG, "live received");
+						cameraRelativeLayout.setBackgroundDrawable(drawable);
 						CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_received;
 					}
 					else
 					{
-						if (enableLogs) Log.e(TAG, "File Load Error" + "::"
-								+ "Unable to load image for the camera [" + evercamCamera.getCameraId() + ":"
-								+ evercamCamera.getName() + "] from path [" + result + "]");
+						Log.e(TAG,
+								"File Load Error" + "::" + "Unable to load image for the camera ["
+										+ evercamCamera.getCameraId() + ":"
+										+ evercamCamera.getName() + "] from path [" + result + "]");
 					}
 				}
 			}
 			catch (OutOfMemoryError e)
 			{
-				if (enableLogs) Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+				Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
 			}
 			catch (Exception e)
 			{
-				if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
+				Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
 				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 			}
 			try
@@ -611,139 +649,167 @@ public class CameraLayout extends LinearLayout
 				synchronized (this)
 				{
 					isTaskended = true;
+					// if (liveImageTask.isTaskended
+					// && liveImageTaskLocal.isTaskended
+					// && CameraLayout.this.evercamCamera.loadingStatus !=
+					// ImageLoadingStatus.live_received)
+					// CameraLayout.this.evercamCamera.loadingStatus =
+					// ImageLoadingStatus.live_not_received;
+					// if (liveImageTask.isTaskended &&
+					// liveImageTaskLocal.isTaskended) handler
+					// .postDelayed(LoadImageRunnable, 0);
+					//
 					if (liveImageTask.isTaskended
-							&& liveImageTaskLocal.isTaskended
-							&& CameraLayout.this.evercamCamera.loadingStatus != ImageLoadingStatus.live_received) CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_not_received;
-					if (liveImageTask.isTaskended && liveImageTaskLocal.isTaskended) handler
-							.postDelayed(LoadImageRunnable, 0);
+							&& CameraLayout.this.evercamCamera.loadingStatus != ImageLoadingStatus.live_received)
+					{
+						Log.v(TAG, "set as not received");
+						CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_not_received;
+
+					}
+					if (liveImageTask.isTaskended)
+					{
+						handler.postDelayed(LoadImageRunnable, 0);
+					}
 				}
 			}
 			catch (Exception e)
 			{
-				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+				if (Constants.isAppTrackingEnabled)
+					{BugSenseHandler.sendException(e);
+					
+					}
 			}
 		}
 	}
 
 	// Connect to the camba site and get the last recorded image. If found, put
 	// in the cache as well for future ease
-//	private class DownloadLatestTask extends AsyncTask<Integer, Void, String>
-//	{
-//		@Override
-//		protected String doInBackground(Integer... cameraIDs)
-//		{
-//			for (int camid : cameraIDs)
-//			{
-//				try
-//				{
-//					String pathString = context.getCacheDir() + "/" + evercamCamera.getCameraId() + ".jpg";
-//					CambaApiManager.getCameraLatestImageAndSave(camid, pathString, 15000);
-//
-//					File file = new File(pathString);
-//					if (file.exists() && file.length() > 0)
-//					{
-//						try
-//						// save image to external cache folder for cache
-//						{
-//							String extCachePath = context.getExternalFilesDir(null) + "/"
-//									+ evercamCamera.getCameraId() + ".jpg";
-//							File extfile = new File(extCachePath);
-//							if (!extfile.exists()) // write only when file does
-//													// not exist
-//							{
-//								Commons.copyFile(file, extfile);
-//							}
-//						}
-//						catch (Exception e)
-//						{
-//						}
-//
-//						return pathString;
-//					}
-//					else
-//					{
-//						if (enableLogs) Log.e(
-//								TAG,
-//								"File Error" + "::"
-//										+ "Unable to get the full file for the camera ["
-//										+ evercamCamera.getCameraId() + ":" + evercamCamera.getName() + "]");
-//						return null;
-//					}
-//
-//				}
-//				catch (OutOfMemoryError e)
-//				{
-//					if (enableLogs) Log.e(TAG,
-//							e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-//					return null;
-//				}
-//				catch (Exception e)
-//				{
-//					if (enableLogs) Log.e(TAG, e.toString() + "\n" + "[" + evercamCamera.toString() + "]"
-//							+ "::" + Log.getStackTraceString(e));
-//					if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-//				}
-//			}
-//			return null;
-//		}
-//
-//		@Override
-//		protected void onPostExecute(String result)
-//		{ // DownloadImageLatestCamba
-//			try
-//			{
-//				if (result != null && !end)
-//				{
-//					Drawable d = Drawable.createFromPath(result);
-//					if (d != null && d.getIntrinsicWidth() > 0 && d.getIntrinsicHeight() > 0)
-//					{
-//						cameraRelativeLayout.setVisibility(View.VISIBLE);
-//						cameraRelativeLayout.setBackgroundDrawable(d);
-//						CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.camba_image_received;
-//					}
-//					else
-//					{
-//						if (enableLogs) Log.e(TAG, "File Load Error" + "::"
-//								+ "Unable to load image for the camera [" + evercamCamera.getCameraId() + ":"
-//								+ evercamCamera.getName() + "] from path [" + result + "]");
-//					}
-//				}
-//			}
-//			catch (OutOfMemoryError e)
-//			{
-//				if (enableLogs) Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-//			}
-//			catch (Exception e)
-//			{
-//				if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-//				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-//
-//			}
-//			try
-//			{
-//				if (CameraLayout.this.evercamCamera.loadingStatus != ImageLoadingStatus.camba_image_received) CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.camba_not_received;
-//			}
-//			catch (Exception e)
-//			{
-//			}
-//			try
-//			{
-//				if (!end)
-//				{
-//					handler.postDelayed(LoadImageRunnable, 0);
-//				}
-//			}
-//			catch (Exception e)
-//			{
-//			}
-//			try
-//			{
-//				latestTask = null;
-//			}
-//			catch (Exception e)
-//			{
-//			}
-//		}
-//	}
+	// private class DownloadLatestTask extends AsyncTask<Integer, Void, String>
+	// {
+	// @Override
+	// protected String doInBackground(Integer... cameraIDs)
+	// {
+	// for (int camid : cameraIDs)
+	// {
+	// try
+	// {
+	// String pathString = context.getCacheDir() + "/" +
+	// evercamCamera.getCameraId() + ".jpg";
+	// CambaApiManager.getCameraLatestImageAndSave(camid, pathString, 15000);
+	//
+	// File file = new File(pathString);
+	// if (file.exists() && file.length() > 0)
+	// {
+	// try
+	// // save image to external cache folder for cache
+	// {
+	// String extCachePath = context.getExternalFilesDir(null) + "/"
+	// + evercamCamera.getCameraId() + ".jpg";
+	// File extfile = new File(extCachePath);
+	// if (!extfile.exists()) // write only when file does
+	// // not exist
+	// {
+	// Commons.copyFile(file, extfile);
+	// }
+	// }
+	// catch (Exception e)
+	// {
+	// }
+	//
+	// return pathString;
+	// }
+	// else
+	// {
+	// if (enableLogs) Log.e(
+	// TAG,
+	// "File Error" + "::"
+	// + "Unable to get the full file for the camera ["
+	// + evercamCamera.getCameraId() + ":" + evercamCamera.getName() + "]");
+	// return null;
+	// }
+	//
+	// }
+	// catch (OutOfMemoryError e)
+	// {
+	// if (enableLogs) Log.e(TAG,
+	// e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+	// return null;
+	// }
+	// catch (Exception e)
+	// {
+	// if (enableLogs) Log.e(TAG, e.toString() + "\n" + "[" +
+	// evercamCamera.toString() + "]"
+	// + "::" + Log.getStackTraceString(e));
+	// if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+	// }
+	// }
+	// return null;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(String result)
+	// { // DownloadImageLatestCamba
+	// try
+	// {
+	// if (result != null && !end)
+	// {
+	// Drawable d = Drawable.createFromPath(result);
+	// if (d != null && d.getIntrinsicWidth() > 0 && d.getIntrinsicHeight() > 0)
+	// {
+	// cameraRelativeLayout.setVisibility(View.VISIBLE);
+	// cameraRelativeLayout.setBackgroundDrawable(d);
+	// CameraLayout.this.evercamCamera.loadingStatus =
+	// ImageLoadingStatus.camba_image_received;
+	// }
+	// else
+	// {
+	// if (enableLogs) Log.e(TAG, "File Load Error" + "::"
+	// + "Unable to load image for the camera [" + evercamCamera.getCameraId() +
+	// ":"
+	// + evercamCamera.getName() + "] from path [" + result + "]");
+	// }
+	// }
+	// }
+	// catch (OutOfMemoryError e)
+	// {
+	// if (enableLogs) Log.e(TAG, e.toString() + "-::OOM::-" +
+	// Log.getStackTraceString(e));
+	// }
+	// catch (Exception e)
+	// {
+	// if (enableLogs) Log.e(TAG, e.toString() + "::" +
+	// Log.getStackTraceString(e));
+	// if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+	//
+	// }
+	// try
+	// {
+	// if (CameraLayout.this.evercamCamera.loadingStatus !=
+	// ImageLoadingStatus.camba_image_received)
+	// CameraLayout.this.evercamCamera.loadingStatus =
+	// ImageLoadingStatus.camba_not_received;
+	// }
+	// catch (Exception e)
+	// {
+	// }
+	// try
+	// {
+	// if (!end)
+	// {
+	// handler.postDelayed(LoadImageRunnable, 0);
+	// }
+	// }
+	// catch (Exception e)
+	// {
+	// }
+	// try
+	// {
+	// latestTask = null;
+	// }
+	// catch (Exception e)
+	// {
+	// }
+	// }
+	// }
 
 }
