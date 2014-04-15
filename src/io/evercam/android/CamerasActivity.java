@@ -34,6 +34,7 @@ import io.evercam.android.slidemenu.*;
 import io.evercam.android.tasks.LoadCameraListTask;
 import io.evercam.android.utils.AppData;
 import io.evercam.android.utils.Constants;
+import io.evercam.android.utils.PrefsManager;
 import io.evercam.android.utils.UIUtils;
 
 import java.util.List;
@@ -196,16 +197,6 @@ public class CamerasActivity extends ParentActivity implements
 			switch (itemId)
 			{
 			case R.id.slidemenu_logout:
-
-				// delete saved username and password
-				SharedPreferences sharedPrefs = PreferenceManager
-						.getDefaultSharedPreferences(CamerasActivity.this);
-				SharedPreferences.Editor editor = sharedPrefs.edit();
-				editor.putString("AppUserEmail", null);
-				editor.putString("AppUserPassword", null);
-				editor.commit();
-
-				startActivity(new Intent(this, MainActivity.class));
 
 				new LogoutTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 
@@ -839,22 +830,23 @@ public class CamerasActivity extends ParentActivity implements
 				// delete saved username and apssword
 				SharedPreferences sharedPrefs = PreferenceManager
 						.getDefaultSharedPreferences(CamerasActivity.this);
-				SharedPreferences.Editor editor = sharedPrefs.edit();
-				editor.putString("AppUserEmail", null);
-				editor.putString("AppUserPassword", null);
-				editor.commit();
+				PrefsManager.removeUserEmail(sharedPrefs);
+				
+				//clear realtime default app data
+				AppData.defaultUser = null;
+				AppData.evercamCameraList.clear();
 
 				// Un register from gcm server
 				GCMRegistrar.setRegisteredOnServer(CamerasActivity.this, false);
 
-				// delete all app users
-				DbAppUser dbu = new DbAppUser(CamerasActivity.this);
-				List<AppUser> list = dbu.getAllAppUsers(10000);
+				// delete app user
+				DbAppUser dbUser = new DbAppUser(CamerasActivity.this);
+				List<AppUser> list = dbUser.getAllAppUsers(10000);
 				if (list != null && list.size() > 0)
 				{
 					for (AppUser user : list)
 					{
-						dbu.deleteAppUserByEmail(user.getEmail());
+						dbUser.deleteAppUserByEmail(user.getEmail());
 					}
 				}
 
@@ -899,7 +891,7 @@ public class CamerasActivity extends ParentActivity implements
 
 					for (AppUser user : list)
 					{
-						dbu.deleteAppUserByEmail(user.getEmail());
+						dbUser.deleteAppUserByEmail(user.getEmail());
 						AppUserEmail = user.getEmail();
 						try
 						{
@@ -922,8 +914,7 @@ public class CamerasActivity extends ParentActivity implements
 		@Override
 		protected void onPostExecute(String result)
 		{
-			CamerasActivity.this.finish();
-
+			startActivity(new Intent(CamerasActivity.this, MainActivity.class));
 		}
 	}
 

@@ -38,4 +38,11 @@ public class PrefsManager
 	{
 		return sharedPrefs.getString(KEY_USER_EMAIL, null);
 	}
+	
+	public static void removeUserEmail(SharedPreferences sharedPrefs)
+	{
+		SharedPreferences.Editor editor = sharedPrefs.edit();
+		editor.putString(KEY_USER_EMAIL, null);
+		editor.commit();
+	}
 }
