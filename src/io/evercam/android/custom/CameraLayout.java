@@ -4,6 +4,9 @@ import io.evercam.android.dto.*;
 import io.evercam.android.utils.Commons;
 import io.evercam.android.utils.Constants;
 import io.evercam.android.utils.UIUtils;
+import io.evercam.android.video.VideoActivity;
+import io.evercam.android.CamerasActivity;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -11,7 +14,9 @@ import org.apache.http.cookie.Cookie;
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.android.R;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Color;
@@ -30,7 +35,7 @@ public class CameraLayout extends LinearLayout
 	private RelativeLayout cameraRelativeLayout;
 	private Context context;
 	private EvercamCamera evercamCamera;
-	private DownloadLiveImageTask liveImageTask; 
+	private DownloadLiveImageTask liveImageTask;
 	private DownloadLiveImageTask liveImageTaskLocal;
 	// private DownloadLatestTask latestTask; // tsk to download image from
 	// camba
@@ -113,69 +118,66 @@ public class CameraLayout extends LinearLayout
 			cameraRelativeLayout.addView(imageMessage);
 
 			cameraRelativeLayout.setClickable(true);
-			// cameraRelativeLayout.setOnClickListener(new
-			// View.OnClickListener(){
-			// @Override
-			// public void onClick(View v)
-			// {
-			// AlertDialog.Builder builder =
-			// UIUtils.GetAlertDialogBuilderNoTitle(CameraLayout.this.context);
-			// final View layout = ((CamerasActivity)
-			// CameraLayout.this.context).getLayoutInflater().inflate(
-			// R.layout.cameralayout_dialog_liverecordingview, null);
-			//
-			// builder.setView(layout);
-			//
-			// builder.setNegativeButton("Cancel", new
-			// DialogInterface.OnClickListener(){
-			// @Override
-			// public void onClick(DialogInterface dialog, int which)
-			// {
-			// dialog.cancel();
-			// }
-			// });
-			//
-			// final AlertDialog dialog = builder.create();
-			//
-			// Button btnLive = (Button) layout
-			// .findViewById(R.id.cameralayout_dialog_btn_live);
-			// btnLive.setEnabled(true);
-			// btnLive.getCompoundDrawables()[0].setAlpha(255);
-			//
-			// if (evercamCamera.getStatus().equalsIgnoreCase("Offline"))
-			// {
-			// btnLive.setText("Offline");
-			//
-			// btnLive.setEnabled(false);
-			// btnLive.getCompoundDrawables()[0].setAlpha(100);
-			//
-			// }
-			//
-			// btnLive.setOnClickListener(new OnClickListener(){
-			// @Override
-			// public void onClick(View v)
-			// {
-			// VideoActivity.startPlayingVIdeoForCamera(CameraLayout.this.context,
-			// evercamCamera.getCameraID());
-			// dialog.cancel();
-			// }
-			// });
-			//
-			// Button btnRecorded = (Button) layout
-			// .findViewById(R.id.cameralayout_dialog_btn_recored);
-			// btnRecorded.setOnClickListener(new OnClickListener(){
-			// @Override
-			// public void onClick(View v)
-			// {
-			// RVideoViewActivity.StartPlayingVIdeo(CameraLayout.this.context,
-			// evercamCamera, null);
-			// dialog.cancel();
-			// }
-			// });
-			//
-			// dialog.show();
-			// }
-			// });
+			cameraRelativeLayout.setOnClickListener(new View.OnClickListener(){
+				@Override
+				public void onClick(View v)
+				{
+					AlertDialog.Builder builder = UIUtils
+							.GetAlertDialogBuilderNoTitle(CameraLayout.this.context);
+					final View layout = ((CamerasActivity) CameraLayout.this.context)
+							.getLayoutInflater().inflate(
+									R.layout.cameralayout_dialog_liverecordingview, null);
+
+					builder.setView(layout);
+					builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							dialog.cancel();
+						}
+					});
+
+					final AlertDialog dialog = builder.create();
+
+					Button btnLive = (Button) layout
+							.findViewById(R.id.cameralayout_dialog_btn_live);
+					btnLive.setEnabled(true);
+					btnLive.getCompoundDrawables()[0].setAlpha(255);
+
+					if (evercamCamera.getStatus().equalsIgnoreCase("Offline"))
+					{
+						btnLive.setText("Offline");
+
+						btnLive.setEnabled(false);
+						btnLive.getCompoundDrawables()[0].setAlpha(100);
+
+					}
+
+					btnLive.setOnClickListener(new OnClickListener(){
+						@Override
+						public void onClick(View v)
+						{
+							// VideoActivity.startPlayingVIdeoForCamera(CameraLayout.this.context,
+							// evercamCamera.getCameraId());
+							// dialog.cancel();
+						}
+					});
+					//
+					// Button btnRecorded = (Button) layout
+					// .findViewById(R.id.cameralayout_dialog_btn_recored);
+					// btnRecorded.setOnClickListener(new OnClickListener(){
+					// @Override
+					// public void onClick(View v)
+					// {
+					// RVideoViewActivity.StartPlayingVIdeo(CameraLayout.this.context,
+					// evercamCamera, null);
+					// dialog.cancel();
+					// }
+					// });
+					//
+					 dialog.show();
+				}
+			});
 
 			loadImage();
 		}

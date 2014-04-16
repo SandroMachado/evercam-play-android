@@ -2,8 +2,8 @@ package io.evercam.android.video;
 
 import io.evercam.android.ParentActivity;
 import io.evercam.android.custom.ProgressView;
+import io.evercam.android.dto.CameraStatus;
 import io.evercam.android.dto.EvercamCamera;
-import io.evercam.android.slidemenu.SlideMenu;
 import io.evercam.android.slidemenu.SlideMenuInterface;
 import io.evercam.android.utils.AppData;
 import io.evercam.android.utils.Commons;
@@ -12,7 +12,6 @@ import io.evercam.android.utils.UIUtils;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
@@ -25,7 +24,6 @@ import org.videolan.libvlc.MediaList;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -67,31 +65,26 @@ import com.google.analytics.tracking.android.EasyTracker;
 public class VideoActivity extends ParentActivity implements
 		SlideMenuInterface.OnSlideMenuItemClickListener,SurfaceHolder.Callback,IVideoPlayer
 {
+	public static EvercamCamera camera = new EvercamCamera();
 
-	private final static String TAG = "VideoActivity";
-
-	public final static String LOCATION = "com.compdigitec.libvlcandroidsample.VideoActivity.location";
+	private final static String TAG = "evercamapp-VideoActivity";
+	private final static String LOCATION = "com.compdigitec.libvlcandroidsample.VideoActivity.location";
 
 	private static List<MRLCamba> mrls = null;
 	private static int mrlIndex = -1;
 	private String mrlPlaying = null;
 	private boolean showImagesVideo = false;
 
-	private static int startingCameraID = 0;
-
 	// display surface
-	private SurfaceView mSurface;
-	private SurfaceHolder holder;
-
-	ProgressView myProgressView = null;
+	private SurfaceView surfaceView;
+	private SurfaceHolder surfaceHolder;
+	private ProgressView progressView = null;
 
 	// media player
 	private LibVLC libvlc;
 	private int mVideoWidth;
 	private int mVideoHeight;
-	private final static int VideoSizeChanged = -1;
-
-	private SlideMenu slidemenu;
+	private final static int videoSizeChanged = -1;
 
 	// Screen view change vraibales
 	private int screen_width, screen_height;
@@ -99,21 +92,19 @@ public class VideoActivity extends ParentActivity implements
 	private boolean landscape;
 
 	// video playing controls and variables
-	private RelativeLayout iView;
-	private ImageView imgCam;
-	private ImageView ivMediaPlayer;
+	private RelativeLayout imageViewLayout;
+	private ImageView imageView;
+	private ImageView mediaPlayerView;
 
-	// private String imageURL =
-	// null;//"http://killruddery1.dtdns.net:8001/snapshot1.jpg" ;
 	private long downloadStartCount = 0;
 	private long downloadEndCount = 0;
-	private browseImages imageThread;
+	private BrowseImages imageThread;
 	private boolean isProgressShowing = true;
 	static boolean enableLogs = true;
 
 	// image tasks and thread variables
 	private int sleepIntervalMinTime = 201; // interval between two requests of
-											// iamges
+											// images
 	private int intervalAdjustment = 1; // how much milli seconds to increment
 										// or decrement on image failure or
 										// success
@@ -126,37 +117,31 @@ public class VideoActivity extends ParentActivity implements
 												// requests
 	private static long latestStartImageTime = 0; // time of the latest request
 													// that has been made
-	private boolean isFirstImageLiveReceived = false; // Whether first image has
-														// been received
-	private boolean isFirstImageLocalReceived = false; // Whether first image
-														// has been received
-	private boolean isFirstImageLiveEnded = false; // Whether first image has
-													// been received
-	private boolean isFirstImageLocalEnded = false; // Whether first image has
-													// been received
+	private boolean isFirstImageLiveReceived = false;
+	private boolean isFirstImageLocalReceived = false;
+	private boolean isFirstImageLiveEnded = false;
+	private boolean isFirstImageLocalEnded = false;
 	private int successiveFailureCount = 0; // how much successive image
 											// requests have failed
-	private Boolean isShowingFailureMessage = false; // whether error message
-														// for failure is
-														// showing or not
-
+	private Boolean isShowingFailureMessage = false;
 	private Boolean optionsActivityStarted = false; // whether preference
 													// activity is showing or
 													// not
 
-	public AlertDialog adLocalNetwork; // dialoge message for local network not
-										// connected
-
 	// if camera uses cookies authentication, then use these cookies to pass to
 	// camera
-//	public static EvercamCamera camera = new EvercamCamera(0, 0, "info@camba.tv", "a", "http://url.com/abc",
-//			"http://url.com/abc", "http://url.com/abc", "http://url.com/abc", "camera make",
-//			"access method", "password", "time zone", "camera username", "code",
-//			"http://url.com/abc", "5", "127.0.0.1:99", "http://url.com/abc", "http://url.com/abc",
-//			"http://url.com/abc", "http://url.com/abc", "my camera", "0", "554",
-//			"http://url.com/abc", "Status", false, false, "0", "cam Group", 1, false, "offser");
-
-	public static EvercamCamera camera = new EvercamCamera();
+	// public static EvercamCamera camera = new EvercamCamera(0, 0,
+	// "info@camba.tv", "a", "http://url.com/abc",
+	// "http://url.com/abc", "http://url.com/abc", "http://url.com/abc",
+	// "camera make",
+	// "access method", "password", "time zone", "camera username", "code",
+	// "http://url.com/abc", "5", "127.0.0.1:99", "http://url.com/abc",
+	// "http://url.com/abc",
+	// "http://url.com/abc", "http://url.com/abc", "my camera", "0", "554",
+	// "http://url.com/abc", "Status", false, false, "0", "cam Group", 1, false,
+	// "offser");
+	private static String startingCameraID;
+	private int defaultCameraIndex;
 	// preferences options
 	private String localnetworkSettings = "0";
 	private boolean isLocalNetwork = false;
@@ -164,104 +149,25 @@ public class VideoActivity extends ParentActivity implements
 	private static String imageLiveCameraURL = "http://www.camba.tv/noimage.png";
 	private static String imageLiveLocalURL = "http://www.camba.tv/noimage.png";
 
-	boolean paused = false; // whether media player or playing of video(images)
-							// is paused or not
+	private boolean paused = false;
 
-	Animation myFadeInAnimation = null; // animation that shows the playing icon
-										// of media player fading and
-										// disappearing
+	private Animation fadeInAnimation = null; // animation that shows the
+												// playing icon
+	// of media player fading and
+	// disappearing
 
 	boolean end = false; // whether to end this activity or not
 
 	public void addCamerasToDropdownActionBar()
 	{
-
-		new AsyncTask<String, String, String[]>(){
-			final ArrayList<EvercamCamera> ActiveCamers = new ArrayList<EvercamCamera>();
-			int defaultCamIndex = 0;
-
-			@Override
-			protected String[] doInBackground(String... params)
-			{
-
-				ArrayList<String> cameras = new ArrayList<String>();
-
-				for (int i = 0; i < AppData.evercamCameraList.size(); i++)
-				{
-					if (!AppData.evercamCameraList.get(i).getStatus().equalsIgnoreCase("Offline"))
-					{
-						ActiveCamers.add(AppData.evercamCameraList.get(i));
-						cameras.add(AppData.evercamCameraList.get(i).getName());
-//						if (AppData.evercamCameraList.get(i).getCameraId() == startingCameraID) defaultCamIndex = cameras
-//								.size() - 1;
-					}
-				}
-
-				String[] cameraArray = new String[cameras.size()];
-				cameras.toArray(cameraArray);
-
-				return cameraArray;
-			}
-
-			@Override
-			protected void onPostExecute(final String[] CamsList)
-			{
-				try
-				{
-					ArrayAdapter<String> adapter = new ArrayAdapter<String>(VideoActivity.this,
-							android.R.layout.simple_spinner_dropdown_item, CamsList);
-					VideoActivity.this.getActionBar().setNavigationMode(
-							ActionBar.NAVIGATION_MODE_LIST); 
-					OnNavigationListener navigationListener = new OnNavigationListener(){
-						@Override
-						public boolean onNavigationItemSelected(int itemPosition, long itemId)
-						{
-							try
-							{
-								showImagesVideo = false;
-								if (imageThread != null
-										&& imageThread.getStatus() != AsyncTask.Status.RUNNING) imageThread
-										.cancel(true);
-								imageThread = null;
-
-								mrlPlaying = null;
-								setCameraForPlaying(VideoActivity.this,
-										ActiveCamers.get(itemPosition));
-
-								createPlayer(getCurrentMRL());
-
-							}
-							catch (Exception e)
-							{
-								Log.e(TAG, e.getMessage(), e);
-								if (Constants.isAppTrackingEnabled) BugSenseHandler
-										.sendException(e);
-							}
-							return false;
-						}
-					};
-
-					getActionBar().setListNavigationCallbacks(adapter, navigationListener);
-					getActionBar().setSelectedNavigationItem(defaultCamIndex);
-
-				}
-				catch (Exception e)
-				{
-					Log.e(TAG, e.getMessage(), e);
-					if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-				}
-
-			}
-
-		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
-
+		new LoadActiveCamerasTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
-	public static boolean startPlayingVIdeoForCamera(Context context, int camID)
+	public static boolean startPlayingVIdeoForCamera(Context context, String cameraId)
 	{
-		startingCameraID = camID;
-		Intent i = new Intent(context, VideoActivity.class);
-		context.startActivity(i);
+		startingCameraID = cameraId;
+		Intent intent = new Intent(context, VideoActivity.class);
+		context.startActivity(intent);
 
 		return false;
 	}
@@ -293,42 +199,46 @@ public class VideoActivity extends ParentActivity implements
 
 			isLocalNetwork = false;
 
-			ivMediaPlayer.setVisibility(View.GONE);
+			mediaPlayerView.setVisibility(View.GONE);
 
 			paused = false;
 			end = false;
 
-			mSurface.setVisibility(View.GONE);
-			imgCam.setVisibility(View.VISIBLE);
+			surfaceView.setVisibility(View.GONE);
+			imageView.setVisibility(View.VISIBLE);
 			showProgressView();
 
 			loadImageFromCache();
 			showProgressView();
 			// ###Setting Defaults
 
-//			String ImageUrl = ((camera.getLowResolutionSnapshotUrl() != null && URLUtil
-//					.isValidUrl(camera.getLowResolutionSnapshotUrl())) ? camera
-//					.getLowResolutionSnapshotUrl() : camera.getCameraImageUrl());
+			// String ImageUrl = ((camera.getLowResolutionSnapshotUrl() != null
+			// && URLUtil
+			// .isValidUrl(camera.getLowResolutionSnapshotUrl())) ? camera
+			// .getLowResolutionSnapshotUrl() : camera.getCameraImageUrl());
 
 			imageLiveCameraURL = camera.getExternalSnapshotUrl();
 
-//			if (cam.getLocalIpPort() != null && cam.getLocalIpPort().length() > 10)
-//			{
-//				String Prefix = (ImageUrl.startsWith("https://") ? "https://" : "https://");
-//
-//				if (ImageUrl.startsWith("https://")) // Extracting information
-//														// from the camera image
-//														// url
-//				ImageUrl = ImageUrl.replace("http://", "");
-//
-//				VideoActivity.imageLiveLocalURL = Prefix + cam.getLocalIpPort().trim()
-//						+ ImageUrl.substring(ImageUrl.indexOf("/", Prefix.length() + 1));
-//			}
-//			else
-//			{
-//				VideoActivity.imageLiveLocalURL = null;
-//			}
-			
+			// if (cam.getLocalIpPort() != null && cam.getLocalIpPort().length()
+			// > 10)
+			// {
+			// String Prefix = (ImageUrl.startsWith("https://") ? "https://" :
+			// "https://");
+			//
+			// if (ImageUrl.startsWith("https://")) // Extracting information
+			// // from the camera image
+			// // url
+			// ImageUrl = ImageUrl.replace("http://", "");
+			//
+			// VideoActivity.imageLiveLocalURL = Prefix +
+			// cam.getLocalIpPort().trim()
+			// + ImageUrl.substring(ImageUrl.indexOf("/", Prefix.length() + 1));
+			// }
+			// else
+			// {
+			// VideoActivity.imageLiveLocalURL = null;
+			// }
+
 			VideoActivity.imageLiveLocalURL = null;
 
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -344,12 +254,11 @@ public class VideoActivity extends ParentActivity implements
 				mrlPlaying = null;
 			}
 
-//			addUrlIfValid(cam.getMpeg4Url(), cam);
-//			addUrlIfValid(cam.getMjpgUrl(), cam);
-//			addUrlIfValid(cam.getH264Url(), cam);
-//			addUrlIfValid(cam.getRtspUrl(), cam);
-//			addUrlIfValid(cam.getMobileUrl(), cam);
-
+			// addUrlIfValid(cam.getMpeg4Url(), cam);
+			// addUrlIfValid(cam.getMjpgUrl(), cam);
+			// addUrlIfValid(cam.getH264Url(), cam);
+			// addUrlIfValid(cam.getRtspUrl(), cam);
+			// addUrlIfValid(cam.getMobileUrl(), cam);
 
 		}
 		catch (Exception e)
@@ -389,22 +298,27 @@ public class VideoActivity extends ParentActivity implements
 			if (hostPort.contains("@")) hostPort = hostPort.substring(hostPort.indexOf("@") + 1);
 			if (hostPort.startsWith("www.")) hostPort.substring(4);
 
-//			String localIpPort = "";
-//			if (cam.getLocalIpPort() != null)
-//			{
-//				localIpPort = cam.getLocalIpPort().substring(
-//						0,
-//						(cam.getLocalIpPort().contains(":") ? cam.getLocalIpPort().indexOf(":")
-//								: cam.getLocalIpPort().length()));
-//				if (cam.getRtspPort() != null && prefix.startsWith("rtsp://")) localIpPort += ":"
-//						+ cam.getRtspPort();
-//				else if (hostPort.contains(":")) localIpPort += hostPort.substring(hostPort
-//						.indexOf(":"));
-//
-//			}
+			// String localIpPort = "";
+			// if (cam.getLocalIpPort() != null)
+			// {
+			// localIpPort = cam.getLocalIpPort().substring(
+			// 0,
+			// (cam.getLocalIpPort().contains(":") ?
+			// cam.getLocalIpPort().indexOf(":")
+			// : cam.getLocalIpPort().length()));
+			// if (cam.getRtspPort() != null && prefix.startsWith("rtsp://"))
+			// localIpPort += ":"
+			// + cam.getRtspPort();
+			// else if (hostPort.contains(":")) localIpPort +=
+			// hostPort.substring(hostPort
+			// .indexOf(":"));
+			//
+			// }
 
-//			String liveURLString = prefix + credentialsPart + hostPort + relativeUrlString;
-//			String localURLString = prefix + credentialsPart + localIpPort + relativeUrlString;
+			// String liveURLString = prefix + credentialsPart + hostPort +
+			// relativeUrlString;
+			// String localURLString = prefix + credentialsPart + localIpPort +
+			// relativeUrlString;
 			String liveURLString = "rtsp://admin:12345@89.101.225.158:8300/h264/ch1/main/av_stream";
 			String localURLString = "rtsp://admin:12345@192.168.1.101:8300/h264/ch1/main/av_stream";
 
@@ -413,13 +327,13 @@ public class VideoActivity extends ParentActivity implements
 				MRLCamba liveMRL = new MRLCamba(liveURLString, false);
 				if (!mrls.contains(liveMRL)) mrls.add(liveMRL);
 			}
-//
-//			if (localIpPort != null && localIpPort.length() > 0
-//					&& !localnetworkSettings.equalsIgnoreCase("2"))
-//			{
-//				MRLCamba localMRL = new MRLCamba(localURLString, true);
-//				if (!mrls.contains(localMRL)) mrls.add(localMRL);
-//			}
+			//
+			// if (localIpPort != null && localIpPort.length() > 0
+			// && !localnetworkSettings.equalsIgnoreCase("2"))
+			// {
+			// MRLCamba localMRL = new MRLCamba(localURLString, true);
+			// if (!mrls.contains(localMRL)) mrls.add(localMRL);
+			// }
 
 			mrlIndex = 0;
 		}
@@ -436,7 +350,7 @@ public class VideoActivity extends ParentActivity implements
 		try
 		{
 
-			imgCam.setImageDrawable(null);
+			imageView.setImageDrawable(null);
 			if (camera == null) return false;
 			String path = this.getCacheDir() + "/" + camera.getCameraId() + ".jpg";
 			if (new File(path).exists())
@@ -445,7 +359,7 @@ public class VideoActivity extends ParentActivity implements
 				if (result != null)
 				{
 					startDownloading = true;
-					imgCam.setImageDrawable(result);
+					imageView.setImageDrawable(result);
 
 					if (enableLogs) Log.i(TAG, "Loaded first image from Cache: " + media_width
 							+ ":" + media_height);
@@ -520,7 +434,7 @@ public class VideoActivity extends ParentActivity implements
 				optionsActivityStarted = true;
 				paused = true;
 				startActivity(new Intent(this, VideoPrefsActivity.class));
-				ivMediaPlayer.setVisibility(View.GONE);
+				mediaPlayerView.setVisibility(View.GONE);
 
 				showProgressView();
 				if (enableLogs) Log
@@ -534,7 +448,7 @@ public class VideoActivity extends ParentActivity implements
 				optionsActivityStarted = true;
 				paused = true;
 				startActivity(new Intent(this, VideoPrefsActivity.class));
-				ivMediaPlayer.setVisibility(View.GONE);
+				mediaPlayerView.setVisibility(View.GONE);
 
 				showProgressView();
 				if (enableLogs) Log
@@ -618,19 +532,19 @@ public class VideoActivity extends ParentActivity implements
 
 			setContentView(R.layout.videolayoutwithslide);
 
-			iView = (RelativeLayout) this.findViewById(R.id.camimage1);
-			imgCam = (ImageView) this.findViewById(R.id.img_camera1);
-			ivMediaPlayer = (ImageView) this.findViewById(R.id.ivmediaplayer1);
+			imageViewLayout = (RelativeLayout) this.findViewById(R.id.camimage1);
+			imageView = (ImageView) this.findViewById(R.id.img_camera1);
+			mediaPlayerView = (ImageView) this.findViewById(R.id.ivmediaplayer1);
 
-			mSurface = (SurfaceView) findViewById(R.id.surface1);
-			holder = mSurface.getHolder();
-			holder.addCallback(this);
+			surfaceView = (SurfaceView) findViewById(R.id.surface1);
+			surfaceHolder = surfaceView.getHolder();
+			surfaceHolder.addCallback(this);
 
-			myProgressView = ((ProgressView) iView.findViewById(R.id.ivprogressspinner1));
+			progressView = ((ProgressView) imageViewLayout.findViewById(R.id.ivprogressspinner1));
 
 			addCamerasToDropdownActionBar();
 
-			if (!Commons.isOnline(this)) 
+			if (!Commons.isOnline(this))
 			{
 				try
 				{
@@ -668,16 +582,16 @@ public class VideoActivity extends ParentActivity implements
 
 			readSetPreferences();
 
-			myProgressView.CanvasColor = Color.TRANSPARENT; // transparent color
+			progressView.CanvasColor = Color.TRANSPARENT; // transparent color
 															// because image
 															// loaded in cache
 															// should be
 															// displayed as well
 
 			isProgressShowing = true;
-			myProgressView.setVisibility(View.VISIBLE);
+			progressView.setVisibility(View.VISIBLE);
 
-			ivMediaPlayer.setOnClickListener(new OnClickListener(){
+			mediaPlayerView.setOnClickListener(new OnClickListener(){
 
 				@Override
 				public void onClick(View v)
@@ -695,9 +609,9 @@ public class VideoActivity extends ParentActivity implements
 					{
 						showProgressView();
 
-						ivMediaPlayer.setImageBitmap(null);
-						ivMediaPlayer.setVisibility(View.VISIBLE);
-						ivMediaPlayer.setImageResource(android.R.drawable.ic_media_pause);
+						mediaPlayerView.setImageBitmap(null);
+						mediaPlayerView.setVisibility(View.VISIBLE);
+						mediaPlayerView.setImageResource(android.R.drawable.ic_media_pause);
 
 						startMediaPlayerAnimation();
 
@@ -708,16 +622,16 @@ public class VideoActivity extends ParentActivity implements
 					// video is currently playing. Now we need to pause video
 					{
 
-						ivMediaPlayer.clearAnimation();
-						if (myFadeInAnimation != null && myFadeInAnimation.hasStarted()
-								&& !myFadeInAnimation.hasEnded())
+						mediaPlayerView.clearAnimation();
+						if (fadeInAnimation != null && fadeInAnimation.hasStarted()
+								&& !fadeInAnimation.hasEnded())
 						{
-							myFadeInAnimation.cancel();
-							myFadeInAnimation.reset();
+							fadeInAnimation.cancel();
+							fadeInAnimation.reset();
 						}
-						ivMediaPlayer.setVisibility(View.VISIBLE);
-						ivMediaPlayer.setImageBitmap(null);
-						ivMediaPlayer.setImageResource(android.R.drawable.ic_media_play);
+						mediaPlayerView.setVisibility(View.VISIBLE);
+						mediaPlayerView.setImageBitmap(null);
+						mediaPlayerView.setImageResource(android.R.drawable.ic_media_play);
 
 						stopPlayer();
 
@@ -728,7 +642,7 @@ public class VideoActivity extends ParentActivity implements
 				}
 			});
 
-			iView.setOnClickListener(new OnClickListener(){
+			imageViewLayout.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v)
 				{
@@ -745,16 +659,16 @@ public class VideoActivity extends ParentActivity implements
 											// need to pause video
 					{
 						VideoActivity.this.getActionBar().show();
-						ivMediaPlayer.setImageResource(android.R.drawable.ic_media_pause);
+						mediaPlayerView.setImageResource(android.R.drawable.ic_media_pause);
 
-						ivMediaPlayer.setVisibility(View.VISIBLE);
+						mediaPlayerView.setVisibility(View.VISIBLE);
 
 						startMediaPlayerAnimation();
 					}
 
 				}
 			});
-			if (enableLogs) Log.i(TAG, "Got image view " + iView.toString());
+			if (enableLogs) Log.i(TAG, "Got image view " + imageViewLayout.toString());
 
 			// Get the size of the device, will be our maximum.
 			Display display = getWindowManager().getDefaultDisplay();
@@ -780,17 +694,17 @@ public class VideoActivity extends ParentActivity implements
 
 	private void startMediaPlayerAnimation()
 	{
-		if (myFadeInAnimation != null)
+		if (fadeInAnimation != null)
 		{
-			myFadeInAnimation.cancel();
-			myFadeInAnimation.reset();
+			fadeInAnimation.cancel();
+			fadeInAnimation.reset();
 
-			ivMediaPlayer.clearAnimation();
+			mediaPlayerView.clearAnimation();
 		}
 
-		myFadeInAnimation = AnimationUtils.loadAnimation(VideoActivity.this, R.layout.fadein);
+		fadeInAnimation = AnimationUtils.loadAnimation(VideoActivity.this, R.layout.fadein);
 
-		myFadeInAnimation.setAnimationListener(new Animation.AnimationListener(){
+		fadeInAnimation.setAnimationListener(new Animation.AnimationListener(){
 			@Override
 			public void onAnimationStart(Animation animation)
 			{
@@ -807,8 +721,8 @@ public class VideoActivity extends ParentActivity implements
 			public void onAnimationEnd(Animation animation)
 			{
 
-				if (!paused) ivMediaPlayer.setVisibility(View.GONE);
-				else ivMediaPlayer.setVisibility(View.VISIBLE);
+				if (!paused) mediaPlayerView.setVisibility(View.GONE);
+				else mediaPlayerView.setVisibility(View.VISIBLE);
 
 				int orientation = VideoActivity.this.getResources().getConfiguration().orientation;
 				if (!paused && orientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -818,7 +732,7 @@ public class VideoActivity extends ParentActivity implements
 			}
 		});
 
-		ivMediaPlayer.startAnimation(myFadeInAnimation);
+		mediaPlayerView.startAnimation(fadeInAnimation);
 	}
 
 	private boolean isCurrentMRLValid()
@@ -850,14 +764,14 @@ public class VideoActivity extends ParentActivity implements
 	 *************/
 
 	@Override
-	public void surfaceCreated(SurfaceHolder holder)
+	public void surfaceCreated(SurfaceHolder surfaceHolder)
 	{
 	}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder surfaceholder, int format, int width, int height)
 	{
-		if (libvlc != null) libvlc.attachSurface(holder.getSurface(), this);
+		if (libvlc != null) libvlc.attachSurface(surfaceHolder.getSurface(), this);
 	}
 
 	@Override
@@ -892,21 +806,21 @@ public class VideoActivity extends ParentActivity implements
 		else w = (int) (h * videoAR);
 
 		// force surface buffer size
-		holder.setFixedSize(mVideoWidth, mVideoHeight);
+		surfaceHolder.setFixedSize(mVideoWidth, mVideoHeight);
 
 		// set display size
-		LayoutParams lp = mSurface.getLayoutParams();
+		LayoutParams lp = surfaceView.getLayoutParams();
 		lp.width = w;
 		lp.height = h;
-		mSurface.setLayoutParams(lp);
-		mSurface.invalidate();
+		surfaceView.setLayoutParams(lp);
+		surfaceView.invalidate();
 	}
 
 	@Override
 	public void setSurfaceSize(int width, int height, int visible_width, int visible_height,
 			int sar_num, int sar_den)
 	{
-		Message msg = Message.obtain(mHandler, VideoSizeChanged, width, height);
+		Message msg = Message.obtain(mHandler, videoSizeChanged, width, height);
 		msg.sendToTarget();
 	}
 
@@ -941,8 +855,8 @@ public class VideoActivity extends ParentActivity implements
 			libvlc.setVerboseMode(true);
 			LibVLC.restart(this);
 			EventHandler.getInstance().addHandler(mHandler);
-			holder.setFormat(PixelFormat.RGBX_8888);
-			holder.setKeepScreenOn(true);
+			surfaceHolder.setFormat(PixelFormat.RGBX_8888);
+			surfaceHolder.setKeepScreenOn(true);
 			MediaList list = libvlc.getMediaList();
 			list.clear();
 			list.add(new Media(libvlc, LibVLC.PathToURI(media)), false);
@@ -1052,7 +966,7 @@ public class VideoActivity extends ParentActivity implements
 				VideoActivity player = mOwner.get();
 
 				// SamplePlayer events
-				if (msg.what == VideoSizeChanged)
+				if (msg.what == videoSizeChanged)
 				{
 					player.setSize(msg.arg1, msg.arg2);
 					return;
@@ -1074,8 +988,8 @@ public class VideoActivity extends ParentActivity implements
 					break;
 				case EventHandler.MediaPlayerPlaying:
 
-					player.mSurface.setVisibility(View.VISIBLE);
-					player.imgCam.setVisibility(View.GONE);
+					player.surfaceView.setVisibility(View.VISIBLE);
+					player.imageView.setVisibility(View.GONE);
 					player.mrlPlaying = player.getCurrentMRL();
 
 					Log.e("sajjad", "EventHandler.MediaPlayerPlaying");
@@ -1150,9 +1064,10 @@ public class VideoActivity extends ParentActivity implements
 			isFirstImageLiveEnded = false;
 			isFirstImageLocalEnded = false;
 
-			ivMediaPlayer.setVisibility(View.GONE); // hide the media player
-													// play icon when animation
-													// ends
+			mediaPlayerView.setVisibility(View.GONE); // hide the media player
+														// play icon when
+														// animation
+														// ends
 
 			readSetPreferences();
 
@@ -1168,7 +1083,7 @@ public class VideoActivity extends ParentActivity implements
 		}
 	}
 
-	public class browseImages extends AsyncTask<String, String, String>
+	public class BrowseImages extends AsyncTask<String, String, String>
 	{
 
 		@Override
@@ -1301,7 +1216,7 @@ public class VideoActivity extends ParentActivity implements
 				}
 				else if (imageThread.getStatus() == AsyncTask.Status.FINISHED)
 				{
-					imageThread = new browseImages();
+					imageThread = new BrowseImages();
 					imageThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 				}
 			}
@@ -1321,15 +1236,15 @@ public class VideoActivity extends ParentActivity implements
 	// Hide progress view
 	void hideProgressView()
 	{
-		iView.findViewById(R.id.ivprogressspinner1).setVisibility(View.GONE);
+		imageViewLayout.findViewById(R.id.ivprogressspinner1).setVisibility(View.GONE);
 		isProgressShowing = false;
 		isProgressShowing = false;
 	}
 
 	void showProgressView()
 	{
-		myProgressView.CanvasColor = Color.TRANSPARENT;
-		myProgressView.setVisibility(View.VISIBLE);
+		progressView.CanvasColor = Color.TRANSPARENT;
+		progressView.setVisibility(View.VISIBLE);
 		isProgressShowing = true;
 	}
 
@@ -1365,7 +1280,7 @@ public class VideoActivity extends ParentActivity implements
 
 	private void createNewImageThread()
 	{
-		imageThread = new browseImages();
+		imageThread = new BrowseImages();
 		imageThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 	}
 
@@ -1460,8 +1375,8 @@ public class VideoActivity extends ParentActivity implements
 
 			this.invalidateOptionsMenu();
 
-			mVideoWidth = mSurface.getWidth();
-			mVideoHeight = mSurface.getHeight() - this.getActionBar().getHeight();
+			mVideoWidth = surfaceView.getWidth();
+			mVideoHeight = surfaceView.getHeight() - this.getActionBar().getHeight();
 			setSize(mVideoWidth, mVideoHeight);
 
 		}
@@ -1525,18 +1440,17 @@ public class VideoActivity extends ParentActivity implements
 					if (url1 == null) url1 = "http://www.camba.tv/no-image.jpg";
 					myStartImageTime = SystemClock.uptimeMillis();
 
-//					if (camera.getUseCredentials())
-//					{
-						response = Commons.getDrawablefromUrlAuthenticated1(url1,
-								camera.getUsername(), camera.getPassword(),
-								camera.cookies, 15000);
+					// if (camera.getUseCredentials())
+					// {
+					response = Commons.getDrawablefromUrlAuthenticated1(url1, camera.getUsername(),
+							camera.getPassword(), camera.cookies, 15000);
 
-//					}
-//					else
-//					{
-//						URL url = new URL(url1);
-//						response = Commons.DownlaodDrawableSync(url, 15000);
-//					}
+					// }
+					// else
+					// {
+					// URL url = new URL(url1);
+					// response = Commons.DownlaodDrawableSync(url, 15000);
+					// }
 					if (response != null) successiveFailureCount = 0;
 				}
 				catch (OutOfMemoryError e)
@@ -1586,11 +1500,11 @@ public class VideoActivity extends ParentActivity implements
 
 					latestStartImageTime = myStartImageTime;
 
-					if (ivMediaPlayer.getVisibility() != View.VISIBLE
+					if (mediaPlayerView.getVisibility() != View.VISIBLE
 							&& VideoActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) VideoActivity.this
 							.getActionBar().hide();
 
-					if (showImagesVideo) imgCam.setImageDrawable(result);
+					if (showImagesVideo) imageView.setImageDrawable(result);
 
 					if (enableLogs) Log.i(TAG, "image loaded in ivideo");
 
@@ -1708,6 +1622,90 @@ public class VideoActivity extends ParentActivity implements
 	@Override
 	public void onSlideMenuItemClick(int itemId)
 	{
-		VideoActivity.startPlayingVIdeoForCamera(VideoActivity.this, itemId);
+		// VideoActivity.startPlayingVIdeoForCamera(VideoActivity.this, itemId);
+	}
+
+	private class LoadActiveCamerasTask extends AsyncTask<String, String, String[]>
+	{
+		final ArrayList<EvercamCamera> activeCameras = new ArrayList<EvercamCamera>();
+		int defaultCameraIndex = 0;
+
+		@Override
+		protected String[] doInBackground(String... params)
+		{
+			ArrayList<String> cameraNames = new ArrayList<String>();
+
+			for (int count = 0; count < AppData.evercamCameraList.size(); count++)
+			{
+				if (!AppData.evercamCameraList.get(count).getStatus()
+						.equalsIgnoreCase(CameraStatus.OFFLINE))
+				{
+					activeCameras.add(AppData.evercamCameraList.get(count));
+					cameraNames.add(AppData.evercamCameraList.get(count).getName());
+					if (AppData.evercamCameraList.get(count).getCameraId() == startingCameraID)
+					{
+						defaultCameraIndex = cameraNames.size() - 1;
+					}
+				}
+			}
+
+			String[] cameraArray = new String[cameraNames.size()];
+			cameraNames.toArray(cameraArray);
+
+			return cameraArray;
+		}
+
+		@Override
+		protected void onPostExecute(final String[] cameraNames)
+		{
+			try
+			{
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(VideoActivity.this,
+						android.R.layout.simple_spinner_dropdown_item, cameraNames);
+				VideoActivity.this.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+				OnNavigationListener navigationListener = new OnNavigationListener(){
+					@Override
+					public boolean onNavigationItemSelected(int itemPosition, long itemId)
+					{
+						try
+						{
+							showImagesVideo = false;
+							if (imageThread != null
+									&& imageThread.getStatus() != AsyncTask.Status.RUNNING) imageThread
+									.cancel(true);
+							imageThread = null;
+
+							mrlPlaying = null;
+							setCameraForPlaying(VideoActivity.this, activeCameras.get(itemPosition));
+
+							createPlayer(getCurrentMRL());
+
+						}
+						catch (Exception e)
+						{
+							Log.e(TAG, e.getMessage(), e);
+							if (Constants.isAppTrackingEnabled)
+							{
+								BugSenseHandler.sendException(e);
+							}
+						}
+						return false;
+					}
+				};
+
+				getActionBar().setListNavigationCallbacks(adapter, navigationListener);
+				getActionBar().setSelectedNavigationItem(defaultCameraIndex);
+
+			}
+			catch (Exception e)
+			{
+				Log.e(TAG, e.getMessage(), e);
+				if (Constants.isAppTrackingEnabled)
+				{
+					BugSenseHandler.sendException(e);
+				}
+			}
+
+		}
 	}
 }

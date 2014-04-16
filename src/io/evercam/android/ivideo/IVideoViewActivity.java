@@ -60,31 +60,27 @@ public class IVideoViewActivity extends ParentActivity implements
 		SlideMenuInterface.OnSlideMenuItemClickListener
 {
 
-	private final static String TAG = "IVideoViewActivity";
+	private final static String TAG = "evercamapp-IVideoViewActivity";
 
-	private SlideMenu slidemenu;
-
-	// Screen view change vraibales
+	// Screen view change variables
 	private int screen_width, screen_height;
 	private int media_width = 0, media_height = 0;
 	public int actionBarHeight = 0;
 	private boolean landscape;
 
 	// video playing controls and variables
-	private RelativeLayout iView;
-	private ImageView imgCam;
-	private ImageView ivMediaPlayer;
-	// private String imageURL =
-	// null;//"http://killruddery1.dtdns.net:8001/snapshot1.jpg" ;
+	private RelativeLayout imageViewLayout;
+	private ImageView imageView;
+	private ImageView mediaPlayerView;
 	private long downloadStartCount = 0;
 	private long downloadEndCount = 0;
-	private TextView txtframerate;
-	private browseImages imageThread;
+	private TextView txtFrameRate;
+	private BrowseImages imageThread;
 	private boolean isProgressShowing = true;
 	static boolean enableLogs = true;
 
 	// currently queued tasks that need to be cancelled when quiting
-	ArrayList<DownloadImage> taskList = new ArrayList<IVideoViewActivity.DownloadImage>();
+	ArrayList<DownloadImageTask> taskList = new ArrayList<DownloadImageTask>();
 
 	// image tasks and thread variables
 	private int sleepIntervalMinTime = 51; // interval between two requests of
@@ -207,7 +203,7 @@ public class IVideoViewActivity extends ParentActivity implements
 								setImageAttributesAndLoadImage();
 
 								startResumeDownloading();
-								// //imageThread=new browseImages();
+								// //imageThread=new BrowseImages();
 								// //imageThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,new
 								// String[] {});
 
@@ -361,7 +357,7 @@ public class IVideoViewActivity extends ParentActivity implements
 				if (result != null)
 				{
 					startDownloading = true;
-					imgCam.setImageDrawable(result);
+					imageView.setImageDrawable(result);
 
 					if (enableLogs) Log.i(TAG, "Loaded first image from Cache: " + media_width
 							+ ":" + media_height);
@@ -436,7 +432,7 @@ public class IVideoViewActivity extends ParentActivity implements
 				optionsActivityStarted = true;
 				paused = true;
 				startActivity(new Intent(this, IVideoPrefsActivity.class));
-				ivMediaPlayer.setVisibility(View.GONE);
+				mediaPlayerView.setVisibility(View.GONE);
 
 				showProgressView();
 				if (enableLogs) Log
@@ -491,8 +487,8 @@ public class IVideoViewActivity extends ParentActivity implements
 			imageLiveCameraURL = "http://" + host + portString + "/"
 					+ (chkhighqualityvideo ? HighResImageURL : LowResImageURL);
 
-			if (bchkenabfps) txtframerate.setVisibility(View.VISIBLE);
-			else txtframerate.setVisibility(View.GONE);
+			if (bchkenabfps) txtFrameRate.setVisibility(View.VISIBLE);
+			else txtFrameRate.setVisibility(View.GONE);
 
 		}
 		catch (OutOfMemoryError e)
@@ -580,16 +576,15 @@ public class IVideoViewActivity extends ParentActivity implements
 				}
 			}
 
-			if (enableLogs) Log.i(TAG, "getting Image View");
-			iView = (RelativeLayout) this.findViewById(R.id.camimage);
-			imgCam = (ImageView) this.findViewById(R.id.img_camera);
-			ivMediaPlayer = (ImageView) this.findViewById(R.id.ivmediaplayer);
-			txtframerate = (TextView) IVideoViewActivity.this.findViewById(R.id.txtframerate);
-			txtframerate.setText(String.format("[F/s:%.2f]", ((float) 0)));
+			imageViewLayout = (RelativeLayout) this.findViewById(R.id.camimage);
+			imageView = (ImageView) this.findViewById(R.id.img_camera);
+			mediaPlayerView = (ImageView) this.findViewById(R.id.ivmediaplayer);
+			txtFrameRate = (TextView) IVideoViewActivity.this.findViewById(R.id.txtframerate);
+			txtFrameRate.setText(String.format("[F/s:%.2f]", ((float) 0)));
 
 			readSetPreferences();
 
-			((ProgressView) iView.findViewById(R.id.ivprogressspinner)).CanvasColor = Color.TRANSPARENT; // transparent
+			((ProgressView) imageViewLayout.findViewById(R.id.ivprogressspinner)).CanvasColor = Color.TRANSPARENT; // transparent
 																											// color
 																											// because
 																											// image
@@ -603,9 +598,9 @@ public class IVideoViewActivity extends ParentActivity implements
 																											// well
 
 			isProgressShowing = true;
-			((ProgressView) iView.findViewById(R.id.ivprogressspinner)).setVisibility(View.VISIBLE);
+			((ProgressView) imageViewLayout.findViewById(R.id.ivprogressspinner)).setVisibility(View.VISIBLE);
 
-			ivMediaPlayer.setOnClickListener(new OnClickListener(){
+			mediaPlayerView.setOnClickListener(new OnClickListener(){
 
 				@Override
 				public void onClick(View v)
@@ -621,9 +616,9 @@ public class IVideoViewActivity extends ParentActivity implements
 					if (paused) // video is currently paused. Now we need to
 								// resume it.
 					{
-						ivMediaPlayer.setImageBitmap(null);
-						ivMediaPlayer.setVisibility(View.VISIBLE);
-						ivMediaPlayer.setImageResource(android.R.drawable.ic_media_pause);
+						mediaPlayerView.setImageBitmap(null);
+						mediaPlayerView.setVisibility(View.VISIBLE);
+						mediaPlayerView.setImageResource(android.R.drawable.ic_media_pause);
 
 						startMediaPlayerAnimation();
 
@@ -632,16 +627,16 @@ public class IVideoViewActivity extends ParentActivity implements
 					else
 					// video is currently playing. Now we need to pause video
 					{
-						ivMediaPlayer.clearAnimation();
+						mediaPlayerView.clearAnimation();
 						if (myFadeInAnimation != null && myFadeInAnimation.hasStarted()
 								&& !myFadeInAnimation.hasEnded())
 						{
 							myFadeInAnimation.cancel();
 							myFadeInAnimation.reset();
 						}
-						ivMediaPlayer.setVisibility(View.VISIBLE);
-						ivMediaPlayer.setImageBitmap(null);
-						ivMediaPlayer.setImageResource(android.R.drawable.ic_media_play);
+						mediaPlayerView.setVisibility(View.VISIBLE);
+						mediaPlayerView.setImageBitmap(null);
+						mediaPlayerView.setImageResource(android.R.drawable.ic_media_play);
 
 						paused = true; // mark the images as paused. Do not stop
 										// threads, but do not show the images
@@ -650,7 +645,7 @@ public class IVideoViewActivity extends ParentActivity implements
 				}
 			});
 
-			iView.setOnClickListener(new OnClickListener(){
+			imageViewLayout.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v)
 				{
@@ -668,9 +663,9 @@ public class IVideoViewActivity extends ParentActivity implements
 					{
 
 						IVideoViewActivity.this.getActionBar().show();
-						ivMediaPlayer.setImageResource(android.R.drawable.ic_media_pause);
+						mediaPlayerView.setImageResource(android.R.drawable.ic_media_pause);
 
-						ivMediaPlayer.setVisibility(View.VISIBLE);
+						mediaPlayerView.setVisibility(View.VISIBLE);
 
 						startMediaPlayerAnimation();
 
@@ -678,7 +673,7 @@ public class IVideoViewActivity extends ParentActivity implements
 
 				}
 			});
-			if (enableLogs) Log.i(TAG, "Got image view " + iView.toString());
+			if (enableLogs) Log.i(TAG, "Got image view " + imageViewLayout.toString());
 
 			// Get the size of the device, will be our maximum.
 			Display display = getWindowManager().getDefaultDisplay();
@@ -694,7 +689,7 @@ public class IVideoViewActivity extends ParentActivity implements
 
 			if (imageThread == null)
 			{
-				imageThread = new browseImages();
+				imageThread = new BrowseImages();
 
 			}
 
@@ -722,7 +717,7 @@ public class IVideoViewActivity extends ParentActivity implements
 			myFadeInAnimation.cancel();
 			myFadeInAnimation.reset();
 
-			ivMediaPlayer.clearAnimation();
+			mediaPlayerView.clearAnimation();
 		}
 
 		myFadeInAnimation = AnimationUtils.loadAnimation(IVideoViewActivity.this, R.layout.fadein);
@@ -744,8 +739,8 @@ public class IVideoViewActivity extends ParentActivity implements
 			public void onAnimationEnd(Animation animation)
 			{
 
-				if (!paused) ivMediaPlayer.setVisibility(View.GONE);
-				else ivMediaPlayer.setVisibility(View.VISIBLE);
+				if (!paused) mediaPlayerView.setVisibility(View.GONE);
+				else mediaPlayerView.setVisibility(View.VISIBLE);
 
 				int orientation = IVideoViewActivity.this.getResources().getConfiguration().orientation;
 				if (!paused && orientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -755,7 +750,7 @@ public class IVideoViewActivity extends ParentActivity implements
 			}
 		});
 
-		ivMediaPlayer.startAnimation(myFadeInAnimation);
+		mediaPlayerView.startAnimation(myFadeInAnimation);
 	}
 
 	@Override
@@ -826,7 +821,7 @@ public class IVideoViewActivity extends ParentActivity implements
 			isFirstImageLiveEnded = false;
 			isFirstImageLocalEnded = false;
 
-			ivMediaPlayer.setVisibility(View.GONE); // hide the media player
+			mediaPlayerView.setVisibility(View.GONE); // hide the media player
 													// play icon when animation
 													// ends
 
@@ -861,7 +856,7 @@ public class IVideoViewActivity extends ParentActivity implements
 		}
 	}
 
-	private class browseImages extends AsyncTask<String, String, String>
+	private class BrowseImages extends AsyncTask<String, String, String>
 	{
 
 		@Override
@@ -897,7 +892,7 @@ public class IVideoViewActivity extends ParentActivity implements
 									// command
 					{
 						downloadStartCount++;
-						DownloadImage tasklive = new DownloadImage();
+						DownloadImageTask tasklive = new DownloadImageTask();
 
 						if (LiveTaskID >= 100) LiveTaskID = 1;
 
@@ -1020,7 +1015,7 @@ public class IVideoViewActivity extends ParentActivity implements
 				}
 				else if (imageThread.getStatus() == AsyncTask.Status.FINISHED)
 				{
-					imageThread = new browseImages();
+					imageThread = new BrowseImages();
 					imageThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 				}
 			}
@@ -1040,15 +1035,15 @@ public class IVideoViewActivity extends ParentActivity implements
 	// Hide progress view
 	void hideProgressView()
 	{
-		iView.findViewById(R.id.ivprogressspinner).setVisibility(View.GONE);
+		imageViewLayout.findViewById(R.id.ivprogressspinner).setVisibility(View.GONE);
 		isProgressShowing = false;
 		isProgressShowing = false;
 	}
 
 	void showProgressView()
 	{
-		((ProgressView) iView.findViewById(R.id.ivprogressspinner)).CanvasColor = Color.TRANSPARENT;
-		iView.findViewById(R.id.ivprogressspinner).setVisibility(View.VISIBLE);
+		((ProgressView) imageViewLayout.findViewById(R.id.ivprogressspinner)).CanvasColor = Color.TRANSPARENT;
+		imageViewLayout.findViewById(R.id.ivprogressspinner).setVisibility(View.VISIBLE);
 		isProgressShowing = true;
 	}
 
@@ -1114,7 +1109,7 @@ public class IVideoViewActivity extends ParentActivity implements
 			latestStartImageTime = SystemClock.uptimeMillis();
 			if (localnetworkSettings.equalsIgnoreCase("1"))
 			{
-				DownloadImage task = new DownloadImage();
+				DownloadImageTask task = new DownloadImageTask();
 				isLocalNetwork = true;
 				task.isLocalNetworkRequest = true;
 				task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -1123,7 +1118,7 @@ public class IVideoViewActivity extends ParentActivity implements
 			}
 			else if (localnetworkSettings.equalsIgnoreCase("2"))
 			{
-				DownloadImage task = new DownloadImage();
+				DownloadImageTask task = new DownloadImageTask();
 				task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
 						new String[] { imageLiveCameraURL });
 			}
@@ -1131,13 +1126,13 @@ public class IVideoViewActivity extends ParentActivity implements
 			// autodetect
 			{
 				// Local Network Request
-				DownloadImage task1 = new DownloadImage();
+				DownloadImageTask task1 = new DownloadImageTask();
 				task1.isLocalNetworkRequest = true;
 				task1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
 						new String[] { imageLiveLocalURL });
 
 				// Live Camera Request
-				DownloadImage task = new DownloadImage();
+				DownloadImageTask task = new DownloadImageTask();
 				task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
 						new String[] { imageLiveCameraURL });
 
@@ -1147,7 +1142,7 @@ public class IVideoViewActivity extends ParentActivity implements
 
 			if (imageThread.getStatus() == AsyncTask.Status.FINISHED)
 			{
-				imageThread = new browseImages();
+				imageThread = new BrowseImages();
 				imageThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 			}
 			else if (imageThread.getStatus() != AsyncTask.Status.RUNNING)
@@ -1386,7 +1381,7 @@ public class IVideoViewActivity extends ParentActivity implements
 	}
 
 	// download the image from the camera
-	private class DownloadImage extends AsyncTask<String, Void, Drawable>
+	private class DownloadImageTask extends AsyncTask<String, Void, Drawable>
 	{
 		private long myStartImageTime;
 		private boolean isLocalNetworkRequest = false;
@@ -1436,7 +1431,7 @@ public class IVideoViewActivity extends ParentActivity implements
 
 		@Override
 		protected void onPostExecute(Drawable result)
-		{// DownloadImage Live
+		{// DownloadImageTask Live
 			try
 			{
 				downloadEndCount++;
@@ -1458,14 +1453,14 @@ public class IVideoViewActivity extends ParentActivity implements
 
 					latestStartImageTime = myStartImageTime;
 
-					if (ivMediaPlayer.getVisibility() != View.VISIBLE
+					if (mediaPlayerView.getVisibility() != View.VISIBLE
 							&& IVideoViewActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) IVideoViewActivity.this
 							.getActionBar().hide();
 
-					imgCam.setImageDrawable(result);
+					imageView.setImageDrawable(result);
 
 					if (enableLogs) Log.i(TAG, "image loaded in ivideo");
-					txtframerate.setText(String
+					txtFrameRate.setText(String
 							.format("[F/s:%.2f]", (1000 / (float) sleepInterval)));
 
 					hideProgressView();
