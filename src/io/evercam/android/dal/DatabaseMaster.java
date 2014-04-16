@@ -20,7 +20,7 @@ public class DatabaseMaster extends SQLiteOpenHelper
 	public void onCreate(SQLiteDatabase db)
 	{
 		new DbNotifcation(this.context).onCreateCustom(db);
-		new DbCamera(this.context).onCreateCustom(db);
+		new EvercamDbCamera(this.context).onCreateCustom(db);
 		new DbAppUser(this.context).onCreateCustom(db);
 	}
 

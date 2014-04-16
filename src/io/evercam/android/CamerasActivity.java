@@ -26,12 +26,14 @@ import io.evercam.android.custom.CameraLayout;
 import io.evercam.android.dal.DbAppUser;
 import io.evercam.android.dal.DbCamera;
 import io.evercam.android.dal.DbNotifcation;
+import io.evercam.android.dal.EvercamDbCamera;
 import io.evercam.android.dto.AppUser;
 import io.evercam.android.dto.CameraNotification;
 import io.evercam.android.dto.EvercamCamera;
 import io.evercam.android.dto.ImageLoadingStatus;
 import io.evercam.android.slidemenu.*;
 import io.evercam.android.tasks.LoadCameraListTask;
+import io.evercam.android.tasks.LogoutTask;
 import io.evercam.android.utils.AppData;
 import io.evercam.android.utils.Constants;
 import io.evercam.android.utils.PrefsManager;
@@ -52,10 +54,10 @@ public class CamerasActivity extends ParentActivity implements
 		SlideMenuInterface.OnSlideMenuItemClickListener
 {
 	public static CamerasActivity activity = null;
+	public MenuItem refresh;
 
 	private static final String TAG = "evecamapp-CamerasActivity";
 	private RegisterGCMAlertsServiceTask RegisterTask = null;
-	private MenuItem refresh;
 	private SlideMenu slideMenu;
 	private int totalCamerasInGrid = 0;
 	private int slideoutMenuAnimationTime = 255;
@@ -198,7 +200,7 @@ public class CamerasActivity extends ParentActivity implements
 			{
 			case R.id.slidemenu_logout:
 
-				new LogoutTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+				new LogoutTask(CamerasActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 
 				break;
 
@@ -384,7 +386,7 @@ public class CamerasActivity extends ParentActivity implements
 
 	// Remove all the cameras so that all activities being performed can be
 	// stopped
-	boolean removeAllCameraViews()
+	public boolean removeAllCameraViews()
 	{
 		try
 		{
@@ -604,10 +606,13 @@ public class CamerasActivity extends ParentActivity implements
 
 				final String[] userAccounts = new String[AppData.appUsers.size()];
 
-				for (int i = 0; i < AppData.appUsers.size(); i++)
+				for (int count = 0; count < AppData.appUsers.size(); count++)
 				{
-					userAccounts[i] = AppData.appUsers.get(i).getEmail();
-					if (AppData.appUsers.get(i).getIsDefault()) defaultUserIndex = i;
+					userAccounts[count] = AppData.appUsers.get(count).getEmail();
+					if (AppData.appUsers.get(count).getIsDefault()) 
+						{defaultUserIndex = count;
+						
+						}
 				}
 
 				return userAccounts;
@@ -616,7 +621,10 @@ public class CamerasActivity extends ParentActivity implements
 			catch (Exception e)
 			{
 				Log.e(TAG, e.getMessage(), e);
-				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+				if (Constants.isAppTrackingEnabled) 
+					{BugSenseHandler.sendException(e);
+					
+					}
 			}
 			return null;
 		}
@@ -654,9 +662,8 @@ public class CamerasActivity extends ParentActivity implements
 							dbUser.updateAppUser(user);
 
 							Log.v("evercamapp", "use default user:" + user.getEmail());
-							// load cameras for default user
-//							AppData.cameraList = new DbCamera(CamerasActivity.this)
-//									.getAllCamerasForEmailID(AppData.defaultUser.getEmail(), 500);
+							// load local cameras for default user
+							AppData.evercamCameraList = new EvercamDbCamera(CamerasActivity.this).getCamerasByOwner(user.getUsername(), 500);
 							removeAllCameraViews();
 							addAllCameraViews(true);
 
@@ -818,104 +825,6 @@ public class CamerasActivity extends ParentActivity implements
 //			}
 //		}
 //	}
-
-	private class LogoutTask extends AsyncTask<String, String, String>
-	{
-		@Override
-		protected String doInBackground(String... params)
-		{
-			try
-			{
-				// delete saved username and apssword
-				SharedPreferences sharedPrefs = PreferenceManager
-						.getDefaultSharedPreferences(CamerasActivity.this);
-				PrefsManager.removeUserEmail(sharedPrefs);
-				
-				//clear realtime default app data
-				AppData.defaultUser = null;
-				AppData.evercamCameraList.clear();
-
-				// Un register from gcm server
-				GCMRegistrar.setRegisteredOnServer(CamerasActivity.this, false);
-
-				// delete app user
-				DbAppUser dbUser = new DbAppUser(CamerasActivity.this);
-				List<AppUser> list = dbUser.getAllAppUsers(10000);
-				if (list != null && list.size() > 0)
-				{
-					for (AppUser user : list)
-					{
-						dbUser.deleteAppUserByEmail(user.getEmail());
-					}
-				}
-
-				// unregister all users
-				if (list != null && list.size() > 0)
-				{
-					// get information to be posted for unregister on camba
-					// server request
-					String regId = GCMRegistrar.getRegistrationId(CamerasActivity.this);
-					String AppUserEmail = null;
-					String AppUserPassword = null;
-					String Operation = null;
-					String Manufacturer = null;
-					String Model = null;
-					String SerialNo = null;
-					String ImeiNo = null;
-					String Fingureprint = null;
-					String MacAddress = null;
-					String BlueToothName = null;
-					String AppVersion = null;
-
-					try
-					{
-
-						AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
-						Operation = "2";
-						Manufacturer = android.os.Build.MANUFACTURER;
-						Model = android.os.Build.MODEL;
-						SerialNo = android.os.Build.SERIAL;
-						ImeiNo = ((android.telephony.TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE))
-								.getDeviceId();
-						Fingureprint = android.os.Build.FINGERPRINT;
-						WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-						WifiInfo info = manager.getConnectionInfo();
-						MacAddress = info.getMacAddress();
-						BlueToothName = BluetoothAdapter.getDefaultAdapter().getName();
-						AppVersion = (getPackageManager().getPackageInfo(getPackageName(), 0)).versionName;
-					}
-					catch (Exception ee)
-					{
-					}
-
-					for (AppUser user : list)
-					{
-						dbUser.deleteAppUserByEmail(user.getEmail());
-						AppUserEmail = user.getEmail();
-						try
-						{
-//							CambaApiManager.registerDeviceForUsername(AppUserEmail,
-//									AppUserPassword, regId, Operation, BlueToothName, Manufacturer,
-//									Model, SerialNo, ImeiNo, Fingureprint, MacAddress, AppVersion);
-						}
-						catch (Exception e)
-						{
-						}
-					}
-				}
-			}
-			catch (Exception eee)
-			{
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(String result)
-		{
-			startActivity(new Intent(CamerasActivity.this, MainActivity.class));
-		}
-	}
 
 	private class MarkNotificationAsReadTask extends AsyncTask<String, String, String>
 	{

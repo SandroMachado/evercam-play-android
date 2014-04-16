@@ -36,11 +36,11 @@ public class EvercamDbCamera extends DatabaseMaster
 		String CREATE_TABLE_Cameras = "CREATE TABLE " + TABLE_CAMERA + "(" + KEY_ID
 				+ " INTEGER PRIMARY KEY autoincrement" + "," + KEY_CAMERA_ID + " TEXT NOT NULL"
 				+ "," + KEY_CAMERA_NAME + " TEXT NULL" + "," + KEY_OWNER + " TEXT  NOT NULL" + ","
-				+ KEY_USERNAME + " TEXT NULL" + KEY_PASSWORD + " TEXT NULL" + "," + KEY_TIMEZONE
+				+ KEY_USERNAME + " TEXT NULL" + "," + KEY_PASSWORD + " TEXT NULL" + "," + KEY_TIMEZONE
 				+ " TEXT NULL" + "," + KEY_VENDOR + " TEXT NULL" + "," + KEY_MODEL + " TEXT NULL"
 				+ "," + KEY_MAC + " TEXT NULL " + "," + KEY_EXTERNAL_JPG_URL + " TEXT NULL " + ","
 				+ KEY_INTERNAL_JPG_URL + " TEXT NULL " + "," + KEY_EXTERNAL_RTSP_URL + " TEXT NULL"
-				+ "," + KEY_STATUS + " TEXT NULL" + "," + ",  CONSTRAINT uniqueCamAndUser UNIQUE ("
+				+ "," + KEY_STATUS + " TEXT NULL" + "," + "CONSTRAINT uniqueCamAndUser UNIQUE ("
 				+ KEY_CAMERA_ID + ")" + ")";
 		db.execSQL(CREATE_TABLE_Cameras);
 	}

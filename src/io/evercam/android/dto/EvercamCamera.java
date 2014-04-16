@@ -12,51 +12,52 @@ public class EvercamCamera
 {
 	public ImageLoadingStatus loadingStatus = ImageLoadingStatus.not_started;
 	public ArrayList<Cookie> cookies = null;
-	
+
 	private final String TAG = "evercamapp-EvercamCamera";
-	
-	private int id;
-	private String cameraId;
-	private String name;
-	private String owner;
-	private String username;
-	private String password;
-	private String timezone;
-	private String vendor;
-	private String model;
-	private String mac;
-	private String externalSnapshotUrl;
-	private String internalSnapshotUrl;
-	private String externalRtspUrl;
-	private String status;
-	
+
+	private int id = -1;
+	private String cameraId = "";
+	private String name = "";
+	private String owner = "";
+	private String username = "";
+	private String password = "";
+	private String timezone = "";
+	private String vendor = "";
+	private String model = "";
+	private String mac = "";
+	private String externalSnapshotUrl = "";
+	private String internalSnapshotUrl = "";
+	private String externalRtspUrl = "";
+	private String status = "";
+
 	public EvercamCamera()
 	{
-		
+
 	}
-	
+
 	public EvercamCamera convertFromEvercam(io.evercam.Camera camera)
 	{
 		try
 		{
 			cameraId = camera.getId();
 			name = camera.getName();
+			owner = camera.getOwner();
 			username = camera.getCameraUsername();
 			password = camera.getCameraPassword();
-			externalSnapshotUrl = camera.getJpgExternalFullUrl();		
-			internalSnapshotUrl = camera.getJpgInternalFullUrl();
 			timezone = camera.getTimezone();
-			model = camera.getModel();
 			vendor = camera.getVendor();
-			owner = camera.getOwner();
+			model = camera.getModel();
+			mac = camera.getMacAddress();
+			externalSnapshotUrl = camera.getJpgExternalFullUrl();
+			internalSnapshotUrl = camera.getJpgInternalFullUrl();
 		}
 		catch (EvercamException e)
 		{
-			Log.e(TAG,e.getMessage());
+			Log.e(TAG, e.getMessage());
 		}
 		return this;
 	}
-	
+
 	public int getId()
 	{
 		return id;
@@ -195,5 +196,25 @@ public class EvercamCamera
 	public void setStatus(String status)
 	{
 		this.status = status;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		EvercamCamera other = (EvercamCamera) obj;
+		if (cameraId.equals(other.cameraId) && externalRtspUrl.equals(other.externalRtspUrl)
+				&& externalSnapshotUrl.equals(other.externalSnapshotUrl)
+				&& internalSnapshotUrl.equals(other.internalSnapshotUrl) && mac.equals(other.mac)
+				&& model.equals(other.model) && name.equals(other.name)
+				&& owner.equals(other.owner) && password.equals(other.password)
+				&& status.equals(other.status) && timezone.equals(other.timezone)
+				&& username.equals(other.username) && vendor.equals(other.vendor))
+		{
+			return true;
+		}
+		return false;
 	}
 }
