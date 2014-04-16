@@ -2,7 +2,7 @@ package io.evercam.android.ivideo;
 
 import io.evercam.android.ParentActivity;
 import io.evercam.android.custom.ProgressView;
-import io.evercam.android.dto.Camera;
+import io.evercam.android.dto.EvercamCamera;
 import io.evercam.android.slidemenu.SlideMenu;
 import io.evercam.android.slidemenu.SlideMenuInterface;
 import io.evercam.android.utils.AppData;
@@ -127,7 +127,7 @@ public class IVideoViewActivity extends ParentActivity implements
 			localip = "192.168.1.198"// "149.5.40.144";
 			, localport = "8001", HighResImageURL = "snapshot1.jpg",
 			LowResImageURL = "snapshot_3gp.jpg";
-	public static Camera camera = null; // if camera uses cookies
+	public static EvercamCamera camera = null; // if camera uses cookies
 										// authentication, then use these
 										// cookies to pass to camera
 
@@ -153,7 +153,7 @@ public class IVideoViewActivity extends ParentActivity implements
 	{
 
 		new AsyncTask<String, String, String[]>(){
-			final ArrayList<Camera> ActiveCamers = new ArrayList<Camera>();
+			final ArrayList<EvercamCamera> ActiveCamers = new ArrayList<EvercamCamera>();
 			int defaultCamIndex = 0;
 
 			@Override
@@ -161,13 +161,13 @@ public class IVideoViewActivity extends ParentActivity implements
 			{
 				ArrayList<String> Cams = new ArrayList<String>();
 
-				for (int i = 0; i < AppData.cameraList.size(); i++)
+				for (int i = 0; i < AppData.evercamCameraList.size(); i++)
 				{
-					if (!AppData.cameraList.get(i).getStatus().equalsIgnoreCase("Offline"))
+					if (!AppData.evercamCameraList.get(i).getStatus().equalsIgnoreCase("Offline"))
 					{
-						ActiveCamers.add(AppData.cameraList.get(i));
-						Cams.add(AppData.cameraList.get(i).getName());
-						if (AppData.cameraList.get(i).getCameraID() == camera.getCameraID()) defaultCamIndex = Cams
+						ActiveCamers.add(AppData.evercamCameraList.get(i));
+						Cams.add(AppData.evercamCameraList.get(i).getName());
+						if (AppData.evercamCameraList.get(i).getCameraId() == camera.getCameraId()) defaultCamIndex = Cams
 								.size() - 1;
 
 					}
@@ -201,12 +201,12 @@ public class IVideoViewActivity extends ParentActivity implements
 							try
 							{
 
-								SetCameraForPlaying(IVideoViewActivity.this,
+								setCameraForPlaying(IVideoViewActivity.this,
 										ActiveCamers.get(itemPosition));
 
-								SetImageAttributesAndLoadImage();
+								setImageAttributesAndLoadImage();
 
-								StartResumeDownloading();
+								startResumeDownloading();
 								// //imageThread=new browseImages();
 								// //imageThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,new
 								// String[] {});
@@ -238,26 +238,26 @@ public class IVideoViewActivity extends ParentActivity implements
 
 	}
 
-	public static boolean StartPlayingVIdeoForCamera(Context context, int camID)
+	public static boolean startPlayingVIdeoForCamera(Context context, String camID)
 	{
-		if (AppData.cameraList != null) for (Camera cam : AppData.cameraList)
+		if (AppData.evercamCameraList != null) for (EvercamCamera cam : AppData.evercamCameraList)
 		{
-			if (cam.getCameraID() == camID)
+			if (cam.getCameraId() == camID)
 			{
 
-				StartPlayingVIdeo(context, cam);
+				startPlayingVIdeo(context, cam);
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public static void StartPlayingVIdeo(Context context, Camera cam)
+	public static void startPlayingVIdeo(Context context, EvercamCamera cam)
 	{
 		try
 		{
 
-			SetCameraForPlaying(context, cam);
+			setCameraForPlaying(context, cam);
 
 			// going to start the activity to show the full screen video
 			Intent i = new Intent(context, io.evercam.android.ivideo.IVideoViewActivity.class);
@@ -276,18 +276,19 @@ public class IVideoViewActivity extends ParentActivity implements
 		}
 	}
 
-	public static void SetCameraForPlaying(Context context, Camera cam)
+	public static void setCameraForPlaying(Context context, EvercamCamera cam)
 	{
 		try
 		{
 			if (enableLogs) Log.i(TAG, "Playing camera:" + cam.toString());
 			// passing the medium, mobile compatible range image url to the
 			// camra
-			String ImageUrl = ((cam.getLowResolutionSnapshotUrl() != null && URLUtil.isValidUrl(cam
-					.getLowResolutionSnapshotUrl())) ? cam.getLowResolutionSnapshotUrl() : cam
-					.getCameraImageUrl());
+//			String imageUrl = ((cam.getLowResolutionSnapshotUrl() != null && URLUtil.isValidUrl(cam
+//					.getLowResolutionSnapshotUrl())) ? cam.getLowResolutionSnapshotUrl() : cam
+//					.getCameraImageUrl());
+			String imageUrl = cam.getExternalSnapshotUrl();
 
-			if (!URLUtil.isValidUrl(ImageUrl))
+			if (!URLUtil.isValidUrl(imageUrl))
 			{
 				UIUtils.GetAlertDialog(context, "Camera URL Error",
 						"Invalid camera settings. Please contact camba.tv team.").show();
@@ -295,41 +296,41 @@ public class IVideoViewActivity extends ParentActivity implements
 			}
 
 			// Extracting information from the camera image url
-			ImageUrl = ImageUrl.replace("http://", "");
-			boolean hasPort = ImageUrl.contains(":");
-			io.evercam.android.ivideo.IVideoViewActivity.host = (String) (hasPort ? ImageUrl
-					.subSequence(0, ImageUrl.indexOf(":")) : ImageUrl.subSequence(0,
-					ImageUrl.indexOf("/")));
+			imageUrl = imageUrl.replace("http://", "");
+			boolean hasPort = imageUrl.contains(":");
+			io.evercam.android.ivideo.IVideoViewActivity.host = (String) (hasPort ? imageUrl
+					.subSequence(0, imageUrl.indexOf(":")) : imageUrl.subSequence(0,
+					imageUrl.indexOf("/")));
 			if (hasPort)
 			{
-				IVideoViewActivity.port = (String) ImageUrl.subSequence(ImageUrl.indexOf(":") + 1,
-						ImageUrl.indexOf("/"));
+				IVideoViewActivity.port = (String) imageUrl.subSequence(imageUrl.indexOf(":") + 1,
+						imageUrl.indexOf("/"));
 			}
 			else
 			{
 				IVideoViewActivity.port = "";
 			}
-			ImageUrl = ImageUrl.replace(IVideoViewActivity.host
+			imageUrl = imageUrl.replace(IVideoViewActivity.host
 					+ (hasPort ? ":" + IVideoViewActivity.port : "") + "/", "");
-			io.evercam.android.ivideo.IVideoViewActivity.HighResImageURL = ImageUrl;
-			io.evercam.android.ivideo.IVideoViewActivity.LowResImageURL = ImageUrl;
+			io.evercam.android.ivideo.IVideoViewActivity.HighResImageURL = imageUrl;
+			io.evercam.android.ivideo.IVideoViewActivity.LowResImageURL = imageUrl;
 			IVideoViewActivity.camera = cam;
-			String LocalIpPort = cam.getLocalIpPort() + "";
-			if (LocalIpPort.contains(":"))
-			{
-				IVideoViewActivity.localip = LocalIpPort.substring(0, LocalIpPort.indexOf(":"));
-				IVideoViewActivity.localport = LocalIpPort.substring(LocalIpPort.indexOf(":") + 1);
-			}
-			else if (LocalIpPort.length() > 0)
-			{
-				IVideoViewActivity.localip = LocalIpPort;
-				IVideoViewActivity.localport = null;
-			}
-			else
-			{
-				IVideoViewActivity.localip = null;
-				IVideoViewActivity.localport = null;
-			}
+//			String LocalIpPort = cam.getLocalIpPort() + "";
+//			if (LocalIpPort.contains(":"))
+//			{
+//				IVideoViewActivity.localip = LocalIpPort.substring(0, LocalIpPort.indexOf(":"));
+//				IVideoViewActivity.localport = LocalIpPort.substring(LocalIpPort.indexOf(":") + 1);
+//			}
+//			else if (LocalIpPort.length() > 0)
+//			{
+//				IVideoViewActivity.localip = LocalIpPort;
+//				IVideoViewActivity.localport = null;
+//			}
+//			else
+//			{
+//				IVideoViewActivity.localip = null;
+//				IVideoViewActivity.localport = null;
+//			}
 
 			// going to start the activity to show the full screen video
 
@@ -349,11 +350,11 @@ public class IVideoViewActivity extends ParentActivity implements
 
 	// Loads image from cache. First image gets loaded correctly and hence we
 	// can start making requests concurrently as well
-	public boolean LoadImageFromCache()
+	public boolean loadImageFromCache()
 	{
 		try
 		{
-			String path = this.getCacheDir() + "/" + camera.getCameraID() + ".jpg";
+			String path = this.getCacheDir() + "/" + camera.getCameraId() + ".jpg";
 			if (new File(path).exists())
 			{
 				Drawable result = Drawable.createFromPath(path);
@@ -476,7 +477,7 @@ public class IVideoViewActivity extends ParentActivity implements
 
 			isLocalNetwork = false;
 			localnetworkSettings = sharedPrefs.getString(
-					"pref_enablocalnetwork" + camera.getCameraID(), "0");// ("chkenablocalnetwork",
+					"pref_enablocalnetwork" + camera.getCameraId(), "0");// ("chkenablocalnetwork",
 																			// false);
 			if (localnetworkSettings.equalsIgnoreCase("1")) isLocalNetwork = true;
 			else isLocalNetwork = false;
@@ -699,7 +700,7 @@ public class IVideoViewActivity extends ParentActivity implements
 
 			if (!this.paused)
 			{
-				StartResumeDownloading();
+				startResumeDownloading();
 			}
 
 		}
@@ -816,7 +817,7 @@ public class IVideoViewActivity extends ParentActivity implements
 
 	}
 
-	public void SetImageAttributesAndLoadImage()
+	public void setImageAttributesAndLoadImage()
 	{
 		try
 		{
@@ -1088,7 +1089,7 @@ public class IVideoViewActivity extends ParentActivity implements
 				}
 				latestStartImageTime = SystemClock.uptimeMillis();
 
-				StartResumeDownloading();
+				startResumeDownloading();
 			}
 		}
 		catch (OutOfMemoryError e)
@@ -1103,7 +1104,7 @@ public class IVideoViewActivity extends ParentActivity implements
 	}
 
 	// take care of the steps that are required to start downloading
-	public void StartResumeDownloading()
+	public void startResumeDownloading()
 	{
 		try
 		{
@@ -1154,7 +1155,7 @@ public class IVideoViewActivity extends ParentActivity implements
 				imageThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 			}
 
-			LoadImageFromCache();
+			loadImageFromCache();
 		}
 		catch (OutOfMemoryError e)
 		{
@@ -1400,18 +1401,19 @@ public class IVideoViewActivity extends ParentActivity implements
 				{
 					myStartImageTime = SystemClock.uptimeMillis();
 
-					if (camera.getUseCredentials())
-					{
+//					if (camera.getUseCredentials())
+//					{
 						response = Commons.getDrawablefromUrlAuthenticated1(url1,
-								camera.getCameraUserName(), camera.getCameraPassword(),
+								camera.getUsername(), camera.getPassword(),
 								camera.cookies, 15000);
+						
 
-					}
-					else
-					{
-						URL url = new URL(url1);
-						response = Commons.DownlaodDrawableSync(url, 15000);
-					}
+//					}
+//					else
+//					{
+//						URL url = new URL(url1);
+//						response = Commons.DownlaodDrawableSync(url, 15000);
+//					}
 					if (response != null) successiveFailureCount = 0;
 				}
 				catch (OutOfMemoryError e)
@@ -1555,11 +1557,11 @@ public class IVideoViewActivity extends ParentActivity implements
 	public void onSlideMenuItemClick(int itemId)
 	{
 
-		for (Camera caml : AppData.cameraList)
+		for (EvercamCamera caml : AppData.evercamCameraList)
 		{
-			if (caml.getCameraID() == itemId && caml.getCameraID() != camera.getCameraID())
+			if (caml.getId() == itemId && caml.getCameraId() != camera.getCameraId())
 			{
-				IVideoViewActivity.StartPlayingVIdeo(IVideoViewActivity.this, caml);
+				IVideoViewActivity.startPlayingVIdeo(IVideoViewActivity.this, caml);
 				return;
 			}
 		}

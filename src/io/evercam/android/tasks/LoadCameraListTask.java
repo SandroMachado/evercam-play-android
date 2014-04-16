@@ -8,7 +8,7 @@ import io.evercam.EvercamException;
 import io.evercam.User;
 import io.evercam.android.CamerasActivity;
 import io.evercam.android.MainActivity;
-import io.evercam.android.dal.EvercamDbCamera;
+import io.evercam.android.dal.DbCamera;
 import io.evercam.android.dto.AppUser;
 import io.evercam.android.dto.EvercamCamera;
 import io.evercam.android.utils.AppData;
@@ -85,7 +85,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 				reload = true;
 
 				AppData.evercamCameraList = evercamCameras;
-				EvercamDbCamera dbCamera = new EvercamDbCamera(camerasActivity);
+				DbCamera dbCamera = new DbCamera(camerasActivity);
 				dbCamera.deleteCameraByOwner(user.getUsername());
 
 				for (EvercamCamera camera : AppData.evercamCameraList)

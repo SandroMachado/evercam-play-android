@@ -2,7 +2,7 @@ package io.evercam.android.rvideo;
 
 import io.evercam.android.ParentActivity;
 import io.evercam.android.custom.ProgressView;
-import io.evercam.android.dto.Camera;
+import io.evercam.android.dto.EvercamCamera;
 import io.evercam.android.dto.ImageRecord;
 import io.evercam.android.utils.AppData;
 import io.evercam.android.utils.CLog;
@@ -125,10 +125,10 @@ public class RVideoViewActivity extends ParentActivity
 										// connected
 
 	public static String recordingStartTime = null;
-	public static Camera camera = null; // if camera uses cookies
+	public static EvercamCamera camera = null; // if camera uses cookies
 										// authentication, then use these
 										// cookies to pass to camera
-	private int CameraID = 0;
+	private String CameraID = "";
 	private MenuItem dateTimeMenuItem = null;
 
 	private static volatile ArrayList<ImageRecord> imageList = new ArrayList<ImageRecord>();
@@ -158,12 +158,12 @@ public class RVideoViewActivity extends ParentActivity
 				// TODO Auto-generated method stub
 				ArrayList<String> Cams = new ArrayList<String>();
 
-				for (int i = 0; i < AppData.cameraList.size(); i++)
+				for (int i = 0; i < AppData.evercamCameraList.size(); i++)
 				{
 
-					Cams.add(AppData.cameraList.get(i).getName());
+					Cams.add(AppData.evercamCameraList.get(i).getName());
 
-					if (AppData.cameraList.get(i).getCameraID() == camera.getCameraID()) defaultCamIndex = Cams
+					if (AppData.evercamCameraList.get(i).getCameraId() == camera.getCameraId()) defaultCamIndex = Cams
 							.size() - 1;
 
 				}
@@ -195,10 +195,10 @@ public class RVideoViewActivity extends ParentActivity
 							try
 							{
 
-								RVideoViewActivity.camera = AppData.cameraList.get(itemPosition);
+								RVideoViewActivity.camera = AppData.evercamCameraList.get(itemPosition);
 								//
 								//
-								SetImageAttributesAndLoadImage();
+								setImageAttributesAndLoadImage();
 								//
 								//
 
@@ -206,7 +206,7 @@ public class RVideoViewActivity extends ParentActivity
 								// imageList = new ArrayList<ImageRecord>();
 								// }
 
-								if (CameraID != camera.getCameraID() || imageList == null
+								if (CameraID != camera.getCameraId() || imageList == null
 										|| imageList.size() == 0)
 								{
 									imageIndex = 0;
@@ -247,20 +247,20 @@ public class RVideoViewActivity extends ParentActivity
 
 	}
 
-	public static boolean StartPlayingVIdeoForCamera(Context context, int camID, String time)
+	public static boolean startPlayingVIdeoForCamera(Context context, String camID, String time)
 	{
-		if (AppData.cameraList != null) for (Camera cam : AppData.cameraList)
+		if (AppData.evercamCameraList != null) for (EvercamCamera cam : AppData.evercamCameraList)
 		{
-			if (cam.getCameraID() == camID)
+			if (cam.getCameraId() == camID)
 			{
-				StartPlayingVIdeo(context, cam, time);
+				startPlayingVIdeo(context, cam, time);
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public static void StartPlayingVIdeo(Context context, Camera cam, String time)
+	public static void startPlayingVIdeo(Context context, EvercamCamera cam, String time)
 	{
 		try
 		{
@@ -295,22 +295,22 @@ public class RVideoViewActivity extends ParentActivity
 	// Loads image from cache. First image gets loaded correctly and hence we
 	// can start making requests concurrently as well
 	@SuppressLint("NewApi")
-	public boolean LoadImageFromCache()
+	public boolean loadImageFromCache()
 	{
 		try
 		{
 
 			boolean isPathExists = false;
 
-			String path = this.getCacheDir() + "/" + camera.getCameraID() + "_"
+			String path = this.getCacheDir() + "/" + camera.getCameraId() + "_"
 					+ RVideoDateTimeDialog.GetDateTimeStringFullNoSpaces() + ".jpg";
 			if (new File(path).exists())
 			{
 				isPathExists = true;
 			}
-			else if (new File(this.getCacheDir() + "/" + camera.getCameraID() + ".jpg").exists())
+			else if (new File(this.getCacheDir() + "/" + camera.getCameraId() + ".jpg").exists())
 			{
-				path = this.getCacheDir() + "/" + camera.getCameraID() + ".jpg";
+				path = this.getCacheDir() + "/" + camera.getCameraId() + ".jpg";
 				isPathExists = true;
 			}
 
@@ -332,7 +332,7 @@ public class RVideoViewActivity extends ParentActivity
 					if (enableLogs) Log.e(
 							TAG,
 							"laodimagefromcache drawable d1 is null. Camera ID is "
-									+ camera.getCameraID());
+									+ camera.getCameraId());
 				}
 			}
 		}
@@ -690,7 +690,7 @@ public class RVideoViewActivity extends ParentActivity
 		rvmediaplayer.startAnimation(myFadeInAnimation);
 	}
 
-	public void SetImageAttributesAndLoadImage()
+	public void setImageAttributesAndLoadImage()
 	{
 		try
 		{
@@ -927,7 +927,7 @@ public class RVideoViewActivity extends ParentActivity
 				imageThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 			}
 
-			LoadImageFromCache();
+			loadImageFromCache();
 		}
 		catch (OutOfMemoryError e)
 		{
@@ -1133,7 +1133,7 @@ public class RVideoViewActivity extends ParentActivity
 					response = Commons.DownlaodDrawableSync(url, 15000);
 
 					Bitmap bmp = ((BitmapDrawable) response).getBitmap();
-					CacheUrl = RVideoViewActivity.this.getCacheDir() + "/" + camera.getCameraID()
+					CacheUrl = RVideoViewActivity.this.getCacheDir() + "/" + camera.getCameraId()
 							+ "_" + imager.getFDT() + ".jpg";
 
 					FileOutputStream fos = new FileOutputStream(CacheUrl);

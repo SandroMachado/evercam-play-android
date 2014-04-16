@@ -39,9 +39,9 @@ public class RVideoPrefsActivity extends PreferenceActivity
 		SharedPreferences sharedprefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		ListPreference prefNetwork = (ListPreference) this.findPreference("pref_enablocalnetwork");
-		prefNetwork.setKey("pref_enablocalnetwork" + RVideoViewActivity.camera.getCameraID());
+		prefNetwork.setKey("pref_enablocalnetwork" + RVideoViewActivity.camera.getCameraId());
 		prefNetwork.setValue(sharedprefs.getString("pref_enablocalnetwork"
-				+ RVideoViewActivity.camera.getCameraID(), "0"));
+				+ RVideoViewActivity.camera.getCameraId(), "0"));
 		prefNetwork.setSummary(prefNetwork.getEntry());
 		prefNetwork.setOnPreferenceChangeListener(new ListPreference.OnPreferenceChangeListener(){
 

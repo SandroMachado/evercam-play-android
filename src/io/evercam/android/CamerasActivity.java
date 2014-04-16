@@ -24,9 +24,8 @@ import android.widget.*;
 import io.evercam.android.custom.AboutDialog;
 import io.evercam.android.custom.CameraLayout;
 import io.evercam.android.dal.DbAppUser;
-import io.evercam.android.dal.DbCamera;
 import io.evercam.android.dal.DbNotifcation;
-import io.evercam.android.dal.EvercamDbCamera;
+import io.evercam.android.dal.DbCamera;
 import io.evercam.android.dto.AppUser;
 import io.evercam.android.dto.CameraNotification;
 import io.evercam.android.dto.EvercamCamera;
@@ -240,21 +239,21 @@ public class CamerasActivity extends ParentActivity implements
 				}, slideoutMenuAnimationTime);
 				break;
 
-			default: // starting the notification activity
-
-				NotificationActivity.NotificationID = itemId;
-				new MarkNotificationAsReadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-						itemId + "");
-				new Handler().postDelayed(new Runnable(){
-					@Override
-					public void run()
-					{
-						Intent i = new Intent(new Intent(CamerasActivity.this,
-								NotificationActivity.class));
-						startActivity(i);
-					}
-				}, slideoutMenuAnimationTime);
-				break;
+//			default: // starting the notification activity
+//
+//				NotificationActivity.NotificationID = itemId;
+//				new MarkNotificationAsReadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+//						itemId + "");
+//				new Handler().postDelayed(new Runnable(){
+//					@Override
+//					public void run()
+//					{
+//						Intent i = new Intent(new Intent(CamerasActivity.this,
+//								NotificationActivity.class));
+//						startActivity(i);
+//					}
+//				}, slideoutMenuAnimationTime);
+//				break;
 
 			}
 		}
@@ -663,7 +662,7 @@ public class CamerasActivity extends ParentActivity implements
 
 							Log.v("evercamapp", "use default user:" + user.getEmail());
 							// load local cameras for default user
-							AppData.evercamCameraList = new EvercamDbCamera(CamerasActivity.this).getCamerasByOwner(user.getUsername(), 500);
+							AppData.evercamCameraList = new DbCamera(CamerasActivity.this).getCamerasByOwner(user.getUsername(), 500);
 							removeAllCameraViews();
 							addAllCameraViews(true);
 
@@ -698,133 +697,6 @@ public class CamerasActivity extends ParentActivity implements
 			}
 		}
 	}
-
-	// This class gets users cameras list from the api with proper login
-//	private class GetUserCamsData extends AsyncTask<String, Void, String>
-//	{
-//		public boolean reload = false;
-//
-//		@Override
-//		protected String doInBackground(String... login)
-//		{
-//			try
-//			{
-//				boolean updateDB = false;
-//
-//				SharedPreferences sharedPrefs = PreferenceManager
-//						.getDefaultSharedPreferences(CamerasActivity.this);
-////				AppData.AppUserEmail = sharedPrefs.getString("AppUserEmail", null);
-////				AppData.AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
-//
-//				ArrayList<Camera> cambaList = CambaApiManager.getCameraListAndSetKey();
-//				for (Camera camera : cambaList)
-//				{
-//					camera.setUserEmail(AppData.AppUserEmail);
-//					Log.v(TAG, camera.toString());
-//				}
-//
-//				for (Camera cam : cambaList)
-//				{
-//					if (!AppData.camesList.contains(cam))
-//					{
-//						updateDB = true;
-//						break;
-//					}
-//				}
-//				if (!updateDB)
-//				{
-//					for (Camera cam1 : AppData.camesList)
-//				{
-//					if (!cambaList.contains(cam1))
-//					{
-//						updateDB = true;
-//						break;
-//					}
-//				}
-//				}
-//				if (updateDB)
-//				{
-//					this.reload = true;
-//					AppData.cameraList = cambaList;
-//
-//					DbCamera dbcam = new DbCamera(CamerasActivity.this);
-//					dbcam.deleteCameraForEmail(AppData.defaultUser.getEmail());
-//
-//					for (Camera cam : AppData.cameraList)
-//					{
-//						Log.i(TAG, cam.toString());
-//						dbcam.addCamera(cam);
-//					}
-//				}
-//			}
-//
-//			catch (CredentialsException ce)
-//			{
-//				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(ce);
-//				return Constants.ErrorMessageInvalidCredentialsAndLogout;
-//
-//			}
-//			catch (ConnectivityException e)
-//			{
-//				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-//				return Constants.ErrorMessageNoConnectivity;
-//			}
-//			catch (Exception e)
-//			{
-//				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-//				if (AppData.camesList == null && AppData.camesList.size() == 0) return Constants.ErrorMessageRefreshCamerasWhenNoCamerasExist;
-//				else return Constants.ErrorMessageRefreshCamerasWhenCamerasLoadedFromLocalDB;
-//			}
-//			return null;
-//		}
-//
-//		@Override
-//		protected void onPostExecute(final String result)
-//		{
-//			if (result == null)
-//			{
-//				if (this.reload || totalCamerasInGrid != AppData.camesList.size())
-//				{
-//					CamerasActivity.this.removeAllCameraViews();
-//					CamerasActivity.this.addAllCameraViews(true);
-//				}
-//			}
-//			else
-//			{
-//				if (!CamerasActivity.this.isFinishing()) UIUtils.GetAlertDialog(
-//						CamerasActivity.this, "Error Occured", result,
-//						new DialogInterface.OnClickListener(){
-//							@Override
-//							public void onClick(DialogInterface dialog, int which)
-//							{
-//								dialog.dismiss();
-//								// CamerasActivity.this.finish(); // cannot
-//								// finish
-//								// because if we finish, user will not be able
-//								// to login back again.
-//								if ((result + "")
-//										.equalsIgnoreCase(Constants.ErrorMessageInvalidCredentialsAndLogout))
-//								{
-//									// delete saved username and apssword
-//									SharedPreferences sharedPrefs = PreferenceManager
-//											.getDefaultSharedPreferences(CamerasActivity.this);
-//									SharedPreferences.Editor editor = sharedPrefs.edit();
-//									editor.putString("AppUserEmail", null);
-//									editor.putString("AppUserPassword", null);
-//									editor.commit();
-//
-//									startActivity(new Intent(CamerasActivity.this,
-//											MainActivity.class));
-//									new LogoutTask().executeOnExecutor(
-//											AsyncTask.THREAD_POOL_EXECUTOR, "");
-//								}
-//								if (CamerasActivity.this.refresh != null) CamerasActivity.this.refresh
-//										.setActionView(null);
-//							}
-//						}).show();
-//			}
-//		}
-//	}
 
 	private class MarkNotificationAsReadTask extends AsyncTask<String, String, String>
 	{

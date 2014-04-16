@@ -1,10 +1,7 @@
 package io.evercam.android.dal;
 
-import io.evercam.android.dto.Camera;
-
 import java.util.ArrayList;
-import java.util.List;
-
+import io.evercam.android.dto.EvercamCamera;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,382 +9,201 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class DbCamera extends DatabaseMaster
 {
+	private static final String TABLE_CAMERA = "evercamcamera";
 
-	// Cameras table name
-	private static final String TABLE_Camera = "ApiCamera";
-
-	// Cameras Table Columns names
-	public static final String KEY_ID = "_id";
-	public static final String KEY_CameraID = "CameraID";
-	public static final String KEY_UserEmail = "UserEmail";
-
-	public static final String KEY_AccessMethod = "AccessMethod";
-	public static final String KEY_AudioUrl = "AudioUrl";
-	public static final String KEY_BaseUrl = "BaseUrl";
-	public static final String KEY_BrowserUrl = "BrowserUrl";
-	public static final String KEY_CameraImageUrl = "CameraImageUrl";
-	public static final String KEY_CameraMake = "CameraMake";
-	public static final String KEY_CameraModel = "CameraModel";
-	public static final String KEY_CameraPassword = "CameraPassword";
-	public static final String KEY_CameraTimeZone = "CameraTimeZone";
-	public static final String KEY_CameraUserName = "CameraUserName";
-	public static final String KEY_Code = "Code";
-	public static final String KEY_H264Url = "H264Url";
-	public static final String KEY_HistoryDays = "HistoryDays";
-	public static final String KEY_LocalIpPort = "LocalIpPort";
-	public static final String KEY_LowResolutionSnapshotUrl = "LowResolutionSnapshotUrl ";
-	public static final String KEY_MjpgUrl = "MjpgUrl";
-	public static final String KEY_MobileUrl = "MobileUrl";
-	public static final String KEY_Mpeg4Url = "Mpeg4Url";
-	public static final String KEY_Name = "Name";
-	public static final String KEY_OfflineTime = "OfflineTime";
-	public static final String KEY_RtspPort = "RtspPort";
-	public static final String KEY_RtspUrl = "RtspUrl";
-	public static final String KEY_Status = "Status";
-	public static final String KEY_UseCredentials = "UseCredentials";
-	public static final String KEY_VideoRecording = "VideoRecording";
-
-	public static final String KEY_AlarmLevel = "AlarmLevel";
-	public static final String Key_CameraGroup = "CameraGroup";
-	public static final String Key_CameraStatusIntVal = "CameraStatusIntVal";
-	public static final String Key_IsMdEnabled = "IsMdEnabled";
-
-	public static final String Key_UtcOffset = "UtcOffset";
+	public static final String KEY_ID = "id";
+	private final String KEY_CAMERA_ID = "cameraId";
+	private final String KEY_CAMERA_NAME = "name";
+	private final String KEY_OWNER = "owner";
+	private final String KEY_USERNAME = "username";
+	private final String KEY_PASSWORD = "password";
+	private final String KEY_TIMEZONE = "timezone";
+	private final String KEY_VENDOR = "vendor";
+	private final String KEY_MODEL = "model";
+	private final String KEY_MAC = "mac";
+	private final String KEY_EXTERNAL_JPG_URL = "externalSnapshotUrl";
+	private final String KEY_INTERNAL_JPG_URL = "internalSnapshotUrl";
+	private final String KEY_EXTERNAL_RTSP_URL = "externalRtspUrl";
+	private final String KEY_STATUS = "status";
 
 	public DbCamera(Context context)
 	{
 		super(context);
 	}
 
-	// Creating Tables
 	public void onCreateCustom(SQLiteDatabase db)
 	{
-		String CREATE_TABLE_Cameras = "CREATE TABLE " + TABLE_Camera + "(" + KEY_ID
-				+ " INTEGER PRIMARY KEY autoincrement" + "," + KEY_CameraID + " INTEGER NOT NULL"
-				+ "," + KEY_UserEmail + " TEXT  NOT NULL"
-
-				+ "," + KEY_AccessMethod + " TEXT NULL" + "," + KEY_AudioUrl + " TEXT NULL" + ","
-				+ KEY_BaseUrl + " TEXT NULL" + "," + KEY_BrowserUrl + " TEXT NULL" + ","
-				+ KEY_CameraImageUrl + " TEXT NULL" + "," + KEY_CameraMake + " TEXT NULL" + ","
-				+ KEY_CameraModel + " TEXT NULL" + "," + KEY_CameraPassword + " TEXT NULL" + ","
-				+ KEY_CameraTimeZone + " TEXT NULL" + "," + KEY_CameraUserName + " TEXT NULL" + ","
-				+ KEY_Code + " TEXT NULL" + "," + KEY_H264Url + " TEXT NULL" + ","
-				+ KEY_HistoryDays + " TEXT NULL" + "," + KEY_LocalIpPort + " TEXT NULL" + ","
-				+ KEY_LowResolutionSnapshotUrl + " TEXT NULL" + "," + KEY_MjpgUrl + " TEXT NULL"
-				+ "," + KEY_MobileUrl + " TEXT NULL" + "," + KEY_Mpeg4Url + " TEXT NULL" + ","
-				+ KEY_Name + " TEXT NULL" + "," + KEY_OfflineTime + " TEXT NULL" + ","
-				+ KEY_RtspPort + " TEXT NULL" + "," + KEY_RtspUrl + " TEXT NULL" + "," + KEY_Status
-				+ " TEXT NULL" + "," + KEY_UseCredentials + " INTEGER" + "," + KEY_VideoRecording
-				+ " INTEGER"
-
-				+ "," + KEY_AlarmLevel + " TEXT NULL " + "," + Key_CameraGroup + " TEXT NULL "
-				+ "," + Key_CameraStatusIntVal + " INTEGER " + "," + Key_IsMdEnabled + " INTEGER "
-				+ "," + Key_UtcOffset + " TEXT NULL "
-
-				+ ",  CONSTRAINT uniqueCamAndUser UNIQUE (" + KEY_CameraID + ", " + KEY_UserEmail
-				+ ")"
-
-				+ ")";
+		String CREATE_TABLE_Cameras = "CREATE TABLE " + TABLE_CAMERA + "(" + KEY_ID
+				+ " INTEGER PRIMARY KEY autoincrement" + "," + KEY_CAMERA_ID + " TEXT NOT NULL"
+				+ "," + KEY_CAMERA_NAME + " TEXT NULL" + "," + KEY_OWNER + " TEXT  NOT NULL" + ","
+				+ KEY_USERNAME + " TEXT NULL" + "," + KEY_PASSWORD + " TEXT NULL" + "," + KEY_TIMEZONE
+				+ " TEXT NULL" + "," + KEY_VENDOR + " TEXT NULL" + "," + KEY_MODEL + " TEXT NULL"
+				+ "," + KEY_MAC + " TEXT NULL " + "," + KEY_EXTERNAL_JPG_URL + " TEXT NULL " + ","
+				+ KEY_INTERNAL_JPG_URL + " TEXT NULL " + "," + KEY_EXTERNAL_RTSP_URL + " TEXT NULL"
+				+ "," + KEY_STATUS + " TEXT NULL" + "," + "CONSTRAINT uniqueCamAndUser UNIQUE ("
+				+ KEY_CAMERA_ID + ")" + ")";
 		db.execSQL(CREATE_TABLE_Cameras);
 	}
 
-	// Upgrading database
 	public void onUpgradeCustom(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
 		// Drop older table if existed
-		db.execSQL("DROP TABLE IF EXISTS " + TABLE_Camera);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_CAMERA);
 
 		// Create tables again
 		onCreateCustom(db);
 	}
 
-	/**
-	 * All CRUD(Create, Read, Update, Delete) Operations
-	 */
-
-	// Adding new Camera
-	public void addCamera(Camera cam)
+	public void addCamera(EvercamCamera evercamCamera)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 
-		ContentValues values = new ContentValues();
+		ContentValues values = getContentValueFrom(evercamCamera);
 
-		values.put(KEY_CameraID, cam.getCameraID());
-		values.put(KEY_UserEmail, cam.getUserEmail());
-
-		values.put(KEY_AccessMethod, cam.getAccessMethod());
-		values.put(KEY_AudioUrl, cam.getAudioUrl());
-		values.put(KEY_BaseUrl, cam.getBaseUrl());
-		values.put(KEY_BrowserUrl, cam.getBrowserUrl());
-		values.put(KEY_CameraImageUrl, cam.getCameraImageUrl());
-		values.put(KEY_CameraMake, cam.getCameraMake());
-		values.put(KEY_CameraModel, cam.getCameraModel());
-		values.put(KEY_CameraPassword, cam.getCameraPassword());
-		values.put(KEY_CameraTimeZone, cam.getCameraTimeZone());
-		values.put(KEY_CameraUserName, cam.getCameraUserName());
-		values.put(KEY_Code, cam.getCode());
-		values.put(KEY_H264Url, cam.getH264Url());
-		values.put(KEY_HistoryDays, cam.getHistoryDays());
-		values.put(KEY_LocalIpPort, cam.getLocalIpPort());
-		values.put(KEY_LowResolutionSnapshotUrl, cam.getLowResolutionSnapshotUrl());
-		values.put(KEY_MjpgUrl, cam.getMjpgUrl());
-		values.put(KEY_MobileUrl, cam.getMobileUrl());
-		values.put(KEY_Mpeg4Url, cam.getMpeg4Url());
-		values.put(KEY_Name, cam.getName());
-		values.put(KEY_OfflineTime, cam.getOfflineTime());
-		values.put(KEY_RtspPort, cam.getRtspPort());
-		values.put(KEY_RtspUrl, cam.getRtspUrl());
-		values.put(KEY_Status, cam.getStatus());
-		values.put(KEY_UseCredentials, cam.getUseCredentials());
-		values.put(KEY_VideoRecording, cam.getVideoRecording());
-
-		values.put(KEY_AlarmLevel, cam.getAlarmLevel());
-		values.put(Key_CameraGroup, cam.getCameraGroup());
-		values.put(Key_CameraStatusIntVal, cam.getCameraStatusIntVal());
-		values.put(Key_IsMdEnabled, cam.getIsMdEnabledInteger());
-		values.put(Key_UtcOffset, cam.getUtcOffset());
-
-		// Inserting Row
-		db.insert(TABLE_Camera, null, values);
-		db.close(); // Closing database connection
+		db.insert(TABLE_CAMERA, null, values);
+		db.close();
 
 	}
 
 	// Getting single Camera
-	public Camera getCamera(int id)
+	public EvercamCamera getCamera(int id)
 	{
-		Camera cam = null;
+		EvercamCamera evercamCamera = null;
 
 		SQLiteDatabase db = this.getReadableDatabase();
 
-		Cursor cursor = db.query(TABLE_Camera, new String[] { KEY_ID, KEY_CameraID, KEY_UserEmail,
-				KEY_AccessMethod, KEY_AudioUrl, KEY_BaseUrl, KEY_BrowserUrl, KEY_CameraImageUrl,
-				KEY_CameraMake, KEY_CameraModel, KEY_CameraPassword, KEY_CameraTimeZone,
-				KEY_CameraUserName, KEY_Code, KEY_H264Url, KEY_HistoryDays, KEY_LocalIpPort,
-				KEY_LowResolutionSnapshotUrl, KEY_MjpgUrl, KEY_MobileUrl, KEY_Mpeg4Url, KEY_Name,
-				KEY_OfflineTime, KEY_RtspPort, KEY_RtspUrl, KEY_Status, KEY_UseCredentials,
-				KEY_VideoRecording, KEY_AlarmLevel, Key_CameraGroup, Key_CameraStatusIntVal,
-				Key_IsMdEnabled, Key_UtcOffset }, KEY_ID + "=?",
+		Cursor cursor = db.query(TABLE_CAMERA, new String[] { KEY_ID, KEY_CAMERA_ID,
+				KEY_CAMERA_NAME, KEY_OWNER, KEY_USERNAME, KEY_PASSWORD, KEY_TIMEZONE, KEY_VENDOR,
+				KEY_MODEL, KEY_MAC, KEY_EXTERNAL_JPG_URL, KEY_INTERNAL_JPG_URL,
+				KEY_EXTERNAL_RTSP_URL, KEY_STATUS }, KEY_ID + "=?",
 				new String[] { String.valueOf(id) }, null, null, null, null);
 		if (cursor != null)
 		{
 			if (cursor.moveToFirst())
 			{
-				cam = new Camera(Integer.parseInt(cursor.getString(0)), Integer.parseInt(cursor
-						.getString(1)), cursor.getString(2), cursor.getString(3),
-						cursor.getString(4), cursor.getString(5), cursor.getString(6),
-						cursor.getString(7), cursor.getString(8), cursor.getString(9),
-						cursor.getString(10), cursor.getString(11), cursor.getString(12),
-						cursor.getString(13), cursor.getString(14), cursor.getString(15),
-						cursor.getString(16), cursor.getString(17), cursor.getString(18),
-						cursor.getString(19), cursor.getString(20), cursor.getString(21),
-						cursor.getString(22), cursor.getString(23), cursor.getString(24),
-						cursor.getString(25), (Integer.parseInt(cursor.getString(26)) == 1),
-						(Integer.parseInt(cursor.getString(27)) == 1), cursor.getString(28),
-						cursor.getString(29), Integer.getInteger(cursor.getString(30), 0),
-						(Integer.parseInt(cursor.getString(31)) == 1), cursor.getString(32));
+				evercamCamera = new EvercamCamera();
+				evercamCamera.setId(Integer.parseInt(cursor.getString(0)));
+				evercamCamera.setCameraId(cursor.getString(1));
+				evercamCamera.setName(cursor.getString(2));
+				evercamCamera.setOwner(cursor.getString(3));
+				evercamCamera.setUsername(cursor.getString(4));
+				evercamCamera.setPassword(cursor.getString(5));
+				evercamCamera.setTimezone(cursor.getString(6));
+				evercamCamera.setVendor(cursor.getString(7));
+				evercamCamera.setModel(cursor.getString(8));
+				evercamCamera.setMac(cursor.getString(9));
+				evercamCamera.setExternalSnapshotUrl(cursor.getString(10));
+				evercamCamera.setInternalSnapshotUrl(cursor.getString(11));
+				evercamCamera.setExternalRtspUrl(cursor.getString(12));
+				evercamCamera.setStatus(cursor.getString(13));
 			}
 			cursor.close();
 		}
 		db.close();
 
-		return cam;
+		return evercamCamera;
 	}
-
-//	public int getMaxID()
-//	{
-//		int latestID = 0;
-//		// Select All Query
-//		String selectQuery = "SELECT  max(" + KEY_ID + ") FROM " + TABLE_Camera;// +
-//																				// " order by "
-//																				// +
-//																				// KEY_ID
-//																				// +
-//																				// " desc";
-//
-//		SQLiteDatabase db = this.getReadableDatabase();
-//		Cursor cursor = db.rawQuery(selectQuery, null);
-//
-//		// looping through all rows and adding to list
-//		if (cursor.moveToFirst())
-//		{
-//
-//			latestID = Integer.parseInt(cursor.getString(0));
-//
-//		}
-//
-//		cursor.close();
-//		db.close();
-//
-//		return latestID;
-//	}
-
-	// Getting All Cameras
-	public List<Camera> getAllCameras(int maxRecords)
+	
+	public ArrayList<EvercamCamera> getAllCameras(int maxRecords)
 	{
-		List<Camera> CameraList = new ArrayList<Camera>();
-		// Select All Query
-		String selectQuery = "SELECT  * FROM " + TABLE_Camera + " order by " + KEY_Name + " asc";
-
-		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery(selectQuery, null);
-
-		// looping through all rows and adding to list
-		int i = 0;
-		if (cursor.moveToFirst())
-		{
-
-			do
-			{
-				Camera cam = new Camera(Integer.parseInt(cursor.getString(0)),
-						Integer.parseInt(cursor.getString(1)), cursor.getString(2),
-						cursor.getString(3), cursor.getString(4), cursor.getString(5),
-						cursor.getString(6), cursor.getString(7), cursor.getString(8),
-						cursor.getString(9), cursor.getString(10), cursor.getString(11),
-						cursor.getString(12), cursor.getString(13), cursor.getString(14),
-						cursor.getString(15), cursor.getString(16), cursor.getString(17),
-						cursor.getString(18), cursor.getString(19), cursor.getString(20),
-						cursor.getString(21), cursor.getString(22), cursor.getString(23),
-						cursor.getString(24), cursor.getString(25), (Integer.parseInt(cursor
-								.getString(26)) == 1),
-						(Integer.parseInt(cursor.getString(27)) == 1), cursor.getString(28),
-						cursor.getString(29), Integer.getInteger(cursor.getString(30), 0),
-						(Integer.parseInt(cursor.getString(31)) == 1), cursor.getString(32));
-
-				// Adding Camera to list
-				CameraList.add(cam);
-				i++;
-			} while (cursor.moveToNext() && (maxRecords == 0 || i < maxRecords));
-
-		}
-
-		cursor.close();
-		db.close();
-		return CameraList;
+		String selectQuery = "SELECT  * FROM " + TABLE_CAMERA + " order by " + KEY_ID + " asc";
+		return selectCameraListByQuery(selectQuery,maxRecords);
 	}
+	
 
-	public ArrayList<Camera> getAllCamerasForEmailID(String Email, int maxRecords)
+	public ArrayList<EvercamCamera> getCamerasByOwner(String ownerUsername, int maxRecords)
 	{
-		ArrayList<Camera> CameraList = new ArrayList<Camera>();
-		// Select All Query
-		String selectQuery = "SELECT  * FROM " + TABLE_Camera + " where upper(" + KEY_UserEmail
-				+ ") = upper('" + Email + "') order by " + KEY_Name + " asc";
-
-		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery(selectQuery, null);
-
-		// looping through all rows and adding to list
-		int i = 0;
-		if (cursor.moveToFirst())
-		{
-
-			do
-			{
-				Camera cam = new Camera(Integer.parseInt(cursor.getString(0)),
-						Integer.parseInt(cursor.getString(1)), cursor.getString(2),
-						cursor.getString(3), cursor.getString(4), cursor.getString(5),
-						cursor.getString(6), cursor.getString(7), cursor.getString(8),
-						cursor.getString(9), cursor.getString(10), cursor.getString(11),
-						cursor.getString(12), cursor.getString(13), cursor.getString(14),
-						cursor.getString(15), cursor.getString(16), cursor.getString(17),
-						cursor.getString(18), cursor.getString(19), cursor.getString(20),
-						cursor.getString(21), cursor.getString(22), cursor.getString(23),
-						cursor.getString(24), cursor.getString(25), (Integer.parseInt(cursor
-								.getString(26)) == 1),
-						(Integer.parseInt(cursor.getString(27)) == 1), cursor.getString(28),
-						cursor.getString(29), Integer.getInteger(cursor.getString(30), 0),
-						(Integer.parseInt(cursor.getString(31)) == 1), cursor.getString(32));
-
-				CameraList.add(cam);
-				i++;
-			} while (cursor.moveToNext() && (maxRecords == 0 || i < maxRecords));
-
-		}
-
-		cursor.close();
-		db.close();
-
-		return CameraList;
+		String selectQuery = "SELECT  * FROM " + TABLE_CAMERA + " where upper(" + KEY_OWNER
+				+ ") = upper('" + ownerUsername + "') order by " + KEY_ID + " asc";
+		return selectCameraListByQuery(selectQuery,maxRecords);
 	}
-
-	// Updating single Camera
-	public int updateCamera(Camera cam)
+	
+	public int updateCamera(EvercamCamera evercamCamera)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 
-		ContentValues values = new ContentValues();
-		values.put(KEY_CameraID, cam.getCameraID());
-		values.put(KEY_UserEmail, cam.getUserEmail());
+		ContentValues values = getContentValueFrom(evercamCamera);
 
-		values.put(KEY_AccessMethod, cam.getAccessMethod());
-		values.put(KEY_AudioUrl, cam.getAudioUrl());
-		values.put(KEY_BaseUrl, cam.getBaseUrl());
-		values.put(KEY_BrowserUrl, cam.getBrowserUrl());
-		values.put(KEY_CameraImageUrl, cam.getCameraImageUrl());
-		values.put(KEY_CameraMake, cam.getCameraMake());
-		values.put(KEY_CameraModel, cam.getCameraModel());
-		values.put(KEY_CameraPassword, cam.getCameraPassword());
-		values.put(KEY_CameraTimeZone, cam.getCameraTimeZone());
-		values.put(KEY_CameraUserName, cam.getCameraUserName());
-		values.put(KEY_Code, cam.getCode());
-		values.put(KEY_H264Url, cam.getH264Url());
-		values.put(KEY_HistoryDays, cam.getHistoryDays());
-		values.put(KEY_LocalIpPort, cam.getLocalIpPort());
-		values.put(KEY_LowResolutionSnapshotUrl, cam.getLowResolutionSnapshotUrl());
-		values.put(KEY_MjpgUrl, cam.getMjpgUrl());
-		values.put(KEY_MobileUrl, cam.getMobileUrl());
-		values.put(KEY_Mpeg4Url, cam.getMpeg4Url());
-		values.put(KEY_Name, cam.getName());
-		values.put(KEY_OfflineTime, cam.getOfflineTime());
-		values.put(KEY_RtspPort, cam.getRtspPort());
-		values.put(KEY_RtspUrl, cam.getRtspUrl());
-		values.put(KEY_Status, cam.getStatus());
-		values.put(KEY_UseCredentials, cam.getUseCredentials());
-		values.put(KEY_VideoRecording, cam.getVideoRecording());
-
-		values.put(KEY_AlarmLevel, cam.getAlarmLevel());
-		values.put(Key_CameraGroup, cam.getCameraGroup());
-		values.put(Key_CameraStatusIntVal, cam.getCameraStatusIntVal());
-		values.put(Key_IsMdEnabled, cam.getIsMdEnabledInteger());
-
-		values.put(Key_UtcOffset, cam.getUtcOffset());
-
-		// updating row
-		int return_value = db.update(TABLE_Camera, values, KEY_ID + " = ?",
-				new String[] { String.valueOf(cam.getID()) });
+		// update row
+		int return_value = db.update(TABLE_CAMERA, values, KEY_ID + " = ?",
+				new String[] { String.valueOf(evercamCamera.getId()) });
 		db.close();
+		
 		return return_value;
 	}
-
-	// Deleting single Camera
-	public void deleteCamera(Camera cam)
+	
+	public void deleteCamera(EvercamCamera evercamCamera)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
-		db.delete(TABLE_Camera, KEY_ID + " = ?", new String[] { String.valueOf(cam.getID()) });
+		db.delete(TABLE_CAMERA, KEY_ID + " = ?", new String[] { String.valueOf(evercamCamera.getId()) });
 		db.close();
 	}
 
-	public void deleteCameraForEmail(String Email)
+	public void deleteCameraByOwner(String ownerUsername)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
-		db.delete(TABLE_Camera, " upper(" + KEY_UserEmail + ") = upper(?)",
-				new String[] { String.valueOf(Email) });
+		db.delete(TABLE_CAMERA, " upper(" + KEY_OWNER + ") = upper(?)",
+				new String[] { String.valueOf(ownerUsername) });
 		db.close();
 	}
 
-	// Getting Cameras Count
-//	public int getCamerasCount()
-//	{
-//
-//		String countQuery = "SELECT  * FROM " + TABLE_Camera;
-//		SQLiteDatabase db = this.getReadableDatabase();
-//		Cursor cursor = db.rawQuery(countQuery, null);
-//		cursor.close();
-//
-//		// return count
-//		int count = cursor.getCount();
-//		db.close();
-//		return count;
-//	}
+	private ContentValues getContentValueFrom(EvercamCamera evercamCamera)
+	{
+		ContentValues values = new ContentValues();
 
+		values.put(KEY_CAMERA_ID, evercamCamera.getCameraId());
+		values.put(KEY_OWNER, evercamCamera.getOwner());
+		values.put(KEY_CAMERA_NAME, evercamCamera.getName());
+		values.put(KEY_USERNAME, evercamCamera.getUsername());
+		values.put(KEY_PASSWORD, evercamCamera.getPassword());
+		values.put(KEY_VENDOR, evercamCamera.getVendor());
+		values.put(KEY_MODEL, evercamCamera.getModel());
+		values.put(KEY_TIMEZONE, evercamCamera.getTimezone());
+		values.put(KEY_MAC, evercamCamera.getMac());
+		values.put(KEY_STATUS, evercamCamera.getStatus());
+		values.put(KEY_INTERNAL_JPG_URL, evercamCamera.getInternalSnapshotUrl());
+		values.put(KEY_EXTERNAL_JPG_URL, evercamCamera.getExternalSnapshotUrl());
+		values.put(KEY_EXTERNAL_RTSP_URL, evercamCamera.getExternalRtspUrl());
+
+		return values;
+	}
+	
+	private ArrayList<EvercamCamera> selectCameraListByQuery(String query, int maxRecords)
+	{
+		ArrayList<EvercamCamera> cameraList = new ArrayList<EvercamCamera>();
+
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+
+		int count = 0;
+		if (cursor.moveToFirst())
+		{
+			do
+			{
+				EvercamCamera evercamCamera = new EvercamCamera();
+				evercamCamera.setId(Integer.parseInt(cursor.getString(0)));
+				evercamCamera.setCameraId(cursor.getString(1));
+				evercamCamera.setName(cursor.getString(2));
+				evercamCamera.setOwner(cursor.getString(3));
+				evercamCamera.setUsername(cursor.getString(4));
+				evercamCamera.setPassword(cursor.getString(5));
+				evercamCamera.setTimezone(cursor.getString(6));
+				evercamCamera.setVendor(cursor.getString(7));
+				evercamCamera.setModel(cursor.getString(8));
+				evercamCamera.setMac(cursor.getString(9));
+				evercamCamera.setExternalSnapshotUrl(cursor.getString(10));
+				evercamCamera.setInternalSnapshotUrl(cursor.getString(11));
+				evercamCamera.setExternalRtspUrl(cursor.getString(12));
+				evercamCamera.setStatus(cursor.getString(13));
+
+				cameraList.add(evercamCamera);
+				count++;
+			} while (cursor.moveToNext() && (maxRecords == 0 || count < maxRecords));
+		}
+
+		cursor.close();
+		db.close();
+		
+		return cameraList;
+	}
 }

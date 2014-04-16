@@ -2,7 +2,7 @@ package io.evercam.android.video;
 
 import io.evercam.android.ParentActivity;
 import io.evercam.android.custom.ProgressView;
-import io.evercam.android.dto.Camera;
+import io.evercam.android.dto.EvercamCamera;
 import io.evercam.android.slidemenu.SlideMenu;
 import io.evercam.android.slidemenu.SlideMenuInterface;
 import io.evercam.android.utils.AppData;
@@ -77,7 +77,7 @@ public class VideoActivity extends ParentActivity implements
 	private String mrlPlaying = null;
 	private boolean showImagesVideo = false;
 
-	private static int startingCameraID = -1;
+	private static int startingCameraID = 0;
 
 	// display surface
 	private SurfaceView mSurface;
@@ -149,13 +149,14 @@ public class VideoActivity extends ParentActivity implements
 
 	// if camera uses cookies authentication, then use these cookies to pass to
 	// camera
-	public static Camera camera = new Camera(0, 0, "info@camba.tv", "a", "http://url.com/abc",
-			"http://url.com/abc", "http://url.com/abc", "http://url.com/abc", "camera make",
-			"access method", "password", "time zone", "camera username", "code",
-			"http://url.com/abc", "5", "127.0.0.1:99", "http://url.com/abc", "http://url.com/abc",
-			"http://url.com/abc", "http://url.com/abc", "my camera", "0", "554",
-			"http://url.com/abc", "Status", false, false, "0", "cam Group", 1, false, "offser");
+//	public static EvercamCamera camera = new EvercamCamera(0, 0, "info@camba.tv", "a", "http://url.com/abc",
+//			"http://url.com/abc", "http://url.com/abc", "http://url.com/abc", "camera make",
+//			"access method", "password", "time zone", "camera username", "code",
+//			"http://url.com/abc", "5", "127.0.0.1:99", "http://url.com/abc", "http://url.com/abc",
+//			"http://url.com/abc", "http://url.com/abc", "my camera", "0", "554",
+//			"http://url.com/abc", "Status", false, false, "0", "cam Group", 1, false, "offser");
 
+	public static EvercamCamera camera = new EvercamCamera();
 	// preferences options
 	private String localnetworkSettings = "0";
 	private boolean isLocalNetwork = false;
@@ -176,7 +177,7 @@ public class VideoActivity extends ParentActivity implements
 	{
 
 		new AsyncTask<String, String, String[]>(){
-			final ArrayList<Camera> ActiveCamers = new ArrayList<Camera>();
+			final ArrayList<EvercamCamera> ActiveCamers = new ArrayList<EvercamCamera>();
 			int defaultCamIndex = 0;
 
 			@Override
@@ -185,69 +186,16 @@ public class VideoActivity extends ParentActivity implements
 
 				ArrayList<String> cameras = new ArrayList<String>();
 
-				for (int i = 0; i < AppData.cameraList.size(); i++)
+				for (int i = 0; i < AppData.evercamCameraList.size(); i++)
 				{
-					if (!AppData.cameraList.get(i).getStatus().equalsIgnoreCase("Offline"))
+					if (!AppData.evercamCameraList.get(i).getStatus().equalsIgnoreCase("Offline"))
 					{
-						ActiveCamers.add(AppData.cameraList.get(i));
-						cameras.add(AppData.cameraList.get(i).getName());
-						if (AppData.cameraList.get(i).getCameraID() == startingCameraID) defaultCamIndex = cameras
-								.size() - 1;
+						ActiveCamers.add(AppData.evercamCameraList.get(i));
+						cameras.add(AppData.evercamCameraList.get(i).getName());
+//						if (AppData.evercamCameraList.get(i).getCameraId() == startingCameraID) defaultCamIndex = cameras
+//								.size() - 1;
 					}
 				}
-
-				/*
-				 * Cams.add("Mast Wicklow N(B)"); Camera c = new Camera();
-				 * c.setCameraID(0);
-				 * c.setCameraImageUrl("http://www.camba.com/sajjad/noimage.png"
-				 * ); c.setLowResolutionSnapshotUrl(
-				 * "http://www.camba.com/sajjad/noimage.png"); c.setH264Url(
-				 * "rtsp://camba:Camba123@149.5.43.10:8001/live_3gpp.sdp");
-				 * ActiveCamers.add(c);
-				 * 
-				 * Cams.add("Herbst Mast PTZ MJ"); c = new Camera();
-				 * c.setCameraID(0);
-				 * c.setCameraImageUrl("http://www.camba.com/sajjad/noimage.png"
-				 * ); c.setLowResolutionSnapshotUrl(
-				 * "http://www.camba.com/sajjad/noimage.png"); c.setH264Url(
-				 * "rtsp://camba:mehcam@149.5.42.145:10214/axis-media/media.amp?resolution=QCIF"
-				 * ); ActiveCamers.add(c);
-				 * 
-				 * Cams.add("Klaus Front Yard"); c = new Camera();
-				 * c.setCameraID(0);
-				 * c.setCameraImageUrl("http://www.camba.com/sajjad/noimage.png"
-				 * ); c.setLowResolutionSnapshotUrl(
-				 * "http://www.camba.com/sajjad/noimage.png"); c.setH264Url(
-				 * "rtsp://admin:mehcam@klaus-riccius.dvrdns.org:8150/live_h264_1.sdp"
-				 * ); ActiveCamers.add(c);
-				 * 
-				 * Cams.add("Polo Stable West"); c = new Camera();
-				 * c.setCameraID(0);
-				 * c.setCameraImageUrl("http://www.camba.com/sajjad/noimage.png"
-				 * ); c.setH264Url(
-				 * "rtsp://camba:C4mb4123@149.5.42.145:11067/live_3gpp.sdp");
-				 * ActiveCamers.add(c);
-				 * 
-				 * Cams.add("sajjad-office"); c = new Camera();
-				 * c.setCameraID(0);
-				 * c.setCameraImageUrl("http://www.camba.com/sajjad/noimage.png"
-				 * ); c.setLowResolutionSnapshotUrl(
-				 * "http://www.camba.com/sajjad/noimage.png");
-				 * c.setH264Url("rtsp://pp9.no-ip.org:554/live.sdp");
-				 * ActiveCamers.add(c);
-				 * 
-				 * 
-				 * 
-				 * Cams.add("New Camera"); c = new Camera(); c.setCameraID(0);
-				 * c.
-				 * setCameraImageUrl("http://www.camba.com/sajjad/noimage.png");
-				 * c.setH264Url(
-				 * "rtsp://admin:mehcam@89.101.225.158:9105/live_3gpp.sdp");
-				 * ActiveCamers.add(c);
-				 * 
-				 * 
-				 * //
-				 */
 
 				String[] cameraArray = new String[cameras.size()];
 				cameras.toArray(cameraArray);
@@ -277,7 +225,7 @@ public class VideoActivity extends ParentActivity implements
 								imageThread = null;
 
 								mrlPlaying = null;
-								SetCameraForPlaying(VideoActivity.this,
+								setCameraForPlaying(VideoActivity.this,
 										ActiveCamers.get(itemPosition));
 
 								createPlayer(getCurrentMRL());
@@ -318,7 +266,7 @@ public class VideoActivity extends ParentActivity implements
 		return false;
 	}
 
-	private void SetCameraForPlaying(Context context, Camera cam)
+	private void setCameraForPlaying(Context context, EvercamCamera cam)
 	{
 		try
 		{
@@ -354,35 +302,37 @@ public class VideoActivity extends ParentActivity implements
 			imgCam.setVisibility(View.VISIBLE);
 			showProgressView();
 
-			LoadImageFromCache();
+			loadImageFromCache();
 			showProgressView();
 			// ###Setting Defaults
 
-			String ImageUrl = ((camera.getLowResolutionSnapshotUrl() != null && URLUtil
-					.isValidUrl(camera.getLowResolutionSnapshotUrl())) ? camera
-					.getLowResolutionSnapshotUrl() : camera.getCameraImageUrl());
+//			String ImageUrl = ((camera.getLowResolutionSnapshotUrl() != null && URLUtil
+//					.isValidUrl(camera.getLowResolutionSnapshotUrl())) ? camera
+//					.getLowResolutionSnapshotUrl() : camera.getCameraImageUrl());
 
-			imageLiveCameraURL = ImageUrl;
+			imageLiveCameraURL = camera.getExternalSnapshotUrl();
 
-			if (cam.getLocalIpPort() != null && cam.getLocalIpPort().length() > 10)
-			{
-				String Prefix = (ImageUrl.startsWith("https://") ? "https://" : "https://");
-
-				if (ImageUrl.startsWith("https://")) // Extracting information
-														// from the camera image
-														// url
-				ImageUrl = ImageUrl.replace("http://", "");
-
-				VideoActivity.imageLiveLocalURL = Prefix + cam.getLocalIpPort().trim()
-						+ ImageUrl.substring(ImageUrl.indexOf("/", Prefix.length() + 1));
-			}
-			else
-			{
-				VideoActivity.imageLiveLocalURL = null;
-			}
+//			if (cam.getLocalIpPort() != null && cam.getLocalIpPort().length() > 10)
+//			{
+//				String Prefix = (ImageUrl.startsWith("https://") ? "https://" : "https://");
+//
+//				if (ImageUrl.startsWith("https://")) // Extracting information
+//														// from the camera image
+//														// url
+//				ImageUrl = ImageUrl.replace("http://", "");
+//
+//				VideoActivity.imageLiveLocalURL = Prefix + cam.getLocalIpPort().trim()
+//						+ ImageUrl.substring(ImageUrl.indexOf("/", Prefix.length() + 1));
+//			}
+//			else
+//			{
+//				VideoActivity.imageLiveLocalURL = null;
+//			}
+			
+			VideoActivity.imageLiveLocalURL = null;
 
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-			mrlPlaying = sharedPrefs.getString("pref_mrlplaying" + camera.getCameraID(), null);
+			mrlPlaying = sharedPrefs.getString("pref_mrlplaying" + camera.getCameraId(), null);
 
 			mrls = new ArrayList<VideoActivity.MRLCamba>();
 			mrlIndex = -1;
@@ -394,18 +344,12 @@ public class VideoActivity extends ParentActivity implements
 				mrlPlaying = null;
 			}
 
-			addUrlIfValid(cam.getMpeg4Url(), cam);
-			addUrlIfValid(cam.getMjpgUrl(), cam);
-			addUrlIfValid(cam.getH264Url(), cam);
-			addUrlIfValid(cam.getRtspUrl(), cam);
-			addUrlIfValid(cam.getMobileUrl(), cam);
+//			addUrlIfValid(cam.getMpeg4Url(), cam);
+//			addUrlIfValid(cam.getMjpgUrl(), cam);
+//			addUrlIfValid(cam.getH264Url(), cam);
+//			addUrlIfValid(cam.getRtspUrl(), cam);
+//			addUrlIfValid(cam.getMobileUrl(), cam);
 
-			// addUrlIfValid(cam.getH264Url(),cam);
-			// addUrlIfValid(cam.getRtspUrl(),cam);
-			// addUrlIfValid(cam.getMobileUrl(),cam);
-			// addUrlIfValid(cam.getMpeg4Url(),cam);
-			// addUrlIfValid(cam.getMjpgUrl(),cam);
-			//
 
 		}
 		catch (Exception e)
@@ -421,7 +365,7 @@ public class VideoActivity extends ParentActivity implements
 
 	}
 
-	private void addUrlIfValid(String url, Camera cam)
+	private void addUrlIfValid(String url, EvercamCamera cam)
 	{
 		try
 		{
@@ -430,8 +374,8 @@ public class VideoActivity extends ParentActivity implements
 					|| !(url.startsWith("http://") || url.startsWith("https://")
 							|| url.startsWith("rtsp://") || url.startsWith("tcp://"))) return;
 
-			String username = cam.getCameraUserName();
-			String password = cam.getCameraPassword();
+			String username = cam.getUsername();
+			String password = cam.getPassword();
 			String credentialsPart = "";
 
 			if (username != null && password != null && username.trim().length() > 0
@@ -445,35 +389,37 @@ public class VideoActivity extends ParentActivity implements
 			if (hostPort.contains("@")) hostPort = hostPort.substring(hostPort.indexOf("@") + 1);
 			if (hostPort.startsWith("www.")) hostPort.substring(4);
 
-			String localIpPort = "";
-			if (cam.getLocalIpPort() != null)
-			{
-				localIpPort = cam.getLocalIpPort().substring(
-						0,
-						(cam.getLocalIpPort().contains(":") ? cam.getLocalIpPort().indexOf(":")
-								: cam.getLocalIpPort().length()));
-				if (cam.getRtspPort() != null && prefix.startsWith("rtsp://")) localIpPort += ":"
-						+ cam.getRtspPort();
-				else if (hostPort.contains(":")) localIpPort += hostPort.substring(hostPort
-						.indexOf(":"));
+//			String localIpPort = "";
+//			if (cam.getLocalIpPort() != null)
+//			{
+//				localIpPort = cam.getLocalIpPort().substring(
+//						0,
+//						(cam.getLocalIpPort().contains(":") ? cam.getLocalIpPort().indexOf(":")
+//								: cam.getLocalIpPort().length()));
+//				if (cam.getRtspPort() != null && prefix.startsWith("rtsp://")) localIpPort += ":"
+//						+ cam.getRtspPort();
+//				else if (hostPort.contains(":")) localIpPort += hostPort.substring(hostPort
+//						.indexOf(":"));
+//
+//			}
 
-			}
-
-			String liveURLString = prefix + credentialsPart + hostPort + relativeUrlString;
-			String localURLString = prefix + credentialsPart + localIpPort + relativeUrlString;
+//			String liveURLString = prefix + credentialsPart + hostPort + relativeUrlString;
+//			String localURLString = prefix + credentialsPart + localIpPort + relativeUrlString;
+			String liveURLString = "rtsp://admin:12345@89.101.225.158:8300/h264/ch1/main/av_stream";
+			String localURLString = "rtsp://admin:12345@192.168.1.101:8300/h264/ch1/main/av_stream";
 
 			if (!localnetworkSettings.equalsIgnoreCase("1"))
 			{
 				MRLCamba liveMRL = new MRLCamba(liveURLString, false);
 				if (!mrls.contains(liveMRL)) mrls.add(liveMRL);
 			}
-
-			if (localIpPort != null && localIpPort.length() > 0
-					&& !localnetworkSettings.equalsIgnoreCase("2"))
-			{
-				MRLCamba localMRL = new MRLCamba(localURLString, true);
-				if (!mrls.contains(localMRL)) mrls.add(localMRL);
-			}
+//
+//			if (localIpPort != null && localIpPort.length() > 0
+//					&& !localnetworkSettings.equalsIgnoreCase("2"))
+//			{
+//				MRLCamba localMRL = new MRLCamba(localURLString, true);
+//				if (!mrls.contains(localMRL)) mrls.add(localMRL);
+//			}
 
 			mrlIndex = 0;
 		}
@@ -485,14 +431,14 @@ public class VideoActivity extends ParentActivity implements
 
 	// Loads image from cache. First image gets loaded correctly and hence we
 	// can start making requests concurrently as well
-	public boolean LoadImageFromCache()
+	public boolean loadImageFromCache()
 	{
 		try
 		{
 
 			imgCam.setImageDrawable(null);
 			if (camera == null) return false;
-			String path = this.getCacheDir() + "/" + camera.getCameraID() + ".jpg";
+			String path = this.getCacheDir() + "/" + camera.getCameraId() + ".jpg";
 			if (new File(path).exists())
 			{
 				Drawable result = Drawable.createFromPath(path);
@@ -620,7 +566,7 @@ public class VideoActivity extends ParentActivity implements
 
 			isLocalNetwork = false;
 			localnetworkSettings = sharedPrefs.getString(
-					"pref_enablocalnetwork" + camera.getCameraID(), "0");// ("chkenablocalnetwork",
+					"pref_enablocalnetwork" + camera.getCameraId(), "0");// ("chkenablocalnetwork",
 																			// false);
 			if (localnetworkSettings.equalsIgnoreCase("1")) isLocalNetwork = true;
 			else isLocalNetwork = false;
@@ -1144,9 +1090,8 @@ public class VideoActivity extends ParentActivity implements
 					break;
 
 				case EventHandler.MediaPlayerEncounteredError:
-					Log.e("sajjad", "EventHandler.MediaPlayerEncounteredError");
 
-					player.LoadImageFromCache();
+					player.loadImageFromCache();
 
 					if (player.mrlPlaying == null && player.isNextMRLValid()) player
 							.RestartPlay(player.getNextMRL());
@@ -1174,7 +1119,7 @@ public class VideoActivity extends ParentActivity implements
 							SharedPreferences sharedPrefs = PreferenceManager
 									.getDefaultSharedPreferences(player);
 							SharedPreferences.Editor editor = sharedPrefs.edit();
-							editor.putString("pref_mrlplaying" + camera.getCameraID(),
+							editor.putString("pref_mrlplaying" + camera.getCameraId(),
 									player.mrlPlaying);
 							editor.commit();
 						}
@@ -1401,7 +1346,7 @@ public class VideoActivity extends ParentActivity implements
 			if (optionsActivityStarted)
 			{
 				mrlPlaying = null;
-				SetCameraForPlaying(this, camera);
+				setCameraForPlaying(this, camera);
 
 				createPlayer(getCurrentMRL());
 
@@ -1580,18 +1525,18 @@ public class VideoActivity extends ParentActivity implements
 					if (url1 == null) url1 = "http://www.camba.tv/no-image.jpg";
 					myStartImageTime = SystemClock.uptimeMillis();
 
-					if (camera.getUseCredentials())
-					{
+//					if (camera.getUseCredentials())
+//					{
 						response = Commons.getDrawablefromUrlAuthenticated1(url1,
-								camera.getCameraUserName(), camera.getCameraPassword(),
+								camera.getUsername(), camera.getPassword(),
 								camera.cookies, 15000);
 
-					}
-					else
-					{
-						URL url = new URL(url1);
-						response = Commons.DownlaodDrawableSync(url, 15000);
-					}
+//					}
+//					else
+//					{
+//						URL url = new URL(url1);
+//						response = Commons.DownlaodDrawableSync(url, 15000);
+//					}
 					if (response != null) successiveFailureCount = 0;
 				}
 				catch (OutOfMemoryError e)

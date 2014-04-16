@@ -197,6 +197,11 @@ public class EvercamCamera
 	{
 		this.status = status;
 	}
+	
+	public String getCode()
+	{
+		return "";
+	}
 
 	@Override
 	public boolean equals(Object obj)
