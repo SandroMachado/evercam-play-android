@@ -194,33 +194,33 @@ public class DbCamera extends DatabaseMaster
 		return cam;
 	}
 
-	public int getMaxID()
-	{
-		int latestID = 0;
-		// Select All Query
-		String selectQuery = "SELECT  max(" + KEY_ID + ") FROM " + TABLE_Camera;// +
-																				// " order by "
-																				// +
-																				// KEY_ID
-																				// +
-																				// " desc";
-
-		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery(selectQuery, null);
-
-		// looping through all rows and adding to list
-		if (cursor.moveToFirst())
-		{
-
-			latestID = Integer.parseInt(cursor.getString(0));
-
-		}
-
-		cursor.close();
-		db.close();
-
-		return latestID;
-	}
+//	public int getMaxID()
+//	{
+//		int latestID = 0;
+//		// Select All Query
+//		String selectQuery = "SELECT  max(" + KEY_ID + ") FROM " + TABLE_Camera;// +
+//																				// " order by "
+//																				// +
+//																				// KEY_ID
+//																				// +
+//																				// " desc";
+//
+//		SQLiteDatabase db = this.getReadableDatabase();
+//		Cursor cursor = db.rawQuery(selectQuery, null);
+//
+//		// looping through all rows and adding to list
+//		if (cursor.moveToFirst())
+//		{
+//
+//			latestID = Integer.parseInt(cursor.getString(0));
+//
+//		}
+//
+//		cursor.close();
+//		db.close();
+//
+//		return latestID;
+//	}
 
 	// Getting All Cameras
 	public List<Camera> getAllCameras(int maxRecords)
@@ -376,18 +376,18 @@ public class DbCamera extends DatabaseMaster
 	}
 
 	// Getting Cameras Count
-	public int getCamerasCount()
-	{
-
-		String countQuery = "SELECT  * FROM " + TABLE_Camera;
-		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery(countQuery, null);
-		cursor.close();
-
-		// return count
-		int count = cursor.getCount();
-		db.close();
-		return count;
-	}
+//	public int getCamerasCount()
+//	{
+//
+//		String countQuery = "SELECT  * FROM " + TABLE_Camera;
+//		SQLiteDatabase db = this.getReadableDatabase();
+//		Cursor cursor = db.rawQuery(countQuery, null);
+//		cursor.close();
+//
+//		// return count
+//		int count = cursor.getCount();
+//		db.close();
+//		return count;
+//	}
 
 }

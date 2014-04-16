@@ -14,17 +14,21 @@ public class EvercamCamera
 	public ArrayList<Cookie> cookies = null;
 	
 	private final String TAG = "evercamapp-EvercamCamera";
+	
+	private int id;
 	private String cameraId;
-	private String externalSnapshotUrl;
-	private String internalSnapshotUrl;
 	private String name;
-	private String status;
+	private String owner;
 	private String username;
 	private String password;
 	private String timezone;
-	private String model;
 	private String vendor;
-	private String owner;
+	private String model;
+	private String mac;
+	private String externalSnapshotUrl;
+	private String internalSnapshotUrl;
+	private String externalRtspUrl;
+	private String status;
 	
 	public EvercamCamera()
 	{
@@ -53,6 +57,16 @@ public class EvercamCamera
 		return this;
 	}
 	
+	public int getId()
+	{
+		return id;
+	}
+
+	public void setId(int id)
+	{
+		this.id = id;
+	}
+
 	public String getStatus()
 	{
 		return "Active";
@@ -156,5 +170,30 @@ public class EvercamCamera
 	public void setOwner(String owner)
 	{
 		this.owner = owner;
+	}
+
+	public String getMac()
+	{
+		return mac;
+	}
+
+	public void setMac(String mac)
+	{
+		this.mac = mac;
+	}
+
+	public String getExternalRtspUrl()
+	{
+		return externalRtspUrl;
+	}
+
+	public void setExternalRtspUrl(String externalRtspUrl)
+	{
+		this.externalRtspUrl = externalRtspUrl;
+	}
+
+	public void setStatus(String status)
+	{
+		this.status = status;
 	}
 }
