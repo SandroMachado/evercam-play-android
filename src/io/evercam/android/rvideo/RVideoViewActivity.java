@@ -843,7 +843,7 @@ public class RVideoViewActivity extends ParentActivity
 	{
 		if (iView != null)
 		{
-			((ProgressView) iView.findViewById(R.id.rvprogressspinner)).CanvasColor = Color.TRANSPARENT;
+			((ProgressView) iView.findViewById(R.id.rvprogressspinner)).canvasColor = Color.TRANSPARENT;
 			iView.findViewById(R.id.rvprogressspinner).setVisibility(View.VISIBLE);
 			isProgressShowing = true;
 		}

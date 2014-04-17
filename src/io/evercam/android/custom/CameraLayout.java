@@ -37,9 +37,7 @@ public class CameraLayout extends LinearLayout
 	private EvercamCamera evercamCamera;
 	private DownloadLiveImageTask liveImageTask;
 	private DownloadLiveImageTask liveImageTaskLocal;
-	// private DownloadLatestTask latestTask; // tsk to download image from
-	// camba
-	// website
+	// private DownloadLatestTask latestTask; 
 
 	private boolean end = false; // tells whether application has ended or not.
 									// If it is
@@ -157,9 +155,9 @@ public class CameraLayout extends LinearLayout
 						@Override
 						public void onClick(View v)
 						{
-							// VideoActivity.startPlayingVIdeoForCamera(CameraLayout.this.context,
-							// evercamCamera.getCameraId());
-							// dialog.cancel();
+							 VideoActivity.startPlayingVideoForCamera(CameraLayout.this.context,
+							 evercamCamera.getCameraId());
+							 dialog.cancel();
 						}
 					});
 					//

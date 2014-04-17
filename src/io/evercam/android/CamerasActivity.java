@@ -35,10 +35,7 @@ import io.evercam.android.tasks.LoadCameraListTask;
 import io.evercam.android.tasks.LogoutTask;
 import io.evercam.android.utils.AppData;
 import io.evercam.android.utils.Constants;
-import io.evercam.android.utils.PrefsManager;
 import io.evercam.android.utils.UIUtils;
-
-import java.util.List;
 
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.android.R;

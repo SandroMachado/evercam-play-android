@@ -12,42 +12,39 @@ import android.widget.ProgressBar;
 
 //This class will play the progress spinner for loading image
 public class ProgressView extends ProgressBar
-{ // View
-
-	static String TAG = "ProgressView";
+{ 
+	static String TAG = "evercamapp-ProgressView";
 	Movie movie;
-	InputStream is = null;
+	InputStream inputStream = null;
 
 	long moviestart = 0;
 	Handler handler1 = new Handler();
 
-	public int CanvasColor = Color.WHITE;
+	public int canvasColor = Color.WHITE;
 
 	public ProgressView(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
-		ConstructorToDo(context);
+		constructorToDo(context);
 	}
 
 	public ProgressView(Context context, AttributeSet attrs, int defStyle)
 	{
 		super(context, attrs, defStyle);
-		ConstructorToDo(context);
+		constructorToDo(context);
 	}
 
 	public ProgressView(Context context)
 	{
 		super(context);
-		ConstructorToDo(context);
+		constructorToDo(context);
 	}
 
-	private void ConstructorToDo(Context context)
+	private void constructorToDo(Context context)
 	{
 		try
 		{
-
 			this.setIndeterminate(true);
-
 		}
 		catch (Exception e)
 		{

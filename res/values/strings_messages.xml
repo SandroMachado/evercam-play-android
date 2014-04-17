@@ -3,5 +3,7 @@
 
     <string name="msg_network_not_connected">Network not connected</string>
     <string name="msg_try_network_again">Please connect to internet and try again</string>
+    <string name="msg_try_again">Please close and try again.</string>
+    <string name="msg_switch_to_jpg">Switching to jpeg view.</string>
 
 </resources>

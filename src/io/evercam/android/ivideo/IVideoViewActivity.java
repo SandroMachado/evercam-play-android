@@ -3,7 +3,6 @@ package io.evercam.android.ivideo;
 import io.evercam.android.ParentActivity;
 import io.evercam.android.custom.ProgressView;
 import io.evercam.android.dto.EvercamCamera;
-import io.evercam.android.slidemenu.SlideMenu;
 import io.evercam.android.slidemenu.SlideMenuInterface;
 import io.evercam.android.utils.AppData;
 import io.evercam.android.utils.Commons;
@@ -13,7 +12,6 @@ import io.evercam.android.utils.UIUtils;
 import java.io.File;
 
 import java.net.InetAddress;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.RejectedExecutionException;
 
@@ -584,7 +582,7 @@ public class IVideoViewActivity extends ParentActivity implements
 
 			readSetPreferences();
 
-			((ProgressView) imageViewLayout.findViewById(R.id.ivprogressspinner)).CanvasColor = Color.TRANSPARENT; // transparent
+			((ProgressView) imageViewLayout.findViewById(R.id.ivprogressspinner)).canvasColor = Color.TRANSPARENT; // transparent
 																											// color
 																											// because
 																											// image
@@ -1042,7 +1040,7 @@ public class IVideoViewActivity extends ParentActivity implements
 
 	void showProgressView()
 	{
-		((ProgressView) imageViewLayout.findViewById(R.id.ivprogressspinner)).CanvasColor = Color.TRANSPARENT;
+		((ProgressView) imageViewLayout.findViewById(R.id.ivprogressspinner)).canvasColor = Color.TRANSPARENT;
 		imageViewLayout.findViewById(R.id.ivprogressspinner).setVisibility(View.VISIBLE);
 		isProgressShowing = true;
 	}

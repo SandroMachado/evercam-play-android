@@ -45,6 +45,7 @@
     
     <!-- Text on camera -->
     <string name="connecting">Connecting&#8230;</string>
+    <string name="reconnecting">Reconnecting&#8230;</string>
     
     <!-- General -->
     <string name="cancel">Cancel</string>
