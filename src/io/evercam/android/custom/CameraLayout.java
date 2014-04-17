@@ -191,7 +191,6 @@ public class CameraLayout extends LinearLayout
 			{
 				BugSenseHandler.sendException(e);
 			}
-
 		}
 	}
 
@@ -300,7 +299,6 @@ public class CameraLayout extends LinearLayout
 				BugSenseHandler.sendException(e);
 			}
 		}
-
 	}
 
 	// Stop the image laoding process. My be need to end current activity
@@ -406,7 +404,6 @@ public class CameraLayout extends LinearLayout
 			cameraRelativeLayout.setBackgroundResource(R.drawable.cam_unavailable);
 			imageMessage.setVisibility(View.VISIBLE);
 			greyImageShown();
-
 		}
 
 		if ((evercamCamera.getStatus() + "").contains("Active")) imageMessage
@@ -415,7 +412,7 @@ public class CameraLayout extends LinearLayout
 
 		imageMessage.setTextColor(Color.RED);
 
-		// anination must have been stopped when image loaded from cache
+		// animation must have been stopped when image loaded from cache
 		handler.removeCallbacks(LoadImageRunnable);
 	}
 
@@ -427,8 +424,6 @@ public class CameraLayout extends LinearLayout
 			{
 				if (end) return;
 
-				Log.v(TAG, "Loading Status:" + evercamCamera.loadingStatus);
-
 				if (evercamCamera.loadingStatus == ImageLoadingStatus.not_started)
 				{
 					// liveImageTaskLocal = new DownloadLiveImageTask ();
@@ -438,13 +433,7 @@ public class CameraLayout extends LinearLayout
 					// });
 
 					liveImageTask = new DownloadLiveImageTask();
-					// String ImageUrl =
-					// ((evercamCamera.getLowResolutionSnapshotUrl() != null &&
-					// URLUtil
-					// .isValidUrl(evercamCamera.getLowResolutionSnapshotUrl()))
-					// ? evercamCamera
-					// .getLowResolutionSnapshotUrl() :
-					// evercamCamera.getCameraImageUrl());
+
 					String imageUrl = evercamCamera.getExternalSnapshotUrl();
 
 					liveImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,

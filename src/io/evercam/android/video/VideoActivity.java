@@ -259,7 +259,6 @@ public class VideoActivity extends ParentActivity implements
 				setCameraForPlaying(this, camera);
 
 				createPlayer(getCurrentMRL());
-
 			}
 		}
 		catch (OutOfMemoryError e)
