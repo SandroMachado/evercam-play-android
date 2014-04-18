@@ -97,7 +97,7 @@ public class MainActivity extends Activity
 				if (defaultEmail != null)
 				{
 					DbAppUser dbUser = new DbAppUser(this);
-					AppUser defaultUser = dbUser.getAppUser(defaultEmail);
+					AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
 					AppData.defaultUser = defaultUser;
 				}
 

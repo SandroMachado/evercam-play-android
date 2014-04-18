@@ -69,7 +69,7 @@ public class DbAppUser extends DatabaseMaster
 	}
 
 	// Getting single AppUser
-	public AppUser getAppUser(String email) throws NumberFormatException, Exception
+	public AppUser getAppUserByEmail(String email) throws NumberFormatException, Exception
 	{
 		AppUser user = null;
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -172,45 +172,14 @@ public class DbAppUser extends DatabaseMaster
 
 		return latestID;
 	}
-
-	public List<AppUser> getAllAppUsers(int maxRecords) throws NumberFormatException, Exception
-	{
-		List<AppUser> appUserList = new ArrayList<AppUser>();
-		// Select All Query
-		String selectQuery = "SELECT  * FROM " + TABLE_APP_USER + " order by " + KEY_EMAIL + " asc";
-
-		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery(selectQuery, null);
-
-		// loop through all rows and adding to list
-		int count = 0;
-		if (cursor.moveToFirst())
-		{
-			do
-			{
-				AppUser user = new AppUser(Integer.parseInt(cursor.getString(0)),
-						cursor.getString(1), cursor.getString(2), Crypto.decrypt(cursor
-								.getString(3)), cursor.getString(4), cursor.getString(5),
-						cursor.getString(6), Integer.parseInt(cursor.getString(7)));
-
-				appUserList.add(user);
-				count++;
-			} while (cursor.moveToNext() && (maxRecords == 0 || count < maxRecords));
-
-		}
-
-		cursor.close();
-		db.close();
-		return appUserList;
-	}
-
-	public List<AppUser> getAllActiveAppUsers(int maxRecords) throws NumberFormatException,
+	
+	public List<AppUser> getAllAppUsers(int maxRecords) throws NumberFormatException,
 			Exception
 	{
 
 		List<AppUser> AppUserList = new ArrayList<AppUser>();
 
-		String selectQuery = "SELECT  * FROM " + TABLE_APP_USER + "order by " + KEY_ID + " desc";
+		String selectQuery = "SELECT  * FROM " + TABLE_APP_USER + " order by " + KEY_ID + " desc";
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);

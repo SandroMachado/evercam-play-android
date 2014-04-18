@@ -232,10 +232,6 @@ public class CameraLayout extends LinearLayout
 					cameraRelativeLayout.setBackgroundDrawable(drawable);
 
 					isImageLodedFromCache = true;
-					Log.i(TAG,
-							"laodimagefromcache image loaded for camera ["
-									+ evercamCamera.getCameraId() + ":" + evercamCamera.getName()
-									+ "].");
 					setlayoutForImageLoadedFromCache();
 					return true;
 				}
@@ -248,9 +244,6 @@ public class CameraLayout extends LinearLayout
 						ds += ". File Physically Exists with size [" + file.length() + "]";
 						file.delete();
 					}
-					Log.e(TAG, "laodimagefromcache drawable d1 is null for camera ["
-							+ evercamCamera.getCameraId() + ":" + evercamCamera.getName() + "]."
-							+ ds);
 				}
 			}
 
@@ -610,16 +603,8 @@ public class CameraLayout extends LinearLayout
 					if (drawable != null && drawable.getIntrinsicWidth() > 0
 							&& drawable.getIntrinsicHeight() > 0)
 					{
-						Log.v(TAG, "live received");
 						cameraRelativeLayout.setBackgroundDrawable(drawable);
 						CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_received;
-					}
-					else
-					{
-						Log.e(TAG,
-								"File Load Error" + "::" + "Unable to load image for the camera ["
-										+ evercamCamera.getCameraId() + ":"
-										+ evercamCamera.getName() + "] from path [" + result + "]");
 					}
 				}
 			}

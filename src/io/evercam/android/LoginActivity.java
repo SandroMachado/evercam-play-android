@@ -38,8 +38,6 @@ public class LoginActivity extends ParentActivity
 	private String password;
 	private LoginTask loginTask;
 	private SharedPreferences sharedPrefs;
-	private String developerAppKey;
-	private String developerAppID;
 	private String TAG = "evercamapp-LoginActivity";
 	private ProgressDialog progressDialog;
 
@@ -264,8 +262,8 @@ public class LoginActivity extends ParentActivity
 	private void setEvercamDeveloperKeypair()
 	{
 		PropertyReader propertyReader = new PropertyReader(getApplicationContext());
-		developerAppKey = propertyReader.getPropertyStr(PropertyReader.KEY_API_KEY);
-		developerAppID = propertyReader.getPropertyStr(PropertyReader.KEY_API_ID);
+		String developerAppKey = propertyReader.getPropertyStr(PropertyReader.KEY_API_KEY);
+		String developerAppID = propertyReader.getPropertyStr(PropertyReader.KEY_API_ID);
 		API.setDeveloperKeyPair(developerAppKey, developerAppID);
 	}
 

@@ -7,7 +7,7 @@ public class AppUser
 	private String username;
 	private String password;
 	private String country;
-	private boolean isDefault;
+	private boolean isDefault = false;
 	private String apiKey;
 	private String apiId;
 

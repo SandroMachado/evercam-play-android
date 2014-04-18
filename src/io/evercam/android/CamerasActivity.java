@@ -24,7 +24,6 @@ import android.widget.*;
 import io.evercam.android.custom.AboutDialog;
 import io.evercam.android.custom.CameraLayout;
 import io.evercam.android.dal.DbAppUser;
-import io.evercam.android.dal.DbNotifcation;
 import io.evercam.android.dal.DbCamera;
 import io.evercam.android.dto.AppUser;
 import io.evercam.android.dto.CameraNotification;
@@ -128,7 +127,8 @@ public class CamerasActivity extends ParentActivity implements
 
 			refresh = menu.findItem(R.id.menurefresh);
 
-			if (refresh != null && (AppData.evercamCameraList == null || AppData.evercamCameraList.size() == 0))
+			if (refresh != null
+					&& (AppData.evercamCameraList == null || AppData.evercamCameraList.size() == 0))
 			{
 				refresh.setActionView(null);
 				refresh.setActionView(R.layout.actionbar_indeterminate_progress);
@@ -138,10 +138,10 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception ex)
 		{
 			Log.e(TAG, ex.toString());
-			if (Constants.isAppTrackingEnabled) 
-				{
+			if (Constants.isAppTrackingEnabled)
+			{
 				BugSenseHandler.sendException(ex);
-				}
+			}
 		}
 		return true;
 	}
@@ -155,16 +155,16 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			switch (item.getItemId())
 			{
-//			case R.id.menurefresh: // need to refresh the application
-//				if (refresh != null) refresh
-//						.setActionView(R.layout.actionbar_indeterminate_progress);
-//
-//				GetUserCamsData task = new GetUserCamsData();
-//				task.reload = true; // be default do not refesh until there is
-//									// any change in cameras in database
-//				task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
-//
-//				return true;
+			// case R.id.menurefresh: // need to refresh the application
+			// if (refresh != null) refresh
+			// .setActionView(R.layout.actionbar_indeterminate_progress);
+			//
+			// GetUserCamsData task = new GetUserCamsData();
+			// task.reload = true; // be default do not refesh until there is
+			// // any change in cameras in database
+			// task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+			//
+			// return true;
 
 			case android.R.id.home:
 				slideMenu.show();
@@ -196,11 +196,12 @@ public class CamerasActivity extends ParentActivity implements
 			{
 			case R.id.slidemenu_logout:
 
-				new LogoutTask(CamerasActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+				new LogoutTask(CamerasActivity.this)
+						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 				break;
 
-			case R.id.slidemenu_about: // show the about dialog
+			case R.id.slidemenu_about:
 
 				new Handler().postDelayed(new Runnable(){
 					@Override
@@ -236,21 +237,22 @@ public class CamerasActivity extends ParentActivity implements
 				}, slideoutMenuAnimationTime);
 				break;
 
-//			default: // starting the notification activity
-//
-//				NotificationActivity.NotificationID = itemId;
-//				new MarkNotificationAsReadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-//						itemId + "");
-//				new Handler().postDelayed(new Runnable(){
-//					@Override
-//					public void run()
-//					{
-//						Intent i = new Intent(new Intent(CamerasActivity.this,
-//								NotificationActivity.class));
-//						startActivity(i);
-//					}
-//				}, slideoutMenuAnimationTime);
-//				break;
+			// default: // starting the notification activity
+			//
+			// NotificationActivity.NotificationID = itemId;
+			// new
+			// MarkNotificationAsReadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+			// itemId + "");
+			// new Handler().postDelayed(new Runnable(){
+			// @Override
+			// public void run()
+			// {
+			// Intent i = new Intent(new Intent(CamerasActivity.this,
+			// NotificationActivity.class));
+			// startActivity(i);
+			// }
+			// }, slideoutMenuAnimationTime);
+			// break;
 
 			}
 		}
@@ -297,7 +299,6 @@ public class CamerasActivity extends ParentActivity implements
 		}
 	}
 
-
 	private void addUsersToDropdownActionBar()
 	{
 		boolean taskStarted = false;
@@ -327,7 +328,7 @@ public class CamerasActivity extends ParentActivity implements
 		}
 
 	}
-	
+
 	// Stop All Camera Views
 	private void stopAllCameraViews()
 	{
@@ -424,11 +425,11 @@ public class CamerasActivity extends ParentActivity implements
 
 			int index = 0;
 			totalCamerasInGrid = 0;
-			
-			for(EvercamCamera evercamCamera: AppData.evercamCameraList)
+
+			for (EvercamCamera evercamCamera : AppData.evercamCameraList)
 			{
 				LinearLayout cameraListLayout = new LinearLayout(this);
-				
+
 				int indexPlus = index + 1;
 
 				if (reloadImages) evercamCamera.loadingStatus = ImageLoadingStatus.not_started;
@@ -448,7 +449,7 @@ public class CamerasActivity extends ParentActivity implements
 				index++;
 				totalCamerasInGrid++;
 			}
-			
+
 			if (this.getActionBar() != null) this.getActionBar().setHomeButtonEnabled(true);
 
 			startgCMRegisterActions();
@@ -589,26 +590,26 @@ public class CamerasActivity extends ParentActivity implements
 				// has been installed. Then user might be not in
 				// database but in preferences. So we need to add it
 				// to database as well.
-//				AppUser old = dbUser.getAppUser(AppData.AppUserEmail);
-//				if (old == null)
-//				{
-//					AppUser user = new AppUser();
-//					user.setEmail(AppData.AppUserEmail + "");
-//					user.setPassword(AppData.AppUserPassword + "");
-//					user.setApiKey(AppData.cambaApiKey + "");
-//					user.setIsDefault(true);
-//					dbUser.addAppUser(user);
-//				}
+				// AppUser old = dbUser.getAppUser(AppData.AppUserEmail);
+				// if (old == null)
+				// {
+				// AppUser user = new AppUser();
+				// user.setEmail(AppData.AppUserEmail + "");
+				// user.setPassword(AppData.AppUserPassword + "");
+				// user.setApiKey(AppData.cambaApiKey + "");
+				// user.setIsDefault(true);
+				// dbUser.addAppUser(user);
+				// }
 
 				final String[] userAccounts = new String[AppData.appUsers.size()];
 
 				for (int count = 0; count < AppData.appUsers.size(); count++)
 				{
 					userAccounts[count] = AppData.appUsers.get(count).getEmail();
-					if (AppData.appUsers.get(count).getIsDefault()) 
-						{defaultUserIndex = count;
-						
-						}
+					if (AppData.appUsers.get(count).getIsDefault())
+					{
+						defaultUserIndex = count;
+					}
 				}
 
 				return userAccounts;
@@ -617,10 +618,10 @@ public class CamerasActivity extends ParentActivity implements
 			catch (Exception e)
 			{
 				Log.e(TAG, e.getMessage(), e);
-				if (Constants.isAppTrackingEnabled) 
-					{BugSenseHandler.sendException(e);
-					
-					}
+				if (Constants.isAppTrackingEnabled)
+				{
+					BugSenseHandler.sendException(e);
+				}
 			}
 			return null;
 		}
@@ -653,18 +654,22 @@ public class CamerasActivity extends ParentActivity implements
 							// set selected user's default to true
 							AppUser user = AppData.appUsers.get(itemPosition);
 							user.setIsDefault(true);
-//							Commons.setDefaultUserForApp(CamerasActivity.this, user.getEmail(),
-//									user.getPassword(), user.getApiKey(), true);
+							// Commons.setDefaultUserForApp(CamerasActivity.this,
+							// user.getEmail(),
+							// user.getPassword(), user.getApiKey(), true);
 							dbUser.updateAppUser(user);
 
 							Log.v("evercamapp", "use default user:" + user.getEmail());
 							// load local cameras for default user
-							AppData.evercamCameraList = new DbCamera(CamerasActivity.this).getCamerasByOwner(user.getUsername(), 500);
+							AppData.evercamCameraList = new DbCamera(CamerasActivity.this)
+									.getCamerasByOwner(user.getUsername(), 500);
 							removeAllCameraViews();
 							addAllCameraViews(true);
 
-							// start the task for default user to refresh camera list
-							new LoadCameraListTask(AppData.defaultUser, CamerasActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+							// start the task for default user to refresh camera
+							// list
+							new LoadCameraListTask(AppData.defaultUser, CamerasActivity.this)
+									.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 							if (totalCamerasInGrid == 0 && refresh != null)
 							{
 								refresh.setActionView(null);
@@ -674,7 +679,7 @@ public class CamerasActivity extends ParentActivity implements
 						catch (Exception e)
 						{
 							Log.e(TAG, e.getMessage(), e);
-							if (Constants.isAppTrackingEnabled) 
+							if (Constants.isAppTrackingEnabled)
 							{
 								BugSenseHandler.sendException(e);
 							}
@@ -692,30 +697,6 @@ public class CamerasActivity extends ParentActivity implements
 				Log.e(TAG, e.getMessage(), e);
 				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 			}
-		}
-	}
-
-	private class MarkNotificationAsReadTask extends AsyncTask<String, String, String>
-	{
-		@Override
-		protected String doInBackground(String... id)
-		{
-			String message = "";
-			try
-			{
-				DbNotifcation helper = new DbNotifcation(CamerasActivity.this);
-
-				CameraNotification notif = helper.getCameraNotification(Integer.parseInt(id[0]));
-				notif.setIsRead(true);
-				helper.updateCameraNotification(notif);
-
-			}
-			catch (Exception e)
-			{
-				Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-				message = e.toString();
-			}
-			return message;
 		}
 	}
 
@@ -783,22 +764,28 @@ public class CamerasActivity extends ParentActivity implements
 				}
 				else if (!GCMRegistrar.isRegisteredOnServer(CamerasActivity.this))
 				{
-//					if (CambaApiManager.registerDeviceForUsername(AppUserEmail, AppUserPassword,
-//							regId, Operation, BlueToothName, Manufacturer, Model, SerialNo, ImeiNo,
-//							Fingureprint, MacAddress, AppVersion))
-//					{
-//						return "Device successfully registerd on GCM Server and Camba Server.";
-//					}
-//					else
-//					{
-//						return "Device failed to register on Camba server.";
-//					}
+					// if
+					// (CambaApiManager.registerDeviceForUsername(AppUserEmail,
+					// AppUserPassword,
+					// regId, Operation, BlueToothName, Manufacturer, Model,
+					// SerialNo, ImeiNo,
+					// Fingureprint, MacAddress, AppVersion))
+					// {
+					// return
+					// "Device successfully registerd on GCM Server and Camba Server.";
+					// }
+					// else
+					// {
+					// return "Device failed to register on Camba server.";
+					// }
 				}
 				else
 				{
-//					CambaApiManager.registerDeviceForUsername(AppUserEmail, AppUserPassword, regId,
-//							Operation, BlueToothName, Manufacturer, Model, SerialNo, ImeiNo,
-//							Fingureprint, MacAddress, AppVersion);
+					// CambaApiManager.registerDeviceForUsername(AppUserEmail,
+					// AppUserPassword, regId,
+					// Operation, BlueToothName, Manufacturer, Model, SerialNo,
+					// ImeiNo,
+					// Fingureprint, MacAddress, AppVersion);
 					GCMRegistrar.setRegisteredOnServer(CamerasActivity.this, true);
 
 					// return
