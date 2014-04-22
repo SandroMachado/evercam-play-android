@@ -26,7 +26,6 @@ import io.evercam.android.custom.CameraLayout;
 import io.evercam.android.dal.DbAppUser;
 import io.evercam.android.dal.DbCamera;
 import io.evercam.android.dto.AppUser;
-import io.evercam.android.dto.CameraNotification;
 import io.evercam.android.dto.EvercamCamera;
 import io.evercam.android.dto.ImageLoadingStatus;
 import io.evercam.android.slidemenu.*;
@@ -155,16 +154,16 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			switch (item.getItemId())
 			{
-			// case R.id.menurefresh: // need to refresh the application
-			// if (refresh != null) refresh
-			// .setActionView(R.layout.actionbar_indeterminate_progress);
-			//
-			// GetUserCamsData task = new GetUserCamsData();
-			// task.reload = true; // be default do not refesh until there is
-			// // any change in cameras in database
-			// task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
-			//
-			// return true;
+			 case R.id.menurefresh: // need to refresh the application
+			 if (refresh != null) refresh
+			 .setActionView(R.layout.actionbar_indeterminate_progress);
+			
+			 LoadCameraListTask loadTask = new LoadCameraListTask(AppData.defaultUser, CamerasActivity.this);
+			 loadTask.reload = true; // be default do not refesh until there is
+			 // any change in cameras in database
+			 loadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			
+			 return true;
 
 			case android.R.id.home:
 				slideMenu.show();
@@ -601,18 +600,18 @@ public class CamerasActivity extends ParentActivity implements
 				// dbUser.addAppUser(user);
 				// }
 
-				final String[] userAccounts = new String[AppData.appUsers.size()];
+				final String[] userEmailArray = new String[AppData.appUsers.size()];
 
 				for (int count = 0; count < AppData.appUsers.size(); count++)
 				{
-					userAccounts[count] = AppData.appUsers.get(count).getEmail();
+					userEmailArray[count] = AppData.appUsers.get(count).getEmail();
 					if (AppData.appUsers.get(count).getIsDefault())
 					{
 						defaultUserIndex = count;
 					}
 				}
 
-				return userAccounts;
+				return userEmailArray;
 
 			}
 			catch (Exception e)
@@ -627,12 +626,12 @@ public class CamerasActivity extends ParentActivity implements
 		}
 
 		@Override
-		protected void onPostExecute(String[] userAccounts)
+		protected void onPostExecute(String[] userEmailArray)
 		{
 			try
 			{
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(CamerasActivity.this,
-						android.R.layout.simple_spinner_dropdown_item, userAccounts);
+				ArrayAdapter<String> dropdownListAdapter = new ArrayAdapter<String>(CamerasActivity.this,
+						android.R.layout.simple_spinner_dropdown_item, userEmailArray);
 				CamerasActivity.this.getActionBar().setNavigationMode(
 						ActionBar.NAVIGATION_MODE_LIST);
 				OnNavigationListener navigationListener = new OnNavigationListener(){
@@ -654,12 +653,10 @@ public class CamerasActivity extends ParentActivity implements
 							// set selected user's default to true
 							AppUser user = AppData.appUsers.get(itemPosition);
 							user.setIsDefault(true);
-							// Commons.setDefaultUserForApp(CamerasActivity.this,
-							// user.getEmail(),
-							// user.getPassword(), user.getApiKey(), true);
+							
 							dbUser.updateAppUser(user);
+							AppData.defaultUser = user;
 
-							Log.v("evercamapp", "use default user:" + user.getEmail());
 							// load local cameras for default user
 							AppData.evercamCameraList = new DbCamera(CamerasActivity.this)
 									.getCamerasByOwner(user.getUsername(), 500);
@@ -688,7 +685,7 @@ public class CamerasActivity extends ParentActivity implements
 					}
 				};
 
-				getActionBar().setListNavigationCallbacks(adapter, navigationListener);
+				getActionBar().setListNavigationCallbacks(dropdownListAdapter, navigationListener);
 				getActionBar().setSelectedNavigationItem(defaultUserIndex);
 
 			}
