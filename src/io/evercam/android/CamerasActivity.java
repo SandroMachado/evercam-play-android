@@ -354,7 +354,7 @@ public class CamerasActivity extends ParentActivity implements
 			for (int i = 0; i < camsLineView.getChildCount(); i++)
 			{
 				LinearLayout pview = (LinearLayout) camsLineView.getChildAt(i);
-				CameraLayout cl = (CameraLayout) pview.getChildAt(0); // CameraLayout
+				CameraLayout cameraLayout = (CameraLayout) pview.getChildAt(0); // CameraLayout
 																		// is on
 																		// 0th
 																		// index
@@ -365,9 +365,8 @@ public class CamerasActivity extends ParentActivity implements
 				params.width = ((i + 1 % camerasPerRow == 0) ? (screen_width - (i % camerasPerRow)
 						* (screen_width / camerasPerRow)) : screen_width / camerasPerRow);
 				params.height = (int) (params.width / (1.25));
-				cl.setLayoutParams(params);
+				cameraLayout.setLayoutParams(params);
 			}
-
 			return true;
 		}
 		catch (Exception e)

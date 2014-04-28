@@ -48,15 +48,15 @@ public class EvercamCamera
 			vendor = camera.getVendor();
 			model = camera.getModel();
 			mac = camera.getMacAddress();
-			externalSnapshotUrl = camera.getJpgExternalFullUrl();
-			internalSnapshotUrl = camera.getJpgInternalFullUrl();
+			externalSnapshotUrl = camera.getExternalJpgUrl();
+			internalSnapshotUrl = camera.getInternalJpgUrl();
 			if(camera.isOnline())
 			{
-				status = "Active";
+				status = CameraStatus.ACTIVE;
 			}
 			else
 			{
-				status = "Offline";
+				status = CameraStatus.OFFLINE;
 			}
 		}
 		catch (EvercamException e)
