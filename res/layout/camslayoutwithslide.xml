@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <io.evercam.android.slidemenu.SlideMenu
+    <io.evercam.androidapp.slidemenu.SlideMenu
         android:id="@+id/slideMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -19,7 +19,7 @@
             android:paddingTop="5dip"
         -->
 
-        <io.evercam.android.custom.FlowLayout
+        <io.evercam.androidapp.custom.FlowLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/camsLV"
             android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
 
             <!-- Child linear layouts will be created and inserted here dynamically -->
 
-        </io.evercam.android.custom.FlowLayout>
+        </io.evercam.androidapp.custom.FlowLayout>
     </ScrollView>
 
 </RelativeLayout>

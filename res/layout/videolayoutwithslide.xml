@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:background="#000000" >
 
-    <io.evercam.android.slidemenu.SlideMenu
+    <io.evercam.androidapp.slidemenu.SlideMenu
         android:id="@+id/slideMenuvideo1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -39,7 +39,7 @@
             android:background="@layout/image_bg"
             android:visibility="gone" />
 
-        <io.evercam.android.custom.ProgressView
+        <io.evercam.androidapp.custom.ProgressView
             android:id="@+id/ivprogressspinner1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
