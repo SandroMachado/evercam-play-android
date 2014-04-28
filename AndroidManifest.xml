@@ -124,7 +124,7 @@
             android:launchMode="singleTop" >
         </activity>
         <activity
-            android:name=".CamsPrefsActivity"
+            android:name=".CameraPrefsActivity"
             android:label="Settings" >
         </activity>
 

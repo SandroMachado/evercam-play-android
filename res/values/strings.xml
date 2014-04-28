@@ -50,5 +50,7 @@
     
     <!-- General -->
     <string name="cancel">Cancel</string>
-
+    
+    <!-- Preferences -->
+	<string name="prefs_camera_per_row">Cameras Per Row</string>
 </resources>

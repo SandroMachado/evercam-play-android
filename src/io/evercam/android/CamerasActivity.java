@@ -33,6 +33,7 @@ import io.evercam.android.tasks.LoadCameraListTask;
 import io.evercam.android.tasks.LogoutTask;
 import io.evercam.android.utils.AppData;
 import io.evercam.android.utils.Constants;
+import io.evercam.android.utils.PrefsManager;
 import io.evercam.android.utils.UIUtils;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -50,7 +51,7 @@ public class CamerasActivity extends ParentActivity implements
 	public static CamerasActivity activity = null;
 	public MenuItem refresh;
 
-	private static final String TAG = "evecamapp-CamerasActivity";
+	private static final String TAG = "evercamapp-CamerasActivity";
 	private RegisterGCMAlertsServiceTask RegisterTask = null;
 	private SlideMenu slideMenu;
 	private int totalCamerasInGrid = 0;
@@ -218,7 +219,7 @@ public class CamerasActivity extends ParentActivity implements
 					@Override
 					public void run()
 					{
-						startActivity(new Intent(CamerasActivity.this, CamsPrefsActivity.class));
+						startActivity(new Intent(CamerasActivity.this, CameraPrefsActivity.class));
 					}
 				}, slideoutMenuAnimationTime);
 
@@ -280,7 +281,7 @@ public class CamerasActivity extends ParentActivity implements
 
 			int camsOldValue = camerasPerRow;
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-			camerasPerRow = Integer.parseInt(sharedPrefs.getString("lstgridcamerasPerRow", "2"));
+			camerasPerRow = PrefsManager.getCameraPerRow(sharedPrefs, 2);
 
 			if (camsOldValue != camerasPerRow)
 			{
@@ -413,8 +414,7 @@ public class CamerasActivity extends ParentActivity implements
 		try
 		{
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-			camerasPerRow = Integer.parseInt(sharedPrefs.getString("lstgridcamerasPerRow", ""
-					+ camerasPerRow));
+			camerasPerRow = PrefsManager.getCameraPerRow(sharedPrefs, camerasPerRow);
 
 			io.evercam.android.custom.FlowLayout camsLineView = (io.evercam.android.custom.FlowLayout) this
 					.findViewById(R.id.camsLV);

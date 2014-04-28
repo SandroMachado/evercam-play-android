@@ -9,7 +9,7 @@ import com.bugsense.trace.BugSenseHandler;
 import io.evercam.android.R;
 import com.google.analytics.tracking.android.EasyTracker;
 
-public class CamsPrefsActivity extends PreferenceActivity
+public class CameraPrefsActivity extends PreferenceActivity
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -28,9 +28,7 @@ public class CamsPrefsActivity extends PreferenceActivity
 		catch (Exception e)
 		{
 		}
-		addPreferencesFromResource(R.layout.camspreferences); // inflate the
-																// custom prefs
-																// layout
+		addPreferencesFromResource(R.layout.camspreferences);
 		this.setDefaultKeyMode(DEFAULT_KEYS_DISABLE);
 	}
 
@@ -49,7 +47,7 @@ public class CamsPrefsActivity extends PreferenceActivity
 		if (Constants.isAppTrackingEnabled)
 		{
 			EasyTracker.getInstance().activityStart(this);
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
+			BugSenseHandler.startSession(this);
 		}
 	}
 
@@ -60,7 +58,7 @@ public class CamsPrefsActivity extends PreferenceActivity
 		if (Constants.isAppTrackingEnabled)
 		{
 			EasyTracker.getInstance().activityStop(this);
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
+			BugSenseHandler.closeSession(this);
 		}
 	}
 }

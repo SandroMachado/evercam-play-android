@@ -7,7 +7,7 @@
         android:entryValues="@array/noofcameras"
         android:key="lstgridcamerasperrow"
         android:summary="Select number of cameras to show in a row"
-        android:title="Cameras Per Row" />
+        android:title="@string/prefs_camera_per_row" />
 
     <CheckBoxPreference
         android:defaultValue="true"
