@@ -34,8 +34,6 @@ public class DownloadLatestTask extends AsyncTask<Void, Void, String>
 		{
 			Snapshot latestSnapshot = Camera.getLatestArchivedSnapshot(cameraId, true);
 			byte[] snapshotByte = latestSnapshot.getData();
-			// Bitmap bitmap = BitmapFactory.decodeByteArray(snapshotByte , 0,
-			// snapshotByte.length);
 
 			String pathString = context.getCacheDir() + "/" + cameraId + ".jpg";
 			File file = new File(pathString);
