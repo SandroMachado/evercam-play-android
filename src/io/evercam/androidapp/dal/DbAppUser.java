@@ -172,9 +172,8 @@ public class DbAppUser extends DatabaseMaster
 
 		return latestID;
 	}
-	
-	public List<AppUser> getAllAppUsers(int maxRecords) throws NumberFormatException,
-			Exception
+
+	public List<AppUser> getAllAppUsers(int maxRecords) throws NumberFormatException, Exception
 	{
 
 		List<AppUser> AppUserList = new ArrayList<AppUser>();

@@ -43,14 +43,15 @@
     <string name="options_exit">Exit</string>
     <string name="is_release_notes_shown">is_release_notes_shown</string>
     <string name="accounts">Accounts</string>
-    
+
     <!-- Text on camera -->
     <string name="connecting">Connecting&#8230;</string>
     <string name="reconnecting">Reconnecting&#8230;</string>
-    
+
     <!-- General -->
     <string name="cancel">Cancel</string>
-    
+
     <!-- Preferences -->
-	<string name="prefs_camera_per_row">Cameras Per Row</string>
+    <string name="prefs_camera_per_row">Cameras Per Row</string>
+
 </resources>

@@ -75,7 +75,8 @@ public class DownloadLatestTask extends AsyncTask<Void, Void, String>
 		if (result != null)
 		{
 			Drawable drawable = Drawable.createFromPath(result);
-			if (drawable != null && drawable.getIntrinsicWidth() > 0 && drawable.getIntrinsicHeight() > 0)
+			if (drawable != null && drawable.getIntrinsicWidth() > 0
+					&& drawable.getIntrinsicHeight() > 0)
 			{
 				cameraLayout.cameraRelativeLayout.setVisibility(View.VISIBLE);
 				cameraLayout.cameraRelativeLayout.setBackgroundDrawable(drawable);

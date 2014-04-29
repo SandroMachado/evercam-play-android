@@ -31,7 +31,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 
 public class LoginActivity extends ParentActivity
 {
-	public static final int loginVerifyRequestCode = 5; 
+	public static final int loginVerifyRequestCode = 5;
 	public static int loginResultSuccessCode = 5;
 
 	private EditText usernameEdit;
@@ -190,7 +190,7 @@ public class LoginActivity extends ParentActivity
 				PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
 				finishLoginActivity();
 
-				// AppData.camesList = new ArrayList<Camera>(); 
+				// AppData.camesList = new ArrayList<Camera>();
 			}
 			else
 			{
@@ -219,8 +219,9 @@ public class LoginActivity extends ParentActivity
 		{
 			EasyTracker.getInstance().activityStart(this);
 			if (Constants.isAppTrackingEnabled)
-				{BugSenseHandler.startSession(this);
-				}
+			{
+				BugSenseHandler.startSession(this);
+			}
 		}
 	}
 
@@ -233,8 +234,9 @@ public class LoginActivity extends ParentActivity
 		{
 			EasyTracker.getInstance().activityStop(this);
 			if (Constants.isAppTrackingEnabled)
-				{BugSenseHandler.closeSession(this);
-				}
+			{
+				BugSenseHandler.closeSession(this);
+			}
 		}
 	}
 

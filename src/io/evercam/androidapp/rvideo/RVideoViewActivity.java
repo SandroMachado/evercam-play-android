@@ -126,8 +126,8 @@ public class RVideoViewActivity extends ParentActivity
 
 	public static String recordingStartTime = null;
 	public static EvercamCamera camera = null; // if camera uses cookies
-										// authentication, then use these
-										// cookies to pass to camera
+	// authentication, then use these
+	// cookies to pass to camera
 	private String CameraID = "";
 	private MenuItem dateTimeMenuItem = null;
 
@@ -195,7 +195,8 @@ public class RVideoViewActivity extends ParentActivity
 							try
 							{
 
-								RVideoViewActivity.camera = AppData.evercamCameraList.get(itemPosition);
+								RVideoViewActivity.camera = AppData.evercamCameraList
+										.get(itemPosition);
 								//
 								//
 								setImageAttributesAndLoadImage();

@@ -122,8 +122,8 @@ public class IVideoViewActivity extends ParentActivity implements
 			, localport = "8001", HighResImageURL = "snapshot1.jpg",
 			LowResImageURL = "snapshot_3gp.jpg";
 	public static EvercamCamera camera = null; // if camera uses cookies
-										// authentication, then use these
-										// cookies to pass to camera
+	// authentication, then use these
+	// cookies to pass to camera
 
 	// preferences options
 	private boolean playAudio = false;
@@ -277,9 +277,11 @@ public class IVideoViewActivity extends ParentActivity implements
 			if (enableLogs) Log.i(TAG, "Playing camera:" + cam.toString());
 			// passing the medium, mobile compatible range image url to the
 			// camra
-//			String imageUrl = ((cam.getLowResolutionSnapshotUrl() != null && URLUtil.isValidUrl(cam
-//					.getLowResolutionSnapshotUrl())) ? cam.getLowResolutionSnapshotUrl() : cam
-//					.getCameraImageUrl());
+			// String imageUrl = ((cam.getLowResolutionSnapshotUrl() != null &&
+			// URLUtil.isValidUrl(cam
+			// .getLowResolutionSnapshotUrl())) ?
+			// cam.getLowResolutionSnapshotUrl() : cam
+			// .getCameraImageUrl());
 			String imageUrl = cam.getExternalSnapshotUrl();
 
 			if (!URLUtil.isValidUrl(imageUrl))
@@ -309,22 +311,24 @@ public class IVideoViewActivity extends ParentActivity implements
 			io.evercam.androidapp.ivideo.IVideoViewActivity.HighResImageURL = imageUrl;
 			io.evercam.androidapp.ivideo.IVideoViewActivity.LowResImageURL = imageUrl;
 			IVideoViewActivity.camera = cam;
-//			String LocalIpPort = cam.getLocalIpPort() + "";
-//			if (LocalIpPort.contains(":"))
-//			{
-//				IVideoViewActivity.localip = LocalIpPort.substring(0, LocalIpPort.indexOf(":"));
-//				IVideoViewActivity.localport = LocalIpPort.substring(LocalIpPort.indexOf(":") + 1);
-//			}
-//			else if (LocalIpPort.length() > 0)
-//			{
-//				IVideoViewActivity.localip = LocalIpPort;
-//				IVideoViewActivity.localport = null;
-//			}
-//			else
-//			{
-//				IVideoViewActivity.localip = null;
-//				IVideoViewActivity.localport = null;
-//			}
+			// String LocalIpPort = cam.getLocalIpPort() + "";
+			// if (LocalIpPort.contains(":"))
+			// {
+			// IVideoViewActivity.localip = LocalIpPort.substring(0,
+			// LocalIpPort.indexOf(":"));
+			// IVideoViewActivity.localport =
+			// LocalIpPort.substring(LocalIpPort.indexOf(":") + 1);
+			// }
+			// else if (LocalIpPort.length() > 0)
+			// {
+			// IVideoViewActivity.localip = LocalIpPort;
+			// IVideoViewActivity.localport = null;
+			// }
+			// else
+			// {
+			// IVideoViewActivity.localip = null;
+			// IVideoViewActivity.localport = null;
+			// }
 
 			// going to start the activity to show the full screen video
 
@@ -583,20 +587,21 @@ public class IVideoViewActivity extends ParentActivity implements
 			readSetPreferences();
 
 			((ProgressView) imageViewLayout.findViewById(R.id.ivprogressspinner)).canvasColor = Color.TRANSPARENT; // transparent
-																											// color
-																											// because
-																											// image
-																											// loaded
-																											// in
-																											// cache
-																											// should
-																											// be
-																											// displayed
-																											// as
-																											// well
+			// color
+			// because
+			// image
+			// loaded
+			// in
+			// cache
+			// should
+			// be
+			// displayed
+			// as
+			// well
 
 			isProgressShowing = true;
-			((ProgressView) imageViewLayout.findViewById(R.id.ivprogressspinner)).setVisibility(View.VISIBLE);
+			((ProgressView) imageViewLayout.findViewById(R.id.ivprogressspinner))
+					.setVisibility(View.VISIBLE);
 
 			mediaPlayerView.setOnClickListener(new OnClickListener(){
 
@@ -820,8 +825,9 @@ public class IVideoViewActivity extends ParentActivity implements
 			isFirstImageLocalEnded = false;
 
 			mediaPlayerView.setVisibility(View.GONE); // hide the media player
-													// play icon when animation
-													// ends
+														// play icon when
+														// animation
+														// ends
 
 			// showProgressView();
 
@@ -1394,19 +1400,17 @@ public class IVideoViewActivity extends ParentActivity implements
 				{
 					myStartImageTime = SystemClock.uptimeMillis();
 
-//					if (camera.getUseCredentials())
-//					{
-						response = Commons.getDrawablefromUrlAuthenticated1(url1,
-								camera.getUsername(), camera.getPassword(),
-								camera.cookies, 15000);
-						
+					// if (camera.getUseCredentials())
+					// {
+					response = Commons.getDrawablefromUrlAuthenticated1(url1, camera.getUsername(),
+							camera.getPassword(), camera.cookies, 15000);
 
-//					}
-//					else
-//					{
-//						URL url = new URL(url1);
-//						response = Commons.DownlaodDrawableSync(url, 15000);
-//					}
+					// }
+					// else
+					// {
+					// URL url = new URL(url1);
+					// response = Commons.DownlaodDrawableSync(url, 15000);
+					// }
 					if (response != null) successiveFailureCount = 0;
 				}
 				catch (OutOfMemoryError e)

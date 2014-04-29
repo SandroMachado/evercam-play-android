@@ -1,35 +1,35 @@
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dip" >
+
+    <EditText
+        android:id="@+id/editUsername"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dip" >
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="5dp"
+        android:hint="@string/username"
+        android:inputType="text"
+        android:singleLine="true" />
 
-        <EditText
-            android:id="@+id/editUsername"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="5dp"
-            android:hint="@string/username"
-            android:inputType="text"
-            android:singleLine="true"/>
+    <EditText
+        android:id="@+id/editPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:singleLine="true" />
 
-        <EditText
-            android:id="@+id/editPassword"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dip"
-            android:inputType="textPassword"
-            android:singleLine="true"
-            android:hint="@string/password"/>
+    <!-- Login button -->
 
-        <!-- Login button -->
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dip"
+        android:text="Login" />
 
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dip"
-            android:text="Login" />
-    </LinearLayout>
+</LinearLayout>

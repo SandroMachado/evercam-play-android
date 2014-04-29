@@ -1,4 +1,5 @@
 package io.evercam.androidapp;
+
 //package io.evercam.androidapp;
 //
 //import io.evercam.androidapp.dal.DbNotifcation;
@@ -416,4 +417,4 @@ package io.evercam.androidapp;
 //			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
 //		}
 //	}
-//}
+// }

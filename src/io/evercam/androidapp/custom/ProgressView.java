@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 
 //This class will play the progress spinner for loading image
 public class ProgressView extends ProgressBar
-{ 
+{
 	static String TAG = "evercamapp-ProgressView";
 	Movie movie;
 	InputStream inputStream = null;

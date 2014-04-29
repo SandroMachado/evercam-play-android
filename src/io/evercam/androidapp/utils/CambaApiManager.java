@@ -1,4 +1,5 @@
 package io.evercam.androidapp.utils;
+
 //package io.evercam.androidapp.utils;
 //
 //import io.evercam.androidapp.dto.Camera;
@@ -453,4 +454,4 @@ package io.evercam.androidapp.utils;
 //		}
 //	}
 //
-//}
+// }

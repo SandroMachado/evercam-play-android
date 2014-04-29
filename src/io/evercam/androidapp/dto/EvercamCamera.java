@@ -53,7 +53,7 @@ public class EvercamCamera
 			internalSnapshotUrl = camera.getInternalJpgUrl();
 			externalRtspUrl = camera.getExternalRtspUrlWithCredential();
 			internalRtspUrl = camera.getExternalRtspUrlWithCredential();
-			if(camera.isOnline())
+			if (camera.isOnline())
 			{
 				status = CameraStatus.ACTIVE;
 			}
@@ -198,7 +198,7 @@ public class EvercamCamera
 	{
 		return externalRtspUrl;
 	}
-	
+
 	public String getInternalRtspUrl()
 	{
 		return internalRtspUrl;
@@ -208,7 +208,7 @@ public class EvercamCamera
 	{
 		this.externalRtspUrl = externalRtspUrl;
 	}
-	
+
 	public void setInternalRtspUrl(String internalRtspUrl)
 	{
 		this.internalRtspUrl = internalRtspUrl;
@@ -218,7 +218,7 @@ public class EvercamCamera
 	{
 		this.status = status;
 	}
-	
+
 	public String getCode()
 	{
 		return "";
@@ -231,7 +231,8 @@ public class EvercamCamera
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		EvercamCamera other = (EvercamCamera) obj;
-		if (cameraId.equals(other.cameraId) && externalRtspUrl.equals(other.externalRtspUrl) && internalRtspUrl.equals(other.internalRtspUrl)
+		if (cameraId.equals(other.cameraId) && externalRtspUrl.equals(other.externalRtspUrl)
+				&& internalRtspUrl.equals(other.internalRtspUrl)
 				&& externalSnapshotUrl.equals(other.externalSnapshotUrl)
 				&& internalSnapshotUrl.equals(other.internalSnapshotUrl) && mac.equals(other.mac)
 				&& model.equals(other.model) && name.equals(other.name)

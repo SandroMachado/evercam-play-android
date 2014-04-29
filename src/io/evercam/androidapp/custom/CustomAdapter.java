@@ -36,7 +36,7 @@ public class CustomAdapter extends ArrayAdapter<AppUser>
 		}
 		else
 		{
-			this.fakeUser = new AppUser(-1, "", "", "", "","","",false);
+			this.fakeUser = new AppUser(-1, "", "", "", "", "", "", false);
 			this.entries.add(fakeUser); // add at the end
 		}
 		this.activity = a;

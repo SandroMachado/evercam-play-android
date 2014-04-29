@@ -38,7 +38,7 @@ public class CameraLayout extends LinearLayout
 	public EvercamCamera evercamCamera;
 	private DownloadLiveImageTask liveImageTask;
 	private DownloadLiveImageTask liveImageTaskLocal;
-	// private DownloadLatestTask latestTask; 
+	// private DownloadLatestTask latestTask;
 
 	private boolean end = false; // tells whether application has ended or not.
 									// If it is
@@ -128,13 +128,14 @@ public class CameraLayout extends LinearLayout
 									R.layout.cameralayout_dialog_liverecordingview, null);
 
 					builder.setView(layout);
-					builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
-						@Override
-						public void onClick(DialogInterface dialog, int which)
-						{
-							dialog.cancel();
-						}
-					});
+					builder.setNegativeButton(R.string.cancel,
+							new DialogInterface.OnClickListener(){
+								@Override
+								public void onClick(DialogInterface dialog, int which)
+								{
+									dialog.cancel();
+								}
+							});
 
 					final AlertDialog dialog = builder.create();
 
@@ -156,9 +157,9 @@ public class CameraLayout extends LinearLayout
 						@Override
 						public void onClick(View v)
 						{
-							 VideoActivity.startPlayingVideoForCamera(CameraLayout.this.context,
-							 evercamCamera.getCameraId());
-							 dialog.cancel();
+							VideoActivity.startPlayingVideoForCamera(CameraLayout.this.context,
+									evercamCamera.getCameraId());
+							dialog.cancel();
 						}
 					});
 					//
@@ -174,7 +175,7 @@ public class CameraLayout extends LinearLayout
 					// }
 					// });
 					//
-					 dialog.show();
+					dialog.show();
 				}
 			});
 
@@ -443,7 +444,8 @@ public class CameraLayout extends LinearLayout
 					// latestTask = new DownloadLatestTask();
 					// latestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
 					// new Integer[] { evercamCamera.getCameraId() });
-					new DownloadLatestTask(evercamCamera.getCameraId(),CameraLayout.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					new DownloadLatestTask(evercamCamera.getCameraId(), CameraLayout.this)
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 					setlayoutForNoImageReceived();
 				}
 				else if (evercamCamera.loadingStatus == ImageLoadingStatus.camba_image_received)

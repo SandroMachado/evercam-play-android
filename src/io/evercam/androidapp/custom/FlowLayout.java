@@ -75,8 +75,7 @@ public class FlowLayout extends ViewGroup
 				child.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.AT_MOST),
 						childHeightMeasureSpec);
 				final int childw = child.getMeasuredWidth();
-				lineHeight = Math
-						.max(lineHeight, child.getMeasuredHeight() + lp.vertical_spacing);
+				lineHeight = Math.max(lineHeight, child.getMeasuredHeight() + lp.vertical_spacing);
 
 				if (xpos + childw > width)
 				{

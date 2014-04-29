@@ -16,8 +16,8 @@ public class AppUser
 
 	}
 
-	public AppUser(int id, String email, String username, String password, String apiKey, String apiId,String country,
-			 boolean isDefault)
+	public AppUser(int id, String email, String username, String password, String apiKey,
+			String apiId, String country, boolean isDefault)
 	{
 		this.id = id;
 		this.email = email;
@@ -29,8 +29,8 @@ public class AppUser
 		this.isDefault = isDefault;
 	}
 
-	public AppUser(int id, String email,String username, String password, String apiKey, String apiId,String country,
-			int isDefaultInteger)
+	public AppUser(int id, String email, String username, String password, String apiKey,
+			String apiId, String country, int isDefaultInteger)
 	{
 		this.id = id;
 		this.email = email;
@@ -134,15 +134,15 @@ public class AppUser
 
 	public String toStringAll()
 	{
-		return "id[" + id + "], email [" + email + "], password [" + password
-				+ "], isDefault [" + isDefault + "]";
+		return "id[" + id + "], email [" + email + "], password [" + password + "], isDefault ["
+				+ isDefault + "]";
 	}
 
 	@Override
 	public String toString()
 	{
-		return "id[" + id + "], email [" + email + "], password [" + password
-				+ "], isDefault [" + isDefault + "]";
+		return "id[" + id + "], email [" + email + "], password [" + password + "], isDefault ["
+				+ isDefault + "]";
 	}
 
 }

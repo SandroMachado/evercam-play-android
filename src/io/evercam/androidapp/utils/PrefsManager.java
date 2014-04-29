@@ -27,29 +27,28 @@ public class PrefsManager
 	{
 		return sharedPrefs.getString(KEY_USER_API_ID, null);
 	}
-	
+
 	public static void saveUserEmail(SharedPreferences sharedPrefs, String email)
 	{
 		SharedPreferences.Editor editor = sharedPrefs.edit();
 		editor.putString(KEY_USER_EMAIL, email);
 		editor.commit();
 	}
-	
+
 	public static String getUserEmail(SharedPreferences sharedPrefs)
 	{
 		return sharedPrefs.getString(KEY_USER_EMAIL, null);
 	}
-	
+
 	public static void removeUserEmail(SharedPreferences sharedPrefs)
 	{
 		SharedPreferences.Editor editor = sharedPrefs.edit();
 		editor.putString(KEY_USER_EMAIL, null);
 		editor.commit();
 	}
-	
+
 	public static int getCameraPerRow(SharedPreferences sharedPrefs, int oldNumber)
 	{
-		return Integer.parseInt(sharedPrefs.getString(KEY_CAMERA_PER_ROW, ""
-				+ oldNumber));
+		return Integer.parseInt(sharedPrefs.getString(KEY_CAMERA_PER_ROW, "" + oldNumber));
 	}
 }

@@ -1,4 +1,5 @@
 package io.evercam.androidapp;
+
 ///*
 // * Copyright 2012 Google Inc.
 // *
@@ -413,4 +414,4 @@ package io.evercam.androidapp;
 //
 //	}
 //
-//}
+// }

@@ -108,10 +108,10 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 	{
 		if (success)
 		{
-			if(reload)
+			if (reload)
 			{
-			camerasActivity.removeAllCameraViews();
-			camerasActivity.addAllCameraViews(true);
+				camerasActivity.removeAllCameraViews();
+				camerasActivity.addAllCameraViews(true);
 			}
 		}
 		else
@@ -130,8 +130,8 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 
 								camerasActivity.startActivity(new Intent(camerasActivity,
 										MainActivity.class));
-								new LogoutTask(camerasActivity).executeOnExecutor(
-										AsyncTask.THREAD_POOL_EXECUTOR);
+								new LogoutTask(camerasActivity)
+										.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 								if (camerasActivity.refresh != null)
 								{

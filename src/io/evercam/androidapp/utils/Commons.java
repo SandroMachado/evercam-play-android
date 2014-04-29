@@ -477,36 +477,41 @@ public class Commons
 		return Drawable.createFromStream(input, "src");
 	}
 
-//	private static String getB64AuthKey(String login, String pass) throws IllegalArgumentException,
-//			Exception
-//	{
-//
-//		String source = login + ":" + pass;
-//		String ret;
-//		ret = Base64.encodeToString(source.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
-//		return ret;
-//	}
+	// private static String getB64AuthKey(String login, String pass) throws
+	// IllegalArgumentException,
+	// Exception
+	// {
+	//
+	// String source = login + ":" + pass;
+	// String ret;
+	// ret = Base64.encodeToString(source.getBytes(), Base64.URL_SAFE |
+	// Base64.NO_WRAP);
+	// return ret;
+	// }
 
-//	public static void setDefaultUserForApp(Context cont, String email, String password,
-//			String apiKey, boolean clearCamsList)
-//	{
-//		if (email != null && email.length() == 0) email = null;
-//
-//		if (password != null && password.length() == 0) email = null;
-//
-//		if (apiKey != null && apiKey.length() == 0) apiKey = null;
-//
-//		AppData.AppUserEmail = email;
-//		AppData.AppUserPassword = password;
-//		AppData.cambaApiKey = apiKey;
-//		if (AppData.camesList != null && clearCamsList) AppData.camesList.clear();
-//
-//		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(cont);
-//		SharedPreferences.Editor editor = sharedPrefs.edit();
-//		editor.putString("AppUserEmail", email);
-//		editor.putString("AppUserPassword", password);
-//		editor.commit();
-//	}
+	// public static void setDefaultUserForApp(Context cont, String email,
+	// String password,
+	// String apiKey, boolean clearCamsList)
+	// {
+	// if (email != null && email.length() == 0) email = null;
+	//
+	// if (password != null && password.length() == 0) email = null;
+	//
+	// if (apiKey != null && apiKey.length() == 0) apiKey = null;
+	//
+	// AppData.AppUserEmail = email;
+	// AppData.AppUserPassword = password;
+	// AppData.cambaApiKey = apiKey;
+	// if (AppData.camesList != null && clearCamsList)
+	// AppData.camesList.clear();
+	//
+	// SharedPreferences sharedPrefs =
+	// PreferenceManager.getDefaultSharedPreferences(cont);
+	// SharedPreferences.Editor editor = sharedPrefs.edit();
+	// editor.putString("AppUserEmail", email);
+	// editor.putString("AppUserPassword", password);
+	// editor.commit();
+	// }
 
 	public static String readRawTextFile(int id, Context ctx)
 	{

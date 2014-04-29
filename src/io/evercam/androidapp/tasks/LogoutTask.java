@@ -23,12 +23,12 @@ import com.google.android.gcm.GCMRegistrar;
 public class LogoutTask extends AsyncTask<String, String, String>
 {
 	private CamerasActivity cameraActivity;
-	
+
 	public LogoutTask(CamerasActivity cameraActivity)
 	{
 		this.cameraActivity = cameraActivity;
 	}
-	
+
 	@Override
 	protected String doInBackground(String... params)
 	{
@@ -38,8 +38,8 @@ public class LogoutTask extends AsyncTask<String, String, String>
 			SharedPreferences sharedPrefs = PreferenceManager
 					.getDefaultSharedPreferences(cameraActivity);
 			PrefsManager.removeUserEmail(sharedPrefs);
-			
-			//clear realtime default app data
+
+			// clear realtime default app data
 			AppData.defaultUser = null;
 			AppData.evercamCameraList.clear();
 
@@ -83,14 +83,16 @@ public class LogoutTask extends AsyncTask<String, String, String>
 					Manufacturer = android.os.Build.MANUFACTURER;
 					Model = android.os.Build.MODEL;
 					SerialNo = android.os.Build.SERIAL;
-					ImeiNo = ((android.telephony.TelephonyManager) cameraActivity.getSystemService(Context.TELEPHONY_SERVICE))
-							.getDeviceId();
+					ImeiNo = ((android.telephony.TelephonyManager) cameraActivity
+							.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
 					Fingureprint = android.os.Build.FINGERPRINT;
-					WifiManager manager = (WifiManager) cameraActivity.getSystemService(Context.WIFI_SERVICE);
+					WifiManager manager = (WifiManager) cameraActivity
+							.getSystemService(Context.WIFI_SERVICE);
 					WifiInfo info = manager.getConnectionInfo();
 					MacAddress = info.getMacAddress();
 					BlueToothName = BluetoothAdapter.getDefaultAdapter().getName();
-					AppVersion = (cameraActivity.getPackageManager().getPackageInfo(cameraActivity.getPackageName(), 0)).versionName;
+					AppVersion = (cameraActivity.getPackageManager().getPackageInfo(
+							cameraActivity.getPackageName(), 0)).versionName;
 				}
 				catch (Exception ee)
 				{
@@ -102,9 +104,11 @@ public class LogoutTask extends AsyncTask<String, String, String>
 					AppUserEmail = user.getEmail();
 					try
 					{
-//						CambaApiManager.registerDeviceForUsername(AppUserEmail,
-//								AppUserPassword, regId, Operation, BlueToothName, Manufacturer,
-//								Model, SerialNo, ImeiNo, Fingureprint, MacAddress, AppVersion);
+						// CambaApiManager.registerDeviceForUsername(AppUserEmail,
+						// AppUserPassword, regId, Operation, BlueToothName,
+						// Manufacturer,
+						// Model, SerialNo, ImeiNo, Fingureprint, MacAddress,
+						// AppVersion);
 					}
 					catch (Exception e)
 					{

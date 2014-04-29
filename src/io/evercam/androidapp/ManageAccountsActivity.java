@@ -244,33 +244,33 @@ public class ManageAccountsActivity extends ParentActivity
 
 						String username = usernameEdit.getText().toString();
 						String password = passwordEdit.getText().toString();
-						
+
 						TextView textError = (TextView) dialog_layout
 								.findViewById(R.id.txt_error_user_authentication);
 						if (TextUtils.isEmpty(password))
 						{
-							showErrorMessageOnDialog(textError,R.string.error_password_required);
+							showErrorMessageOnDialog(textError, R.string.error_password_required);
 							return;
 						}
 						else if (password.contains(" "))
 						{
-							showErrorMessageOnDialog(textError,R.string.error_invalid_password);
+							showErrorMessageOnDialog(textError, R.string.error_invalid_password);
 							return;
 						}
 
 						if (TextUtils.isEmpty(username))
 						{
-							showErrorMessageOnDialog(textError,R.string.error_username_required);
+							showErrorMessageOnDialog(textError, R.string.error_username_required);
 							return;
 						}
 						else if (username.contains("@"))
 						{
-							showErrorMessageOnDialog(textError,R.string.please_use_username);
+							showErrorMessageOnDialog(textError, R.string.please_use_username);
 							return;
 						}
 						else if (username.contains(" "))
 						{
-							showErrorMessageOnDialog(textError,R.string.error_invalid_username);
+							showErrorMessageOnDialog(textError, R.string.error_invalid_username);
 							return;
 						}
 						ProgressBar progressBar = (ProgressBar) alertDialog
@@ -448,8 +448,7 @@ public class ManageAccountsActivity extends ParentActivity
 					{
 						try
 						{
-							DbAppUser dbuser = new DbAppUser(
-									ManageAccountsActivity.this);
+							DbAppUser dbuser = new DbAppUser(ManageAccountsActivity.this);
 							AppUser oldUser = dbuser.getAppUserByEmail(newUser.getEmail());
 							int defaultUsersCount = dbuser.getDefaultUsersCount();
 							if (oldUser != null)
@@ -495,7 +494,7 @@ public class ManageAccountsActivity extends ParentActivity
 		String developerAppID = propertyReader.getPropertyStr(PropertyReader.KEY_API_ID);
 		API.setDeveloperKeyPair(developerAppKey, developerAppID);
 	}
-	
+
 	private void showErrorMessageOnDialog(TextView errorTextView, int message)
 	{
 		errorTextView.setVisibility(View.VISIBLE);

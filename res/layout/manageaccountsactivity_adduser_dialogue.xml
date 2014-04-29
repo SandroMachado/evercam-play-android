@@ -16,7 +16,7 @@
         android:id="@+id/username_edit"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp">
+        android:layout_marginLeft="20dp" >
 
         <requestFocus />
     </EditText>
@@ -44,7 +44,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginBottom="30dp"
         android:checked="false" 
-        android:text="Set default user for loading cameras"/>
+        android:text="Set default user for loading cameras"/>
     -->
 
     <TextView

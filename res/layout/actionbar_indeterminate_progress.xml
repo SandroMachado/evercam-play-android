@@ -9,8 +9,7 @@
         android:layout_height="32dp"
         android:layout_gravity="center" />
 
-</FrameLayout>
-<!--
+</FrameLayout><!--
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="64dp"
     android:layout_height="wrap_content"
@@ -19,5 +18,5 @@
         android:layout_height="32dp"
         android:layout_gravity="center"
         style="?android:attr/indeterminateProgressStyle" />
-</FrameLayout>
+</FrameLayout>
 -->

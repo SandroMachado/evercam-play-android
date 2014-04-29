@@ -38,11 +38,11 @@ public class DbCamera extends DatabaseMaster
 		String CREATE_TABLE_Cameras = "CREATE TABLE " + TABLE_CAMERA + "(" + KEY_ID
 				+ " INTEGER PRIMARY KEY autoincrement" + "," + KEY_CAMERA_ID + " TEXT NOT NULL"
 				+ "," + KEY_CAMERA_NAME + " TEXT NULL" + "," + KEY_OWNER + " TEXT  NOT NULL" + ","
-				+ KEY_USERNAME + " TEXT NULL" + "," + KEY_PASSWORD + " TEXT NULL" + "," + KEY_TIMEZONE
-				+ " TEXT NULL" + "," + KEY_VENDOR + " TEXT NULL" + "," + KEY_MODEL + " TEXT NULL"
-				+ "," + KEY_MAC + " TEXT NULL " + "," + KEY_EXTERNAL_JPG_URL + " TEXT NULL " + ","
-				+ KEY_INTERNAL_JPG_URL + " TEXT NULL " + "," + KEY_EXTERNAL_RTSP_URL + " TEXT NULL"
-				+ "," + KEY_INTERNAL_RTSP_URL + " TEXT NULL"
+				+ KEY_USERNAME + " TEXT NULL" + "," + KEY_PASSWORD + " TEXT NULL" + ","
+				+ KEY_TIMEZONE + " TEXT NULL" + "," + KEY_VENDOR + " TEXT NULL" + "," + KEY_MODEL
+				+ " TEXT NULL" + "," + KEY_MAC + " TEXT NULL " + "," + KEY_EXTERNAL_JPG_URL
+				+ " TEXT NULL " + "," + KEY_INTERNAL_JPG_URL + " TEXT NULL " + ","
+				+ KEY_EXTERNAL_RTSP_URL + " TEXT NULL" + "," + KEY_INTERNAL_RTSP_URL + " TEXT NULL"
 				+ "," + KEY_STATUS + " TEXT NULL" + "," + "CONSTRAINT uniqueCamAndUser UNIQUE ("
 				+ KEY_CAMERA_ID + ")" + ")";
 		db.execSQL(CREATE_TABLE_Cameras);
@@ -78,7 +78,7 @@ public class DbCamera extends DatabaseMaster
 		Cursor cursor = db.query(TABLE_CAMERA, new String[] { KEY_ID, KEY_CAMERA_ID,
 				KEY_CAMERA_NAME, KEY_OWNER, KEY_USERNAME, KEY_PASSWORD, KEY_TIMEZONE, KEY_VENDOR,
 				KEY_MODEL, KEY_MAC, KEY_EXTERNAL_JPG_URL, KEY_INTERNAL_JPG_URL,
-				KEY_EXTERNAL_RTSP_URL, KEY_INTERNAL_RTSP_URL,KEY_STATUS }, KEY_ID + "=?",
+				KEY_EXTERNAL_RTSP_URL, KEY_INTERNAL_RTSP_URL, KEY_STATUS }, KEY_ID + "=?",
 				new String[] { String.valueOf(id) }, null, null, null, null);
 		if (cursor != null)
 		{
@@ -107,21 +107,20 @@ public class DbCamera extends DatabaseMaster
 
 		return evercamCamera;
 	}
-	
+
 	public ArrayList<EvercamCamera> getAllCameras(int maxRecords)
 	{
 		String selectQuery = "SELECT  * FROM " + TABLE_CAMERA + " order by " + KEY_ID + " asc";
-		return selectCameraListByQuery(selectQuery,maxRecords);
+		return selectCameraListByQuery(selectQuery, maxRecords);
 	}
-	
 
 	public ArrayList<EvercamCamera> getCamerasByOwner(String ownerUsername, int maxRecords)
 	{
 		String selectQuery = "SELECT  * FROM " + TABLE_CAMERA + " where upper(" + KEY_OWNER
 				+ ") = upper('" + ownerUsername + "') order by " + KEY_ID + " asc";
-		return selectCameraListByQuery(selectQuery,maxRecords);
+		return selectCameraListByQuery(selectQuery, maxRecords);
 	}
-	
+
 	public int updateCamera(EvercamCamera evercamCamera)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -132,14 +131,15 @@ public class DbCamera extends DatabaseMaster
 		int return_value = db.update(TABLE_CAMERA, values, KEY_ID + " = ?",
 				new String[] { String.valueOf(evercamCamera.getId()) });
 		db.close();
-		
+
 		return return_value;
 	}
-	
+
 	public void deleteCamera(EvercamCamera evercamCamera)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
-		db.delete(TABLE_CAMERA, KEY_ID + " = ?", new String[] { String.valueOf(evercamCamera.getId()) });
+		db.delete(TABLE_CAMERA, KEY_ID + " = ?",
+				new String[] { String.valueOf(evercamCamera.getId()) });
 		db.close();
 	}
 
@@ -172,7 +172,7 @@ public class DbCamera extends DatabaseMaster
 
 		return values;
 	}
-	
+
 	private ArrayList<EvercamCamera> selectCameraListByQuery(String query, int maxRecords)
 	{
 		ArrayList<EvercamCamera> cameraList = new ArrayList<EvercamCamera>();
@@ -209,7 +209,7 @@ public class DbCamera extends DatabaseMaster
 
 		cursor.close();
 		db.close();
-		
+
 		return cameraList;
 	}
 }

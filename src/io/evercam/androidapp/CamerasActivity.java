@@ -155,16 +155,18 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			switch (item.getItemId())
 			{
-			 case R.id.menurefresh: // need to refresh the application
-			 if (refresh != null) refresh
-			 .setActionView(R.layout.actionbar_indeterminate_progress);
-			
-			 LoadCameraListTask loadTask = new LoadCameraListTask(AppData.defaultUser, CamerasActivity.this);
-			 loadTask.reload = true; // be default do not refesh until there is
-			 // any change in cameras in database
-			 loadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			
-			 return true;
+			case R.id.menurefresh: // need to refresh the application
+				if (refresh != null) refresh
+						.setActionView(R.layout.actionbar_indeterminate_progress);
+
+				LoadCameraListTask loadTask = new LoadCameraListTask(AppData.defaultUser,
+						CamerasActivity.this);
+				loadTask.reload = true; // be default do not refesh until there
+										// is
+				// any change in cameras in database
+				loadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+				return true;
 
 			case android.R.id.home:
 				slideMenu.show();
@@ -355,9 +357,9 @@ public class CamerasActivity extends ParentActivity implements
 			{
 				LinearLayout pview = (LinearLayout) camsLineView.getChildAt(i);
 				CameraLayout cameraLayout = (CameraLayout) pview.getChildAt(0); // CameraLayout
-																		// is on
-																		// 0th
-																		// index
+				// is on
+				// 0th
+				// index
 
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -629,8 +631,9 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			try
 			{
-				ArrayAdapter<String> dropdownListAdapter = new ArrayAdapter<String>(CamerasActivity.this,
-						android.R.layout.simple_spinner_dropdown_item, userEmailArray);
+				ArrayAdapter<String> dropdownListAdapter = new ArrayAdapter<String>(
+						CamerasActivity.this, android.R.layout.simple_spinner_dropdown_item,
+						userEmailArray);
 				CamerasActivity.this.getActionBar().setNavigationMode(
 						ActionBar.NAVIGATION_MODE_LIST);
 				OnNavigationListener navigationListener = new OnNavigationListener(){
@@ -652,7 +655,7 @@ public class CamerasActivity extends ParentActivity implements
 							// set selected user's default to true
 							AppUser user = AppData.appUsers.get(itemPosition);
 							user.setIsDefault(true);
-							
+
 							dbUser.updateAppUser(user);
 							AppData.defaultUser = user;
 
