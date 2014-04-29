@@ -60,8 +60,7 @@ import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
 import com.google.analytics.tracking.android.EasyTracker;
 
-public class VideoActivity extends ParentActivity implements
-		SurfaceHolder.Callback,IVideoPlayer
+public class VideoActivity extends ParentActivity implements SurfaceHolder.Callback,IVideoPlayer
 {
 	public static EvercamCamera camera;
 
@@ -553,7 +552,8 @@ public class VideoActivity extends ParentActivity implements
 			// String localURLString = prefix + credentialsPart + localIpPort +
 			// relativeUrlString;
 			String liveURLString = camera.getExternalRtspUrl();
-		//	String localURLString = "rtsp://admin:mehcam@192.168.1.101:9101/h264/ch1/main/av_stream";
+			// String localURLString =
+			// "rtsp://admin:mehcam@192.168.1.101:9101/h264/ch1/main/av_stream";
 
 			if (!localnetworkSettings.equalsIgnoreCase("1"))
 			{
@@ -901,7 +901,7 @@ public class VideoActivity extends ParentActivity implements
 			isFirstImageLiveEnded = false;
 			isFirstImageLocalEnded = false;
 
-			mediaPlayerView.setVisibility(View.GONE); 
+			mediaPlayerView.setVisibility(View.GONE);
 
 			readSetPreferences();
 
@@ -1023,9 +1023,10 @@ public class VideoActivity extends ParentActivity implements
 						}
 						catch (Exception e)
 						{
-							if (Constants.isAppTrackingEnabled) 
-								{BugSenseHandler.sendException(e);
-								}
+							if (Constants.isAppTrackingEnabled)
+							{
+								BugSenseHandler.sendException(e);
+							}
 						}
 					}
 				}).show();
@@ -1219,17 +1220,17 @@ public class VideoActivity extends ParentActivity implements
 					// wait for starting
 					try
 					{
-						while (!startDownloading) 
+						while (!startDownloading)
 						{
 							Thread.sleep(500);
 						}
 					}
 					catch (Exception e)
 					{
-						if (Constants.isAppTrackingEnabled) 
-							{
+						if (Constants.isAppTrackingEnabled)
+						{
 							BugSenseHandler.sendException(e);
-							}
+						}
 					}
 
 					if (!paused) // if application is paused, do not send the
@@ -1251,9 +1252,7 @@ public class VideoActivity extends ParentActivity implements
 						{
 							sleepInterval -= intervalAdjustment;
 						}
-
 					}
-
 				}
 				catch (RejectedExecutionException ree)
 				{
@@ -1337,14 +1336,20 @@ public class VideoActivity extends ParentActivity implements
 
 				case EventHandler.MediaPlayerEncounteredError:
 
+					Log.v(TAG, "EventHandler.MediaPlayerEncounteredError");
 					player.loadImageFromCache();
 
-					if (player.mrlPlaying == null && player.isNextMRLValid()) player
-							.restartPlay(player.getNextMRL());
-					else if (player.mrlPlaying != null) player.restartPlay(player.mrlPlaying);
+					if (player.mrlPlaying == null && player.isNextMRLValid())
+					{
+						player.restartPlay(player.getNextMRL());
+					}
+					else if (player.mrlPlaying != null)
+					{
+						player.restartPlay(player.mrlPlaying);
+					}
 					else
 					{
-						player.showToast("Switching to jpeg view.");
+						player.showToast(videoActivity.get().getString(R.string.msg_switch_to_jpg));
 						player.showImagesVideo = true;
 						player.createNewImageThread();
 					}
@@ -1427,8 +1432,7 @@ public class VideoActivity extends ParentActivity implements
 					// if (camera.getUseCredentials())
 					// {
 					response = Commons.getDrawablefromUrlAuthenticated1(url, camera.getUsername(),
-							camera.getPassword(), camera.cookies, 15000);
-
+							camera.getPassword(), camera.cookies, 5000);
 					// }
 					// else
 					// {
@@ -1446,11 +1450,11 @@ public class VideoActivity extends ParentActivity implements
 				}
 				catch (Exception e)
 				{
-					Log.e(TAG, "Exception: " + e.toString() + "\r\n" + "ImageURl=["
-							+ url + "]");
-					if (Constants.isAppTrackingEnabled) 
-						{BugSenseHandler.sendException(e);
-						}
+					Log.e(TAG, "Exception: " + e.toString() + "\r\n" + "ImageURl=[" + url + "]");
+					if (Constants.isAppTrackingEnabled)
+					{
+						BugSenseHandler.sendException(e);
+					}
 					successiveFailureCount++;
 				} finally
 				{
@@ -1491,8 +1495,6 @@ public class VideoActivity extends ParentActivity implements
 							.getActionBar().hide();
 
 					if (showImagesVideo) imageView.setImageDrawable(result);
-
-					if (enableLogs) Log.i(TAG, "image loaded in ivideo");
 
 					hideProgressView();
 
@@ -1546,7 +1548,7 @@ public class VideoActivity extends ParentActivity implements
 			}
 		}
 	}
-	
+
 	private class LoadActiveCamerasTask extends AsyncTask<String, String, String[]>
 	{
 		final ArrayList<EvercamCamera> activeCameras = new ArrayList<EvercamCamera>();
