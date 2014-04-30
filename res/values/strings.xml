@@ -16,7 +16,7 @@
 -->
 <resources>
 
-    <string name="app_name">Evercam.io</string>
+    <string name="app_name">Evercam Play</string>
     <string name="empty" />
     <string name="current_video_path" />
     <string name="menu_refresh">Refresh</string>
