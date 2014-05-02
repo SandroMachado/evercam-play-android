@@ -1403,10 +1403,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				catch (Exception e)
 				{
 					Log.e(TAG, "Exception: " + e.toString() + "\r\n" + "ImageURl=[" + url + "]");
-					if (Constants.isAppTrackingEnabled)
-					{
-						BugSenseHandler.sendException(e);
-					}
+
 					successiveFailureCount++;
 				} finally
 				{

@@ -584,10 +584,7 @@ public class CameraLayout extends LinearLayout
 				}
 				catch (Exception e)
 				{
-					if (Constants.isAppTrackingEnabled)
-					{
-						BugSenseHandler.sendException(e);
-					}
+					Log.e(TAG, e.toString());
 				}
 			}
 			return null;
