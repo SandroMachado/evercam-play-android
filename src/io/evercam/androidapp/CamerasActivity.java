@@ -52,7 +52,7 @@ public class CamerasActivity extends ParentActivity implements
 	public MenuItem refresh;
 
 	private static final String TAG = "evercamapp-CamerasActivity";
-//	private RegisterGCMAlertsServiceTask RegisterTask = null;
+	// private RegisterGCMAlertsServiceTask RegisterTask = null;
 	private SlideMenu slideMenu;
 	private int totalCamerasInGrid = 0;
 	private int slideoutMenuAnimationTime = 255;
@@ -452,7 +452,7 @@ public class CamerasActivity extends ParentActivity implements
 
 			if (this.getActionBar() != null) this.getActionBar().setHomeButtonEnabled(true);
 
-//			startgCMRegisterActions();
+			// startgCMRegisterActions();
 
 			if (refresh != null) refresh.setActionView(null);
 
@@ -485,27 +485,29 @@ public class CamerasActivity extends ParentActivity implements
 	}
 
 	boolean mHandleMessageReceiverRegistered = false;
-//
-//	private final void startgCMRegisterActions()
-//	{
-//		try
-//		{
-//			RegisterTask = new RegisterGCMAlertsServiceTask();
-//			RegisterTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
-//
-//			registerReceiver(mHandleMessageReceiver, new IntentFilter("CambaGCMAlert"));
-//
-//			mHandleMessageReceiverRegistered = true;
-//
-//			Log.i(TAG,
-//					"registerReceiver(mHandleMessageReceiver,new IntentFilter(\"CambaGCMAlert\"));");
-//		}
-//		catch (Exception e)
-//		{
-//			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-//		}
-//
-//	}
+
+	//
+	// private final void startgCMRegisterActions()
+	// {
+	// try
+	// {
+	// RegisterTask = new RegisterGCMAlertsServiceTask();
+	// RegisterTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+	//
+	// registerReceiver(mHandleMessageReceiver, new
+	// IntentFilter("CambaGCMAlert"));
+	//
+	// mHandleMessageReceiverRegistered = true;
+	//
+	// Log.i(TAG,
+	// "registerReceiver(mHandleMessageReceiver,new IntentFilter(\"CambaGCMAlert\"));");
+	// }
+	// catch (Exception e)
+	// {
+	// if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+	// }
+	//
+	// }
 
 	private final void stopGcmRegisterActions()
 	{
@@ -698,112 +700,120 @@ public class CamerasActivity extends ParentActivity implements
 			}
 		}
 	}
-//
-//	private class RegisterGCMAlertsServiceTask extends AsyncTask<String, Void, String>
-//	{
-//		@Override
-//		protected String doInBackground(String... usernames)
-//		{
-//			String message = "";
-//			String TAG = "RegisterTask";
-//			try
-//			{
-//				GCMRegistrar.checkDevice(CamerasActivity.this);
-//				Log.i(TAG, "Device Checked");
-//				GCMRegistrar.checkManifest(CamerasActivity.this);
-//				Log.i(TAG, "Manifest Checked");
-//				String regId = GCMRegistrar.getRegistrationId(CamerasActivity.this); // registration
-//																						// id
-//																						// for
-//																						// this
-//				String AppUserEmail = null;
-//				String AppUserPassword = null;
-//				String Operation = null;
-//				String Manufacturer = null;
-//				String Model = null;
-//				String SerialNo = null;
-//				String ImeiNo = null;
-//				String Fingureprint = null;
-//				String MacAddress = null;
-//				String BlueToothName = null;
-//				String AppVersion = null;
-//
-//				try
-//				{
-//
-//					SharedPreferences sharedPrefs = PreferenceManager
-//							.getDefaultSharedPreferences(CamerasActivity.this);
-//					AppUserEmail = sharedPrefs.getString("AppUserEmail", null);
-//					AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
-//					Operation = "1";
-//					Manufacturer = android.os.Build.MANUFACTURER;
-//					Model = android.os.Build.MODEL;
-//					SerialNo = android.os.Build.SERIAL;
-//					ImeiNo = ((android.telephony.TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE))
-//							.getDeviceId();
-//					Fingureprint = android.os.Build.FINGERPRINT;
-//					WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-//					WifiInfo info = manager.getConnectionInfo();
-//					MacAddress = info.getMacAddress();
-//					BlueToothName = BluetoothAdapter.getDefaultAdapter().getName();
-//					AppVersion = (getPackageManager().getPackageInfo(getPackageName(), 0)).versionName;
-//				}
-//				catch (Exception ee)
-//				{
-//				}
-//
-//				Log.i(TAG, "regId [" + regId + "] ");
-//				// *
-//				if (regId.equals(""))
-//				{ // New Registration on GCM Server
-//					// Automatically registers application on startup.
-//					GCMRegistrar.register(CamerasActivity.this, Constants.GCM_SENDER_ID);
-//					return "Device registered successfully on GCM Server. It will be registered on camba server shortly.";
-//
-//				}
-//				else if (!GCMRegistrar.isRegisteredOnServer(CamerasActivity.this))
-//				{
-//					// if
-//					// (CambaApiManager.registerDeviceForUsername(AppUserEmail,
-//					// AppUserPassword,
-//					// regId, Operation, BlueToothName, Manufacturer, Model,
-//					// SerialNo, ImeiNo,
-//					// Fingureprint, MacAddress, AppVersion))
-//					// {
-//					// return
-//					// "Device successfully registerd on GCM Server and Camba Server.";
-//					// }
-//					// else
-//					// {
-//					// return "Device failed to register on Camba server.";
-//					// }
-//				}
-//				else
-//				{
-//					// CambaApiManager.registerDeviceForUsername(AppUserEmail,
-//					// AppUserPassword, regId,
-//					// Operation, BlueToothName, Manufacturer, Model, SerialNo,
-//					// ImeiNo,
-//					// Fingureprint, MacAddress, AppVersion);
-//					GCMRegistrar.setRegisteredOnServer(CamerasActivity.this, true);
-//
-//					// return
-//					// "Device is already registered on GCM Server with ID ["+regId+"] but was unable to register on camba server.";
-//					return regId;
-//				}
-//			}
-//			catch (Exception e)
-//			{
-//				Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-//				message = e.toString();
-//				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-//			}
-//			catch (Error e)
-//			{
-//				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendExceptionMessage(TAG,
-//						"Error", new Exception(Log.getStackTraceString(e)));
-//			}
-//			return message;
-//		}
-//	}
+	//
+	// private class RegisterGCMAlertsServiceTask extends AsyncTask<String,
+	// Void, String>
+	// {
+	// @Override
+	// protected String doInBackground(String... usernames)
+	// {
+	// String message = "";
+	// String TAG = "RegisterTask";
+	// try
+	// {
+	// GCMRegistrar.checkDevice(CamerasActivity.this);
+	// Log.i(TAG, "Device Checked");
+	// GCMRegistrar.checkManifest(CamerasActivity.this);
+	// Log.i(TAG, "Manifest Checked");
+	// String regId = GCMRegistrar.getRegistrationId(CamerasActivity.this); //
+	// registration
+	// // id
+	// // for
+	// // this
+	// String AppUserEmail = null;
+	// String AppUserPassword = null;
+	// String Operation = null;
+	// String Manufacturer = null;
+	// String Model = null;
+	// String SerialNo = null;
+	// String ImeiNo = null;
+	// String Fingureprint = null;
+	// String MacAddress = null;
+	// String BlueToothName = null;
+	// String AppVersion = null;
+	//
+	// try
+	// {
+	//
+	// SharedPreferences sharedPrefs = PreferenceManager
+	// .getDefaultSharedPreferences(CamerasActivity.this);
+	// AppUserEmail = sharedPrefs.getString("AppUserEmail", null);
+	// AppUserPassword = sharedPrefs.getString("AppUserPassword", null);
+	// Operation = "1";
+	// Manufacturer = android.os.Build.MANUFACTURER;
+	// Model = android.os.Build.MODEL;
+	// SerialNo = android.os.Build.SERIAL;
+	// ImeiNo = ((android.telephony.TelephonyManager)
+	// getSystemService(Context.TELEPHONY_SERVICE))
+	// .getDeviceId();
+	// Fingureprint = android.os.Build.FINGERPRINT;
+	// WifiManager manager = (WifiManager)
+	// getSystemService(Context.WIFI_SERVICE);
+	// WifiInfo info = manager.getConnectionInfo();
+	// MacAddress = info.getMacAddress();
+	// BlueToothName = BluetoothAdapter.getDefaultAdapter().getName();
+	// AppVersion = (getPackageManager().getPackageInfo(getPackageName(),
+	// 0)).versionName;
+	// }
+	// catch (Exception ee)
+	// {
+	// }
+	//
+	// Log.i(TAG, "regId [" + regId + "] ");
+	// // *
+	// if (regId.equals(""))
+	// { // New Registration on GCM Server
+	// // Automatically registers application on startup.
+	// GCMRegistrar.register(CamerasActivity.this, Constants.GCM_SENDER_ID);
+	// return
+	// "Device registered successfully on GCM Server. It will be registered on camba server shortly.";
+	//
+	// }
+	// else if (!GCMRegistrar.isRegisteredOnServer(CamerasActivity.this))
+	// {
+	// // if
+	// // (CambaApiManager.registerDeviceForUsername(AppUserEmail,
+	// // AppUserPassword,
+	// // regId, Operation, BlueToothName, Manufacturer, Model,
+	// // SerialNo, ImeiNo,
+	// // Fingureprint, MacAddress, AppVersion))
+	// // {
+	// // return
+	// // "Device successfully registerd on GCM Server and Camba Server.";
+	// // }
+	// // else
+	// // {
+	// // return "Device failed to register on Camba server.";
+	// // }
+	// }
+	// else
+	// {
+	// // CambaApiManager.registerDeviceForUsername(AppUserEmail,
+	// // AppUserPassword, regId,
+	// // Operation, BlueToothName, Manufacturer, Model, SerialNo,
+	// // ImeiNo,
+	// // Fingureprint, MacAddress, AppVersion);
+	// GCMRegistrar.setRegisteredOnServer(CamerasActivity.this, true);
+	//
+	// // return
+	// //
+	// "Device is already registered on GCM Server with ID ["+regId+"] but was unable to register on camba server.";
+	// return regId;
+	// }
+	// }
+	// catch (Exception e)
+	// {
+	// Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
+	// message = e.toString();
+	// if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+	// }
+	// catch (Error e)
+	// {
+	// if (Constants.isAppTrackingEnabled)
+	// BugSenseHandler.sendExceptionMessage(TAG,
+	// "Error", new Exception(Log.getStackTraceString(e)));
+	// }
+	// return message;
+	// }
+	// }
 }

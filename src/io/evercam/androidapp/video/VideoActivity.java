@@ -522,7 +522,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					mediaUrls.add(localMRL);
 				}
 			}
-			
+
 			if (!localnetworkSettings.equalsIgnoreCase("1"))
 			{
 				MediaURL liveMRL = new MediaURL(liveURLString, false);
@@ -1199,8 +1199,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						DownloadImage tasklive = new DownloadImage();
 
 						if (downloadStartCount - downloadEndCount < 9) tasklive.executeOnExecutor(
-								AsyncTask.THREAD_POOL_EXECUTOR,
-								new String[] { imageLiveCameraURL, imageLiveLocalURL });
+								AsyncTask.THREAD_POOL_EXECUTOR, new String[] { imageLiveCameraURL,
+										imageLiveLocalURL });
 
 						if (downloadStartCount - downloadEndCount > 9 && sleepInterval < 2000)
 						{
@@ -1386,7 +1386,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					downloadStartCount++;
 					if (url == null) url = "http://www.camba.tv/no-image.jpg";
 					myStartImageTime = SystemClock.uptimeMillis();
-
 
 					response = Commons.getDrawablefromUrlAuthenticated1(url, camera.getUsername(),
 							camera.getPassword(), camera.cookies, 5000);

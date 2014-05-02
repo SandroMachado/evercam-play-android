@@ -423,9 +423,9 @@ public class CameraLayout extends LinearLayout
 				if (evercamCamera.loadingStatus == ImageLoadingStatus.not_started)
 				{
 					String internalJpgUrl = evercamCamera.getInternalSnapshotUrl();
-					 liveImageTaskLocal = new DownloadLiveImageTask ();
-					 liveImageTaskLocal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-					 new String[] {internalJpgUrl });
+					liveImageTaskLocal = new DownloadLiveImageTask();
+					liveImageTaskLocal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+							new String[] { internalJpgUrl });
 
 					liveImageTask = new DownloadLiveImageTask();
 
@@ -621,7 +621,8 @@ public class CameraLayout extends LinearLayout
 				{
 					isTaskended = true;
 
-					if (liveImageTask.isTaskended && liveImageTaskLocal.isTaskended
+					if (liveImageTask.isTaskended
+							&& liveImageTaskLocal.isTaskended
 							&& CameraLayout.this.evercamCamera.loadingStatus != ImageLoadingStatus.live_received)
 					{
 						CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_not_received;

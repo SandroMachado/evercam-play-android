@@ -224,7 +224,7 @@ public class EvercamCamera
 	{
 		return "";
 	}
-	
+
 	public boolean isLocal()
 	{
 		return isLocal;
