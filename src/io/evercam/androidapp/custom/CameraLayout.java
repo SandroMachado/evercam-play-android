@@ -335,6 +335,7 @@ public class CameraLayout extends LinearLayout
 	// accordingly
 	private void setlayoutForLiveImageReceived()
 	{
+		evercamCamera.setStatus(CameraStatus.ACTIVE);
 		imageMessage.setVisibility(View.GONE);
 
 		if (cameraRelativeLayout.indexOfChild(loadingAnimation) >= 0)
@@ -421,18 +422,17 @@ public class CameraLayout extends LinearLayout
 
 				if (evercamCamera.loadingStatus == ImageLoadingStatus.not_started)
 				{
-					// liveImageTaskLocal = new DownloadLiveImageTask ();
-					// liveImageTaskLocal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-					// new String[] {
-					// evercamCamera.getLowResSnapshotLocalURLforCameraPlaying()
-					// });
+					String internalJpgUrl = evercamCamera.getInternalSnapshotUrl();
+					 liveImageTaskLocal = new DownloadLiveImageTask ();
+					 liveImageTaskLocal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+					 new String[] {internalJpgUrl });
 
 					liveImageTask = new DownloadLiveImageTask();
 
-					String imageUrl = evercamCamera.getExternalSnapshotUrl();
+					String externalJpgUrl = evercamCamera.getExternalSnapshotUrl();
 
 					liveImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-							new String[] { imageUrl });
+							new String[] { externalJpgUrl });
 				}
 				else if (evercamCamera.loadingStatus == ImageLoadingStatus.live_received)
 				{
@@ -441,9 +441,6 @@ public class CameraLayout extends LinearLayout
 				}
 				else if (evercamCamera.loadingStatus == ImageLoadingStatus.live_not_received)
 				{
-					// latestTask = new DownloadLatestTask();
-					// latestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-					// new Integer[] { evercamCamera.getCameraId() });
 					new DownloadLatestTask(evercamCamera.getCameraId(), CameraLayout.this)
 							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 					setlayoutForNoImageReceived();
@@ -626,22 +623,13 @@ public class CameraLayout extends LinearLayout
 				synchronized (this)
 				{
 					isTaskended = true;
-					// if (liveImageTask.isTaskended
-					// && liveImageTaskLocal.isTaskended
-					// && CameraLayout.this.evercamCamera.loadingStatus !=
-					// ImageLoadingStatus.live_received)
-					// CameraLayout.this.evercamCamera.loadingStatus =
-					// ImageLoadingStatus.live_not_received;
-					// if (liveImageTask.isTaskended &&
-					// liveImageTaskLocal.isTaskended) handler
-					// .postDelayed(LoadImageRunnable, 0);
-					//
-					if (liveImageTask.isTaskended
+
+					if (liveImageTask.isTaskended && liveImageTaskLocal.isTaskended
 							&& CameraLayout.this.evercamCamera.loadingStatus != ImageLoadingStatus.live_received)
 					{
 						CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_not_received;
 					}
-					if (liveImageTask.isTaskended)
+					if (liveImageTask.isTaskended && liveImageTaskLocal.isTaskended)
 					{
 						handler.postDelayed(LoadImageRunnable, 0);
 					}

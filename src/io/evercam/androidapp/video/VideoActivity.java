@@ -510,51 +510,19 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					|| !(url.startsWith("http://") || url.startsWith("https://")
 							|| url.startsWith("rtsp://") || url.startsWith("tcp://"))) return;
 
-			String username = cam.getUsername();
-			String password = cam.getPassword();
-			// String credentialsPart = "";
-			//
-			// if (username != null && password != null &&
-			// username.trim().length() > 0
-			// && password.trim().length() > 0 &&
-			// !username.equalsIgnoreCase("null")
-			// && !password.equals("null")) credentialsPart = username + ":" +
-			// password + "@";
-			//
-			// String prefix = url.substring(0, url.indexOf("//") + 2);
-			// String relativeUrlString = url.substring(url.indexOf("/",
-			// prefix.length()));
-			// String hostPort = url.substring(prefix.length(),
-			// url.length() - relativeUrlString.length());
-			// if (hostPort.contains("@")) hostPort =
-			// hostPort.substring(hostPort.indexOf("@") + 1);
-			// if (hostPort.startsWith("www.")) hostPort.substring(4);
-
-			// String localIpPort = "";
-			// if (cam.getLocalIpPort() != null)
-			// {
-			// localIpPort = cam.getLocalIpPort().substring(
-			// 0,
-			// (cam.getLocalIpPort().contains(":") ?
-			// cam.getLocalIpPort().indexOf(":")
-			// : cam.getLocalIpPort().length()));
-			// if (cam.getRtspPort() != null && prefix.startsWith("rtsp://"))
-			// localIpPort += ":"
-			// + cam.getRtspPort();
-			// else if (hostPort.contains(":")) localIpPort +=
-			// hostPort.substring(hostPort
-			// .indexOf(":"));
-			//
-			// }
-
-			// String liveURLString = prefix + credentialsPart + hostPort +
-			// relativeUrlString;
-			// String localURLString = prefix + credentialsPart + localIpPort +
-			// relativeUrlString;
 			String liveURLString = camera.getExternalRtspUrl();
-			// String localURLString =
-			// "rtsp://admin:mehcam@192.168.1.101:9101/h264/ch1/main/av_stream";
+			String localURLString = camera.getInternalRtspUrl();
 
+			if (!localURLString.isEmpty() && !localnetworkSettings.equalsIgnoreCase("2"))
+			{
+				MediaURL localMRL = new MediaURL(localURLString, true);
+
+				if (!mediaUrls.contains(localMRL))
+				{
+					mediaUrls.add(localMRL);
+				}
+			}
+			
 			if (!localnetworkSettings.equalsIgnoreCase("1"))
 			{
 				MediaURL liveMRL = new MediaURL(liveURLString, false);
@@ -563,20 +531,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					mediaUrls.add(liveMRL);
 				}
 			}
-			//
-			// if (localIpPort != null && localIpPort.length() > 0
-			// && !localnetworkSettings.equalsIgnoreCase("2"))
-			// {
-			// MRLCamba localMRL = new MRLCamba(localURLString, true);
-			// if (!mediaUrls.contains(localMRL)) mediaUrls.add(localMRL);
-			// }
-
 			mrlIndex = 0;
 		}
 		catch (Exception e)
 		{
 		}
-
 	}
 
 	// Loads image from cache. First image gets loaded correctly and hence we
@@ -630,11 +589,18 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 			isLocalNetwork = false;
-			localnetworkSettings = sharedPrefs.getString(
-					"pref_enablocalnetwork" + camera.getCameraId(), "0");
+			String cameraId;
+			if (camera != null)
+			{
+				cameraId = camera.getCameraId();
+			}
+			else
+			{
+				cameraId = "nocamera";
+			}
+			localnetworkSettings = sharedPrefs.getString("pref_enablocalnetwork" + cameraId, "0");
 			if (localnetworkSettings.equalsIgnoreCase("1")) isLocalNetwork = true;
 			else isLocalNetwork = false;
-
 		}
 		catch (OutOfMemoryError e)
 		{
@@ -915,14 +881,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			Log.e(TAG, e.getMessage(), e);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 		}
-	}
-
-	private String getImageUrlToPost()
-	{
-		if (localnetworkSettings.equals("1")) return imageLiveLocalURL;
-		else if (localnetworkSettings.equals("2")) return imageLiveCameraURL;
-		else if (isLocalNetwork) return imageLiveLocalURL;
-		else return imageLiveCameraURL;
 	}
 
 	// when screen gets rotated
@@ -1242,7 +1200,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 						if (downloadStartCount - downloadEndCount < 9) tasklive.executeOnExecutor(
 								AsyncTask.THREAD_POOL_EXECUTOR,
-								new String[] { getImageUrlToPost() });
+								new String[] { imageLiveCameraURL, imageLiveLocalURL });
 
 						if (downloadStartCount - downloadEndCount > 9 && sleepInterval < 2000)
 						{
@@ -1429,16 +1387,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					if (url == null) url = "http://www.camba.tv/no-image.jpg";
 					myStartImageTime = SystemClock.uptimeMillis();
 
-					// if (camera.getUseCredentials())
-					// {
+
 					response = Commons.getDrawablefromUrlAuthenticated1(url, camera.getUsername(),
 							camera.getPassword(), camera.cookies, 5000);
-					// }
-					// else
-					// {
-					// URL url = new URL(url1);
-					// response = Commons.DownlaodDrawableSync(url, 15000);
-					// }
+
 					if (response != null) successiveFailureCount = 0;
 				}
 				catch (OutOfMemoryError e)

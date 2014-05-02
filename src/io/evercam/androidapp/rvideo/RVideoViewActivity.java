@@ -450,8 +450,6 @@ public class RVideoViewActivity extends ParentActivity
 		{
 			super.onCreate(savedInstanceState);
 
-			Log.i("sajjadpp", "onCreate called");
-
 			if (Constants.isAppTrackingEnabled) if (Constants.isAppTrackingEnabled) BugSenseHandler
 					.initAndStartSession(this, Constants.bugsense_ApiKey);
 
@@ -857,9 +855,7 @@ public class RVideoViewActivity extends ParentActivity
 		try
 		{
 			super.onRestart();
-			Log.i("sajjadpp", "onRestart called");
 
-			if (enableLogs) Log.i(TAG, "onRestart called");
 			if (optionsActivityStarted)
 			{
 
@@ -948,9 +944,7 @@ public class RVideoViewActivity extends ParentActivity
 		try
 		{
 			super.onPause();
-			Log.i("sajjadpp", "onPause called");
 
-			if (enableLogs) Log.i(TAG, "onPause called");
 			isFirstImageLiveReceived = false;
 			isFirstImageLocalReceived = false;
 			isFirstImageLiveEnded = false;
@@ -998,8 +992,7 @@ public class RVideoViewActivity extends ParentActivity
 		try
 		{
 			super.onStop();
-			Log.i("sajjadpp", "onStop called");
-			if (enableLogs) Log.i(TAG, "onStop called");
+
 			isFirstImageLiveReceived = false;
 			isFirstImageLocalReceived = false;
 			isFirstImageLiveEnded = false;
@@ -1286,7 +1279,7 @@ public class RVideoViewActivity extends ParentActivity
 					// c.set(Calendar.DAY_OF_MONTH,
 					// dpRecordingDate.getDayOfMonth());
 					// c.set(Calendar.HOUR_OF_DAY,
-					// tpRecordingTime.getCurrentHour());
+					// tpRecordingTime.getCurrentHour());\
 					// c.set(Calendar.MINUTE,
 					// tpRecordingTime.getCurrentMinute());
 					// c.set(Calendar.SECOND, 0);

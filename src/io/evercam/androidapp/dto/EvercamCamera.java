@@ -30,6 +30,7 @@ public class EvercamCamera
 	private String externalRtspUrl = "";
 	private String internalRtspUrl = "";
 	private String status = "";
+	private boolean isLocal = false;
 
 	public EvercamCamera()
 	{
@@ -52,7 +53,7 @@ public class EvercamCamera
 			externalSnapshotUrl = camera.getExternalJpgUrl();
 			internalSnapshotUrl = camera.getInternalJpgUrl();
 			externalRtspUrl = camera.getExternalRtspUrlWithCredential();
-			internalRtspUrl = camera.getExternalRtspUrlWithCredential();
+			internalRtspUrl = camera.getInternalRtspUrlWithCredential();
 			if (camera.isOnline())
 			{
 				status = CameraStatus.ACTIVE;
@@ -222,6 +223,16 @@ public class EvercamCamera
 	public String getCode()
 	{
 		return "";
+	}
+	
+	public boolean isLocal()
+	{
+		return isLocal;
+	}
+
+	public void setLocal(boolean isLocal)
+	{
+		this.isLocal = isLocal;
 	}
 
 	@Override
