@@ -121,61 +121,17 @@ public class CameraLayout extends LinearLayout
 				@Override
 				public void onClick(View v)
 				{
-					AlertDialog.Builder builder = UIUtils
-							.GetAlertDialogBuilderNoTitle(CameraLayout.this.context);
-					final View layout = ((CamerasActivity) CameraLayout.this.context)
-							.getLayoutInflater().inflate(
-									R.layout.cameralayout_dialog_liverecordingview, null);
-
-					builder.setView(layout);
-					builder.setNegativeButton(R.string.cancel,
-							new DialogInterface.OnClickListener(){
-								@Override
-								public void onClick(DialogInterface dialog, int which)
-								{
-									dialog.cancel();
-								}
-							});
-
-					final AlertDialog dialog = builder.create();
-
-					Button btnLive = (Button) layout
-							.findViewById(R.id.cameralayout_dialog_btn_live);
-					btnLive.setEnabled(true);
-					btnLive.getCompoundDrawables()[0].setAlpha(255);
-
-					if (evercamCamera.getStatus().equalsIgnoreCase(CameraStatus.OFFLINE))
+					if(evercamCamera.getStatus().equalsIgnoreCase(CameraStatus.OFFLINE))
 					{
-						btnLive.setText(CameraStatus.OFFLINE);
-
-						btnLive.setEnabled(false);
-						btnLive.getCompoundDrawables()[0].setAlpha(100);
-
+						Toast toast = Toast.makeText(CameraLayout.this.context, R.string.msg_camera_offline, Toast.LENGTH_SHORT);
+						toast.setGravity(Gravity.CENTER, 0, 0);
+						toast.show();
 					}
-
-					btnLive.setOnClickListener(new OnClickListener(){
-						@Override
-						public void onClick(View v)
-						{
-							VideoActivity.startPlayingVideoForCamera(CameraLayout.this.context,
-									evercamCamera.getCameraId());
-							dialog.cancel();
-						}
-					});
-					//
-					// Button btnRecorded = (Button) layout
-					// .findViewById(R.id.cameralayout_dialog_btn_recored);
-					// btnRecorded.setOnClickListener(new OnClickListener(){
-					// @Override
-					// public void onClick(View v)
-					// {
-					// RVideoViewActivity.StartPlayingVIdeo(CameraLayout.this.context,
-					// evercamCamera, null);
-					// dialog.cancel();
-					// }
-					// });
-					//
-					dialog.show();
+					else
+					{
+						VideoActivity.startPlayingVideoForCamera(CameraLayout.this.context,
+								evercamCamera.getCameraId());
+					}
 				}
 			});
 
