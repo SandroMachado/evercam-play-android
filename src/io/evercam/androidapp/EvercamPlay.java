@@ -9,7 +9,7 @@ import android.app.Application;
 // not used
 formUri = "http://www.bugsense.com/api/acra?api_key="
 		+ io.evercam.androidapp.utils.Constants.bugsense_ApiKey)
-public class EvercamApp extends Application
+public class EvercamPlay extends Application
 {
 
 	@Override

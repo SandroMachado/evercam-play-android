@@ -45,7 +45,7 @@
         <item name="android:background">@color/slidemenu_listitem_background_color</item>
         <item name="android:titleTextStyle">@style/ActionBarTitle</item>
         -->
-        <item name="android:icon">@drawable/icon_192x192</item>
+        <item name="android:icon">@drawable/evercam_play_192x192</item>
         <item name="android:horizontalSpacing">15sp</item>
     </style>
     <!-- <item name="android:background">#ffffff</item> -->

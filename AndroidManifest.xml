@@ -50,8 +50,8 @@
 
     <!-- Main activity. -->
     <application
-        android:name="EvercamApp"
-        android:icon="@drawable/icon_192x192"
+        android:name="EvercamPlay"
+        android:icon="@drawable/evercam_play_192x192"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/AppTheme" > <!-- Theme.Black.NoTitleBar previsou value -->

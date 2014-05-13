@@ -61,7 +61,7 @@ public class AboutDialog extends Activity
 			});
 
 			ImageView iconImageView = (ImageView) this.findViewById(R.id.ivshowlogoabout);
-			iconImageView.setImageResource(R.drawable.icon_192x192);
+			iconImageView.setImageResource(R.drawable.evercam_play_192x192);
 
 		}
 		catch (Exception ex)
