@@ -50,10 +50,10 @@
             android:src="@android:drawable/ic_media_pause">
             </ImageButton>
         -s-s>
-    </RelativeLayout>
+    </RelativeLayout>
     -->
 
 </RelativeLayout><!--
  android:background="@drawable/ic_launcher" 
-android:layout_centerInParent="true"
+android:layout_centerInParent="true"
 -->

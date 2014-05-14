@@ -16,7 +16,7 @@
         <!--
             android:background="#ffffff" 
             android:paddingBottom="5dip"
-            android:paddingTop="5dip"
+            android:paddingTop="5dip"
         -->
 
         <io.evercam.androidapp.custom.FlowLayout

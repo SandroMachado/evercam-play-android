@@ -291,7 +291,8 @@ public class CameraLayout extends LinearLayout
 	// accordingly
 	private void setlayoutForLiveImageReceived()
 	{
-		Log.d(TAG, "live image received: " + evercamCamera.getCameraId() + "--camera status: " + evercamCamera.getStatus());
+		Log.d(TAG, "live image received: " + evercamCamera.getCameraId() + "--camera status: "
+				+ evercamCamera.getStatus());
 		evercamCamera.setStatus(CameraStatus.ACTIVE);
 		imageMessage.setVisibility(View.GONE);
 
@@ -310,7 +311,8 @@ public class CameraLayout extends LinearLayout
 	// text accordingly
 	private void setlayoutForCambaImageReceived()
 	{
-		Log.d(TAG, "camba image received: " + evercamCamera.getCameraId() + "--camera status: " + evercamCamera.getStatus());
+		Log.d(TAG, "camba image received: " + evercamCamera.getCameraId() + "--camera status: "
+				+ evercamCamera.getStatus());
 		if (cameraRelativeLayout.indexOfChild(loadingAnimation) >= 0)
 		{
 			loadingAnimation.setVisibility(View.GONE);
@@ -337,7 +339,8 @@ public class CameraLayout extends LinearLayout
 	// appearence and text accordingly
 	private void setlayoutForNoImageReceived()
 	{
-		Log.d(TAG, "no image received: " + evercamCamera.getCameraId() + "--camera status: " + evercamCamera.getStatus());
+		Log.d(TAG, "no image received: " + evercamCamera.getCameraId() + "--camera status: "
+				+ evercamCamera.getStatus());
 		if (cameraRelativeLayout.indexOfChild(loadingAnimation) >= 0)
 		{
 			loadingAnimation.setVisibility(View.GONE);
@@ -463,7 +466,8 @@ public class CameraLayout extends LinearLayout
 					Drawable drawable = null;
 					if (evercamCamera.hasCredential())
 					{
-						Log.d(TAG, "camera has credentials" + evercamCamera.getId() +"try url:" + url);
+						Log.d(TAG, "camera has credentials" + evercamCamera.getId() + "try url:"
+								+ url);
 						drawable = Commons.getDrawablefromUrlAuthenticated1(url,
 								evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
 								15000);

@@ -312,7 +312,8 @@ public class SignUpActivity extends Activity
 
 				dbUser.addAppUser(newUser);
 				AppData.defaultUser = newUser;
-				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(SignUpActivity.this);
+				SharedPreferences sharedPrefs = PreferenceManager
+						.getDefaultSharedPreferences(SignUpActivity.this);
 				PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
 				makeShortToast(R.string.confirmSignUp);
 				showProgress(false);

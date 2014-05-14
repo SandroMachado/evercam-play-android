@@ -48,7 +48,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 			boolean updateDB = false;
 
 			// Step 1: Load camera list from Evercam
-			ArrayList<Camera> cameras = User.getCameras(user.getUsername(),true);
+			ArrayList<Camera> cameras = User.getCameras(user.getUsername(), true);
 			ArrayList<EvercamCamera> evercamCameras = new ArrayList<EvercamCamera>();
 			for (io.evercam.Camera camera : cameras)
 			{

@@ -266,7 +266,7 @@ public class LoginActivity extends ParentActivity
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onRestart()
 	{
@@ -335,7 +335,7 @@ public class LoginActivity extends ParentActivity
 		setResult(loginResultSuccessCode);
 		this.finish();
 	}
-	
+
 	private void setUnderLine()
 	{
 		signUpLink = (TextView) findViewById(R.id.signupLink);
@@ -344,7 +344,7 @@ public class LoginActivity extends ParentActivity
 		spanString.setSpan(new UnderlineSpan(), 0, spanString.length(), 0);
 		signUpLink.setText(spanString);
 	}
-	
+
 	private void showInternetNotConnectDialog()
 	{
 		UIUtils.getNoInternetDialog(this, new DialogInterface.OnClickListener(){

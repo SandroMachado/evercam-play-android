@@ -178,13 +178,12 @@
                 android:layout_width="fill_parent"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="55dp" 
+                android:layout_marginTop="55dp"
                 android:background="@+drawable/signup_btn_selector"
                 android:drawableStart="@drawable/icon_50x50"
                 android:paddingLeft="30sp"
                 android:text="@string/create_account"
-                android:textColor="@+drawable/signup_btn_txt_selector" 
-                />
+                android:textColor="@+drawable/signup_btn_txt_selector" />
         </LinearLayout>
     </ScrollView>
 

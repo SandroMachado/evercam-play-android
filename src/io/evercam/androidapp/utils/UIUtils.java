@@ -79,8 +79,8 @@ public class UIUtils
 		ad.setCanceledOnTouchOutside(false);
 		return ad;
 	}
-	
-	//Alert dialog with single click
+
+	// Alert dialog with single click
 	public static AlertDialog getAlertDialog(Context ctx, String title, String message,
 			DialogInterface.OnClickListener listener)
 	{
@@ -96,7 +96,7 @@ public class UIUtils
 		dialogWithOneButton.closeOptionsMenu();
 		return dialogWithOneButton;
 	}
-	
+
 	public static AlertDialog getNoInternetDialog(final Context context,
 			DialogInterface.OnClickListener negativeistener)
 	{
