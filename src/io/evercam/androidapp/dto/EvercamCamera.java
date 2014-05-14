@@ -1,5 +1,6 @@
 package io.evercam.androidapp.dto;
 
+import io.evercam.Camera;
 import io.evercam.EvercamException;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class EvercamCamera
 
 	private final String TAG = "evercamapp-EvercamCamera";
 
+	public Camera camera = null;
 	private int id = -1;
 	private String cameraId = "";
 	private String name = "";
@@ -39,13 +41,17 @@ public class EvercamCamera
 
 	public EvercamCamera convertFromEvercam(io.evercam.Camera camera)
 	{
+		this.camera = camera;
 		try
 		{
 			cameraId = camera.getId();
 			name = camera.getName();
 			owner = camera.getOwner();
-			username = camera.getCameraUsername();
-			password = camera.getCameraPassword();
+			if (camera.hasCredentials())
+			{
+				username = camera.getCameraUsername();
+				password = camera.getCameraPassword();
+			}
 			timezone = camera.getTimezone();
 			vendor = camera.getVendor();
 			model = camera.getModel();
@@ -233,6 +239,15 @@ public class EvercamCamera
 	public void setLocal(boolean isLocal)
 	{
 		this.isLocal = isLocal;
+	}
+
+	public boolean hasCredential()
+	{
+		if (getUsername().isEmpty() && getPassword().isEmpty())
+		{
+			return false;
+		}
+		return true;
 	}
 
 	@Override

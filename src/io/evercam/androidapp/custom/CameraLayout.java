@@ -1,5 +1,6 @@
 package io.evercam.androidapp.custom;
 
+import io.evercam.Camera;
 import io.evercam.androidapp.dto.*;
 import io.evercam.androidapp.tasks.DownloadLatestTask;
 import io.evercam.androidapp.utils.Commons;
@@ -9,6 +10,7 @@ import io.evercam.androidapp.video.VideoActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import org.apache.http.cookie.Cookie;
 import com.bugsense.trace.BugSenseHandler;
@@ -118,9 +120,10 @@ public class CameraLayout extends LinearLayout
 				@Override
 				public void onClick(View v)
 				{
-					if(evercamCamera.getStatus().equalsIgnoreCase(CameraStatus.OFFLINE))
+					if (evercamCamera.getStatus().equalsIgnoreCase(CameraStatus.OFFLINE))
 					{
-						Toast toast = Toast.makeText(CameraLayout.this.context, R.string.msg_camera_offline, Toast.LENGTH_SHORT);
+						Toast toast = Toast.makeText(CameraLayout.this.context,
+								R.string.msg_camera_offline, Toast.LENGTH_SHORT);
 						toast.setGravity(Gravity.CENTER, 0, 0);
 						toast.show();
 					}
@@ -288,6 +291,7 @@ public class CameraLayout extends LinearLayout
 	// accordingly
 	private void setlayoutForLiveImageReceived()
 	{
+		Log.d(TAG, "live image received: " + evercamCamera.getCameraId() + "--camera status: " + evercamCamera.getStatus());
 		evercamCamera.setStatus(CameraStatus.ACTIVE);
 		imageMessage.setVisibility(View.GONE);
 
@@ -306,6 +310,7 @@ public class CameraLayout extends LinearLayout
 	// text accordingly
 	private void setlayoutForCambaImageReceived()
 	{
+		Log.d(TAG, "camba image received: " + evercamCamera.getCameraId() + "--camera status: " + evercamCamera.getStatus());
 		if (cameraRelativeLayout.indexOfChild(loadingAnimation) >= 0)
 		{
 			loadingAnimation.setVisibility(View.GONE);
@@ -332,6 +337,7 @@ public class CameraLayout extends LinearLayout
 	// appearence and text accordingly
 	private void setlayoutForNoImageReceived()
 	{
+		Log.d(TAG, "no image received: " + evercamCamera.getCameraId() + "--camera status: " + evercamCamera.getStatus());
 		if (cameraRelativeLayout.indexOfChild(loadingAnimation) >= 0)
 		{
 			loadingAnimation.setVisibility(View.GONE);
@@ -454,9 +460,24 @@ public class CameraLayout extends LinearLayout
 				try
 				{
 					ArrayList<Cookie> cookies = new ArrayList<Cookie>();
-					Drawable drawable = Commons.getDrawablefromUrlAuthenticated1(url,
-							evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
-							15000);
+					Drawable drawable = null;
+					if (evercamCamera.hasCredential())
+					{
+						Log.d(TAG, "camera has credentials" + evercamCamera.getId() +"try url:" + url);
+						drawable = Commons.getDrawablefromUrlAuthenticated1(url,
+								evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
+								15000);
+					}
+					else
+					{
+						Log.d(TAG, "camera has no credentials" + evercamCamera.getCameraId());
+						Camera camera = evercamCamera.camera;
+						if (camera != null)
+						{
+							InputStream stream = camera.getSnapshotFromEvercam();
+							drawable = Drawable.createFromStream(stream, "src");
+						}
+					}
 					if (cookies.size() > 0)
 					{
 						evercamCamera.cookies = cookies;
