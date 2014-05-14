@@ -1,6 +1,5 @@
 package io.evercam.androidapp.custom;
 
-import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.dto.*;
 import io.evercam.androidapp.tasks.DownloadLatestTask;
 import io.evercam.androidapp.utils.Commons;
@@ -15,9 +14,7 @@ import org.apache.http.cookie.Cookie;
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Color;
@@ -144,7 +141,7 @@ public class CameraLayout extends LinearLayout
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.GetAlertDialog(context, "Exception", e.toString()).show();
+			UIUtils.getAlertDialog(context, "Exception", e.toString()).show();
 			if (Constants.isAppTrackingEnabled)
 			{
 				BugSenseHandler.sendException(e);

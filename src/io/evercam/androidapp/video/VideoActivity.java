@@ -497,7 +497,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.GetAlertDialog(context, "Exception", e.toString()).show();
+			UIUtils.getAlertDialog(context, "Exception", e.toString()).show();
 		}
 	}
 
@@ -965,7 +965,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 	void showMediaFailureDialog()
 	{
-		UIUtils.GetAlertDialog(VideoActivity.this, "Unable to play",
+		UIUtils.getAlertDialog(VideoActivity.this, "Unable to play",
 				"Please check camera and try again.", new DialogInterface.OnClickListener(){
 
 					@Override
@@ -1013,28 +1013,25 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			try
 			{
-				UIUtils.GetAlertDialog(VideoActivity.this,
-						getString(R.string.msg_network_not_connected),
-						getString(R.string.msg_try_network_again),
-						new DialogInterface.OnClickListener(){
-							@Override
-							public void onClick(DialogInterface dialog, int which)
+				UIUtils.getNoInternetDialog(this, new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						try
+						{
+							paused = true;
+							dialog.dismiss();
+							hideProgressView();
+						}
+						catch (Exception e)
+						{
+							if (Constants.isAppTrackingEnabled)
 							{
-								try
-								{
-									paused = true;
-									dialog.dismiss();
-									hideProgressView();
-								}
-								catch (Exception e)
-								{
-									if (Constants.isAppTrackingEnabled)
-									{
-										BugSenseHandler.sendException(e);
-									}
-								}
+								BugSenseHandler.sendException(e);
 							}
-						}).show();
+						}
+					}
+				}).show();
 				return;
 			}
 			catch (Exception e)

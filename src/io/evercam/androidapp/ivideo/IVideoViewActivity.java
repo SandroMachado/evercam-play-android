@@ -261,7 +261,7 @@ public class IVideoViewActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.GetAlertDialog(context, "Exception", e.toString()).show();// +
+			UIUtils.getAlertDialog(context, "Exception", e.toString()).show();// +
 																				// "::cam.getCameraImageUrl() ["
 																				// +
 																				// cam.getCameraImageUrl()
@@ -286,7 +286,7 @@ public class IVideoViewActivity extends ParentActivity implements
 
 			if (!URLUtil.isValidUrl(imageUrl))
 			{
-				UIUtils.GetAlertDialog(context, "Camera URL Error",
+				UIUtils.getAlertDialog(context, "Camera URL Error",
 						"Invalid camera settings. Please contact camba.tv team.").show();
 				return;
 			}
@@ -336,7 +336,7 @@ public class IVideoViewActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.GetAlertDialog(context, "Exception", e.toString()).show();// +
+			UIUtils.getAlertDialog(context, "Exception", e.toString()).show();// +
 																				// "::cam.getCameraImageUrl() ["
 																				// +
 																				// cam.getCameraImageUrl()
@@ -546,7 +546,7 @@ public class IVideoViewActivity extends ParentActivity implements
 			{
 				try
 				{
-					UIUtils.GetAlertDialog(IVideoViewActivity.this, "Network not available",
+					UIUtils.getAlertDialog(IVideoViewActivity.this, "Network not available",
 							"Please connect to internat and try again",
 							new DialogInterface.OnClickListener(){
 
@@ -1356,7 +1356,7 @@ public class IVideoViewActivity extends ParentActivity implements
 			try
 			{
 				// if(pdLoading.isShowing())pdLoading.dismiss();
-				adLocalNetwork = UIUtils.GetAlertDialog(IVideoViewActivity.this,
+				adLocalNetwork = UIUtils.getAlertDialog(IVideoViewActivity.this,
 						"Stream Not Found",
 						"Camera stream not found. In settings, try turning on/off local network.",
 						new DialogInterface.OnClickListener(){
@@ -1493,7 +1493,7 @@ public class IVideoViewActivity extends ParentActivity implements
 				{
 					isShowingFailureMessage = true;
 					hideProgressView();
-					UIUtils.GetAlertDialog(IVideoViewActivity.this, "Unable to connect",
+					UIUtils.getAlertDialog(IVideoViewActivity.this, "Unable to connect",
 							"Check camera and try again.", new DialogInterface.OnClickListener(){
 
 								@Override

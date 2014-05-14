@@ -51,6 +51,9 @@
 
     <!-- General -->
     <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="notNow">NOT NOW</string>
+    <string name="settings">SETTINGS</string>
 
     <!-- Preferences -->
     <string name="prefs_camera_per_row">Cameras Per Row</string>

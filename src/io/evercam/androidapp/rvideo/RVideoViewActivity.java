@@ -283,7 +283,7 @@ public class RVideoViewActivity extends ParentActivity
 		catch (Exception e)
 		{
 			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.GetAlertDialog(context, "Exception", e.toString()).show();// +
+			UIUtils.getAlertDialog(context, "Exception", e.toString()).show();// +
 																				// "::cam.getCameraImageUrl() ["
 																				// +
 																				// cam.getCameraImageUrl()
@@ -495,7 +495,7 @@ public class RVideoViewActivity extends ParentActivity
 			{
 				try
 				{
-					UIUtils.GetAlertDialog(RVideoViewActivity.this, "Network not available",
+					UIUtils.getAlertDialog(RVideoViewActivity.this, "Network not available",
 							"Please connect to internat and try again",
 							new DialogInterface.OnClickListener(){
 
@@ -1197,7 +1197,7 @@ public class RVideoViewActivity extends ParentActivity
 				{
 					isShowingFailureMessage = true;
 					hideProgressView();
-					UIUtils.GetAlertDialog(RVideoViewActivity.this, "Unable to connect",
+					UIUtils.getAlertDialog(RVideoViewActivity.this, "Unable to connect",
 							"Internet connectivity is lost.",
 							new DialogInterface.OnClickListener(){
 
@@ -1335,7 +1335,7 @@ public class RVideoViewActivity extends ParentActivity
 		{// DownloadImage Live
 			if (!isImageUrlsDownloadStarted)
 
-			UIUtils.GetAlertDialog(RVideoViewActivity.this, "Recordings Unavailable",
+			UIUtils.getAlertDialog(RVideoViewActivity.this, "Recordings Unavailable",
 					"No recordings available for this time.").show();
 		}
 	}

@@ -2,16 +2,12 @@ package io.evercam.androidapp;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
-import android.bluetooth.BluetoothAdapter;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.view.Display;
@@ -39,8 +35,6 @@ import io.evercam.androidapp.utils.UIUtils;
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
 import com.google.analytics.tracking.android.EasyTracker;
-import com.google.android.gcm.GCMRegistrar;
-
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -107,7 +101,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			UIUtils.GetAlertDialog(
+			UIUtils.getAlertDialog(
 					CamerasActivity.this,
 					"Error Occured",
 					Constants.ErrorMessageGeneric + e.toString() + "::"
@@ -178,7 +172,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			UIUtils.GetAlertDialog(
+			UIUtils.getAlertDialog(
 					this,
 					"Error Occured",
 					"Some error occured while saving your options. Technical details are: "
@@ -261,7 +255,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			UIUtils.GetAlertDialog(
+			UIUtils.getAlertDialog(
 					this,
 					"Error Occured",
 					"Some error occured while saving your options. Technical details are: "
@@ -374,7 +368,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.GetAlertDialog(CamerasActivity.this, "Error Occured",
+			UIUtils.getAlertDialog(CamerasActivity.this, "Error Occured",
 					Constants.ErrorMessageGeneric).show();
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 
@@ -401,7 +395,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.GetAlertDialog(CamerasActivity.this, "Error Occured",
+			UIUtils.getAlertDialog(CamerasActivity.this, "Error Occured",
 					Constants.ErrorMessageGeneric).show();
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 
@@ -461,7 +455,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			UIUtils.GetAlertDialog(CamerasActivity.this, "Error Occured",
+			UIUtils.getAlertDialog(CamerasActivity.this, "Error Occured",
 					Constants.ErrorMessageGeneric).show();
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 

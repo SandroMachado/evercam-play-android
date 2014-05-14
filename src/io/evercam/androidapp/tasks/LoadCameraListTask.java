@@ -118,7 +118,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 		{
 			if (!camerasActivity.isFinishing())
 			{
-				UIUtils.GetAlertDialog(camerasActivity, "Error Occured", "",
+				UIUtils.getAlertDialog(camerasActivity, "Error Occured", "",
 						new DialogInterface.OnClickListener(){
 							@Override
 							public void onClick(DialogInterface dialog, int which)

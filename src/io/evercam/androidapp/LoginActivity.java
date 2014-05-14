@@ -8,22 +8,30 @@ import io.evercam.androidapp.R;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.utils.AppData;
+import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.androidapp.utils.PropertyReader;
+import io.evercam.androidapp.utils.UIUtils;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -42,6 +50,7 @@ public class LoginActivity extends ParentActivity
 	private SharedPreferences sharedPrefs;
 	private String TAG = "evercamapp-LoginActivity";
 	private ProgressDialog progressDialog;
+	private TextView signUpLink;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -52,6 +61,7 @@ public class LoginActivity extends ParentActivity
 
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.login);
+		setUnderLine();
 
 		setEvercamDeveloperKeypair();
 
@@ -74,6 +84,23 @@ public class LoginActivity extends ParentActivity
 			}
 		});
 
+		signUpLink.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v)
+			{
+				if (Commons.isOnline(LoginActivity.this))
+				{
+					Intent signupIntent = new Intent();
+					signupIntent.setClass(LoginActivity.this, SignUpActivity.class);
+					startActivity(signupIntent);
+				}
+				else
+				{
+					showInternetNotConnectDialog();
+				}
+			}
+		});
 	}
 
 	public void attemptLogin()
@@ -239,6 +266,37 @@ public class LoginActivity extends ParentActivity
 			}
 		}
 	}
+	
+	@Override
+	protected void onRestart()
+	{
+		super.onRestart();
+		String defaultEmail = PrefsManager.getUserEmail(sharedPrefs);
+		if (defaultEmail != null)
+		{
+			try
+			{
+				DbAppUser dbUser = new DbAppUser(this);
+				AppUser defaultUser;
+				defaultUser = dbUser.getAppUserByEmail(defaultEmail);
+				AppData.defaultUser = defaultUser;
+			}
+			catch (NumberFormatException e)
+			{
+				e.printStackTrace();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		if (AppData.defaultUser != null)
+		{
+			Intent intent = new Intent(this, CamerasActivity.class);
+			startActivity(intent);
+		}
+	}
 
 	private void launchBugsense()
 	{
@@ -276,5 +334,26 @@ public class LoginActivity extends ParentActivity
 	{
 		setResult(loginResultSuccessCode);
 		this.finish();
+	}
+	
+	private void setUnderLine()
+	{
+		signUpLink = (TextView) findViewById(R.id.signupLink);
+		SpannableString spanString = new SpannableString(this.getResources().getString(
+				R.string.create_evercam_account));
+		spanString.setSpan(new UnderlineSpan(), 0, spanString.length(), 0);
+		signUpLink.setText(spanString);
+	}
+	
+	private void showInternetNotConnectDialog()
+	{
+		UIUtils.getNoInternetDialog(this, new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				dialog.dismiss();
+				finish();
+			}
+		}).show();
 	}
 }

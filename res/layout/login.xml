@@ -1,35 +1,95 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dip" >
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".LoginActivity" >
 
-    <EditText
-        android:id="@+id/editUsername"
-        android:layout_width="fill_parent"
+    <!-- Login progress -->
+
+    <LinearLayout
+        android:id="@+id/login_status"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="5dp"
-        android:hint="@string/username"
-        android:inputType="text"
-        android:singleLine="true" />
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone" >
 
-    <EditText
-        android:id="@+id/editPassword"
-        android:layout_width="fill_parent"
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/login_status_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/login_progress_signing_in"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+
+    <!-- Login form -->
+
+    <RelativeLayout
+        android:id="@+id/login_form"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dip"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:singleLine="true" />
+        android:layout_marginBottom="15sp" >
 
-    <!-- Login button -->
+        <LinearLayout
+            style="@style/LoginFormContainer"
+            android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dip"
-        android:text="Login" />
+            <ImageView
+                android:id="@+id/icon_imgview"
+                android:layout_width="180sp"
+                android:layout_height="180sp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="30sp"
+                android:layout_marginTop="20sp"
+                android:src="@+drawable/icon_192x192" />
 
-</LinearLayout>
+            <EditText
+                android:id="@+id/editUsername"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:hint="@string/username"
+                android:inputType="text"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/editPassword"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:singleLine="true" />
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5sp"
+                android:layout_marginRight="5sp"
+                android:layout_marginTop="35dp"
+                android:background="@drawable/btn_selector"
+                android:text="@string/action_sign_in_with_evercam"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/signupLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="@drawable/txt_selector"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+</merge>

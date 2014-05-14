@@ -18,6 +18,8 @@
     <string name="error_password_required">Password required</string>
     <string name="error_field_required">This field is required</string>
     <string name="create_account">Create Account</string>
+    <string name="create_evercam_account">Create Evercam Account</string>
+    <string name="username_too_short">Username is too short</string>
 
     <!-- Sign Up Strings -->
     <string name="login_progress_signing_up">Signing up</string>
@@ -40,6 +42,6 @@
     <string name="invalidEmail">Invalid Email address!</string>
     <string name="passwordNotMatch">Two different password!</string>
     <string name="please_use_username">Please sign in with your Evercam USERNAME, NOT Email address.</string>
-    <string name="confirmSignUp">Congratulations, now you can sign in with your Evercam account.</string>
+    <string name="confirmSignUp">Congratulations, now you are logged in with your Evercam account.</string>
 
 </resources>

@@ -94,7 +94,7 @@ public class ManageAccountsActivity extends ParentActivity
 				final View ed_dialog_layout = getLayoutInflater().inflate(
 						R.layout.manageaccountsactivity_listitemoptions, null);
 
-				final AlertDialog dialog = UIUtils.GetAlertDialogNoTitleNoButton(
+				final AlertDialog dialog = UIUtils.getAlertDialogNoTitleNoButton(
 						ManageAccountsActivity.this, ed_dialog_layout);
 				dialog.show();
 
@@ -335,7 +335,7 @@ public class ManageAccountsActivity extends ParentActivity
 			{
 				if (error != null && error.length() > 0)
 				{
-					UIUtils.GetAlertDialog(ManageAccountsActivity.this, "Error Occured", error);
+					UIUtils.getAlertDialog(ManageAccountsActivity.this, "Error Occured", error);
 				}
 				if (closeActivity) ManageAccountsActivity.this.finish();
 				else new ShowAllAccountsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

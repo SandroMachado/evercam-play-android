@@ -58,7 +58,7 @@ public class MainActivity extends Activity
 		}
 		catch (Exception ex)
 		{
-			UIUtils.GetAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
+			UIUtils.getAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
 			Log.e(TAG, Log.getStackTraceString(ex));
 		}
 	}
@@ -71,17 +71,14 @@ public class MainActivity extends Activity
 			{
 				try
 				{
-					UIUtils.GetAlertDialog(MainActivity.this,
-							getString(R.string.msg_network_not_connected),
-							getString(R.string.msg_try_network_again),
-							new DialogInterface.OnClickListener(){
-								@Override
-								public void onClick(DialogInterface dialog, int which)
-								{
-									dialog.dismiss();
-									MainActivity.this.finish();
-								}
-							}).show();
+					UIUtils.getNoInternetDialog(this, new DialogInterface.OnClickListener(){
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							dialog.dismiss();
+							finish();
+						}
+					}).show();
 					return;
 				}
 				catch (Exception ex)
@@ -114,7 +111,7 @@ public class MainActivity extends Activity
 		}
 		catch (Exception ex)
 		{
-			UIUtils.GetAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
+			UIUtils.getAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
 			Log.e(TAG, Log.getStackTraceString(ex));
 		}
 
@@ -140,7 +137,7 @@ public class MainActivity extends Activity
 		}
 		catch (Exception ex)
 		{
-			UIUtils.GetAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
+			UIUtils.getAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
 			if (Constants.isAppTrackingEnabled)
 			{
 				BugSenseHandler.sendException(ex);
@@ -176,9 +173,9 @@ public class MainActivity extends Activity
 			}
 		}
 
-		Intent i = new Intent(this, CamerasActivity.class);
-		i.putExtra(Constants.GCMNotificationIDString, notificationID);
-		this.startActivity(i);
+		Intent intent = new Intent(this, CamerasActivity.class);
+		intent.putExtra(Constants.GCMNotificationIDString, notificationID);
+		this.startActivity(intent);
 
 		MainActivity.this.finish();
 
@@ -195,7 +192,6 @@ public class MainActivity extends Activity
 			if (Constants.isAppTrackingEnabled)
 			{
 				BugSenseHandler.startSession(this);
-
 			}
 		}
 	}
