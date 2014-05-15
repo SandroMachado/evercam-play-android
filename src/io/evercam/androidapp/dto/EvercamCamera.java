@@ -241,15 +241,6 @@ public class EvercamCamera
 		this.isLocal = isLocal;
 	}
 
-	public boolean hasCredential()
-	{
-		if (getUsername().isEmpty() && getPassword().isEmpty())
-		{
-			return false;
-		}
-		return true;
-	}
-
 	@Override
 	public boolean equals(Object obj)
 	{

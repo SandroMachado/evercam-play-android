@@ -464,9 +464,9 @@ public class CameraLayout extends LinearLayout
 				{
 					ArrayList<Cookie> cookies = new ArrayList<Cookie>();
 					Drawable drawable = null;
-					if (evercamCamera.hasCredential())
+					if (evercamCamera.camera.hasCredentials())
 					{
-						Log.d(TAG, "camera has credentials" + evercamCamera.getId() + "try url:"
+						Log.d(TAG, "camera has credentials" + evercamCamera.getCameraId() + "try url:"
 								+ url);
 						drawable = Commons.getDrawablefromUrlAuthenticated1(url,
 								evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,

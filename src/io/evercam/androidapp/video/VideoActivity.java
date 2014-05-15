@@ -1,5 +1,6 @@
 package io.evercam.androidapp.video;
 
+import io.evercam.EvercamException;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.custom.ProgressView;
 import io.evercam.androidapp.dto.CameraStatus;
@@ -10,6 +11,7 @@ import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.UIUtils;
 
 import java.io.File;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +64,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 
 public class VideoActivity extends ParentActivity implements SurfaceHolder.Callback,IVideoPlayer
 {
-	public static EvercamCamera camera;
+	public static EvercamCamera evercamCamera;
 
 	private final static String TAG = "evercamapp-VideoActivity";
 
@@ -255,7 +257,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			if (optionsActivityStarted)
 			{
 				mrlPlaying = null;
-				setCameraForPlaying(this, camera);
+				setCameraForPlaying(this, evercamCamera);
 
 				createPlayer(getCurrentMRL());
 			}
@@ -434,7 +436,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	{
 		try
 		{
-			camera = evercamCamera;
+			this.evercamCamera = evercamCamera;
 
 			// ***Setting Defaults
 			readSetPreferences();
@@ -475,14 +477,14 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			// .isValidUrl(camera.getLowResolutionSnapshotUrl())) ? camera
 			// .getLowResolutionSnapshotUrl() : camera.getCameraImageUrl());
 
-			imageLiveCameraURL = camera.getExternalSnapshotUrl();
+			imageLiveCameraURL = evercamCamera.getExternalSnapshotUrl();
 
-			imageLiveLocalURL = camera.getInternalSnapshotUrl();
+			imageLiveLocalURL = evercamCamera.getInternalSnapshotUrl();
 
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-			mrlPlaying = sharedPrefs.getString("pref_mrlplaying" + camera.getCameraId(), null);
+			mrlPlaying = sharedPrefs.getString("pref_mrlplaying" + evercamCamera.getCameraId(), null);
 
-			mrlPlaying = camera.getExternalRtspUrl();
+			mrlPlaying = evercamCamera.getExternalRtspUrl();
 			mediaUrls = new ArrayList<MediaURL>();
 			mrlIndex = -1;
 
@@ -510,8 +512,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					|| !(url.startsWith("http://") || url.startsWith("https://")
 							|| url.startsWith("rtsp://") || url.startsWith("tcp://"))) return;
 
-			String liveURLString = camera.getExternalRtspUrl();
-			String localURLString = camera.getInternalRtspUrl();
+			String liveURLString = evercamCamera.getExternalRtspUrl();
+			String localURLString = evercamCamera.getInternalRtspUrl();
 
 			if (!localURLString.isEmpty() && !localnetworkSettings.equalsIgnoreCase("2"))
 			{
@@ -545,8 +547,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		try
 		{
 			imageView.setImageDrawable(null);
-			if (camera == null) return false;
-			String path = this.getCacheDir() + "/" + camera.getCameraId() + ".jpg";
+			if (evercamCamera == null) return false;
+			String path = this.getCacheDir() + "/" + evercamCamera.getCameraId() + ".jpg";
 			if (new File(path).exists())
 			{
 				Drawable result = Drawable.createFromPath(path);
@@ -561,7 +563,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				else
 				{
 					Log.e(TAG, "laodimagefromcache drawable d1 is null. Camera Object is ["
-							+ camera.toString() + "]");
+							+ evercamCamera.toString() + "]");
 				}
 			}
 		}
@@ -590,9 +592,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 			isLocalNetwork = false;
 			String cameraId;
-			if (camera != null)
+			if (evercamCamera != null)
 			{
-				cameraId = camera.getCameraId();
+				cameraId = evercamCamera.getCameraId();
 			}
 			else
 			{
@@ -1321,7 +1323,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							SharedPreferences sharedPrefs = PreferenceManager
 									.getDefaultSharedPreferences(player);
 							SharedPreferences.Editor editor = sharedPrefs.edit();
-							editor.putString("pref_mrlplaying" + camera.getCameraId(),
+							editor.putString("pref_mrlplaying" + evercamCamera.getCameraId(),
 									player.mrlPlaying);
 							editor.commit();
 						}
@@ -1376,37 +1378,65 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			if (!showImagesVideo) return null;
 			Drawable response = null;
-			for (String url : urls)
+			try
 			{
-				try
+				if(evercamCamera.camera.hasCredentials())
 				{
-					downloadStartCount++;
-					if (url == null) url = "http://www.camba.tv/no-image.jpg";
-					myStartImageTime = SystemClock.uptimeMillis();
+					for (String url : urls)
+					{
+						try
+						{
+							downloadStartCount++;
+							if (url == null) url = "http://www.camba.tv/no-image.jpg";
+							myStartImageTime = SystemClock.uptimeMillis();
 
-					response = Commons.getDrawablefromUrlAuthenticated1(url, camera.getUsername(),
-							camera.getPassword(), camera.cookies, 5000);
+							response = Commons.getDrawablefromUrlAuthenticated1(url, evercamCamera.getUsername(),
+									evercamCamera.getPassword(), evercamCamera.cookies, 5000);
 
-					if (response != null) successiveFailureCount = 0;
+							if (response != null) successiveFailureCount = 0;
+						}
+						catch (OutOfMemoryError e)
+						{
+							if (enableLogs) Log.e(TAG,
+									e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+							successiveFailureCount++;
+							return null;
+						}
+						catch (Exception e)
+						{
+							Log.e(TAG, "Exception: " + e.toString() + "\r\n" + "ImageURl=[" + url + "]");
+
+							successiveFailureCount++;
+						} finally
+						{
+							downloadEndCount++;
+						}
+					}
 				}
-				catch (OutOfMemoryError e)
+				else
 				{
-					if (enableLogs) Log.e(TAG,
-							e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-					successiveFailureCount++;
-					return null;
-				}
-				catch (Exception e)
-				{
-					Log.e(TAG, "Exception: " + e.toString() + "\r\n" + "ImageURl=[" + url + "]");
-
-					successiveFailureCount++;
-				} finally
-				{
-					downloadEndCount++;
+					try
+					{
+						InputStream stream = evercamCamera.camera.getSnapshotFromEvercam();
+						response = Drawable.createFromStream(stream, "src");
+						if (response != null) successiveFailureCount = 0;
+					}
+					catch (EvercamException e)
+					{
+						Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
+						successiveFailureCount++;
+					}
+					catch (Exception e)
+					{
+						Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
+						successiveFailureCount++;
+					}
 				}
 			}
-
+			catch (EvercamException e)
+			{
+				e.printStackTrace();
+			}
 			return response;
 		}
 

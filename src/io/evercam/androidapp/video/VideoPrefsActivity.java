@@ -39,9 +39,9 @@ public class VideoPrefsActivity extends PreferenceActivity
 		SharedPreferences sharedprefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		ListPreference prefNetwork = (ListPreference) this.findPreference("pref_enablocalnetwork");
-		prefNetwork.setKey("pref_enablocalnetwork" + VideoActivity.camera.getCameraId());
+		prefNetwork.setKey("pref_enablocalnetwork" + VideoActivity.evercamCamera.getCameraId());
 		prefNetwork.setValue(sharedprefs.getString(
-				"pref_enablocalnetwork" + VideoActivity.camera.getCameraId(), "0"));
+				"pref_enablocalnetwork" + VideoActivity.evercamCamera.getCameraId(), "0"));
 		prefNetwork.setSummary(prefNetwork.getEntry());
 		prefNetwork.setOnPreferenceChangeListener(new ListPreference.OnPreferenceChangeListener(){
 
