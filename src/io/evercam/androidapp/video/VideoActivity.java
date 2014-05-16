@@ -482,7 +482,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			imageLiveLocalURL = evercamCamera.getInternalSnapshotUrl();
 
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-			mrlPlaying = sharedPrefs.getString("pref_mrlplaying" + evercamCamera.getCameraId(), null);
+			mrlPlaying = sharedPrefs.getString("pref_mrlplaying" + evercamCamera.getCameraId(),
+					null);
 
 			mrlPlaying = evercamCamera.getExternalRtspUrl();
 			mediaUrls = new ArrayList<MediaURL>();
@@ -1380,7 +1381,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			Drawable response = null;
 			try
 			{
-				if(evercamCamera.camera.hasCredentials())
+				if (evercamCamera.camera.hasCredentials())
 				{
 					for (String url : urls)
 					{
@@ -1390,8 +1391,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							if (url == null) url = "http://www.camba.tv/no-image.jpg";
 							myStartImageTime = SystemClock.uptimeMillis();
 
-							response = Commons.getDrawablefromUrlAuthenticated1(url, evercamCamera.getUsername(),
-									evercamCamera.getPassword(), evercamCamera.cookies, 5000);
+							response = Commons.getDrawablefromUrlAuthenticated1(url,
+									evercamCamera.getUsername(), evercamCamera.getPassword(),
+									evercamCamera.cookies, 5000);
 
 							if (response != null) successiveFailureCount = 0;
 						}
@@ -1404,7 +1406,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						}
 						catch (Exception e)
 						{
-							Log.e(TAG, "Exception: " + e.toString() + "\r\n" + "ImageURl=[" + url + "]");
+							Log.e(TAG, "Exception: " + e.toString() + "\r\n" + "ImageURl=[" + url
+									+ "]");
 
 							successiveFailureCount++;
 						} finally

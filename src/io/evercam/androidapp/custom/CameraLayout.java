@@ -466,8 +466,8 @@ public class CameraLayout extends LinearLayout
 					Drawable drawable = null;
 					if (evercamCamera.camera.hasCredentials())
 					{
-						Log.d(TAG, "camera has credentials" + evercamCamera.getCameraId() + "try url:"
-								+ url);
+						Log.d(TAG, "camera has credentials" + evercamCamera.getCameraId()
+								+ "try url:" + url);
 						drawable = Commons.getDrawablefromUrlAuthenticated1(url,
 								evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
 								15000);

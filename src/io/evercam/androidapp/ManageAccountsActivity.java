@@ -201,15 +201,19 @@ public class ManageAccountsActivity extends ParentActivity
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
 		}
 	}
-	
-//	Tells that what item has been selected from options. We need to call the relevent code for that item.
+
+	// Tells that what item has been selected from options. We need to call the
+	// relevent code for that item.
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		try{
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		try
+		{
 			// Handle item selection
-			switch (item.getItemId()) {
+			switch (item.getItemId())
+			{
 			case R.id.menu_account_add:
-				showAddEditUserDialogue(null,null,false,false);
+				showAddEditUserDialogue(null, null, false, false);
 				return true;
 			case android.R.id.home:
 				this.finish();
@@ -218,10 +222,10 @@ public class ManageAccountsActivity extends ParentActivity
 				return super.onOptionsItemSelected(item);
 			}
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			if(Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 			return true;
 		}
 	}
