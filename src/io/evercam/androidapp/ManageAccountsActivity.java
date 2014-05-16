@@ -25,6 +25,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -198,6 +199,30 @@ public class ManageAccountsActivity extends ParentActivity
 		{
 			EasyTracker.getInstance().activityStop(this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
+		}
+	}
+	
+//	Tells that what item has been selected from options. We need to call the relevent code for that item.
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		try{
+			// Handle item selection
+			switch (item.getItemId()) {
+			case R.id.menu_account_add:
+				showAddEditUserDialogue(null,null,false,false);
+				return true;
+			case android.R.id.home:
+				this.finish();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+			}
+		}
+		catch(Exception e)
+		{
+			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
+			if(Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+			return true;
 		}
 	}
 
