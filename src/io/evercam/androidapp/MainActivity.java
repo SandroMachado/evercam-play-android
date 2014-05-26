@@ -18,8 +18,6 @@ import android.preference.PreferenceManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
 /*
@@ -44,16 +42,7 @@ public class MainActivity extends Activity
 
 			setContentView(R.layout.mainactivitylayout);
 
-			if (isReleaseNotePageShowed())
-			{
-				startApplication();
-			}
-			else
-			{
-				Intent notesIntent = new Intent(MainActivity.this, ReleaseNotesActivity.class);
-				startActivity(notesIntent);
-				this.finish();
-			}
+			startApplication();
 
 		}
 		catch (Exception ex)
@@ -88,24 +77,14 @@ public class MainActivity extends Activity
 			}
 			else
 			{
-
-				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-				String defaultEmail = PrefsManager.getUserEmail(sharedPrefs);
-				if (defaultEmail != null)
+				if (isUserLogged())
 				{
-					DbAppUser dbUser = new DbAppUser(this);
-					AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
-					AppData.defaultUser = defaultUser;
-				}
-
-				if (AppData.defaultUser == null)
-				{
-					Intent login = new Intent(MainActivity.this, LoginActivity.class);
-					startActivityForResult(login, LoginActivity.loginVerifyRequestCode);
+					startCamerasActivity();
 				}
 				else
 				{
-					startCamerasActivity();
+					Intent slideIntent = new Intent(MainActivity.this, SlideActivity.class);
+					startActivity(slideIntent);
 				}
 			}
 		}
@@ -115,34 +94,6 @@ public class MainActivity extends Activity
 			Log.e(TAG, Log.getStackTraceString(ex));
 		}
 
-	}
-
-	// login activity result. perform the action according to result...
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		try
-		{
-			// Some simple checks to ensure that we are recieving results for
-			// our desired intention and that it was successfull
-			if (requestCode == LoginActivity.loginVerifyRequestCode
-					&& resultCode == LoginActivity.loginResultSuccessCode)
-			{
-				startCamerasActivity();
-			}
-			else
-			{
-				MainActivity.this.finish();
-			}
-		}
-		catch (Exception ex)
-		{
-			UIUtils.getAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
-			if (Constants.isAppTrackingEnabled)
-			{
-				BugSenseHandler.sendException(ex);
-			}
-		}
 	}
 
 	private void startCamerasActivity()
@@ -211,22 +162,18 @@ public class MainActivity extends Activity
 		}
 	}
 
-	private boolean isReleaseNotePageShowed()
+	private boolean isUserLogged() throws Exception
 	{
-		int versionCode = 0;
-		boolean isReleaseNotesShown = false;
-		try
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		String defaultEmail = PrefsManager.getUserEmail(sharedPrefs);
+		if (defaultEmail != null)
 		{
-			PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-			versionCode = packageInfo.versionCode;
-			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-			isReleaseNotesShown = sharedPrefs.getBoolean(
-					this.getString(R.string.is_release_notes_shown) + versionCode, false);
+			DbAppUser dbUser = new DbAppUser(this);
+			AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
+			AppData.defaultUser = defaultUser;
 		}
-		catch (NameNotFoundException e)
-		{
-			Log.e(TAG, e.getMessage());
-		}
-		return ((isReleaseNotesShown && versionCode != 0) ? true : false);
+
+		return (AppData.defaultUser != null);
+
 	}
 }

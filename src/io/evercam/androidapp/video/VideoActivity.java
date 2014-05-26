@@ -436,7 +436,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	{
 		try
 		{
-			this.evercamCamera = evercamCamera;
+			VideoActivity.evercamCamera = evercamCamera;
 
 			// ***Setting Defaults
 			readSetPreferences();

@@ -215,8 +215,8 @@ public class LoginActivity extends ParentActivity
 				dbUser.addAppUser(newUser);
 				AppData.defaultUser = newUser;
 				PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
-				finishLoginActivity();
-
+				
+				startCamerasActivity();
 				// AppData.camesList = new ArrayList<Camera>();
 			}
 			else
@@ -330,12 +330,6 @@ public class LoginActivity extends ParentActivity
 		API.setDeveloperKeyPair(developerAppKey, developerAppID);
 	}
 
-	private void finishLoginActivity()
-	{
-		setResult(loginResultSuccessCode);
-		this.finish();
-	}
-
 	private void setUnderLine()
 	{
 		signUpLink = (TextView) findViewById(R.id.signupLink);
@@ -355,5 +349,24 @@ public class LoginActivity extends ParentActivity
 				finish();
 			}
 		}).show();
+	}
+	
+	private void startCamerasActivity()
+	{
+		if (CamerasActivity.activity != null)
+		{
+			try
+			{
+				CamerasActivity.activity.finish();
+			}
+			catch (Exception e)
+			{
+				Log.e(TAG, e.toString(), e);
+			}
+		}
+
+		Intent intent = new Intent(this, CamerasActivity.class);
+		this.startActivity(intent);
+
 	}
 }

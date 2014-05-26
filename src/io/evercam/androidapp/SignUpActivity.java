@@ -190,6 +190,12 @@ public class SignUpActivity extends Activity
 			focusView = usernameEdit;
 			return null;
 		}
+		else if (username.contains(" "))
+		{
+			usernameEdit.setError(getString(R.string.error_invalid_username));
+			focusView = usernameEdit;
+			return null;
+		}
 		else
 		{
 			user.setUsername(username);

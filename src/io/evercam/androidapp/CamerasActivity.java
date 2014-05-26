@@ -294,6 +294,12 @@ public class CamerasActivity extends ParentActivity implements
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 		}
 	}
+	
+	@Override
+	public void onBackPressed()
+	{
+
+	}
 
 	private void addUsersToDropdownActionBar()
 	{
