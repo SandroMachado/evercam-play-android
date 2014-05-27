@@ -9,17 +9,11 @@ import io.evercam.androidapp.utils.PrefsManager;
 
 import java.util.List;
 
-import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
-import com.google.android.gcm.GCMRegistrar;
 
 public class LogoutTask extends AsyncTask<String, String, String>
 {
