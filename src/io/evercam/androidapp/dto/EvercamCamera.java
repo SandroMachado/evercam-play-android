@@ -2,6 +2,7 @@ package io.evercam.androidapp.dto;
 
 import io.evercam.Camera;
 import io.evercam.EvercamException;
+import io.evercam.androidapp.utils.AppData;
 
 import java.util.ArrayList;
 
@@ -15,9 +16,10 @@ public class EvercamCamera
 	public ArrayList<Cookie> cookies = null;
 
 	private final String TAG = "evercamapp-EvercamCamera";
-
+	private boolean isLocal = false;
 	public Camera camera = null;
 	private int id = -1;
+	
 	private String cameraId = "";
 	private String name = "";
 	private String owner = "";
@@ -32,7 +34,7 @@ public class EvercamCamera
 	private String externalRtspUrl = "";
 	private String internalRtspUrl = "";
 	private String status = "";
-	private boolean isLocal = false;
+	private boolean hasCredentials = false;
 
 	public EvercamCamera()
 	{
@@ -46,9 +48,10 @@ public class EvercamCamera
 		{
 			cameraId = camera.getId();
 			name = camera.getName();
-			owner = camera.getOwner();
+			owner = AppData.defaultUser.getUsername();
 			if (camera.hasCredentials())
 			{
+				hasCredentials = true;
 				username = camera.getCameraUsername();
 				password = camera.getCameraPassword();
 			}
@@ -139,6 +142,16 @@ public class EvercamCamera
 	public String getOwner()
 	{
 		return owner;
+	}
+	
+	public boolean hasCredentials()
+	{
+		return hasCredentials;
+	}
+	
+	public int getHasCredentialsInt()
+	{
+		return hasCredentials()?1:0;
 	}
 
 	public void setCameraId(String cameraId)
@@ -239,6 +252,11 @@ public class EvercamCamera
 	public void setLocal(boolean isLocal)
 	{
 		this.isLocal = isLocal;
+	}
+	
+	public void setHasCredentials(boolean hasCredentials)
+	{
+		this.hasCredentials = hasCredentials;
 	}
 
 	@Override

@@ -3,10 +3,11 @@ package io.evercam.androidapp.dal;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DatabaseMaster extends SQLiteOpenHelper
 {
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 3; //version 2: added camera field :has credential
 	private static final String DATABASE_NAME = "evercamdata";
 	private Context context = null;
 
@@ -27,6 +28,6 @@ public class DatabaseMaster extends SQLiteOpenHelper
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
-
+		
 	}
 }

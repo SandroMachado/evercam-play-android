@@ -14,7 +14,7 @@ import android.util.Log;
 
 public class DbAppUser extends DatabaseMaster
 {
-	private static final String TABLE_APP_USER = "appuser";
+	public static final String TABLE_APP_USER = "appuser";
 	private final String TAG = "evercamapp-DbAppUser";
 
 	// Users Table Columns names
@@ -46,7 +46,6 @@ public class DbAppUser extends DatabaseMaster
 	// Upgrading database
 	public void onUpgradeCustom(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
-
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_APP_USER);
 		onCreateCustom(db);
 	}

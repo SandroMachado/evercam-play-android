@@ -14,7 +14,7 @@ public class DbNotifcation extends DatabaseMaster
 {
 
 	// CameraNotifications table name
-	private static final String TABLE_CameraNotifications = "CameraNotifications";
+	public static final String TABLE_CameraNotifications = "CameraNotifications";
 
 	// CameraNotifications Table Columns names
 	public static final String KEY_ID = "_id";

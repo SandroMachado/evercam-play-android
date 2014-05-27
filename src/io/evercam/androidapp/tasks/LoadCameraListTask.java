@@ -25,7 +25,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 {
 	private AppUser user;
 	private CamerasActivity camerasActivity;
-	private String TAG = "evercamapp-LoadCameraListTask";
+	private String TAG = "evercamplay-LoadCameraListTask";
 	public boolean reload = false;
 
 	public LoadCameraListTask(AppUser user, CamerasActivity camerasActivity)

@@ -10,6 +10,8 @@ import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
+import io.evercam.androidapp.utils.PropertyReader;
+
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeMap;
@@ -59,6 +61,8 @@ public class SignUpActivity extends Activity
 
 		setContentView(R.layout.activity_sign_up);
 
+		setEvercamDeveloperKeypair();
+		
 		initialPage();
 	}
 
@@ -372,5 +376,13 @@ public class SignUpActivity extends Activity
 	{
 		signUpStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 		signUpFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+	}
+	
+	private void setEvercamDeveloperKeypair()
+	{
+		PropertyReader propertyReader = new PropertyReader(getApplicationContext());
+		String developerAppKey = propertyReader.getPropertyStr(PropertyReader.KEY_API_KEY);
+		String developerAppID = propertyReader.getPropertyStr(PropertyReader.KEY_API_ID);
+		API.setDeveloperKeyPair(developerAppKey, developerAppID);
 	}
 }

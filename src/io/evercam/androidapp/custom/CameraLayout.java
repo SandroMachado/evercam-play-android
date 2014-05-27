@@ -464,18 +464,15 @@ public class CameraLayout extends LinearLayout
 				{
 					ArrayList<Cookie> cookies = new ArrayList<Cookie>();
 					Drawable drawable = null;
-					if (evercamCamera.camera.hasCredentials())
+					if (evercamCamera.hasCredentials())
 					{
-						Log.d(TAG, "camera has credentials" + evercamCamera.getCameraId()
-								+ "try url:" + url);
 						drawable = Commons.getDrawablefromUrlAuthenticated1(url,
 								evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
 								15000);
 					}
 					else
 					{
-						Log.d(TAG, "camera has no credentials" + evercamCamera.getCameraId());
-						Camera camera = evercamCamera.camera;
+						Camera camera = Camera.getById(evercamCamera.getCameraId());
 						if (camera != null)
 						{
 							InputStream stream = camera.getSnapshotFromEvercam();
@@ -562,7 +559,7 @@ public class CameraLayout extends LinearLayout
 				}
 				catch (Exception e)
 				{
-					Log.e(TAG, e.toString());
+					Log.e(TAG, "Exception when load urls: " + Log.getStackTraceString(e));
 				}
 			}
 			return null;

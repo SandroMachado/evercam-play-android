@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class DbCamera extends DatabaseMaster
 {
-	private static final String TABLE_CAMERA = "evercamcamera";
+	public static final String TABLE_CAMERA = "evercamcamera";
 
 	public static final String KEY_ID = "id";
 	private final String KEY_CAMERA_ID = "cameraId";
@@ -27,6 +27,7 @@ public class DbCamera extends DatabaseMaster
 	private final String KEY_EXTERNAL_RTSP_URL = "externalRtspUrl";
 	private final String KEY_INTERNAL_RTSP_URL = "internalRtspUrl";
 	private final String KEY_STATUS = "status";
+	private final String KEY_HAS_CREDENTIAL = "hasCredential";
 
 	public DbCamera(Context context)
 	{
@@ -43,7 +44,7 @@ public class DbCamera extends DatabaseMaster
 				+ " TEXT NULL" + "," + KEY_MAC + " TEXT NULL " + "," + KEY_EXTERNAL_JPG_URL
 				+ " TEXT NULL " + "," + KEY_INTERNAL_JPG_URL + " TEXT NULL " + ","
 				+ KEY_EXTERNAL_RTSP_URL + " TEXT NULL" + "," + KEY_INTERNAL_RTSP_URL + " TEXT NULL"
-				+ "," + KEY_STATUS + " TEXT NULL" + "," + "CONSTRAINT uniqueCamAndUser UNIQUE ("
+				+ "," + KEY_STATUS + " TEXT NULL" + ","  + KEY_HAS_CREDENTIAL + " INT NULL" + "," + "CONSTRAINT uniqueCamAndUser UNIQUE ("
 				+ KEY_CAMERA_ID + ")" + ")";
 		db.execSQL(CREATE_TABLE_Cameras);
 	}
@@ -78,7 +79,7 @@ public class DbCamera extends DatabaseMaster
 		Cursor cursor = db.query(TABLE_CAMERA, new String[] { KEY_ID, KEY_CAMERA_ID,
 				KEY_CAMERA_NAME, KEY_OWNER, KEY_USERNAME, KEY_PASSWORD, KEY_TIMEZONE, KEY_VENDOR,
 				KEY_MODEL, KEY_MAC, KEY_EXTERNAL_JPG_URL, KEY_INTERNAL_JPG_URL,
-				KEY_EXTERNAL_RTSP_URL, KEY_INTERNAL_RTSP_URL, KEY_STATUS }, KEY_ID + "=?",
+				KEY_EXTERNAL_RTSP_URL, KEY_INTERNAL_RTSP_URL, KEY_STATUS, KEY_HAS_CREDENTIAL }, KEY_ID + "=?",
 				new String[] { String.valueOf(id) }, null, null, null, null);
 		if (cursor != null)
 		{
@@ -100,6 +101,7 @@ public class DbCamera extends DatabaseMaster
 				evercamCamera.setExternalRtspUrl(cursor.getString(12));
 				evercamCamera.setInternalRtspUrl(cursor.getString(13));
 				evercamCamera.setStatus(cursor.getString(14));
+				evercamCamera.setHasCredentials(cursor.getInt(15)==1);
 			}
 			cursor.close();
 		}
@@ -169,6 +171,7 @@ public class DbCamera extends DatabaseMaster
 		values.put(KEY_EXTERNAL_JPG_URL, evercamCamera.getExternalSnapshotUrl());
 		values.put(KEY_EXTERNAL_RTSP_URL, evercamCamera.getExternalRtspUrl());
 		values.put(KEY_INTERNAL_RTSP_URL, evercamCamera.getInternalRtspUrl());
+		values.put(KEY_HAS_CREDENTIAL, evercamCamera.getHasCredentialsInt());
 
 		return values;
 	}
@@ -201,6 +204,7 @@ public class DbCamera extends DatabaseMaster
 				evercamCamera.setExternalRtspUrl(cursor.getString(12));
 				evercamCamera.setInternalRtspUrl(cursor.getString(13));
 				evercamCamera.setStatus(cursor.getString(14));
+				evercamCamera.setHasCredentials(cursor.getInt(15)==1);
 
 				cameraList.add(evercamCamera);
 				count++;
@@ -212,4 +216,12 @@ public class DbCamera extends DatabaseMaster
 
 		return cameraList;
 	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+	{
+		onUpgradeCustom(db, oldVersion, newVersion);
+	}
+	
+	
 }
