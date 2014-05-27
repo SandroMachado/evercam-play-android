@@ -8,14 +8,14 @@ import io.evercam.UserDetail;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.utils.AppData;
+import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
-import io.evercam.androidapp.utils.PropertyReader;
-
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeMap;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -45,7 +45,6 @@ public class SignUpActivity extends Activity
 	private View signUpFormView;
 	private View signUpStatusView;
 	private CreateUserTask createUserTask;
-	private PropertyReader propertyReader;
 	private View focusView = null;
 
 	@Override
@@ -53,12 +52,9 @@ public class SignUpActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 
-		propertyReader = new PropertyReader(getApplicationContext());
-		// Bug Sense
-		if (propertyReader.isPropertyExist(PropertyReader.KEY_BUG_SENSE))
+		if (Constants.isAppTrackingEnabled)
 		{
-			String bugSenseCode = propertyReader.getPropertyStr(PropertyReader.KEY_BUG_SENSE);
-			BugSenseHandler.initAndStartSession(SignUpActivity.this, bugSenseCode);
+			BugSenseHandler.initAndStartSession(SignUpActivity.this, Constants.bugsense_ApiKey);
 		}
 
 		setContentView(R.layout.activity_sign_up);
@@ -67,23 +63,25 @@ public class SignUpActivity extends Activity
 	}
 
 	@Override
-	protected void onStart()
+	public void onStart()
 	{
 		super.onStart();
 
-		if (propertyReader.isPropertyExist(PropertyReader.KEY_BUG_SENSE))
+		if (Constants.isAppTrackingEnabled)
 		{
+			EasyTracker.getInstance().activityStart(this);
 			BugSenseHandler.startSession(this);
 		}
 	}
 
 	@Override
-	protected void onStop()
+	public void onStop()
 	{
 		super.onStop();
 
-		if (propertyReader.isPropertyExist(PropertyReader.KEY_BUG_SENSE))
+		if (Constants.isAppTrackingEnabled)
 		{
+			EasyTracker.getInstance().activityStop(this);
 			BugSenseHandler.closeSession(this);
 		}
 	}

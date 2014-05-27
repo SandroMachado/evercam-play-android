@@ -1,7 +1,12 @@
 package io.evercam.androidapp;
 
+import io.evercam.androidapp.utils.Constants;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import com.bugsense.trace.BugSenseHandler;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -34,9 +39,38 @@ public class SlideActivity extends Activity implements OnPageChangeListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.indexslide);
 
+		if (Constants.isAppTrackingEnabled)
+		{
+			BugSenseHandler.initAndStartSession(SlideActivity.this, Constants.bugsense_ApiKey);
+		}
+		
 		initSlideView();
 		initDots();
 		initLinks();
+	}
+	
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+
+		if (Constants.isAppTrackingEnabled)
+		{
+			EasyTracker.getInstance().activityStart(this);
+			BugSenseHandler.startSession(this);
+		}
+	}
+
+	@Override
+	public void onStop()
+	{
+		super.onStop();
+
+		if (Constants.isAppTrackingEnabled)
+		{
+			EasyTracker.getInstance().activityStop(this);
+			BugSenseHandler.closeSession(this);
+		}
 	}
 
 	private void initSlideView()

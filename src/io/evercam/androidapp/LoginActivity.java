@@ -62,7 +62,12 @@ public class LoginActivity extends ParentActivity
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.login);
 		setUnderLine();
-
+		
+		if (Constants.isAppTrackingEnabled)
+		{
+			BugSenseHandler.initAndStartSession(LoginActivity.this, Constants.bugsense_ApiKey);
+		}
+		
 		setEvercamDeveloperKeypair();
 
 		Button btnLogin = (Button) findViewById(R.id.btnLogin);
@@ -245,10 +250,7 @@ public class LoginActivity extends ParentActivity
 		if (Constants.isAppTrackingEnabled)
 		{
 			EasyTracker.getInstance().activityStart(this);
-			if (Constants.isAppTrackingEnabled)
-			{
-				BugSenseHandler.startSession(this);
-			}
+			BugSenseHandler.startSession(this);
 		}
 	}
 
@@ -260,10 +262,7 @@ public class LoginActivity extends ParentActivity
 		if (Constants.isAppTrackingEnabled)
 		{
 			EasyTracker.getInstance().activityStop(this);
-			if (Constants.isAppTrackingEnabled)
-			{
-				BugSenseHandler.closeSession(this);
-			}
+			BugSenseHandler.closeSession(this);
 		}
 	}
 
