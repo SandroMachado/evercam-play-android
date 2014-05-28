@@ -189,7 +189,7 @@ public class CamerasActivity extends ParentActivity implements
 	{
 		try
 		{
-			if(slideMenu.isShown())
+			if (slideMenu.isShown())
 			{
 				slideMenu.hide();
 			}
@@ -198,7 +198,7 @@ public class CamerasActivity extends ParentActivity implements
 			{
 			case R.id.slidemenu_logout:
 				logOutUser();
-				
+
 				break;
 
 			case R.id.slidemenu_about:
@@ -298,7 +298,7 @@ public class CamerasActivity extends ParentActivity implements
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 		}
 	}
-	
+
 	@Override
 	public void onBackPressed()
 	{
@@ -579,15 +579,13 @@ public class CamerasActivity extends ParentActivity implements
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
 		}
 	}
-	
-	
+
 	private void logOutUser()
 	{
 		try
 		{
 			// delete saved username and password
-			SharedPreferences sharedPrefs = PreferenceManager
-					.getDefaultSharedPreferences(this);
+			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 			PrefsManager.removeUserEmail(sharedPrefs);
 
 			// clear realtime default app data
@@ -597,7 +595,7 @@ public class CamerasActivity extends ParentActivity implements
 			// delete app user
 			DbAppUser dbUser = new DbAppUser(this);
 			List<AppUser> list = dbUser.getAllAppUsers(10000);
-			
+
 			if (list != null && list.size() > 0)
 			{
 				for (AppUser user : list)
@@ -685,8 +683,8 @@ public class CamerasActivity extends ParentActivity implements
 
 							// load local cameras for default user
 							AppData.evercamCameraList = new DbCamera(CamerasActivity.this)
-									.getCamerasByOwner(user.getUsername(), 500);	
-							
+									.getCamerasByOwner(user.getUsername(), 500);
+
 							removeAllCameraViews();
 							addAllCameraViews(true);
 

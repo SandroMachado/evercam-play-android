@@ -62,7 +62,7 @@ public class SignUpActivity extends Activity
 		setContentView(R.layout.activity_sign_up);
 
 		setEvercamDeveloperKeypair();
-		
+
 		initialPage();
 	}
 
@@ -377,7 +377,7 @@ public class SignUpActivity extends Activity
 		signUpStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 		signUpFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 	}
-	
+
 	private void setEvercamDeveloperKeypair()
 	{
 		PropertyReader propertyReader = new PropertyReader(getApplicationContext());

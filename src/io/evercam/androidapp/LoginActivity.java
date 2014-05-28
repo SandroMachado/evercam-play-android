@@ -62,12 +62,12 @@ public class LoginActivity extends ParentActivity
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.login);
 		setUnderLine();
-		
+
 		if (Constants.isAppTrackingEnabled)
 		{
 			BugSenseHandler.initAndStartSession(LoginActivity.this, Constants.bugsense_ApiKey);
 		}
-		
+
 		setEvercamDeveloperKeypair();
 
 		Button btnLogin = (Button) findViewById(R.id.btnLogin);
@@ -178,7 +178,7 @@ public class LoginActivity extends ParentActivity
 		protected Boolean doInBackground(Void... params)
 		{
 			Log.v(TAG, "login task started");
-			
+
 			try
 			{
 				ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(username, password);
@@ -227,7 +227,7 @@ public class LoginActivity extends ParentActivity
 				dbUser.addAppUser(newUser);
 				AppData.defaultUser = newUser;
 				PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
-				
+
 				startCamerasActivity();
 				// AppData.camesList = new ArrayList<Camera>();
 			}
@@ -356,7 +356,7 @@ public class LoginActivity extends ParentActivity
 			}
 		}).show();
 	}
-	
+
 	private void startCamerasActivity()
 	{
 		if (CamerasActivity.activity != null)

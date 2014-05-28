@@ -30,7 +30,8 @@ public class SlideActivity extends Activity implements OnPageChangeListener
 
 	private List<View> views;
 	private ImageView[] dots;
-	private static final int[] pics = { R.drawable.play_page_intro, R.drawable.play_page_feature, R.drawable.play_page_next };
+	private static final int[] pics = { R.drawable.play_page_intro, R.drawable.play_page_feature,
+			R.drawable.play_page_next };
 	private int currentIndex;
 
 	@Override
@@ -43,12 +44,12 @@ public class SlideActivity extends Activity implements OnPageChangeListener
 		{
 			BugSenseHandler.initAndStartSession(SlideActivity.this, Constants.bugsense_ApiKey);
 		}
-		
+
 		initSlideView();
 		initDots();
 		initLinks();
 	}
-	
+
 	@Override
 	public void onStart()
 	{

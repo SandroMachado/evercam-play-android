@@ -42,7 +42,7 @@ public class LogoutTask extends AsyncTask<String, String, String>
 			// delete app user
 			DbAppUser dbUser = new DbAppUser(cameraActivity);
 			List<AppUser> list = dbUser.getAllAppUsers(10000);
-			
+
 			if (list != null && list.size() > 0)
 			{
 				for (AppUser user : list)

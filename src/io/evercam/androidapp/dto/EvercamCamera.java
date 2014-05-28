@@ -19,7 +19,7 @@ public class EvercamCamera
 	private boolean isLocal = false;
 	public Camera camera = null;
 	private int id = -1;
-	
+
 	private String cameraId = "";
 	private String name = "";
 	private String owner = "";
@@ -143,15 +143,15 @@ public class EvercamCamera
 	{
 		return owner;
 	}
-	
+
 	public boolean hasCredentials()
 	{
 		return hasCredentials;
 	}
-	
+
 	public int getHasCredentialsInt()
 	{
-		return hasCredentials()?1:0;
+		return hasCredentials() ? 1 : 0;
 	}
 
 	public void setCameraId(String cameraId)
@@ -253,7 +253,7 @@ public class EvercamCamera
 	{
 		this.isLocal = isLocal;
 	}
-	
+
 	public void setHasCredentials(boolean hasCredentials)
 	{
 		this.hasCredentials = hasCredentials;

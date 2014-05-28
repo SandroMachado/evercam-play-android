@@ -14,7 +14,7 @@ public class DbCamera extends DatabaseMaster
 {
 	public static final String TABLE_CAMERA = "evercamcamera";
 	public static final String KEY_ID = "id";
-	
+
 	private final String TAG = "evercamplay-DbCamera";
 	private final String KEY_CAMERA_ID = "cameraId";
 	private final String KEY_CAMERA_NAME = "name";
@@ -47,8 +47,8 @@ public class DbCamera extends DatabaseMaster
 				+ " TEXT NULL" + "," + KEY_MAC + " TEXT NULL " + "," + KEY_EXTERNAL_JPG_URL
 				+ " TEXT NULL " + "," + KEY_INTERNAL_JPG_URL + " TEXT NULL " + ","
 				+ KEY_EXTERNAL_RTSP_URL + " TEXT NULL" + "," + KEY_INTERNAL_RTSP_URL + " TEXT NULL"
-				+ "," + KEY_STATUS + " TEXT NULL" + ","  + KEY_HAS_CREDENTIAL + " INT NULL" + "," + "CONSTRAINT uniqueCamAndUser UNIQUE ("
-				+ KEY_CAMERA_ID + ")" + ")";
+				+ "," + KEY_STATUS + " TEXT NULL" + "," + KEY_HAS_CREDENTIAL + " INT NULL" + ","
+				+ "CONSTRAINT uniqueCamAndUser UNIQUE (" + KEY_CAMERA_ID + ")" + ")";
 		db.execSQL(CREATE_TABLE_Cameras);
 	}
 
@@ -82,8 +82,8 @@ public class DbCamera extends DatabaseMaster
 		Cursor cursor = db.query(TABLE_CAMERA, new String[] { KEY_ID, KEY_CAMERA_ID,
 				KEY_CAMERA_NAME, KEY_OWNER, KEY_USERNAME, KEY_PASSWORD, KEY_TIMEZONE, KEY_VENDOR,
 				KEY_MODEL, KEY_MAC, KEY_EXTERNAL_JPG_URL, KEY_INTERNAL_JPG_URL,
-				KEY_EXTERNAL_RTSP_URL, KEY_INTERNAL_RTSP_URL, KEY_STATUS, KEY_HAS_CREDENTIAL }, KEY_ID + "=?",
-				new String[] { String.valueOf(id) }, null, null, null, null);
+				KEY_EXTERNAL_RTSP_URL, KEY_INTERNAL_RTSP_URL, KEY_STATUS, KEY_HAS_CREDENTIAL },
+				KEY_ID + "=?", new String[] { String.valueOf(id) }, null, null, null, null);
 		if (cursor != null)
 		{
 			if (cursor.moveToFirst())
@@ -104,7 +104,7 @@ public class DbCamera extends DatabaseMaster
 				evercamCamera.setExternalRtspUrl(cursor.getString(12));
 				evercamCamera.setInternalRtspUrl(cursor.getString(13));
 				evercamCamera.setStatus(cursor.getString(14));
-				evercamCamera.setHasCredentials(cursor.getInt(15)==1);
+				evercamCamera.setHasCredentials(cursor.getInt(15) == 1);
 			}
 			cursor.close();
 		}
@@ -123,7 +123,7 @@ public class DbCamera extends DatabaseMaster
 	{
 		String selectQuery = "SELECT  * FROM " + TABLE_CAMERA + " where upper(" + KEY_OWNER
 				+ ") = upper('" + ownerUsername + "') order by " + KEY_ID + " asc";
-		
+
 		return selectCameraListByQuery(selectQuery, maxRecords);
 	}
 
@@ -208,7 +208,7 @@ public class DbCamera extends DatabaseMaster
 				evercamCamera.setExternalRtspUrl(cursor.getString(12));
 				evercamCamera.setInternalRtspUrl(cursor.getString(13));
 				evercamCamera.setStatus(cursor.getString(14));
-				evercamCamera.setHasCredentials(cursor.getInt(15)==1);
+				evercamCamera.setHasCredentials(cursor.getInt(15) == 1);
 
 				cameraList.add(evercamCamera);
 				count++;
@@ -226,6 +226,5 @@ public class DbCamera extends DatabaseMaster
 	{
 		onUpgradeCustom(db, oldVersion, newVersion);
 	}
-	
-	
+
 }
