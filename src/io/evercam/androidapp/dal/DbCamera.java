@@ -3,16 +3,19 @@ package io.evercam.androidapp.dal;
 import java.util.ArrayList;
 
 import io.evercam.androidapp.dto.EvercamCamera;
+import io.evercam.androidapp.utils.AppData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class DbCamera extends DatabaseMaster
 {
 	public static final String TABLE_CAMERA = "evercamcamera";
-
 	public static final String KEY_ID = "id";
+	
+	private final String TAG = "evercamplay-DbCamera";
 	private final String KEY_CAMERA_ID = "cameraId";
 	private final String KEY_CAMERA_NAME = "name";
 	private final String KEY_OWNER = "owner";
@@ -120,6 +123,7 @@ public class DbCamera extends DatabaseMaster
 	{
 		String selectQuery = "SELECT  * FROM " + TABLE_CAMERA + " where upper(" + KEY_OWNER
 				+ ") = upper('" + ownerUsername + "') order by " + KEY_ID + " asc";
+		
 		return selectCameraListByQuery(selectQuery, maxRecords);
 	}
 
@@ -158,7 +162,7 @@ public class DbCamera extends DatabaseMaster
 		ContentValues values = new ContentValues();
 
 		values.put(KEY_CAMERA_ID, evercamCamera.getCameraId());
-		values.put(KEY_OWNER, evercamCamera.getOwner());
+		values.put(KEY_OWNER, AppData.defaultUser.getUsername());
 		values.put(KEY_CAMERA_NAME, evercamCamera.getName());
 		values.put(KEY_USERNAME, evercamCamera.getUsername());
 		values.put(KEY_PASSWORD, evercamCamera.getPassword());

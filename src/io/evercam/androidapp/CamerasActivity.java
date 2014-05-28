@@ -625,21 +625,6 @@ public class CamerasActivity extends ParentActivity implements
 				DbAppUser dbUser = new DbAppUser(CamerasActivity.this);
 				AppData.appUsers = dbUser.getAllAppUsers(1000);
 
-				// If it is the first time called when application
-				// has been installed. Then user might be not in
-				// database but in preferences. So we need to add it
-				// to database as well.
-				// AppUser old = dbUser.getAppUser(AppData.AppUserEmail);
-				// if (old == null)
-				// {
-				// AppUser user = new AppUser();
-				// user.setEmail(AppData.AppUserEmail + "");
-				// user.setPassword(AppData.AppUserPassword + "");
-				// user.setApiKey(AppData.cambaApiKey + "");
-				// user.setIsDefault(true);
-				// dbUser.addAppUser(user);
-				// }
-
 				final String[] userEmailArray = new String[AppData.appUsers.size()];
 
 				for (int count = 0; count < AppData.appUsers.size(); count++)
@@ -700,7 +685,7 @@ public class CamerasActivity extends ParentActivity implements
 
 							// load local cameras for default user
 							AppData.evercamCameraList = new DbCamera(CamerasActivity.this)
-									.getCamerasByOwner(user.getUsername(), 500);
+									.getCamerasByOwner(user.getUsername(), 500);	
 							
 							removeAllCameraViews();
 							addAllCameraViews(true);
