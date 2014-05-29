@@ -382,8 +382,9 @@ public class CameraLayout extends LinearLayout
 				{
 					String internalJpgUrl = evercamCamera.getInternalSnapshotUrl();
 					liveImageTaskLocal = new DownloadLiveImageTask();
+
 					liveImageTaskLocal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-							new String[] { internalJpgUrl });
+								new String[] { internalJpgUrl });
 
 					liveImageTask = new DownloadLiveImageTask();
 
@@ -462,9 +463,12 @@ public class CameraLayout extends LinearLayout
 					Drawable drawable = null;
 					if (evercamCamera.hasCredentials())
 					{
+						if(!url.isEmpty())
+						{
 						drawable = Commons.getDrawablefromUrlAuthenticated1(url,
 								evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
 								15000);
+						}
 					}
 					else
 					{
@@ -564,6 +568,10 @@ public class CameraLayout extends LinearLayout
 		@Override
 		protected void onPostExecute(String result)
 		{
+			if(evercamCamera.getCameraId().equals("10555"))
+			{
+				Log.d(TAG, "105 on post");
+			}
 			try
 			{
 				if (result != null && !end)

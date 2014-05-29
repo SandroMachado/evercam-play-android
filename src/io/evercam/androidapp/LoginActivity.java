@@ -163,7 +163,6 @@ public class LoginActivity extends ParentActivity
 		else
 		{
 			showProgressDialog();
-			Log.v(TAG, "before login task started");
 			loginTask = new LoginTask();
 			loginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		}
@@ -177,17 +176,13 @@ public class LoginActivity extends ParentActivity
 		@Override
 		protected Boolean doInBackground(Void... params)
 		{
-			Log.v(TAG, "login task started");
-
 			try
 			{
 				ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(username, password);
 				String userApiKey = userKeyPair.getApiKey();
 				String userApiId = userKeyPair.getApiId();
 				API.setUserKeyPair(userApiKey, userApiId);
-				Log.v(TAG, "key and id done");
 				User evercamUser = new User(username);
-				Log.v(TAG, "got new user");
 				newUser = new AppUser();
 				newUser.setUsername(username);
 				newUser.setPassword(password);
@@ -196,7 +191,6 @@ public class LoginActivity extends ParentActivity
 				newUser.setEmail(evercamUser.getEmail());
 				newUser.setApiKey(userApiKey);
 				newUser.setApiId(userApiId);
-				Log.v(TAG, "new app user done");
 				return true;
 			}
 			catch (EvercamException e)
@@ -210,7 +204,6 @@ public class LoginActivity extends ParentActivity
 		@Override
 		protected void onPostExecute(final Boolean success)
 		{
-			Log.v(TAG, "login task finished");
 			loginTask = null;
 			dismissProgressDialog();
 
