@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseMaster extends SQLiteOpenHelper
 {
-	private static final int DATABASE_VERSION = 3; // version 2: added camera
+	private static final int DATABASE_VERSION = 3; // version 3: added camera
 													// field :has credential
 	private static final String DATABASE_NAME = "evercamdata";
 	private Context context = null;
@@ -28,6 +28,6 @@ public class DatabaseMaster extends SQLiteOpenHelper
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
-
+		new DbCamera(context).onUpgradeCustom(db,oldVersion,newVersion);
 	}
 }

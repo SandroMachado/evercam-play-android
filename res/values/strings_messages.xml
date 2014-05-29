@@ -6,5 +6,6 @@
     <string name="msg_try_again">Please close and try again.</string>
     <string name="msg_switch_to_jpg">Switching to jpeg view.</string>
     <string name="msg_camera_offline">Camera offline!</string>
+    <string name="msg_unable_to_connect">Unable to Connect.</string>
 
 </resources>

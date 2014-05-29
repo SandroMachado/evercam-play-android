@@ -12,10 +12,12 @@ import io.evercam.androidapp.dto.ImageLoadingStatus;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 
 public class DownloadLatestTask extends AsyncTask<Void, Void, String>
 {
+	private final String TAG = "evercamplay-DownloadLatestTask";
 	String cameraId;
 	Context context;
 	CameraLayout cameraLayout;
@@ -93,6 +95,8 @@ public class DownloadLatestTask extends AsyncTask<Void, Void, String>
 			catch (Exception e)
 			{
 			}
+			
+			cameraLayout.handler.postDelayed(cameraLayout.LoadImageRunnable, 0);
 		}
 	}
 

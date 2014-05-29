@@ -220,11 +220,4 @@ public class DbCamera extends DatabaseMaster
 
 		return cameraList;
 	}
-
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-	{
-		onUpgradeCustom(db, oldVersion, newVersion);
-	}
-
 }

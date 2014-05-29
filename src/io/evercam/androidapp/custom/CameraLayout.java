@@ -30,7 +30,7 @@ import android.widget.*;
 
 public class CameraLayout extends LinearLayout
 {
-	private static final String TAG = "evercamapp-CameraLayout";
+	private static final String TAG = "evercamplay-CameraLayout";
 
 	public RelativeLayout cameraRelativeLayout;
 	public Context context;
@@ -49,7 +49,7 @@ public class CameraLayout extends LinearLayout
 
 	// Handler for the handling the next request. It will call the image loading
 	// thread so that it can proceed with next step.
-	private final Handler handler = new Handler();
+	public final Handler handler = new Handler();
 
 	public CameraLayout(Context context, EvercamCamera camera)
 	{
@@ -260,9 +260,6 @@ public class CameraLayout extends LinearLayout
 			end = true;
 			if (liveImageTask != null && liveImageTask.getStatus() != AsyncTask.Status.FINISHED) liveImageTask
 					.cancel(true);
-			// if (latestTask != null && latestTask.getStatus() !=
-			// AsyncTask.Status.FINISHED) latestTask
-			// .cancel(true);
 		}
 		catch (Exception e)
 		{
@@ -276,7 +273,7 @@ public class CameraLayout extends LinearLayout
 		return true;
 	}
 
-	// Image loaded form cache and now set the controls appearence and text
+	// Image loaded form cache and now set the controls appearance and text
 	// accordingly
 	private void setlayoutForImageLoadedFromCache()
 	{
@@ -287,12 +284,10 @@ public class CameraLayout extends LinearLayout
 		}
 	}
 
-	// Image loaded form camera and now set the controls appearence and text
+	// Image loaded form camera and now set the controls appearance and text
 	// accordingly
 	private void setlayoutForLiveImageReceived()
 	{
-		Log.d(TAG, "live image received: " + evercamCamera.getCameraId() + "--camera status: "
-				+ evercamCamera.getStatus());
 		evercamCamera.setStatus(CameraStatus.ACTIVE);
 		imageMessage.setVisibility(View.GONE);
 
@@ -307,12 +302,10 @@ public class CameraLayout extends LinearLayout
 		handler.removeCallbacks(LoadImageRunnable);
 	}
 
-	// Image loaded form camba website and now set the controls appearence and
+	// Image loaded from Evercam and now set the controls appearance and
 	// text accordingly
-	private void setlayoutForCambaImageReceived()
+	private void setlayoutForLatestImageReceived()
 	{
-		Log.d(TAG, "camba image received: " + evercamCamera.getCameraId() + "--camera status: "
-				+ evercamCamera.getStatus());
 		if (cameraRelativeLayout.indexOfChild(loadingAnimation) >= 0)
 		{
 			loadingAnimation.setVisibility(View.GONE);
@@ -320,7 +313,7 @@ public class CameraLayout extends LinearLayout
 		}
 
 		imageMessage.setVisibility(View.VISIBLE);
-		if ((evercamCamera.getStatus() + "").contains("Active"))
+		if ((evercamCamera.getStatus() + "").contains(CameraStatus.ACTIVE))
 		{
 			imageMessage.setText("");
 		}
@@ -335,12 +328,10 @@ public class CameraLayout extends LinearLayout
 		handler.removeCallbacks(LoadImageRunnable);
 	}
 
-	// Image not received form cahce, camba nor camera side. Set the controls
-	// appearence and text accordingly
+	// Image not received form cache, Evercam nor camera side. Set the controls
+	// appearance and text accordingly
 	private void setlayoutForNoImageReceived()
 	{
-		Log.d(TAG, "no image received: " + evercamCamera.getCameraId() + "--camera status: "
-				+ evercamCamera.getStatus());
 		if (cameraRelativeLayout.indexOfChild(loadingAnimation) >= 0)
 		{
 			loadingAnimation.setVisibility(View.GONE);
@@ -364,9 +355,14 @@ public class CameraLayout extends LinearLayout
 			greyImageShown();
 		}
 
-		if ((evercamCamera.getStatus() + "").contains("Active")) imageMessage
-				.setText("Unable to Connect.");
-		else imageMessage.setText(evercamCamera.getStatus() + "");
+		if ((evercamCamera.getStatus() + "").contains(CameraStatus.ACTIVE))
+		{
+			imageMessage.setText(R.string.msg_unable_to_connect);
+		}
+		else
+		{
+			imageMessage.setText(evercamCamera.getStatus() + "");
+		}
 
 		imageMessage.setTextColor(Color.RED);
 
@@ -374,7 +370,7 @@ public class CameraLayout extends LinearLayout
 		handler.removeCallbacks(LoadImageRunnable);
 	}
 
-	private Runnable LoadImageRunnable = new Runnable(){
+	public Runnable LoadImageRunnable = new Runnable(){
 		@Override
 		public void run()
 		{
@@ -409,7 +405,7 @@ public class CameraLayout extends LinearLayout
 				}
 				else if (evercamCamera.loadingStatus == ImageLoadingStatus.camba_image_received)
 				{
-					setlayoutForCambaImageReceived();
+					setlayoutForLatestImageReceived();
 					return;
 				}
 				else if (evercamCamera.loadingStatus == ImageLoadingStatus.camba_not_received)
@@ -559,7 +555,7 @@ public class CameraLayout extends LinearLayout
 				}
 				catch (Exception e)
 				{
-					Log.e(TAG, "Exception when load urls: " + Log.getStackTraceString(e));
+					Log.e(TAG, "Exception when load urls: " + e.getMessage());
 				}
 			}
 			return null;
