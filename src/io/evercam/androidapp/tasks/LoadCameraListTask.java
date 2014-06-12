@@ -48,8 +48,11 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 			boolean updateDB = false;
 
 			// Step 1: Load camera list from Evercam
+			Log.d(TAG, "Step 1: Load camera list from Evercam");
+			// FIXME: Time consuming at this line
 			ArrayList<Camera> cameras = User.getCameras(user.getUsername(), true);
 			ArrayList<EvercamCamera> evercamCameras = new ArrayList<EvercamCamera>();
+
 			for (io.evercam.Camera camera : cameras)
 			{
 				evercamCameras.add(new EvercamCamera().convertFromEvercam(camera));
@@ -57,6 +60,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 
 			// Step 2: Check if any new cameras different from local saved
 			// cameras.
+			Log.d(TAG, "Step 2: Check if any new cameras different from local saved cameras.");
 			for (EvercamCamera camera : evercamCameras)
 			{
 				if (!AppData.evercamCameraList.contains(camera))
@@ -67,6 +71,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 			}
 
 			// Step 3: Check if any local camera no longer exists in Evercam
+			Log.d(TAG, "Step 3: Check if any local camera no longer exists in Evercam");
 			if (!updateDB)
 			{
 				for (EvercamCamera camera : AppData.evercamCameraList)
@@ -80,6 +85,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 			}
 
 			// Step 4: If any different camera, replace all local camera data.
+			Log.d(TAG, "Step 4: If any different camera, replace all local camera data.");
 			if (updateDB)
 			{
 				reload = true;
@@ -106,6 +112,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 	@Override
 	protected void onPostExecute(Boolean success)
 	{
+		Log.d(TAG, "Done");
 		if (success)
 		{
 			if (reload)

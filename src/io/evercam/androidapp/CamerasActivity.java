@@ -46,7 +46,7 @@ public class CamerasActivity extends ParentActivity implements
 	public static CamerasActivity activity = null;
 	public MenuItem refresh;
 
-	private static final String TAG = "evercamapp-CamerasActivity";
+	private static final String TAG = "evercamplay-CamerasActivity";
 
 	private SlideMenu slideMenu;
 	private int totalCamerasInGrid = 0;
@@ -684,8 +684,10 @@ public class CamerasActivity extends ParentActivity implements
 							// load local cameras for default user
 							AppData.evercamCameraList = new DbCamera(CamerasActivity.this)
 									.getCamerasByOwner(user.getUsername(), 500);
-
+							
 							removeAllCameraViews();
+							
+							//FIXME: Time consuming and freeze UI
 							addAllCameraViews(true);
 
 							// start the task for default user to refresh camera

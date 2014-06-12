@@ -447,7 +447,7 @@ public class CameraLayout extends LinearLayout
 		cameraRelativeLayout.getBackground().setAlpha(50);
 	}
 
-	private class DownloadLiveImageTask extends AsyncTask<String, Void, String>
+	private class DownloadLiveImageTask extends AsyncTask<String, Drawable, String>
 	{
 		public boolean isTaskended = false;
 
@@ -491,6 +491,7 @@ public class CameraLayout extends LinearLayout
 						File extfile = new File(extCachePath);
 						if (drawable != null)
 						{
+							this.publishProgress(drawable);
 							Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
 							if (extfile.exists())
 							{
@@ -564,14 +565,61 @@ public class CameraLayout extends LinearLayout
 			}
 			return null;
 		}
+		
+		@Override
+		protected void onProgressUpdate(Drawable... drawables)
+		{
+			try
+			{
+				if (drawables[0] != null && !end)
+				{
+					if (drawables[0] != null && drawables[0].getIntrinsicWidth() > 0
+							&& drawables[0].getIntrinsicHeight() > 0)
+					{
+						cameraRelativeLayout.setBackgroundDrawable(drawables[0]);
+						CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_received;
+					}
+				}
+			}
+			catch (OutOfMemoryError e)
+			{
+				Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+			}
+			catch (Exception e)
+			{
+				Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
+				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+			}
+			try
+			{
+				synchronized (this)
+				{
+					isTaskended = true;
+
+					if (liveImageTask.isTaskended
+							&& liveImageTaskLocal.isTaskended
+							&& CameraLayout.this.evercamCamera.loadingStatus != ImageLoadingStatus.live_received)
+					{
+						CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_not_received;
+					}
+					if (liveImageTask.isTaskended && liveImageTaskLocal.isTaskended)
+					{
+						handler.postDelayed(LoadImageRunnable, 0);
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				if (Constants.isAppTrackingEnabled)
+				{
+					BugSenseHandler.sendException(e);
+				}
+			}
+		}
 
 		@Override
 		protected void onPostExecute(String result)
 		{
-			if(evercamCamera.getCameraId().equals("10555"))
-			{
-				Log.d(TAG, "105 on post");
-			}
 			try
 			{
 				if (result != null && !end)
