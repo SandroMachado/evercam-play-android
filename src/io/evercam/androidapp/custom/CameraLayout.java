@@ -467,7 +467,7 @@ public class CameraLayout extends LinearLayout
 						{
 						drawable = Commons.getDrawablefromUrlAuthenticated1(url,
 								evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
-								15000);
+								5000);
 						}
 					}
 					else
@@ -495,12 +495,16 @@ public class CameraLayout extends LinearLayout
 							Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
 							if (extfile.exists())
 							{
-								extfile.delete();
+								//extfile.delete();
 							}
-							extfile.createNewFile();
-							FileOutputStream fos = new FileOutputStream(extfile);
-							bitmap.compress(CompressFormat.PNG, 0, fos);
-							fos.close();
+							else
+							{
+								extfile.createNewFile();
+								FileOutputStream fos = new FileOutputStream(extfile);
+								bitmap.compress(CompressFormat.PNG, 0, fos);
+								fos.close();
+							}
+
 						}
 					}
 					catch (Exception e)
@@ -518,14 +522,18 @@ public class CameraLayout extends LinearLayout
 
 						if (file.exists())
 						{
-							file.delete();
+							//file.delete();
 						}
-						file.createNewFile();
-						FileOutputStream fos = new FileOutputStream(file);
+						else
+						{
+							file.createNewFile();
+							FileOutputStream fos = new FileOutputStream(file);
 
-						bitmap.compress(CompressFormat.PNG, 0, fos);
+							bitmap.compress(CompressFormat.PNG, 0, fos);
 
-						fos.close();
+							fos.close();
+						}
+
 					}
 
 					if (file.exists() && file.length() > 0)
@@ -628,7 +636,7 @@ public class CameraLayout extends LinearLayout
 					if (drawable != null && drawable.getIntrinsicWidth() > 0
 							&& drawable.getIntrinsicHeight() > 0)
 					{
-						cameraRelativeLayout.setBackgroundDrawable(drawable);
+				//		cameraRelativeLayout.setBackgroundDrawable(drawable);
 						CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_received;
 					}
 				}

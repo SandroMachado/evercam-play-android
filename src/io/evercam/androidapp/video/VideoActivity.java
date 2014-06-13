@@ -1,5 +1,6 @@
 package io.evercam.androidapp.video;
 
+import io.evercam.Camera;
 import io.evercam.EvercamException;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.custom.ProgressView;
@@ -66,7 +67,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 {
 	public static EvercamCamera evercamCamera;
 
-	private final static String TAG = "evercamapp-VideoActivity";
+	private final static String TAG = "evercamplay-VideoActivity";
 
 	private static List<MediaURL> mediaUrls = null;
 	private static int mrlIndex = -1;
@@ -1379,66 +1380,64 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			if (!showImagesVideo) return null;
 			Drawable response = null;
-			try
+			if (evercamCamera.hasCredentials())
 			{
-				if (evercamCamera.camera.hasCredentials())
-				{
-					for (String url : urls)
-					{
-						try
-						{
-							downloadStartCount++;
-							if (url == null) url = "http://www.camba.tv/no-image.jpg";
-							myStartImageTime = SystemClock.uptimeMillis();
-
-							response = Commons.getDrawablefromUrlAuthenticated1(url,
-									evercamCamera.getUsername(), evercamCamera.getPassword(),
-									evercamCamera.cookies, 5000);
-
-							if (response != null) successiveFailureCount = 0;
-						}
-						catch (OutOfMemoryError e)
-						{
-							if (enableLogs) Log.e(TAG,
-									e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-							successiveFailureCount++;
-							return null;
-						}
-						catch (Exception e)
-						{
-							Log.e(TAG, "Exception: " + e.toString() + "\r\n" + "ImageURl=[" + url
-									+ "]");
-
-							successiveFailureCount++;
-						} finally
-						{
-							downloadEndCount++;
-						}
-					}
-				}
-				else
+				Log.d(TAG, "has credentials");
+				for (String url : urls)
 				{
 					try
 					{
-						InputStream stream = evercamCamera.camera.getSnapshotFromEvercam();
-						response = Drawable.createFromStream(stream, "src");
+						downloadStartCount++;
+						if (url == null) url = "http://www.camba.tv/no-image.jpg";
+						myStartImageTime = SystemClock.uptimeMillis();
+
+
+						if(!url.isEmpty())
+						{
+						response = Commons.getDrawablefromUrlAuthenticated1(url,
+								evercamCamera.getUsername(), evercamCamera.getPassword(),
+								evercamCamera.cookies, 5000);
+						}
 						if (response != null) successiveFailureCount = 0;
 					}
-					catch (EvercamException e)
+					catch (OutOfMemoryError e)
 					{
-						Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
+						if (enableLogs) Log.e(TAG,
+								e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
 						successiveFailureCount++;
+						return null;
 					}
 					catch (Exception e)
 					{
-						Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
+						Log.e(TAG, "Exception get camera with auth: " + e.toString() + "\r\n" + "ImageURl=[" + url + "]" + "\r\n" + "CameraDetail=[" + evercamCamera.toString() + "]" );
+
 						successiveFailureCount++;
+					} finally
+					{
+						downloadEndCount++;
 					}
 				}
 			}
-			catch (EvercamException e)
+			else
 			{
-				e.printStackTrace();
+				Log.d(TAG, "has no credentials");
+				try
+				{
+					Camera camera = Camera.getById(evercamCamera.getCameraId());
+					InputStream stream = camera.getSnapshotFromEvercam();
+					response = Drawable.createFromStream(stream, "src");
+					if (response != null) successiveFailureCount = 0;
+				}
+				catch (EvercamException e)
+				{
+					Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
+					successiveFailureCount++;
+				}
+				catch (Exception e)
+				{
+					Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
+					successiveFailureCount++;
+				}
 			}
 			return response;
 		}
@@ -1535,6 +1534,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		@Override
 		protected String[] doInBackground(String... params)
 		{
+			Log.d(TAG, "start loading camera list");
 			ArrayList<String> cameraNames = new ArrayList<String>();
 
 			for (int count = 0; count < AppData.evercamCameraList.size(); count++)

@@ -279,4 +279,17 @@ public class EvercamCamera
 		}
 		return false;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "EvercamCamera [loadingStatus=" + loadingStatus + ", cookies=" + cookies
+				+ ", isLocal=" + isLocal + ", camera=" + camera + ", id=" + id + ", cameraId="
+				+ cameraId + ", name=" + name + ", owner=" + owner + ", username=" + username
+				+ ", password=" + password + ", timezone=" + timezone + ", vendor=" + vendor
+				+ ", model=" + model + ", mac=" + mac + ", externalSnapshotUrl="
+				+ externalSnapshotUrl + ", internalSnapshotUrl=" + internalSnapshotUrl
+				+ ", externalRtspUrl=" + externalRtspUrl + ", internalRtspUrl=" + internalRtspUrl
+				+ ", status=" + status + ", hasCredentials=" + hasCredentials + "]";
+	}
 }
