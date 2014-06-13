@@ -12,7 +12,6 @@ import io.evercam.androidapp.dto.ImageLoadingStatus;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 
 public class DownloadLatestTask extends AsyncTask<Void, Void, String>
