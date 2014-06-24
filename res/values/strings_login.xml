@@ -18,12 +18,11 @@
     <string name="error_password_required">Password required</string>
     <string name="error_field_required">This field is required</string>
     <string name="create_account">Create Account</string>
-    <string name="create_evercam_account">Create Evercam Account</string>
     <string name="username_too_short">Username is too short</string>
 
     <!-- Sign Up Strings -->
     <string name="login_progress_signing_up">Signing up</string>
-    <string name="forename">Forename:</string>
+    <string name="firstname:">Firstname:</string>
     <string name="firstName">First Name</string>
     <string name="lastname:">Lastname:</string>
     <string name="lastName">Last Name</string>

@@ -5,6 +5,8 @@ import io.evercam.ApiKeyPair;
 import io.evercam.EvercamException;
 import io.evercam.User;
 import io.evercam.UserDetail;
+import io.evercam.androidapp.account.AccountUtils;
+import io.evercam.androidapp.account.UserProfile;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.utils.AppData;
@@ -35,6 +37,11 @@ import android.content.SharedPreferences;
 
 public class SignUpActivity extends Activity
 {
+	// Auto filled profiles
+	private String filledFirstname = "";
+	private String filledLastname = "";
+	private String filledEmail = "";
+	
 	private EditText firstnameEdit;
 	private EditText lastnameEdit;
 	private EditText usernameEdit;
@@ -62,7 +69,7 @@ public class SignUpActivity extends Activity
 		setContentView(R.layout.activity_sign_up);
 
 		setEvercamDeveloperKeypair();
-
+		readFromAccount();
 		initialPage();
 	}
 
@@ -102,6 +109,8 @@ public class SignUpActivity extends Activity
 		repasswordEdit = (EditText) findViewById(R.id.repassword_edit);
 		signupBtn = (Button) findViewById(R.id.sign_up_button);
 		countrySpinner = (Spinner) findViewById(R.id.country_spinner);
+		
+		fillDefaultProfile();
 
 		setSpinnerAdapter();
 		signupBtn.setOnClickListener(new OnClickListener(){
@@ -291,7 +300,7 @@ public class SignUpActivity extends Activity
 				set.toArray(new String[0]));
 		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(SignUpActivity.this,
 				android.R.layout.simple_spinner_item, countryArray);
-		spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinnerArrayAdapter.setDropDownViewResource(R.layout.country_spinner);
 		countrySpinner.setAdapter(spinnerArrayAdapter);
 	}
 
@@ -370,6 +379,37 @@ public class SignUpActivity extends Activity
 				return e.getMessage();
 			}
 		}
+	}
+	
+	private void readFromAccount()
+	{
+		UserProfile profile = AccountUtils.getUserProfile(this);
+		if (profile.primaryEmail() != null)
+		{
+			filledEmail = profile.primaryEmail();
+		}
+		else if (profile.possibleEmails().size() > 0)
+		{
+			filledEmail = profile.possibleEmails().get(0);
+		}
+
+		if (profile.possibleNames().size() > 0)
+		{
+			String name = profile.possibleNames().get(0);
+			String[] nameArray = name.split("\\s+");
+			if (nameArray.length >= 2)
+			{
+				filledFirstname = nameArray[0];
+				filledLastname = nameArray[1];
+			}
+		}
+	}
+	
+	private void fillDefaultProfile()
+	{
+		firstnameEdit.setText(filledFirstname);
+		lastnameEdit.setText(filledLastname);
+		emailEdit.setText(filledEmail);
 	}
 
 	private void showProgress(boolean show)

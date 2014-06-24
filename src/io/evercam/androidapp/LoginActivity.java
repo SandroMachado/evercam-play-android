@@ -333,7 +333,7 @@ public class LoginActivity extends ParentActivity
 	{
 		signUpLink = (TextView) findViewById(R.id.signupLink);
 		SpannableString spanString = new SpannableString(this.getResources().getString(
-				R.string.create_evercam_account));
+				R.string.create_account));
 		spanString.setSpan(new UnderlineSpan(), 0, spanString.length(), 0);
 		signUpLink.setText(spanString);
 	}
@@ -366,6 +366,5 @@ public class LoginActivity extends ParentActivity
 
 		Intent intent = new Intent(this, CamerasActivity.class);
 		this.startActivity(intent);
-
 	}
 }
