@@ -33,6 +33,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 
 public class SignUpActivity extends Activity
@@ -41,7 +42,7 @@ public class SignUpActivity extends Activity
 	private String filledFirstname = "";
 	private String filledLastname = "";
 	private String filledEmail = "";
-	
+
 	private EditText firstnameEdit;
 	private EditText lastnameEdit;
 	private EditText usernameEdit;
@@ -109,7 +110,7 @@ public class SignUpActivity extends Activity
 		repasswordEdit = (EditText) findViewById(R.id.repassword_edit);
 		signupBtn = (Button) findViewById(R.id.sign_up_button);
 		countrySpinner = (Spinner) findViewById(R.id.country_spinner);
-		
+
 		fillDefaultProfile();
 
 		setSpinnerAdapter();
@@ -334,7 +335,8 @@ public class SignUpActivity extends Activity
 				PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
 				makeShortToast(R.string.confirmSignUp);
 				showProgress(false);
-				finish();
+				// finish();
+				startActivity(new Intent(SignUpActivity.this, MainActivity.class));
 			}
 			else
 			{
@@ -380,7 +382,7 @@ public class SignUpActivity extends Activity
 			}
 		}
 	}
-	
+
 	private void readFromAccount()
 	{
 		UserProfile profile = AccountUtils.getUserProfile(this);
@@ -404,7 +406,7 @@ public class SignUpActivity extends Activity
 			}
 		}
 	}
-	
+
 	private void fillDefaultProfile()
 	{
 		firstnameEdit.setText(filledFirstname);

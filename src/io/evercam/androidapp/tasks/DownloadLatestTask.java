@@ -94,7 +94,7 @@ public class DownloadLatestTask extends AsyncTask<Void, Void, String>
 			catch (Exception e)
 			{
 			}
-			
+
 			cameraLayout.handler.postDelayed(cameraLayout.LoadImageRunnable, 0);
 		}
 	}

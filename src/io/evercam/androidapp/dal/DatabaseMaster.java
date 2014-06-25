@@ -28,6 +28,6 @@ public class DatabaseMaster extends SQLiteOpenHelper
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
-		new DbCamera(context).onUpgradeCustom(db,oldVersion,newVersion);
+		new DbCamera(context).onUpgradeCustom(db, oldVersion, newVersion);
 	}
 }

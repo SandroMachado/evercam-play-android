@@ -684,10 +684,10 @@ public class CamerasActivity extends ParentActivity implements
 							// load local cameras for default user
 							AppData.evercamCameraList = new DbCamera(CamerasActivity.this)
 									.getCamerasByOwner(user.getUsername(), 500);
-							
+
 							removeAllCameraViews();
-							
-							//FIXME: Time consuming and freeze UI
+
+							// FIXME: Time consuming and freeze UI
 							addAllCameraViews(true);
 
 							// start the task for default user to refresh camera

@@ -1391,12 +1391,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						if (url == null) url = "http://www.camba.tv/no-image.jpg";
 						myStartImageTime = SystemClock.uptimeMillis();
 
-
-						if(!url.isEmpty())
+						if (!url.isEmpty())
 						{
-						response = Commons.getDrawablefromUrlAuthenticated1(url,
-								evercamCamera.getUsername(), evercamCamera.getPassword(),
-								evercamCamera.cookies, 5000);
+							response = Commons.getDrawablefromUrlAuthenticated1(url,
+									evercamCamera.getUsername(), evercamCamera.getPassword(),
+									evercamCamera.cookies, 5000);
 						}
 						if (response != null) successiveFailureCount = 0;
 					}
@@ -1409,7 +1408,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					}
 					catch (Exception e)
 					{
-						Log.e(TAG, "Exception get camera with auth: " + e.toString() + "\r\n" + "ImageURl=[" + url + "]" + "\r\n" + "CameraDetail=[" + evercamCamera.toString() + "]" );
+						Log.e(TAG, "Exception get camera with auth: " + e.toString() + "\r\n"
+								+ "ImageURl=[" + url + "]" + "\r\n" + "CameraDetail=["
+								+ evercamCamera.toString() + "]");
 
 						successiveFailureCount++;
 					} finally
