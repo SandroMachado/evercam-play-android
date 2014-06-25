@@ -335,7 +335,6 @@ public class SignUpActivity extends Activity
 				PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
 				makeShortToast(R.string.confirmSignUp);
 				showProgress(false);
-				// finish();
 				startActivity(new Intent(SignUpActivity.this, MainActivity.class));
 			}
 			else
