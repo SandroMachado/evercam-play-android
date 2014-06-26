@@ -11,7 +11,6 @@ import io.evercam.androidapp.utils.UIUtils;
 import io.evercam.androidapp.video.VideoActivity;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import org.apache.http.cookie.Cookie;
@@ -20,7 +19,6 @@ import io.evercam.androidapp.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -39,7 +37,7 @@ public class CameraLayout extends LinearLayout
 	public EvercamCamera evercamCamera;
 	private DownloadLiveImageTask liveImageTask;
 	private DownloadLiveImageTask liveImageTaskLocal;
-	// private DownloadLatestTask latestTask;
+	private DownloadLatestTask latestTask;
 
 	private boolean end = false; // tells whether application has ended or not.
 									// If it is
@@ -160,8 +158,8 @@ public class CameraLayout extends LinearLayout
 	{
 		try
 		{
-			File cacheFile = EvercamFile.getCacheFile(context, evercamCamera);
-			File externalFile = EvercamFile.getExternalFile(context, evercamCamera);
+			File cacheFile = EvercamFile.getCacheFile(context, evercamCamera.getCameraId());
+			File externalFile = EvercamFile.getExternalFile(context, evercamCamera.getCameraId());
 
 			if (cacheFile.exists() || (externalFile != null && externalFile.exists()))
 			{
@@ -354,6 +352,7 @@ public class CameraLayout extends LinearLayout
 		else
 		{
 			imageMessage.setText(evercamCamera.getStatus() + "");
+			greyImageShown();
 		}
 
 		imageMessage.setTextColor(Color.RED);
@@ -392,8 +391,8 @@ public class CameraLayout extends LinearLayout
 				}
 				else if (evercamCamera.loadingStatus == ImageLoadingStatus.live_not_received)
 				{
-					new DownloadLatestTask(evercamCamera.getCameraId(), CameraLayout.this)
-							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					latestTask = new DownloadLatestTask(evercamCamera.getCameraId(), CameraLayout.this);
+					latestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 					setlayoutForNoImageReceived();
 				}
 				else if (evercamCamera.loadingStatus == ImageLoadingStatus.camba_image_received)
@@ -481,7 +480,7 @@ public class CameraLayout extends LinearLayout
 				}
 				catch (Exception e)
 				{
-					Log.e(TAG, "Exception when load urls: " + e.getMessage());
+					Log.e(TAG, "Error request snapshot: " + e.getMessage());
 				}
 			}
 			return null;
@@ -495,8 +494,13 @@ public class CameraLayout extends LinearLayout
 			{
 				cameraRelativeLayout.setBackgroundDrawable(drawable);
 				CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_received;
-				new SaveImageTask(context, drawable, evercamCamera)
+				
+				if(drawable != null)
+				{
+				Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+				new SaveImageTask(context, bitmap, evercamCamera.getCameraId())
 						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				}
 			}
 
 			try

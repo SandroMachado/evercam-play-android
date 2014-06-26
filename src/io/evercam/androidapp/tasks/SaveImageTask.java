@@ -4,13 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.utils.EvercamFile;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -18,14 +15,14 @@ public class SaveImageTask extends AsyncTask<Void, Void, Void>
 {
 	private final String TAG = "evercamplay-SaveImageTask";
 	private Context context;
-	private Drawable drawable;
-	private EvercamCamera evercamCamera;
+	private Bitmap bitmap;
+	private String cameraId;
 
-	public SaveImageTask(Context context, Drawable drawable, EvercamCamera evercamCamera)
+	public SaveImageTask(Context context, Bitmap bitmap, String cameraId)
 	{
 		this.context = context;
-		this.drawable = drawable;
-		this.evercamCamera = evercamCamera;
+		this.bitmap = bitmap;
+		this.cameraId = cameraId;
 	}
 
 	@Override
@@ -33,22 +30,22 @@ public class SaveImageTask extends AsyncTask<Void, Void, Void>
 	{
 		try
 		{
-			File externalFile = EvercamFile.getExternalFile(context, evercamCamera);
-			createFile(externalFile, drawable);
-			
-			//Check the file is saved or not
+			File externalFile = EvercamFile.getExternalFile(context, cameraId);
+			createFile(externalFile, bitmap);
+
+			// Check the file is saved or not
 			checkFile(externalFile);
 		}
 		catch (IOException e)
 		{
 			Log.e(TAG, "Error saving external file: " + Log.getStackTraceString(e));
 		}
-		
+
 		try
 		{
-			File cacheFile = EvercamFile.getCacheFile(context, evercamCamera);
-			createFile(cacheFile, drawable);
-			
+			File cacheFile = EvercamFile.getCacheFileRelative(context, cameraId);
+			createFile(cacheFile, bitmap);
+
 			checkFile(cacheFile);
 		}
 		catch (IOException e)
@@ -59,23 +56,18 @@ public class SaveImageTask extends AsyncTask<Void, Void, Void>
 		return null;
 	}
 
-	private void createFile(File file, Drawable drawable) throws IOException
+	private void createFile(File file, Bitmap bitmap) throws IOException
 	{
-		if (drawable != null)
+		if (bitmap != null)
 		{
-			Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-
 			if (file.exists())
 			{
-				// file.delete();
+				file.delete();
 			}
-			else
-			{
-				file.createNewFile();
-				FileOutputStream fos = new FileOutputStream(file);
-				bitmap.compress(CompressFormat.PNG, 0, fos);
-				fos.close();
-			}
+			file.createNewFile();
+			FileOutputStream fos = new FileOutputStream(file);
+			bitmap.compress(CompressFormat.PNG, 0, fos);
+			fos.close();
 		}
 	}
 
@@ -85,17 +77,17 @@ public class SaveImageTask extends AsyncTask<Void, Void, Void>
 		{
 			if (file.length() > 0)
 			{
-
+				//Valid file exists, do nothing for now.
 			}
 			else
 			{
 				file.delete();
-				Log.e(TAG, evercamCamera.getCameraId() + " File Deleted. File was empty.");
+				Log.e(TAG, cameraId + " File Deleted. File was empty.");
 			}
 		}
 		else
 		{
-			Log.e(TAG, "Unable to save image: " + evercamCamera.getCameraId());
+			Log.e(TAG, "Unable to save image: " + cameraId);
 		}
 	}
 }

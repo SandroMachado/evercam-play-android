@@ -1,20 +1,20 @@
 package io.evercam.androidapp.tasks;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import io.evercam.Camera;
 import io.evercam.EvercamException;
 import io.evercam.Snapshot;
 import io.evercam.androidapp.custom.CameraLayout;
 import io.evercam.androidapp.dto.ImageLoadingStatus;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 
-public class DownloadLatestTask extends AsyncTask<Void, Void, String>
+public class DownloadLatestTask extends AsyncTask<Void, Void, Bitmap>
 {
 	private final String TAG = "evercamplay-DownloadLatestTask";
 	String cameraId;
@@ -29,53 +29,33 @@ public class DownloadLatestTask extends AsyncTask<Void, Void, String>
 	}
 
 	@Override
-	protected String doInBackground(Void... params)
+	protected Bitmap doInBackground(Void... params)
 	{
 		try
 		{
 			Snapshot latestSnapshot = Camera.getLatestArchivedSnapshot(cameraId, true);
 			byte[] snapshotByte = latestSnapshot.getData();
-
-			String pathString = context.getCacheDir() + "/" + cameraId + ".jpg";
-			File file = new File(pathString);
-			if (file.exists())
-			{
-				file.delete();
-			}
-			file.createNewFile();
-			FileOutputStream fos = new FileOutputStream(file);
-
-			fos.write(snapshotByte);
-
-			fos.flush();
-			fos.close();
-
-			if (file.exists() && file.length() > 0)
-			{
-				return pathString;
-			}
-			else if (file.exists())
-			{
-				file.delete();
-			}
+			
+			Bitmap bitmap = BitmapFactory.decodeByteArray(snapshotByte , 0, snapshotByte .length);
+			
+			return bitmap;
 		}
 		catch (EvercamException e)
 		{
-			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
+			Log.e(TAG, e.toString());
 		}
 		return null;
 	}
 
 	@Override
-	protected void onPostExecute(String result)
+	protected void onPostExecute(Bitmap bitmap)
 	{
-		if (result != null)
+		if (bitmap != null)
 		{
-			Drawable drawable = Drawable.createFromPath(result);
+			new SaveImageTask(context, bitmap, cameraId)
+			.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			
+			Drawable drawable = new BitmapDrawable(context.getResources(),bitmap);
 			if (drawable != null && drawable.getIntrinsicWidth() > 0
 					&& drawable.getIntrinsicHeight() > 0)
 			{
@@ -84,19 +64,12 @@ public class DownloadLatestTask extends AsyncTask<Void, Void, String>
 				cameraLayout.evercamCamera.loadingStatus = ImageLoadingStatus.camba_image_received;
 			}
 
-			try
+			if (cameraLayout.evercamCamera.loadingStatus != ImageLoadingStatus.camba_image_received)
 			{
-				if (cameraLayout.evercamCamera.loadingStatus != ImageLoadingStatus.camba_image_received)
-				{
-					cameraLayout.evercamCamera.loadingStatus = ImageLoadingStatus.camba_not_received;
-				}
-			}
-			catch (Exception e)
-			{
+				cameraLayout.evercamCamera.loadingStatus = ImageLoadingStatus.camba_not_received;
 			}
 
 			cameraLayout.handler.postDelayed(cameraLayout.LoadImageRunnable, 0);
 		}
 	}
-
 }
