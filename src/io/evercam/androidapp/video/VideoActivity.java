@@ -1415,6 +1415,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				{
 					if (!url.isEmpty())
 					{
+						Log.d(TAG, "Running" + url);
 					try
 					{
 						downloadStartCount++;
@@ -1472,7 +1473,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 		@Override
 		protected void onPostExecute(Drawable result)
-		{// DownloadImage Live
+		{
 			try
 			{
 				if (!showImagesVideo) return;

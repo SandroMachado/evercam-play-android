@@ -12,7 +12,7 @@
           <item
         android:id="@+id/menuabout"
         android:icon="@android:drawable/ic_menu_info_details"
-        android:title="About" android:orderInCategory="1" android:showAsAction="ifRoom"/>
+        android:title="About" android:orderInCategory="1" android:showAsAction="ifRoom"/>
     -->
 
 </menu>

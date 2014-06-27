@@ -23,7 +23,7 @@
         android:layout_weight="0.5"
         android:drawableLeft="@drawable/recorded"
         android:drawablePadding="5dp"
-        android:text="Recorded" />
+        android:text="Recorded" />
     -->
 
 </LinearLayout>

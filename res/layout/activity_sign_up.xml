@@ -59,8 +59,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/firstName"
                     android:inputType="text"
-                    android:textSize="17sp"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textSize="17sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -81,8 +81,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/lastName"
                     android:inputType="text"
-                    android:textSize="17sp"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textSize="17sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -121,8 +121,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/username"
                     android:inputType="text"
-                    android:textSize="17sp"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textSize="17sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -142,9 +142,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
-                    android:textSize="17sp"
                     android:inputType="textEmailAddress"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textSize="17sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -163,11 +163,11 @@
                     android:id="@+id/password_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/password"
                     android:fontFamily="sans-serif"
-                    android:textSize="17sp"
+                    android:hint="@string/password"
                     android:inputType="textPassword"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textSize="17sp" />
             </LinearLayout>
 
             <EditText
@@ -175,11 +175,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="90sp"
-                android:textSize="17sp"
                 android:fontFamily="sans-serif"
                 android:hint="@string/re_password"
                 android:inputType="textPassword"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textSize="17sp" />
 
             <Button
                 android:id="@+id/sign_up_button"
