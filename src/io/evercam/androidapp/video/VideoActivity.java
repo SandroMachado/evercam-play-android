@@ -9,6 +9,7 @@ import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
+import io.evercam.androidapp.utils.EvercamFile;
 import io.evercam.androidapp.utils.UIUtils;
 
 import java.io.File;
@@ -471,16 +472,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 			loadImageFromCache();
 			showProgressView();
-			// ###Setting Defaults
-
-			// String ImageUrl = ((camera.getLowResolutionSnapshotUrl() != null
-			// && URLUtil
-			// .isValidUrl(camera.getLowResolutionSnapshotUrl())) ? camera
-			// .getLowResolutionSnapshotUrl() : camera.getCameraImageUrl());
-
-			imageLiveCameraURL = evercamCamera.getExternalSnapshotUrl();
-
-			imageLiveLocalURL = evercamCamera.getInternalSnapshotUrl();
 
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 			mrlPlaying = sharedPrefs.getString("pref_mrlplaying" + evercamCamera.getCameraId(),
@@ -550,22 +541,21 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			imageView.setImageDrawable(null);
 			if (evercamCamera == null) return false;
-			String path = this.getCacheDir() + "/" + evercamCamera.getCameraId() + ".jpg";
-			if (new File(path).exists())
+			File cacheFile = EvercamFile.getCacheFileRelative(this, evercamCamera.getCameraId());
+			if (cacheFile.exists())
 			{
-				Drawable result = Drawable.createFromPath(path);
+				Drawable result = Drawable.createFromPath(cacheFile.getPath());
 				if (result != null)
 				{
 					startDownloading = true;
 					imageView.setImageDrawable(result);
 
-					Log.i(TAG, "Loaded first image from Cache: " + media_width + ":" + media_height);
+					Log.d(TAG, "Loaded first image from Cache: " + media_width + ":" + media_height);
 					return true;
 				}
 				else
 				{
-					Log.e(TAG, "laodimagefromcache drawable d1 is null. Camera Object is ["
-							+ evercamCamera.toString() + "]");
+					Log.d(TAG, "laodimagefromcache drawable d1 is null");
 				}
 			}
 		}
@@ -1181,6 +1171,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					{
 						while (!startDownloading)
 						{
+							Log.e(TAG, "Wait for starting");
 							Thread.sleep(500);
 						}
 					}
@@ -1196,7 +1187,18 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 									// requests. Rather wait for the play
 									// command
 					{
+						imageLiveCameraURL = evercamCamera.getExternalSnapshotUrl();
+						imageLiveLocalURL = evercamCamera.getInternalSnapshotUrl();
+						
+						if (AbandonedJpgUrl.contains(imageLiveCameraURL))
+						{
+							imageLiveCameraURL = "";
+						}
 
+						if (AbandonedJpgUrl.contains(imageLiveLocalURL))
+						{
+							imageLiveLocalURL = "";
+						}
 						DownloadImage tasklive = new DownloadImage();
 
 						if (downloadStartCount - downloadEndCount < 9) tasklive.executeOnExecutor(
@@ -1338,7 +1340,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				default:
 					break;
 				}
-
 			}
 			catch (Exception e)
 			{
@@ -1370,6 +1371,34 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		}
 	}
 
+	private static class AbandonedJpgUrl
+	{
+		public static ArrayList<String> abandonedArray = new ArrayList<String>();
+
+		public static void add(String url)
+		{
+			if (!abandonedArray.contains(url))
+			{
+				abandonedArray.add(url);
+			}
+		}
+
+		public static boolean contains(String url)
+		{
+			if (!abandonedArray.isEmpty())
+			{
+				for (int index = 0; index < abandonedArray.size(); index++)
+				{
+					if (abandonedArray.get(index).equals(url))
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+
 	private class DownloadImage extends AsyncTask<String, Void, Drawable>
 	{
 		private long myStartImageTime;
@@ -1382,21 +1411,19 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			Drawable response = null;
 			if (evercamCamera.hasCredentials())
 			{
-				Log.d(TAG, "has credentials");
 				for (String url : urls)
 				{
+					if (!url.isEmpty())
+					{
 					try
 					{
 						downloadStartCount++;
-						if (url == null) url = "http://www.camba.tv/no-image.jpg";
 						myStartImageTime = SystemClock.uptimeMillis();
 
-						if (!url.isEmpty())
-						{
+						
 							response = Commons.getDrawablefromUrlAuthenticated1(url,
 									evercamCamera.getUsername(), evercamCamera.getPassword(),
 									evercamCamera.cookies, 5000);
-						}
 						if (response != null) successiveFailureCount = 0;
 					}
 					catch (OutOfMemoryError e)
@@ -1404,24 +1431,24 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						if (enableLogs) Log.e(TAG,
 								e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
 						successiveFailureCount++;
-						return null;
+						continue;
 					}
 					catch (Exception e)
 					{
 						Log.e(TAG, "Exception get camera with auth: " + e.toString() + "\r\n"
-								+ "ImageURl=[" + url + "]" + "\r\n" + "CameraDetail=["
-								+ evercamCamera.toString() + "]");
+								+ "ImageURl=[" + url + "]" + "\r\n");
 
+						AbandonedJpgUrl.add(url);
 						successiveFailureCount++;
 					} finally
 					{
 						downloadEndCount++;
 					}
+					}
 				}
 			}
 			else
 			{
-				Log.d(TAG, "has no credentials");
 				try
 				{
 					Camera camera = Camera.getById(evercamCamera.getCameraId());
@@ -1450,14 +1477,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			{
 				if (!showImagesVideo) return;
 
-				try
-				{
-					if (isLocalNetworkRequest) isFirstImageLocalEnded = true;
-					else isFirstImageLiveEnded = true;
-				}
-				catch (Exception ex)
-				{
-				}
+				if (isLocalNetworkRequest) isFirstImageLocalEnded = true;
+				else isFirstImageLiveEnded = true;
+
 				if (result != null && result.getIntrinsicWidth() > 0
 						&& result.getIntrinsicHeight() > 0
 						&& myStartImageTime >= latestStartImageTime && !paused && !end)
@@ -1480,7 +1502,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				// do not show message on local network failure request.
 				else if (((!isFirstImageLocalEnded && !isFirstImageLiveEnded
 						&& !isFirstImageLocalReceived && !isFirstImageLiveReceived && localnetworkSettings
-							.equalsIgnoreCase("0")) // loclal task ended. Now
+							.equalsIgnoreCase("0")) // local task ended. Now
 													// this is live image
 													// request
 				|| successiveFailureCount > 10
@@ -1517,13 +1539,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				if (enableLogs) Log.e(TAG, e.toString());
 				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 			}
-			try
-			{
-				startDownloading = true;
-			}
-			catch (Exception ex)
-			{
-			}
+
+			startDownloading = true;
+
 		}
 	}
 
@@ -1535,7 +1553,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		@Override
 		protected String[] doInBackground(String... params)
 		{
-			Log.d(TAG, "start loading camera list");
 			ArrayList<String> cameraNames = new ArrayList<String>();
 
 			for (int count = 0; count < AppData.evercamCameraList.size(); count++)
