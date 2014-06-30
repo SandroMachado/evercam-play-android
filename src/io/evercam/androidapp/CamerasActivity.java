@@ -98,7 +98,7 @@ public class CamerasActivity extends ParentActivity implements
 			{
 				CamerasActivity.this.onSlideMenuItemClick(notificationID);
 			}
-		}
+		}      
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
@@ -332,7 +332,6 @@ public class CamerasActivity extends ParentActivity implements
 				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 			}
 		}
-
 	}
 
 	// Stop All Camera Views
@@ -360,10 +359,7 @@ public class CamerasActivity extends ParentActivity implements
 			for (int i = 0; i < camsLineView.getChildCount(); i++)
 			{
 				LinearLayout pview = (LinearLayout) camsLineView.getChildAt(i);
-				CameraLayout cameraLayout = (CameraLayout) pview.getChildAt(0); // CameraLayout
-				// is on
-				// 0th
-				// index
+				CameraLayout cameraLayout = (CameraLayout) pview.getChildAt(0); 
 
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -489,29 +485,6 @@ public class CamerasActivity extends ParentActivity implements
 	}
 
 	boolean mHandleMessageReceiverRegistered = false;
-
-	//
-	// private final void startgCMRegisterActions()
-	// {
-	// try
-	// {
-	// RegisterTask = new RegisterGCMAlertsServiceTask();
-	// RegisterTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
-	//
-	// registerReceiver(mHandleMessageReceiver, new
-	// IntentFilter("CambaGCMAlert"));
-	//
-	// mHandleMessageReceiverRegistered = true;
-	//
-	// Log.i(TAG,
-	// "registerReceiver(mHandleMessageReceiver,new IntentFilter(\"CambaGCMAlert\"));");
-	// }
-	// catch (Exception e)
-	// {
-	// if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-	// }
-	//
-	// }
 
 	private final void stopGcmRegisterActions()
 	{

@@ -19,7 +19,6 @@
     <string name="app_name">Evercam Play</string>
     <string name="empty" />
     <string name="current_video_path" />
-    <string name="menu_refresh">Refresh</string>
     <string name="menu_search">Search</string>
     <string name="menu_share">Share</string>
     <string name="local_service_started">local_service_started</string>
@@ -53,9 +52,16 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="notNow">NOT NOW</string>
-    <string name="settings">SETTINGS</string>
+    <string name="settings_capital">SETTINGS</string>
 
     <!-- Preferences -->
     <string name="prefs_camera_per_row">Cameras Per Row</string>
+    
+    <!-- Menu -->
+	<string name="menu_settings">Settings</string>
+	<string name="menu_manage_accounts">Manage Accounts</string>
+	<string name="menu_about">About</string>
+	<string name="menu_logout">Log Out</string>
+	<string name="menu_refresh">Refresh</string>
 
 </resources>

@@ -73,7 +73,7 @@ public class SlideMenu extends LinearLayout
 	// a simple adapter
 	private static class SlideMenuAdapter extends ArrayAdapter<SlideMenuItem>
 	{
-		Activity act;
+		Activity activity;
 		SlideMenuItem[] items;
 		Typeface itemFont;
 
@@ -83,10 +83,10 @@ public class SlideMenu extends LinearLayout
 			public ImageView icon;
 		}
 
-		public SlideMenuAdapter(Activity act, SlideMenuItem[] items, Typeface itemFont)
+		public SlideMenuAdapter(Activity activity, SlideMenuItem[] items, Typeface itemFont)
 		{
-			super(act, R.id.menu_label, items);
-			this.act = act;
+			super(activity, R.id.menu_label, items);
+			this.activity = activity;
 			this.items = items;
 			this.itemFont = itemFont;
 		}
@@ -97,7 +97,7 @@ public class SlideMenu extends LinearLayout
 			View rowView = convertView;
 			if (rowView == null)
 			{
-				LayoutInflater inflater = act.getLayoutInflater();
+				LayoutInflater inflater = activity.getLayoutInflater();
 				rowView = inflater.inflate(R.layout.slidemenu_listitem, null);
 				MenuItemHolder viewHolder = new MenuItemHolder();
 				viewHolder.label = (TextView) rowView.findViewById(R.id.menu_label);
@@ -117,7 +117,7 @@ public class SlideMenu extends LinearLayout
 
 	private static class SlideMenuNotifAdapter extends ArrayAdapter<SlideMenuNotifItem>
 	{
-		Activity act;
+		Activity activity;
 		SlideMenuNotifItem[] items;
 		Typeface itemFont;
 
@@ -126,10 +126,10 @@ public class SlideMenu extends LinearLayout
 			public TextView label;
 		}
 
-		public SlideMenuNotifAdapter(Activity act, SlideMenuNotifItem[] items, Typeface itemFont)
+		public SlideMenuNotifAdapter(Activity activity, SlideMenuNotifItem[] items, Typeface itemFont)
 		{
-			super(act, R.id.menu_notif_label, items);
-			this.act = act;
+			super(activity, R.id.menu_notif_label, items);
+			this.activity = activity;
 			this.items = items;
 			this.itemFont = itemFont;
 		}
@@ -140,7 +140,7 @@ public class SlideMenu extends LinearLayout
 			View rowView = convertView;
 			if (rowView == null)
 			{
-				LayoutInflater inflater = act.getLayoutInflater();
+				LayoutInflater inflater = activity.getLayoutInflater();
 				rowView = inflater.inflate(R.layout.slidemenu_listnotificationitem, null);
 				MenuItemNotifHolder viewHolder = new MenuItemNotifHolder();
 				viewHolder.label = (TextView) rowView.findViewById(R.id.menu_notif_label);
@@ -161,12 +161,12 @@ public class SlideMenu extends LinearLayout
 			if (items[position].IsRead)
 			{
 				Log.i(TAG, "is read true");
-				holder.label.setTextColor(act.getResources().getColor(color.notificationreadcolor));
+				holder.label.setTextColor(activity.getResources().getColor(color.notificationreadcolor));
 			}
 			else
 			{
 				Log.i(TAG, "is read false");
-				holder.label.setTextColor(act.getResources()
+				holder.label.setTextColor(activity.getResources()
 						.getColor(color.notificationunreadcolor));
 			}
 
@@ -180,7 +180,7 @@ public class SlideMenu extends LinearLayout
 	private static ViewGroup content;
 	private static FrameLayout parent;
 	private static int menuSize;
-	private Activity act;
+	private Activity activity;
 	private Drawable headerImage;
 	private String headerText = null;
 	private Typeface font;
@@ -204,7 +204,7 @@ public class SlideMenu extends LinearLayout
 	}
 
 	/**
-	 * Constructor used by the inflation apparatus. To be able to use the
+	 * Constructor used by the inflation apparatus. To be able to  use the
 	 * SlideMenu, call the {@link #init init()} method.
 	 * 
 	 * @param attrs
@@ -217,7 +217,7 @@ public class SlideMenu extends LinearLayout
 	/**
 	 * Constructs a SlideMenu with the given menu XML.
 	 * 
-	 * @param act
+	 * @param activity
 	 *            The calling activity.
 	 * @param menuResource
 	 *            Menu resource identifier.
@@ -226,33 +226,33 @@ public class SlideMenu extends LinearLayout
 	 * @param slideDuration
 	 *            Slide in/out duration in milliseconds.
 	 */
-	public SlideMenu(Activity act, int menuResource,
+	public SlideMenu(Activity activity, int menuResource,
 			SlideMenuInterface.OnSlideMenuItemClickListener cb, int slideDuration)
 	{
-		super(act);
-		init(act, menuResource, cb, slideDuration);
+		super(activity);
+		init(activity, menuResource, cb, slideDuration);
 	}
 
 	/**
 	 * Constructs an empty SlideMenu.
 	 * 
-	 * @param act
+	 * @param activity
 	 *            The calling activity.
 	 * @param cb
 	 *            Callback to be invoked on menu item click.
 	 * @param slideDuration
 	 *            Slide in/out duration in milliseconds.
 	 */
-	public SlideMenu(Activity act, SlideMenuInterface.OnSlideMenuItemClickListener cb,
+	public SlideMenu(Activity activity, SlideMenuInterface.OnSlideMenuItemClickListener cb,
 			int slideDuration)
 	{
-		this(act, 0, cb, slideDuration);
+		this(activity, 0, cb, slideDuration);
 	}
 
 	/**
 	 * If inflated from XML, initializes the SlideMenu.
 	 * 
-	 * @param act
+	 * @param activity
 	 *            The calling activity.
 	 * @param menuResource
 	 *            Menu resource identifier, can be 0 for an empty SlideMenu.
@@ -261,15 +261,15 @@ public class SlideMenu extends LinearLayout
 	 * @param slideDuration
 	 *            Slide in/out duration in milliseconds.
 	 */
-	public void init(Activity act, int menuResource,
+	public void init(Activity activity, int menuResource,
 			SlideMenuInterface.OnSlideMenuItemClickListener cb, int slideDuration)
 	{
 
-		this.act = act;
+		this.activity = activity;
 		this.callback = cb;
 
 		// set size
-		menuSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250, act
+		menuSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250, activity
 				.getResources().getDisplayMetrics());
 
 		// create animations accordingly
@@ -365,9 +365,9 @@ public class SlideMenu extends LinearLayout
 		try
 		{
 
-			Method getSupportActionBar = act.getClass().getMethod("getSupportActionBar",
+			Method getSupportActionBar = activity.getClass().getMethod("getSupportActionBar",
 					(Class[]) null);
-			Object sab = getSupportActionBar.invoke(act, (Object[]) null);
+			Object sab = getSupportActionBar.invoke(activity, (Object[]) null);
 			sab.toString(); // check for null
 
 			if (android.os.Build.VERSION.SDK_INT >= 11)
@@ -387,7 +387,7 @@ public class SlideMenu extends LinearLayout
 		// modify content layout params
 		try
 		{
-			content = ((LinearLayout) act.findViewById(android.R.id.content).getParent());
+			content = ((LinearLayout) activity.findViewById(android.R.id.content).getParent());
 		}
 		catch (ClassCastException e)
 		{
@@ -398,9 +398,9 @@ public class SlideMenu extends LinearLayout
 			 * DecorView, without the intermediate LinearLayout that holds the
 			 * titlebar plus content.
 			 */
-			if (Build.VERSION.SDK_INT < 18) content = (ViewGroup) act
+			if (Build.VERSION.SDK_INT < 18) content = (ViewGroup) activity
 					.findViewById(android.R.id.content);
-			else content = (ViewGroup) act.findViewById(android.R.id.content).getParent(); // FIXME?
+			else content = (ViewGroup) activity.findViewById(android.R.id.content).getParent(); // FIXME?
 																							// what
 																							// about
 																							// the
@@ -434,14 +434,14 @@ public class SlideMenu extends LinearLayout
 			 * https://github.com/bk138/LibSlideMenu/issues/12
 			 */
 			LinearLayout realParent = (LinearLayout) content.getParent();
-			parent = new FrameLayout(act);
+			parent = new FrameLayout(activity);
 			realParent.addView(parent, 0); // add FrameLayout to real parent of
 											// content
 			realParent.removeView(content); // remove content from real parent
 			parent.addView(content); // add content to FrameLayout
 		}
 
-		LayoutInflater inflater = (LayoutInflater) act
+		LayoutInflater inflater = (LayoutInflater) activity
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		menu = inflater.inflate(R.layout.slidemenu, null);
 
@@ -456,26 +456,26 @@ public class SlideMenu extends LinearLayout
 		{
 			// if(headerImage != null){
 			// ImageView headerIV = (ImageView)
-			// act.findViewById(R.id.menu_header_image);
+			// activity.findViewById(R.id.menu_header_image);
 			// headerIV.setImageDrawable(headerImage);
 			// }
 			// if(headerText != null && headerText.length() > 0){
 			// TextView headerT = (TextView)
-			// act.findViewById(R.id.menu_header_text);
+			// activity.findViewById(R.id.menu_header_text);
 			// headerT.setText(headerText);
 			// }
 		}
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			CLog.email(this.act, e.getMessage(), e);
+			CLog.email(this.activity, e.getMessage(), e);
 			// not found
 		}
 
 		// connect the menu's listview
-		ListView list = (ListView) act.findViewById(R.id.cams_menu_listItems);
+		ListView list = (ListView) activity.findViewById(R.id.cams_menu_listItems);
 		SlideMenuItem[] items = menuItemList.toArray(new SlideMenuItem[menuItemList.size()]);
-		SlideMenuAdapter adap = new SlideMenuAdapter(act, items, font);
+		SlideMenuAdapter adap = new SlideMenuAdapter(activity, items, font);
 		list.setAdapter(adap);
 		list.setOnItemClickListener(new OnItemClickListener(){
 			@Override
@@ -502,10 +502,12 @@ public class SlideMenu extends LinearLayout
 
 		menuShown = true;
 
-		showNotifications();
+	// Disabled to hide events.
+	//	showNotifications();
+		
 		new RefreshNotificationsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 
-		((ImageView) SlideMenu.this.act.findViewById(R.id.slidemenu_notifLoadingrefresh))
+		((ImageView) SlideMenu.this.activity.findViewById(R.id.slidemenu_notifLoadingrefresh))
 				.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View v)
@@ -526,22 +528,23 @@ public class SlideMenu extends LinearLayout
 			// menuNotifList.add(new
 			// SlideMenuNotifItem(449,"item  label",1,true));
 
-			TextView noNotif = (TextView) act.findViewById(R.id.slidemenu_NoNotif);
+			TextView noNotif = (TextView) activity.findViewById(R.id.slidemenu_NoNotif);
 			if (menuNotifList.size() > 0)
 			{
 				noNotif.setVisibility(View.GONE);
 			}
 			else
 			{
-				noNotif.setVisibility(View.VISIBLE);
+				// Disabled to hide events.
+				//noNotif.setVisibility(View.VISIBLE);
 				return;
 			}
 
-			ListView list = (ListView) act.findViewById(R.id.cams_menu_ListNotif);
+			ListView list = (ListView) activity.findViewById(R.id.cams_menu_ListNotif);
 			// list.removeAllViewsInLayout();
 			SlideMenuNotifItem[] items = menuNotifList.toArray(new SlideMenuNotifItem[menuNotifList
 					.size()]);
-			SlideMenuNotifAdapter adap = new SlideMenuNotifAdapter(act, items, font);
+			SlideMenuNotifAdapter adap = new SlideMenuNotifAdapter(activity, items, font);
 			list.setAdapter(adap);
 			list.setOnItemClickListener(new OnItemClickListener(){
 				@Override
@@ -551,14 +554,13 @@ public class SlideMenu extends LinearLayout
 					if (callback != null) callback.onSlideMenuItemClick(menuNotifList.get(position).id);
 
 					hide();
-
 				}
 			});
 		}
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			CLog.email(this.act, e.getMessage(), e);
+			CLog.email(this.activity, e.getMessage(), e);
 		}
 	}
 
@@ -592,7 +594,7 @@ public class SlideMenu extends LinearLayout
 			{
 				Log.i(TAG, e.toString() + "::" + Log.getStackTraceString(e));
 				message = e.toString();
-				CLog.email(SlideMenu.this.act, e.getMessage(), e);
+				CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 			}
 			return message;
 		}
@@ -608,7 +610,7 @@ public class SlideMenu extends LinearLayout
 			catch (Exception e)
 			{
 				Log.e(TAG, e.toString(), e);
-				CLog.email(SlideMenu.this.act, e.getMessage(), e);
+				CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 			}
 		};
 
@@ -623,7 +625,7 @@ public class SlideMenu extends LinearLayout
 			catch (Exception e)
 			{
 				Log.e(TAG, e.toString(), e);
-				CLog.email(SlideMenu.this.act, e.getMessage(), e);
+				CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 			}
 		}
 
@@ -633,14 +635,14 @@ public class SlideMenu extends LinearLayout
 	{
 		try
 		{
-			SlideMenu.this.act.findViewById(R.id.slidemenu_notifLoadingProgress).setVisibility(
+			SlideMenu.this.activity.findViewById(R.id.slidemenu_notifLoadingProgress).setVisibility(
 					View.VISIBLE);
-			SlideMenu.this.act.findViewById(R.id.slidemenu_notifLoadingrefresh).setVisibility(
+			SlideMenu.this.activity.findViewById(R.id.slidemenu_notifLoadingrefresh).setVisibility(
 					View.GONE);
 		}
 		catch (Exception e)
 		{
-			CLog.email(SlideMenu.this.act, e.getMessage(), e);
+			CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 		}
 
 	}
@@ -663,7 +665,7 @@ public class SlideMenu extends LinearLayout
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					CLog.email(SlideMenu.this.act, e.getMessage(), e);
+					CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 				}
 				return null;
 			}
@@ -674,14 +676,14 @@ public class SlideMenu extends LinearLayout
 				try
 				{
 					// TODO Auto-generated method stub
-					SlideMenu.this.act.findViewById(R.id.slidemenu_notifLoadingProgress)
+					SlideMenu.this.activity.findViewById(R.id.slidemenu_notifLoadingProgress)
 							.setVisibility(View.GONE);
-					SlideMenu.this.act.findViewById(R.id.slidemenu_notifLoadingrefresh)
+					SlideMenu.this.activity.findViewById(R.id.slidemenu_notifLoadingrefresh)
 							.setVisibility(View.VISIBLE);
 				}
 				catch (Exception e)
 				{
-					CLog.email(SlideMenu.this.act, e.getMessage(), e);
+					CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 				}
 			}
 
@@ -715,7 +717,7 @@ public class SlideMenu extends LinearLayout
 		if (statusHeight == -1)
 		{
 			Rect r = new Rect();
-			Window window = act.getWindow();
+			Window window = activity.getWindow();
 			window.getDecorView().getWindowVisibleDisplayFrame(r);
 			statusHeight = r.top;
 		}
@@ -757,7 +759,7 @@ public class SlideMenu extends LinearLayout
 
 		try
 		{
-			XmlResourceParser xpp = act.getResources().getXml(menu);
+			XmlResourceParser xpp = activity.getResources().getXml(menu);
 
 			xpp.next();
 			int eventType = xpp.getEventType();
@@ -782,7 +784,7 @@ public class SlideMenu extends LinearLayout
 
 						SlideMenuItem item = new SlideMenuItem();
 						item.id = Integer.valueOf(resId.replace("@", ""));
-						item.icon = act.getResources().getDrawable(
+						item.icon = activity.getResources().getDrawable(
 								Integer.valueOf(iconId.replace("@", "")));
 						item.label = resourceIdToString(textId);
 
@@ -799,7 +801,7 @@ public class SlideMenu extends LinearLayout
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			CLog.email(SlideMenu.this.act, e.getMessage(), e);
+			CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 		}
 
 	}
@@ -813,7 +815,7 @@ public class SlideMenu extends LinearLayout
 		else
 		{
 			String id = text.replace("@", "");
-			return act.getResources().getString(Integer.valueOf(id));
+			return activity.getResources().getString(Integer.valueOf(id));
 
 		}
 	}
@@ -845,7 +847,7 @@ public class SlideMenu extends LinearLayout
 		catch (NullPointerException e)
 		{
 			// in case the menu was not declared via XML but added from code
-			CLog.email(SlideMenu.this.act, e.getMessage(), e);
+			CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 		}
 	}
 
