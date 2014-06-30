@@ -657,6 +657,7 @@ public class CamerasActivity extends ParentActivity implements
 							// load local cameras for default user
 							AppData.evercamCameraList = new DbCamera(CamerasActivity.this)
 									.getCamerasByOwner(user.getUsername(), 500);
+							Log.d(TAG, "Loaded camera number: " + AppData.evercamCameraList.size());
 
 							removeAllCameraViews();
 

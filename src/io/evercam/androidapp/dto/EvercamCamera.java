@@ -22,7 +22,7 @@ public class EvercamCamera
 
 	private String cameraId = "";
 	private String name = "";
-	private String owner = "";
+	private String owner = ""; //The user's user name, not the owner of camera(if is a shared camera);
 	private String username = "";
 	private String password = "";
 	private String timezone = "";
@@ -284,12 +284,12 @@ public class EvercamCamera
 	public String toString()
 	{
 		return "EvercamCamera [loadingStatus=" + loadingStatus + ", cookies=" + cookies
-				+ ", isLocal=" + isLocal + ", camera=" + camera + ", id=" + id + ", cameraId="
+				+ ", isLocal=" + isLocal + ", id=" + id + ", cameraId="
 				+ cameraId + ", name=" + name + ", owner=" + owner + ", username=" + username
 				+ ", password=" + password + ", timezone=" + timezone + ", vendor=" + vendor
 				+ ", model=" + model + ", mac=" + mac + ", externalSnapshotUrl="
 				+ externalSnapshotUrl + ", internalSnapshotUrl=" + internalSnapshotUrl
 				+ ", externalRtspUrl=" + externalRtspUrl + ", internalRtspUrl=" + internalRtspUrl
-				+ ", status=" + status + ", hasCredentials=" + hasCredentials + "]";
+				+ ", status=" + status + ", hasCredentials=" + hasCredentials + "]\n";
 	}
 }
