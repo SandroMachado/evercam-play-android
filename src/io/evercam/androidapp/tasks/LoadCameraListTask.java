@@ -1,6 +1,7 @@
 package io.evercam.androidapp.tasks;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import io.evercam.API;
 import io.evercam.Camera;
@@ -94,9 +95,10 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 				DbCamera dbCamera = new DbCamera(camerasActivity);
 				dbCamera.deleteCameraByOwner(user.getUsername());
 
-				for (EvercamCamera camera : AppData.evercamCameraList)
+				Iterator<EvercamCamera> iterator = AppData.evercamCameraList.iterator();
+				while(iterator.hasNext())
 				{
-					dbCamera.addCamera(camera);
+					dbCamera.addCamera(iterator.next());
 				}
 			}
 
