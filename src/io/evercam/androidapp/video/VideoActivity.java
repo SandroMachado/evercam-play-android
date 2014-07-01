@@ -174,10 +174,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 			initialPageElements();
 
-			addCamerasToDropdownActionBar();
-
 			checkNetworkStatus();
 
+			Log.d(TAG, "Before add camera to dropdown bar.");
+			addCamerasToDropdownActionBar();
+			Log.d(TAG, "After add camera to dropdown bar.");
 			readSetPreferences();
 		}
 		catch (OutOfMemoryError e)
@@ -318,6 +319,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			super.onStop();
 			releasePlayer();
+			end = true;
 			if (!optionsActivityStarted)
 			{
 				if (imageThread != null)
@@ -422,6 +424,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 	public void addCamerasToDropdownActionBar()
 	{
+		Log.d(TAG, "Prepare to add");
 		new LoadActiveCamerasTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
@@ -1171,7 +1174,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					{
 						while (!startDownloading)
 						{
-							Log.e(TAG, "Wait for starting");
 							Thread.sleep(500);
 						}
 					}
@@ -1189,7 +1191,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					{
 						imageLiveCameraURL = evercamCamera.getExternalSnapshotUrl();
 						imageLiveLocalURL = evercamCamera.getInternalSnapshotUrl();
-						
+
 						if (AbandonedJpgUrl.contains(imageLiveCameraURL))
 						{
 							imageLiveCameraURL = "";
@@ -1201,9 +1203,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						}
 						DownloadImage tasklive = new DownloadImage();
 
-						if (downloadStartCount - downloadEndCount < 9) tasklive.executeOnExecutor(
-								AsyncTask.THREAD_POOL_EXECUTOR, new String[] { imageLiveCameraURL,
-										imageLiveLocalURL });
+						if (downloadStartCount - downloadEndCount < 9)
+						{
+							tasklive.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+									new String[] { imageLiveCameraURL, imageLiveLocalURL });
+						}
 
 						if (downloadStartCount - downloadEndCount > 9 && sleepInterval < 2000)
 						{
@@ -1415,36 +1419,35 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				{
 					if (!url.isEmpty())
 					{
-						Log.d(TAG, "Running" + url);
-					try
-					{
-						downloadStartCount++;
-						myStartImageTime = SystemClock.uptimeMillis();
+						Log.d(TAG, "Running: " + url);
+						try
+						{
+							downloadStartCount++;
+							myStartImageTime = SystemClock.uptimeMillis();
 
-						
 							response = Commons.getDrawablefromUrlAuthenticated1(url,
 									evercamCamera.getUsername(), evercamCamera.getPassword(),
-									evercamCamera.cookies, 5000);
-						if (response != null) successiveFailureCount = 0;
-					}
-					catch (OutOfMemoryError e)
-					{
-						if (enableLogs) Log.e(TAG,
-								e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-						successiveFailureCount++;
-						continue;
-					}
-					catch (Exception e)
-					{
-						Log.e(TAG, "Exception get camera with auth: " + e.toString() + "\r\n"
-								+ "ImageURl=[" + url + "]" + "\r\n");
+									evercamCamera.cookies, 3000);
+							if (response != null) successiveFailureCount = 0;
+						}
+						catch (OutOfMemoryError e)
+						{
+							if (enableLogs) Log.e(TAG,
+									e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+							successiveFailureCount++;
+							continue;
+						}
+						catch (Exception e)
+						{
+							Log.e(TAG, "Exception get camera with auth: " + e.toString() + "\r\n"
+									+ "ImageURl=[" + url + "]" + "\r\n");
 
-						AbandonedJpgUrl.add(url);
-						successiveFailureCount++;
-					} finally
-					{
-						downloadEndCount++;
-					}
+							AbandonedJpgUrl.add(url);
+							successiveFailureCount++;
+						} finally
+						{
+							downloadEndCount++;
+						}
 					}
 				}
 			}
@@ -1551,9 +1554,15 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		final ArrayList<EvercamCamera> activeCameras = new ArrayList<EvercamCamera>();
 		int defaultCameraIndex = 0;
 
+		public LoadActiveCamerasTask()
+		{
+			Log.d(TAG, "Constructor called");
+		}
+
 		@Override
 		protected String[] doInBackground(String... params)
 		{
+			Log.d(TAG, "LoadActiveCamerasTask started");
 			ArrayList<String> cameraNames = new ArrayList<String>();
 
 			for (int count = 0; count < AppData.evercamCameraList.size(); count++)
@@ -1579,6 +1588,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		@Override
 		protected void onPostExecute(final String[] cameraNames)
 		{
+			Log.d(TAG, "LoadActiveCamerasTask finished");
 			try
 			{
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(VideoActivity.this,
@@ -1618,11 +1628,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 				getActionBar().setListNavigationCallbacks(adapter, navigationListener);
 				getActionBar().setSelectedNavigationItem(defaultCameraIndex);
+				Log.d(TAG, "LoadActiveCamerasTask listed");
 
 			}
 			catch (Exception e)
 			{
-				Log.e(TAG, e.getMessage(), e);
+				Log.e(TAG, "Error when load dropdown list: " + e.toString());
 				if (Constants.isAppTrackingEnabled)
 				{
 					BugSenseHandler.sendException(e);
