@@ -96,7 +96,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 				dbCamera.deleteCameraByOwner(user.getUsername());
 
 				Iterator<EvercamCamera> iterator = AppData.evercamCameraList.iterator();
-				while(iterator.hasNext())
+				while (iterator.hasNext())
 				{
 					dbCamera.addCamera(iterator.next());
 				}

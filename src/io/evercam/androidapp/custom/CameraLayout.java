@@ -129,7 +129,7 @@ public class CameraLayout extends LinearLayout
 					}
 					else
 					{
-						
+
 						VideoActivity.startPlayingVideoForCamera(CameraLayout.this.context,
 								evercamCamera.getCameraId());
 					}
@@ -392,7 +392,8 @@ public class CameraLayout extends LinearLayout
 				}
 				else if (evercamCamera.loadingStatus == ImageLoadingStatus.live_not_received)
 				{
-					latestTask = new DownloadLatestTask(evercamCamera.getCameraId(), CameraLayout.this);
+					latestTask = new DownloadLatestTask(evercamCamera.getCameraId(),
+							CameraLayout.this);
 					latestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 					setlayoutForNoImageReceived();
 				}
@@ -495,12 +496,12 @@ public class CameraLayout extends LinearLayout
 			{
 				cameraRelativeLayout.setBackgroundDrawable(drawable);
 				CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_received;
-				
-				if(drawable != null)
+
+				if (drawable != null)
 				{
-				Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-				new SaveImageTask(context, bitmap, evercamCamera.getCameraId())
-						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+					new SaveImageTask(context, bitmap, evercamCamera.getCameraId())
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 				}
 			}
 

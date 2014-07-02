@@ -23,19 +23,20 @@ public class CameraPrefsActivity extends PreferenceActivity
 
 		this.getActionBar().hide();
 
-		getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
+		getFragmentManager().beginTransaction()
+				.replace(android.R.id.content, new MyPreferenceFragment()).commit();
 		this.setDefaultKeyMode(DEFAULT_KEYS_DISABLE);
 	}
-	
+
 	public static class MyPreferenceFragment extends PreferenceFragment
-    {
-        @Override
-        public void onCreate(final Bundle savedInstanceState)
-        {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.camspreferences);
-        }
-    }
+	{
+		@Override
+		public void onCreate(final Bundle savedInstanceState)
+		{
+			super.onCreate(savedInstanceState);
+			addPreferencesFromResource(R.xml.camspreferences);
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu m)

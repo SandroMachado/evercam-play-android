@@ -106,14 +106,15 @@ public class UIUtils
 
 		dialogBuilder.setTitle(R.string.msg_network_not_connected);
 		dialogBuilder.setMessage(R.string.msg_try_network_again);
-		dialogBuilder.setPositiveButton(R.string.settings_capital, new DialogInterface.OnClickListener(){
-			@Override
-			public void onClick(DialogInterface dialog, int which)
-			{
-				dialog.dismiss();
-				context.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-			}
-		});
+		dialogBuilder.setPositiveButton(R.string.settings_capital,
+				new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						dialog.dismiss();
+						context.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+					}
+				});
 		dialogBuilder.setNegativeButton(R.string.notNow, negativeistener);
 		AlertDialog dialogNoInternet = dialogBuilder.create();
 		dialogNoInternet.setCanceledOnTouchOutside(false);

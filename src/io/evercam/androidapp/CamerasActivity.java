@@ -49,6 +49,7 @@ public class CamerasActivity extends ParentActivity implements
 	public MenuItem refresh;
 
 	private static final String TAG = "evercamplay-CamerasActivity";
+	private static final String SCREEN_NAME = "CameraList";
 
 	private SlideMenu slideMenu;
 	private int totalCamerasInGrid = 0;
@@ -65,9 +66,10 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
-		
-		Tracker tracker = ((EvercamPlayApplication) getApplication()).getTracker(EvercamPlayApplication.TrackerName.APP_TRACKER);
-		tracker.setScreenName("Testing");
+
+		Tracker tracker = ((EvercamPlayApplication) getApplication())
+				.getTracker(EvercamPlayApplication.TrackerName.APP_TRACKER);
+		tracker.setScreenName(SCREEN_NAME);
 		tracker.send(new HitBuilders.AppViewBuilder().build());
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -104,7 +106,7 @@ public class CamerasActivity extends ParentActivity implements
 			{
 				CamerasActivity.this.onSlideMenuItemClick(notificationID);
 			}
-		}      
+		}
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
@@ -365,7 +367,7 @@ public class CamerasActivity extends ParentActivity implements
 			for (int i = 0; i < camsLineView.getChildCount(); i++)
 			{
 				LinearLayout pview = (LinearLayout) camsLineView.getChildAt(i);
-				CameraLayout cameraLayout = (CameraLayout) pview.getChildAt(0); 
+				CameraLayout cameraLayout = (CameraLayout) pview.getChildAt(0);
 
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,

@@ -126,7 +126,8 @@ public class SlideMenu extends LinearLayout
 			public TextView label;
 		}
 
-		public SlideMenuNotifAdapter(Activity activity, SlideMenuNotifItem[] items, Typeface itemFont)
+		public SlideMenuNotifAdapter(Activity activity, SlideMenuNotifItem[] items,
+				Typeface itemFont)
 		{
 			super(activity, R.id.menu_notif_label, items);
 			this.activity = activity;
@@ -161,13 +162,14 @@ public class SlideMenu extends LinearLayout
 			if (items[position].IsRead)
 			{
 				Log.i(TAG, "is read true");
-				holder.label.setTextColor(activity.getResources().getColor(color.notificationreadcolor));
+				holder.label.setTextColor(activity.getResources().getColor(
+						color.notificationreadcolor));
 			}
 			else
 			{
 				Log.i(TAG, "is read false");
-				holder.label.setTextColor(activity.getResources()
-						.getColor(color.notificationunreadcolor));
+				holder.label.setTextColor(activity.getResources().getColor(
+						color.notificationunreadcolor));
 			}
 
 			return rowView;
@@ -204,7 +206,7 @@ public class SlideMenu extends LinearLayout
 	}
 
 	/**
-	 * Constructor used by the inflation apparatus. To be able to  use the
+	 * Constructor used by the inflation apparatus. To be able to use the
 	 * SlideMenu, call the {@link #init init()} method.
 	 * 
 	 * @param attrs
@@ -401,13 +403,13 @@ public class SlideMenu extends LinearLayout
 			if (Build.VERSION.SDK_INT < 18) content = (ViewGroup) activity
 					.findViewById(android.R.id.content);
 			else content = (ViewGroup) activity.findViewById(android.R.id.content).getParent(); // FIXME?
-																							// what
-																							// about
-																							// the
-																							// corner
-																							// cases
-																							// (fullscreen
-																							// etc)
+			// what
+			// about
+			// the
+			// corner
+			// cases
+			// (fullscreen
+			// etc)
 		}
 
 		FrameLayout.LayoutParams parm = new FrameLayout.LayoutParams(-1, -1, 3);
@@ -502,9 +504,9 @@ public class SlideMenu extends LinearLayout
 
 		menuShown = true;
 
-	// Disabled to hide events.
-	//	showNotifications();
-		
+		// Disabled to hide events.
+		// showNotifications();
+
 		new RefreshNotificationsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 
 		((ImageView) SlideMenu.this.activity.findViewById(R.id.slidemenu_notifLoadingrefresh))
@@ -536,7 +538,7 @@ public class SlideMenu extends LinearLayout
 			else
 			{
 				// Disabled to hide events.
-				//noNotif.setVisibility(View.VISIBLE);
+				// noNotif.setVisibility(View.VISIBLE);
 				return;
 			}
 
@@ -635,8 +637,8 @@ public class SlideMenu extends LinearLayout
 	{
 		try
 		{
-			SlideMenu.this.activity.findViewById(R.id.slidemenu_notifLoadingProgress).setVisibility(
-					View.VISIBLE);
+			SlideMenu.this.activity.findViewById(R.id.slidemenu_notifLoadingProgress)
+					.setVisibility(View.VISIBLE);
 			SlideMenu.this.activity.findViewById(R.id.slidemenu_notifLoadingrefresh).setVisibility(
 					View.GONE);
 		}

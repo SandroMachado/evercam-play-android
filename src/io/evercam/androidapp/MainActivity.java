@@ -9,7 +9,6 @@ import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.androidapp.utils.UIUtils;
 
 import com.bugsense.trace.BugSenseHandler;
-import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import io.evercam.androidapp.R;
@@ -29,7 +28,7 @@ import android.util.Log;
 public class MainActivity extends Activity
 {
 	private static final String TAG = "evercamapp-MainActivity";
-	  
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -44,8 +43,9 @@ public class MainActivity extends Activity
 
 			setContentView(R.layout.mainactivitylayout);
 
-			Tracker tracker = ((EvercamPlayApplication) getApplication()).getTracker(EvercamPlayApplication.TrackerName.APP_TRACKER);
-			
+			Tracker tracker = ((EvercamPlayApplication) getApplication())
+					.getTracker(EvercamPlayApplication.TrackerName.APP_TRACKER);
+
 			startApplication();
 
 		}

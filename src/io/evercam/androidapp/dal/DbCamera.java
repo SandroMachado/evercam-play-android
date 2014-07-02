@@ -47,7 +47,8 @@ public class DbCamera extends DatabaseMaster
 				+ " TEXT NULL " + "," + KEY_INTERNAL_JPG_URL + " TEXT NULL " + ","
 				+ KEY_EXTERNAL_RTSP_URL + " TEXT NULL" + "," + KEY_INTERNAL_RTSP_URL + " TEXT NULL"
 				+ "," + KEY_STATUS + " TEXT NULL" + "," + KEY_HAS_CREDENTIAL + " INT NULL" + ","
-				+ "CONSTRAINT uniqueCamAndUser UNIQUE (" + KEY_CAMERA_ID + ", "+ KEY_OWNER + ")" + ")";
+				+ "CONSTRAINT uniqueCamAndUser UNIQUE (" + KEY_CAMERA_ID + ", " + KEY_OWNER + ")"
+				+ ")";
 		db.execSQL(CREATE_TABLE_Cameras);
 	}
 

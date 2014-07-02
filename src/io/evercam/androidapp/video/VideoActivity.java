@@ -174,11 +174,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			initialPageElements();
 
 			loadImageFromCache(startingCameraID);
-			
+
 			checkNetworkStatus();
 
 			addCamerasToDropdownActionBar();
-			
+
 			readSetPreferences();
 		}
 		catch (OutOfMemoryError e)
@@ -470,11 +470,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			imageView.setVisibility(View.VISIBLE);
 			showProgressView();
 
-			if(evercamCamera != null)
+			if (evercamCamera != null)
 			{
 				loadImageFromCache(evercamCamera.getCameraId());
 			}
-			
+
 			showProgressView();
 
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -1299,7 +1299,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				case EventHandler.MediaPlayerEncounteredError:
 
 					Log.v(TAG, "EventHandler.MediaPlayerEncounteredError");
-					if(evercamCamera != null)
+					if (evercamCamera != null)
 					{
 						player.loadImageFromCache(evercamCamera.getCameraId());
 					}

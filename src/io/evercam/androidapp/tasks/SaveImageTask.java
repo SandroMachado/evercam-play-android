@@ -77,7 +77,7 @@ public class SaveImageTask extends AsyncTask<Void, Void, Void>
 		{
 			if (file.length() > 0)
 			{
-				//Valid file exists, do nothing for now.
+				// Valid file exists, do nothing for now.
 			}
 			else
 			{

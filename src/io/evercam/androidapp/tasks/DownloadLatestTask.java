@@ -35,9 +35,9 @@ public class DownloadLatestTask extends AsyncTask<Void, Void, Bitmap>
 		{
 			Snapshot latestSnapshot = Camera.getLatestArchivedSnapshot(cameraId, true);
 			byte[] snapshotByte = latestSnapshot.getData();
-			
-			Bitmap bitmap = BitmapFactory.decodeByteArray(snapshotByte , 0, snapshotByte .length);
-			
+
+			Bitmap bitmap = BitmapFactory.decodeByteArray(snapshotByte, 0, snapshotByte.length);
+
 			return bitmap;
 		}
 		catch (EvercamException e)
@@ -53,9 +53,9 @@ public class DownloadLatestTask extends AsyncTask<Void, Void, Bitmap>
 		if (bitmap != null)
 		{
 			new SaveImageTask(context, bitmap, cameraId)
-			.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			
-			Drawable drawable = new BitmapDrawable(context.getResources(),bitmap);
+					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+			Drawable drawable = new BitmapDrawable(context.getResources(), bitmap);
 			if (drawable != null && drawable.getIntrinsicWidth() > 0
 					&& drawable.getIntrinsicHeight() > 0)
 			{
