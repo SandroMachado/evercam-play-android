@@ -8,7 +8,6 @@ import android.preference.PreferenceFragment;
 import android.view.Menu;
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
-import com.google.analytics.tracking.android.EasyTracker;
 
 public class CameraPrefsActivity extends PreferenceActivity
 {
@@ -52,7 +51,6 @@ public class CameraPrefsActivity extends PreferenceActivity
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStart(this);
 			BugSenseHandler.startSession(this);
 		}
 	}
@@ -63,7 +61,6 @@ public class CameraPrefsActivity extends PreferenceActivity
 		super.onStop();
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStop(this);
 			BugSenseHandler.closeSession(this);
 		}
 	}

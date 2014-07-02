@@ -20,7 +20,6 @@ import android.widget.TimePicker;
 
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
-import com.google.analytics.tracking.android.EasyTracker;
 
 public class RVideoDateTimeDialog extends Activity
 {
@@ -172,7 +171,6 @@ public class RVideoDateTimeDialog extends Activity
 		super.onStart();
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStart(this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
 		}
 	}
@@ -183,7 +181,6 @@ public class RVideoDateTimeDialog extends Activity
 		super.onStop();
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStop(this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
 		}
 	}

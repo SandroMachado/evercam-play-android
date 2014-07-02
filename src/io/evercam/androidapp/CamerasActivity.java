@@ -35,7 +35,9 @@ import io.evercam.androidapp.utils.UIUtils;
 
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -63,6 +65,10 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
+		
+		Tracker tracker = ((EvercamPlayApplication) getApplication()).getTracker(EvercamPlayApplication.TrackerName.APP_TRACKER);
+		tracker.setScreenName("Testing");
+		tracker.send(new HitBuilders.AppViewBuilder().build());
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -536,7 +542,6 @@ public class CamerasActivity extends ParentActivity implements
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStart(this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
 		}
 	}
@@ -548,7 +553,6 @@ public class CamerasActivity extends ParentActivity implements
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStop(this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
 		}
 	}

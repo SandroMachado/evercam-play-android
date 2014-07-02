@@ -7,11 +7,9 @@ public final class Constants
 
 	public static final boolean isAppTrackingEnabled = true;
 
-	public static final String bugsense_ApiKey = "3e67cb9a";
+	public static final String bugsense_ApiKey = "560565cb";
 
 	public static final String GCM_SENDER_ID = "614642678474";
-
-	public static final String EncryptionKey = "sajjadpp";
 
 	public static final String Success = "success";
 	public static final String ErrorMessageGeneric = "Unexpected error. Please close and retry.";

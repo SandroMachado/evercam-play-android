@@ -11,7 +11,6 @@ import android.preference.PreferenceActivity;
 import android.view.Menu;
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
-import com.google.analytics.tracking.android.EasyTracker;
 
 public class VideoPrefsActivity extends PreferenceActivity
 {
@@ -75,7 +74,6 @@ public class VideoPrefsActivity extends PreferenceActivity
 		super.onStart();
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStart(this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
 		}
 	}
@@ -86,7 +84,6 @@ public class VideoPrefsActivity extends PreferenceActivity
 		super.onStop();
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStop(this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
 		}
 	}

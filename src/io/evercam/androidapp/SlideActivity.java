@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bugsense.trace.BugSenseHandler;
-import com.google.analytics.tracking.android.EasyTracker;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -57,7 +56,6 @@ public class SlideActivity extends Activity implements OnPageChangeListener
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStart(this);
 			BugSenseHandler.startSession(this);
 		}
 	}
@@ -69,7 +67,6 @@ public class SlideActivity extends Activity implements OnPageChangeListener
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStop(this);
 			BugSenseHandler.closeSession(this);
 		}
 	}

@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
-import com.google.analytics.tracking.android.EasyTracker;
 
 public class AboutDialog extends Activity
 {
@@ -81,7 +80,6 @@ public class AboutDialog extends Activity
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStart(this);
 			BugSenseHandler.startSession(this);
 		}
 	}
@@ -92,7 +90,6 @@ public class AboutDialog extends Activity
 		super.onStop();
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStop(this);
 			BugSenseHandler.closeSession(this);
 		}
 	}

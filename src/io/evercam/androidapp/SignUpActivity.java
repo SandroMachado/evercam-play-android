@@ -19,7 +19,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.bugsense.trace.BugSenseHandler;
-import com.google.analytics.tracking.android.EasyTracker;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -81,7 +80,6 @@ public class SignUpActivity extends Activity
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStart(this);
 			BugSenseHandler.startSession(this);
 		}
 	}
@@ -93,7 +91,6 @@ public class SignUpActivity extends Activity
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStop(this);
 			BugSenseHandler.closeSession(this);
 		}
 	}

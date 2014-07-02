@@ -35,7 +35,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
-import com.google.analytics.tracking.android.EasyTracker;
 
 public class LoginActivity extends ParentActivity
 {
@@ -249,7 +248,6 @@ public class LoginActivity extends ParentActivity
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStart(this);
 			BugSenseHandler.startSession(this);
 		}
 	}
@@ -261,7 +259,6 @@ public class LoginActivity extends ParentActivity
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStop(this);
 			BugSenseHandler.closeSession(this);
 		}
 	}

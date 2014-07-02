@@ -62,7 +62,6 @@ import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
-import com.google.analytics.tracking.android.EasyTracker;
 
 public class VideoActivity extends ParentActivity implements SurfaceHolder.Callback,IVideoPlayer
 {
@@ -307,7 +306,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		super.onStart();
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStart(this); // Add this method.
 			BugSenseHandler.startSession(this);
 		}
 	}
@@ -335,7 +333,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStop(this);
 			BugSenseHandler.closeSession(this);
 		}
 	}

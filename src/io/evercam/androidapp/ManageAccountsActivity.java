@@ -17,7 +17,6 @@ import java.util.List;
 
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
-import com.google.analytics.tracking.android.EasyTracker;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -185,7 +184,6 @@ public class ManageAccountsActivity extends ParentActivity
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStart(this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
 		}
 	}
@@ -197,7 +195,6 @@ public class ManageAccountsActivity extends ParentActivity
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStop(this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
 		}
 	}

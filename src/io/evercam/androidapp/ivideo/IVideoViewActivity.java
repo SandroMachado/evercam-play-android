@@ -20,8 +20,6 @@ import java.util.concurrent.RejectedExecutionException;
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
 
-import com.google.analytics.tracking.android.EasyTracker;
-
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ActionBar.OnNavigationListener;
@@ -1209,7 +1207,6 @@ public class IVideoViewActivity extends ParentActivity implements
 		super.onStart();
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStart(this); // Add this method.
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
 		}
 	}
@@ -1244,7 +1241,6 @@ public class IVideoViewActivity extends ParentActivity implements
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			EasyTracker.getInstance().activityStop(this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
 		}
 	}
