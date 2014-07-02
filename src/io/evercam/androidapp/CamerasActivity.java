@@ -335,7 +335,7 @@ public class CamerasActivity extends ParentActivity implements
 	}
 
 	// Stop All Camera Views
-	private void stopAllCameraViews()
+	public void stopAllCameraViews()
 	{
 		io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
 				.findViewById(R.id.camsLV);

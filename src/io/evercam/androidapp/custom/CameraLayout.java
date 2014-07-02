@@ -129,6 +129,7 @@ public class CameraLayout extends LinearLayout
 					}
 					else
 					{
+						
 						VideoActivity.startPlayingVideoForCamera(CameraLayout.this.context,
 								evercamCamera.getCameraId());
 					}

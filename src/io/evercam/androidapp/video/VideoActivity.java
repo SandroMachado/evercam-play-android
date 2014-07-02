@@ -174,11 +174,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 			initialPageElements();
 
+			loadImageFromCache(startingCameraID);
+			
 			checkNetworkStatus();
 
-			Log.d(TAG, "Before add camera to dropdown bar.");
 			addCamerasToDropdownActionBar();
-			Log.d(TAG, "After add camera to dropdown bar.");
+			
 			readSetPreferences();
 		}
 		catch (OutOfMemoryError e)
@@ -296,7 +297,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			if (Constants.isAppTrackingEnabled)
 			{
 				BugSenseHandler.sendException(ex);
-
 			}
 		}
 	}
@@ -473,7 +473,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			imageView.setVisibility(View.VISIBLE);
 			showProgressView();
 
-			loadImageFromCache();
+			if(evercamCamera != null)
+			{
+				loadImageFromCache(evercamCamera.getCameraId());
+			}
+			
 			showProgressView();
 
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -538,13 +542,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 	// Loads image from cache. First image gets loaded correctly and hence we
 	// can start making requests concurrently as well
-	public boolean loadImageFromCache()
+	public boolean loadImageFromCache(String cameraId)
 	{
 		try
 		{
 			imageView.setImageDrawable(null);
-			if (evercamCamera == null) return false;
-			File cacheFile = EvercamFile.getCacheFileRelative(this, evercamCamera.getCameraId());
+			if (evercamCamera == null && cameraId.isEmpty()) return false;
+			File cacheFile = EvercamFile.getCacheFileRelative(this, cameraId);
 			if (cacheFile.exists())
 			{
 				Drawable result = Drawable.createFromPath(cacheFile.getPath());
@@ -555,10 +559,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 					Log.d(TAG, "Loaded first image from Cache: " + media_width + ":" + media_height);
 					return true;
-				}
-				else
-				{
-					Log.d(TAG, "laodimagefromcache drawable d1 is null");
 				}
 			}
 		}
@@ -1302,7 +1302,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				case EventHandler.MediaPlayerEncounteredError:
 
 					Log.v(TAG, "EventHandler.MediaPlayerEncounteredError");
-					player.loadImageFromCache();
+					if(evercamCamera != null)
+					{
+						player.loadImageFromCache(evercamCamera.getCameraId());
+					}
 
 					if (player.mrlPlaying == null && player.isNextMRLValid())
 					{
