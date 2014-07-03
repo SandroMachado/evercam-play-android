@@ -40,16 +40,31 @@ public class EvercamPlayApplication extends Application
 		return mTrackers.get(trackerId);
 	}
 
+	private static Tracker getAppTracker(Activity activity)
+	{
+		return ((EvercamPlayApplication) activity.getApplication())
+				.getTracker(TrackerName.APP_TRACKER);
+	}
+
 	/**
 	 * Send screen view to Google Analytics from activity with screen name.
+	 * 
 	 * @param activity
-	 * @param screenName The screen name that shows in Google dashboard.
+	 * @param screenName
+	 *            The screen name that shows in Google dashboard.
 	 */
 	public static void sendScreenAnalytics(Activity activity, String screenName)
 	{
-		Tracker tracker = ((EvercamPlayApplication) activity.getApplication())
-				.getTracker(TrackerName.APP_TRACKER);
+		Tracker tracker = getAppTracker(activity);
 		tracker.setScreenName(screenName);
 		tracker.send(new HitBuilders.AppViewBuilder().build());
+	}
+
+	public static void sendEventAnalytics(Activity activity, int cateory, int action,
+			int label)
+	{
+		Tracker tracker = getAppTracker(activity);
+		tracker.send(new HitBuilders.EventBuilder().setCategory(activity.getString(cateory)).setAction(activity.getString(action))
+				.setLabel(activity.getString(label)).build());
 	}
 }

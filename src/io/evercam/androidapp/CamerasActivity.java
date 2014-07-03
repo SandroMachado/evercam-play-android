@@ -153,6 +153,8 @@ public class CamerasActivity extends ParentActivity implements
 			switch (item.getItemId())
 			{
 			case R.id.menurefresh: // need to refresh the application
+				
+				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu, R.string.action_refresh, R.string.label_list_refresh);
 				if (refresh != null) refresh
 						.setActionView(R.layout.actionbar_indeterminate_progress);
 
@@ -199,12 +201,13 @@ public class CamerasActivity extends ParentActivity implements
 			switch (itemId)
 			{
 			case R.id.slidemenu_logout:
+				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu, R.string.action_logout, R.string.label_user_logout);
 				logOutUser();
 
 				break;
 
 			case R.id.slidemenu_about:
-
+				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu, R.string.action_about, R.string.label_about);
 				new Handler().postDelayed(new Runnable(){
 					@Override
 					public void run()
@@ -216,7 +219,7 @@ public class CamerasActivity extends ParentActivity implements
 				break;
 
 			case R.id.slidemenu_settings:
-
+				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu, R.string.action_settings, R.string.label_settings);
 				new Handler().postDelayed(new Runnable(){
 					@Override
 					public void run()
@@ -228,7 +231,7 @@ public class CamerasActivity extends ParentActivity implements
 				break;
 
 			case R.id.slidemenu_manage:
-
+				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu, R.string.action_manage_account, R.string.label_account);
 				new Handler().postDelayed(new Runnable(){
 					@Override
 					public void run()
@@ -264,7 +267,7 @@ public class CamerasActivity extends ParentActivity implements
 			UIUtils.getAlertDialog(
 					this,
 					"Error Occured",
-					"Some error occured while saving your options. Technical details are: "
+					"Error occured while saving your options. Technical details are: "
 							+ e.toString());
 		}
 	}
