@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Event Category -->
+    <string name="category_menu">Menu</string>
+    
+    <!-- Event Action -->
+    <string name="action_refresh">Refresh</string>
+    <string name="action_logout">Log Out</string>
+    <string name="action_manage_account">Manage Account</string>
+    <string name="action_about">About</string>
+    <string name="action_settings">Settings</string>
+    
+    <!-- Event Label -->
+    <string name="label_list_refresh">Refresh Camera List</string>
+    <string name="label_user_logout">Log out from slide menu</string>
+    <string name="label_about">Click on about menu</string>
+    <string name="label_settings">Click on settings menu</string>
+    <string name="label_account">Click on manage account</string>
+</resources>
