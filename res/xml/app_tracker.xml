@@ -10,10 +10,10 @@
 
     <!-- The screen names that will appear in reports -->
     <screenName name="io.evercam.androidapp.CamerasActivity">
-        EvercamPlayAnalytics CamerasActivity
+        EvercamPlayAnalytics CamerasView
     </screenName>
     
-    <!-- If true, treat events as test events and don't send to google -->
+    <!-- If true, treat events as test events and don't send to Google -->
     <bool name="ga_dryRun">false</bool>
 
     <string name="ga_trackingId">UA-52483995-1</string>

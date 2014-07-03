@@ -11,6 +11,8 @@ import io.evercam.androidapp.R;
 
 public class CameraPrefsActivity extends PreferenceActivity
 {
+	private static final String SCREEN_NAME = "CamerasPreferenceView";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -20,6 +22,8 @@ public class CameraPrefsActivity extends PreferenceActivity
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
+		
+		EvercamPlayApplication.sendScreenAnalytics(this, SCREEN_NAME);
 
 		this.getActionBar().hide();
 

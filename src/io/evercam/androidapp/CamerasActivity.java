@@ -35,9 +35,6 @@ import io.evercam.androidapp.utils.UIUtils;
 
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -49,7 +46,7 @@ public class CamerasActivity extends ParentActivity implements
 	public MenuItem refresh;
 
 	private static final String TAG = "evercamplay-CamerasActivity";
-	private static final String SCREEN_NAME = "CameraList";
+//	private static final String SCREEN_NAME = "CamerasListView";
 
 	private SlideMenu slideMenu;
 	private int totalCamerasInGrid = 0;
@@ -66,11 +63,8 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
-
-		Tracker tracker = ((EvercamPlayApplication) getApplication())
-				.getTracker(EvercamPlayApplication.TrackerName.APP_TRACKER);
-		tracker.setScreenName(SCREEN_NAME);
-		tracker.send(new HitBuilders.AppViewBuilder().build());
+		
+//		EvercamPlayApplication.sendScreenAnalytics(this, SCREEN_NAME);
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 

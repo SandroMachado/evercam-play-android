@@ -2,6 +2,7 @@ package io.evercam.androidapp.video;
 
 import io.evercam.Camera;
 import io.evercam.EvercamException;
+import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.custom.ProgressView;
 import io.evercam.androidapp.dto.CameraStatus;
@@ -68,6 +69,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	public static EvercamCamera evercamCamera;
 
 	private final static String TAG = "evercamplay-VideoActivity";
+	private static final String SCREEN_NAME = "VideoView";
 
 	private static List<MediaURL> mediaUrls = null;
 	private static int mrlIndex = -1;
@@ -157,6 +159,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			{
 				BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 			}
+			
+			EvercamPlayApplication.sendScreenAnalytics(this, SCREEN_NAME);
 
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 

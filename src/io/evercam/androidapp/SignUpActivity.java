@@ -37,6 +37,8 @@ import android.content.SharedPreferences;
 
 public class SignUpActivity extends Activity
 {
+	private static final String SCREEN_NAME = "SignUpView";
+	
 	// Auto filled profiles
 	private String filledFirstname = "";
 	private String filledLastname = "";
@@ -65,6 +67,8 @@ public class SignUpActivity extends Activity
 		{
 			BugSenseHandler.initAndStartSession(SignUpActivity.this, Constants.bugsense_ApiKey);
 		}
+		
+		EvercamPlayApplication.sendScreenAnalytics(this, SCREEN_NAME);
 
 		setContentView(R.layout.activity_sign_up);
 
