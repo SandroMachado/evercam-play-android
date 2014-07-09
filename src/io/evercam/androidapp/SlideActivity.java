@@ -23,7 +23,6 @@ import android.widget.TextView;
 public class SlideActivity extends Activity implements OnPageChangeListener
 {
 	private final String TAG = "evercamplay-SlideActivity";
-	private static final String SCREEN_NAME = "SlideView";
 
 	private ViewPager viewPager;
 	private ViewPagerAdapter viewPagerAdapter;
@@ -45,7 +44,7 @@ public class SlideActivity extends Activity implements OnPageChangeListener
 			BugSenseHandler.initAndStartSession(SlideActivity.this, Constants.bugsense_ApiKey);
 		}
 		
-		EvercamPlayApplication.sendScreenAnalytics(this, SCREEN_NAME);
+		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_welcome_slides));
 
 		initSlideView();
 		initDots();

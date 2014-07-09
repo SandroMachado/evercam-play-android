@@ -69,7 +69,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	public static EvercamCamera evercamCamera;
 
 	private final static String TAG = "evercamplay-VideoActivity";
-	private static final String SCREEN_NAME = "VideoView";
 
 	private static List<MediaURL> mediaUrls = null;
 	private static int mrlIndex = -1;
@@ -160,7 +159,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 			}
 			
-			EvercamPlayApplication.sendScreenAnalytics(this, SCREEN_NAME);
+			EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_video));
 
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 

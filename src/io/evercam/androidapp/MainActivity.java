@@ -43,9 +43,6 @@ public class MainActivity extends Activity
 
 			setContentView(R.layout.mainactivitylayout);
 
-			Tracker tracker = ((EvercamPlayApplication) getApplication())
-					.getTracker(EvercamPlayApplication.TrackerName.APP_TRACKER);
-
 			startApplication();
 
 		}

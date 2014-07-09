@@ -44,6 +44,10 @@ public class DownloadLatestTask extends AsyncTask<Void, Void, Bitmap>
 		{
 			Log.e(TAG, e.toString());
 		}
+		catch (OutOfMemoryError e)
+		{
+			Log.e(TAG, e.toString());
+		}
 		return null;
 	}
 

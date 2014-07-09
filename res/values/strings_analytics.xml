@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
     <!-- Event Category -->
     <string name="category_menu">Menu</string>
     
@@ -16,4 +17,14 @@
     <string name="label_about">Click on about menu</string>
     <string name="label_settings">Click on settings menu</string>
     <string name="label_account">Click on manage account</string>
+    
+    <!-- Screen Names -->
+    <string name="screen_login">LoginView</string>
+    <string name="screen_sign_up">SignUpView</string>
+    <string name="screen_camera_list">CamerasListView</string>
+    <string name="screen_preference">CamerasPreferenceView</string>
+    <string name="screen_manage_account">ManageAccountsView</string>
+    <string name="screen_welcome_slides">WelcomePage</string>
+    <string name="screen_video">VideoView</string>
+    
 </resources>

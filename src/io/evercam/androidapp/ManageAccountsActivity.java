@@ -39,7 +39,6 @@ import android.widget.TextView;
 public class ManageAccountsActivity extends ParentActivity
 {
 	static String TAG = "evercamapp-ManageAccountsActivity";
-	private final String SCREEN_NAME = "ManageAccountsView";
 
 	private AlertDialog alertDialog = null;
 
@@ -53,7 +52,7 @@ public class ManageAccountsActivity extends ParentActivity
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
 		
-		EvercamPlayApplication.sendScreenAnalytics(this, SCREEN_NAME);
+		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_manage_account));
 
 		if (this.getActionBar() != null)
 		{

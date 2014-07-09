@@ -46,7 +46,6 @@ public class CamerasActivity extends ParentActivity implements
 	public MenuItem refresh;
 
 	private static final String TAG = "evercamplay-CamerasActivity";
-//	private static final String SCREEN_NAME = "CamerasListView";
 
 	private SlideMenu slideMenu;
 	private int totalCamerasInGrid = 0;
@@ -64,7 +63,7 @@ public class CamerasActivity extends ParentActivity implements
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
 		
-//		EvercamPlayApplication.sendScreenAnalytics(this, SCREEN_NAME);
+		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_camera_list));
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 

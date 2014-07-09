@@ -41,7 +41,6 @@ public class LoginActivity extends ParentActivity
 	public static final int loginVerifyRequestCode = 5;
 	public static int loginResultSuccessCode = 5;
 
-	private static final String SCREEN_NAME = "LoginView";
 	private EditText usernameEdit;
 	private EditText passwordEdit;
 	private String username;
@@ -68,7 +67,7 @@ public class LoginActivity extends ParentActivity
 			BugSenseHandler.initAndStartSession(LoginActivity.this, Constants.bugsense_ApiKey);
 		}
 		
-		EvercamPlayApplication.sendScreenAnalytics(this, SCREEN_NAME);
+		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_login));
 
 		setEvercamDeveloperKeypair();
 
