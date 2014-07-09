@@ -9,7 +9,7 @@
     <bool name="ga_reportUncaughtExceptions">true</bool>    
     
     <!-- If true, treat events as test events and don't send to Google -->
-    <bool name="ga_dryRun">true</bool>
+    <bool name="ga_dryRun">false</bool>
 
     <string name="ga_trackingId">UA-52483995-1</string>
 </resources>

@@ -24,6 +24,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -36,7 +37,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 public class SignUpActivity extends Activity
-{	
+{
+	private final String TAG = "evercamplay-SignUpActivity";
 	// Auto filled profiles
 	private String filledFirstname = "";
 	private String filledLastname = "";
@@ -65,7 +67,7 @@ public class SignUpActivity extends Activity
 		{
 			BugSenseHandler.initAndStartSession(SignUpActivity.this, Constants.bugsense_ApiKey);
 		}
-		
+
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_sign_up));
 
 		setContentView(R.layout.activity_sign_up);
@@ -383,25 +385,34 @@ public class SignUpActivity extends Activity
 
 	private void readFromAccount()
 	{
-		UserProfile profile = AccountUtils.getUserProfile(this);
-		if (profile.primaryEmail() != null)
+		try
 		{
-			filledEmail = profile.primaryEmail();
-		}
-		else if (profile.possibleEmails().size() > 0)
-		{
-			filledEmail = profile.possibleEmails().get(0);
-		}
-
-		if (profile.possibleNames().size() > 0)
-		{
-			String name = profile.possibleNames().get(0);
-			String[] nameArray = name.split("\\s+");
-			if (nameArray.length >= 2)
+			UserProfile profile = AccountUtils.getUserProfile(this);
+			if (profile.primaryEmail() != null)
 			{
-				filledFirstname = nameArray[0];
-				filledLastname = nameArray[1];
+				filledEmail = profile.primaryEmail();
 			}
+			else if (profile.possibleEmails().size() > 0)
+			{
+				filledEmail = profile.possibleEmails().get(0);
+			}
+
+			if (profile.possibleNames().size() > 0)
+			{
+				String name = profile.possibleNames().get(0);
+				String[] nameArray = name.split("\\s+");
+				if (nameArray.length >= 2)
+				{
+					filledFirstname = nameArray[0];
+					filledLastname = nameArray[1];
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			// If exceptions happen here, will not influence app functionality.
+			// Just catch it to avoid crashing.
+			Log.e(TAG, e.toString());
 		}
 	}
 

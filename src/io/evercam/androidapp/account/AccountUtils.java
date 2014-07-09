@@ -24,8 +24,9 @@ public class AccountUtils
 	 * @param context
 	 *            the context from which to retrieve the user profile
 	 * @return the user profile
+	 * @throws Exception 
 	 */
-	public static UserProfile getUserProfile(Context context)
+	public static UserProfile getUserProfile(Context context) throws Exception
 	{
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH ? getUserProfileOnIcsDevice(context)
 				: getUserProfileOnGingerbreadDevice(context);
@@ -77,7 +78,7 @@ public class AccountUtils
 	 * @return a list of the possible user's email address and name
 	 */
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-	private static UserProfile getUserProfileOnIcsDevice(Context context)
+	private static UserProfile getUserProfileOnIcsDevice(Context context) throws Exception
 	{
 		final ContentResolver content = context.getContentResolver();
 		final Cursor cursor = content.query(
