@@ -22,9 +22,9 @@
 
     <!-- Sign Up Strings -->
     <string name="login_progress_signing_up">Signing up</string>
-    <string name="firstname:">Firstname:</string>
+    <string name="firstname:">First Name:</string>
     <string name="firstName">First Name</string>
-    <string name="lastname:">Lastname:</string>
+    <string name="lastname:">Last Name:</string>
     <string name="lastName">Last Name</string>
     <string name="username:">Username:</string>
     <string name="username">Username</string>
