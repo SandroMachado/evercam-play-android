@@ -432,8 +432,15 @@ public class CameraLayout extends LinearLayout
 
 	private void greyImageShown()
 	{
+		try
+		{
 		this.setBackgroundColor(Color.GRAY);
 		cameraRelativeLayout.getBackground().setAlpha(70);
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, "Show grey image:" + e.toString());
+		}
 	}
 
 	private class DownloadLiveImageTask extends AsyncTask<String, Drawable, Drawable>
