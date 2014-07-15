@@ -60,13 +60,13 @@ public class EvercamCamera
 				password = camera.getCameraPassword();
 			}
 			timezone = camera.getTimezone();
-			vendor = camera.getVendor();
+			vendor = camera.getVendorName();
 			model = camera.getModel();
 			mac = camera.getMacAddress();
 			externalSnapshotUrl = camera.getExternalJpgUrl();
 			internalSnapshotUrl = camera.getInternalJpgUrl();
-			externalRtspUrl = camera.getExternalRtspUrlWithCredential();
-			internalRtspUrl = camera.getInternalRtspUrlWithCredential();
+			externalRtspUrl = camera.getExternalH264UrlWithCredential();
+			internalRtspUrl = camera.getInternalH264UrlWithCredential();
 			if (camera.isOnline())
 			{
 				status = CameraStatus.ACTIVE;
