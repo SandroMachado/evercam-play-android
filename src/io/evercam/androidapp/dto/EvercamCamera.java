@@ -56,8 +56,8 @@ public class EvercamCamera
 			if (camera.hasCredentials())
 			{
 				hasCredentials = true;
-				username = camera.getCameraUsername();
-				password = camera.getCameraPassword();
+				username = camera.getUsername();
+				password = camera.getPassword();
 			}
 			timezone = camera.getTimezone();
 			vendor = camera.getVendorName();
