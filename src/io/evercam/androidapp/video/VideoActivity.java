@@ -339,41 +339,29 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			BugSenseHandler.closeSession(this);
 		}
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		try
-		{
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.videomenulayout, menu);
-
-			return true;
-		}
-		catch (Exception ex)
-		{
-			Log.e(TAG, ex.toString());
-			if (Constants.isAppTrackingEnabled)
-			{
-				BugSenseHandler.sendException(ex);
-			}
-		}
-		return true;
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu)
-	{
-		super.onPrepareOptionsMenu(menu);
-
-		menu.clear();
-
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.ivideomenulayout, menu);
-
-		return true;
-	}
-
+//
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu)
+//	{
+//		try
+//		{
+//			MenuInflater inflater = getMenuInflater();
+//			inflater.inflate(R.menu.videomenulayout, menu);
+//
+//			return true;
+//		}
+//		catch (Exception ex)
+//		{
+//			Log.e(TAG, ex.toString());
+//			if (Constants.isAppTrackingEnabled)
+//			{
+//				BugSenseHandler.sendException(ex);
+//			}
+//		}
+//		return true;
+//	}
+//
+ 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{

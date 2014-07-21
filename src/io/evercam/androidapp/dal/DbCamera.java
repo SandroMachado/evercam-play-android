@@ -162,7 +162,15 @@ public class DbCamera extends DatabaseMaster
 		ContentValues values = new ContentValues();
 
 		values.put(KEY_CAMERA_ID, evercamCamera.getCameraId());
-		values.put(KEY_OWNER, AppData.defaultUser.getUsername());
+		if(AppData.defaultUser != null)
+		{
+			values.put(KEY_OWNER, AppData.defaultUser.getUsername());
+		}
+		else
+		{
+			//If default owner not exists, save username as an empty string.
+			values.put(KEY_OWNER, "");
+		}
 		values.put(KEY_CAMERA_NAME, evercamCamera.getName());
 		values.put(KEY_USERNAME, evercamCamera.getUsername());
 		values.put(KEY_PASSWORD, evercamCamera.getPassword());
