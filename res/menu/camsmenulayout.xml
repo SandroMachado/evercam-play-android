@@ -3,9 +3,22 @@
 
     <item
         android:id="@+id/menurefresh"
-        android:icon="@drawable/ic_navigation_refresh"
         android:orderInCategory="1"
-        android:showAsAction="ifRoom"
         android:title="@string/menu_refresh"/>
-
+    <item
+        android:id="@+id/menu_settings"
+        android:orderInCategory="2"
+        android:title="@string/menu_settings"/>
+        <item
+        android:id="@+id/menu_manage_accounts"
+        android:orderInCategory="2"
+        android:title="@string/menu_manage_accounts"/>
+    <item
+        android:id="@+id/menu_logout"
+        android:orderInCategory="3"
+        android:title="@string/menu_logout"/>
+    <item
+        android:id="@+id/menu_about"
+        android:orderInCategory="4"
+        android:title="@string/menu_about"/>
 </menu>

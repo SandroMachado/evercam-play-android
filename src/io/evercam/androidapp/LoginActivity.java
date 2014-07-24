@@ -5,6 +5,7 @@ import io.evercam.ApiKeyPair;
 import io.evercam.EvercamException;
 import io.evercam.User;
 import io.evercam.androidapp.R;
+import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.utils.AppData;
@@ -14,7 +15,6 @@ import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.androidapp.utils.PropertyReader;
 import io.evercam.androidapp.utils.UIUtils;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,7 +48,7 @@ public class LoginActivity extends ParentActivity
 	private LoginTask loginTask;
 	private SharedPreferences sharedPrefs;
 	private String TAG = "evercamapp-LoginActivity";
-	private ProgressDialog progressDialog;
+	private CustomProgressDialog customProgressDialog;
 	private TextView signUpLink;
 
 	@Override
@@ -56,6 +56,8 @@ public class LoginActivity extends ParentActivity
 	{
 		super.onCreate(savedInstanceState);
 
+		customProgressDialog = new CustomProgressDialog(this);
+		
 		launchBugsense();
 
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -163,7 +165,7 @@ public class LoginActivity extends ParentActivity
 		}
 		else
 		{
-			showProgressDialog();
+			customProgressDialog.show(getString(R.string.login_progress_signing_in));
 			loginTask = new LoginTask();
 			loginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		}
@@ -206,7 +208,7 @@ public class LoginActivity extends ParentActivity
 		protected void onPostExecute(final Boolean success)
 		{
 			loginTask = null;
-			dismissProgressDialog();
+			customProgressDialog.dismiss();
 
 			if (success)
 			{
@@ -239,7 +241,7 @@ public class LoginActivity extends ParentActivity
 		protected void onCancelled()
 		{
 			loginTask = null;
-			dismissProgressDialog();
+			customProgressDialog.dismiss();
 		}
 	}
 
@@ -301,22 +303,6 @@ public class LoginActivity extends ParentActivity
 		if (Constants.isAppTrackingEnabled)
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
-		}
-	}
-
-	private void showProgressDialog()
-	{
-		progressDialog = new ProgressDialog(LoginActivity.this);
-		progressDialog.setMessage(getString(R.string.login_progress_signing_in));
-		progressDialog.setCanceledOnTouchOutside(false); // can not be canceled
-		progressDialog.show();
-	}
-
-	private void dismissProgressDialog()
-	{
-		if (progressDialog != null && progressDialog.isShowing())
-		{
-			progressDialog.dismiss();
 		}
 	}
 

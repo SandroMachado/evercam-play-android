@@ -62,7 +62,7 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
-		
+
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_camera_list));
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -73,15 +73,19 @@ public class CamerasActivity extends ParentActivity implements
 			{
 				this.getActionBar().setHomeButtonEnabled(true);
 				this.getActionBar().setDisplayShowTitleEnabled(false);
-				this.getActionBar().setIcon(R.drawable.ic_device_access_storage);
+				this.getActionBar().setIcon(R.drawable.evercam_play_192x192);
 			}
 
 			setContentView(R.layout.camslayoutwithslide);
 
-			addUsersToDropdownActionBar();
+			// Disable add user to drop down list to hide user Email
+			// Start loading camera list directly.
+			// addUsersToDropdownActionBar();
+			startLoadingCameras();
 
-			slideMenu = (SlideMenu) findViewById(R.id.slideMenu);
-			slideMenu.init(this, R.menu.slide, this, slideoutMenuAnimationTime);
+			//Disable slide menu until the functionality is required.
+//			slideMenu = (SlideMenu) findViewById(R.id.slideMenu);
+//			slideMenu.init(this, R.menu.slide, this, slideoutMenuAnimationTime);
 
 			int notificationID = 0;
 			try
@@ -151,21 +155,55 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			switch (item.getItemId())
 			{
-			case R.id.menurefresh: // need to refresh the application
-				
-				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu, R.string.action_refresh, R.string.label_list_refresh);
-				if (refresh != null) refresh
-						.setActionView(R.layout.actionbar_indeterminate_progress);
+			case R.id.menurefresh:
+
+				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
+						R.string.action_refresh, R.string.label_list_refresh);
+				// Moved refresh under menu, so disabled indeterminate progress.
+				// if (refresh != null) refresh
+				// .setActionView(R.layout.actionbar_indeterminate_progress);
 
 				LoadCameraListTask loadTask = new LoadCameraListTask(AppData.defaultUser,
 						CamerasActivity.this);
-				loadTask.reload = true; // be default do not refesh until there
+				loadTask.reload = true; // be default do not refresh until there
 										// is
 				// any change in cameras in database
 				loadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 				return true;
+				
+			case R.id.menu_settings:
+				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
+						R.string.action_settings, R.string.label_settings);
 
+				startActivity(new Intent(CamerasActivity.this, CameraPrefsActivity.class));
+
+				return true;
+				
+			case R.id.menu_manage_accounts:
+				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
+						R.string.action_manage_account, R.string.label_account);
+
+				startActivity(new Intent(CamerasActivity.this, ManageAccountsActivity.class));
+				isUsersAccountsActivityStarted = true;
+
+				return true;
+				
+			case R.id.menu_about:
+				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
+						R.string.action_about, R.string.label_about);
+
+				startActivity(new Intent(CamerasActivity.this, AboutDialog.class));
+
+				return true;
+				
+			case R.id.menu_logout:
+				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
+						R.string.action_logout, R.string.label_user_logout);
+				logOutUser();
+				
+				return true;
+				
 			case android.R.id.home:
 				slideMenu.show();
 
@@ -199,47 +237,51 @@ public class CamerasActivity extends ParentActivity implements
 
 			switch (itemId)
 			{
-			case R.id.slidemenu_logout:
-				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu, R.string.action_logout, R.string.label_user_logout);
-				logOutUser();
+//			case R.id.slidemenu_logout:
+//				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
+//						R.string.action_logout, R.string.label_user_logout);
+//				logOutUser();
+//
+//				break;
+//
+//			case R.id.slidemenu_about:
+//				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
+//						R.string.action_about, R.string.label_about);
+//				new Handler().postDelayed(new Runnable(){
+//					@Override
+//					public void run()
+//					{
+//						startActivity(new Intent(CamerasActivity.this, AboutDialog.class));
+//					}
+//				}, slideoutMenuAnimationTime);
+//
+//				break;
 
-				break;
-
-			case R.id.slidemenu_about:
-				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu, R.string.action_about, R.string.label_about);
-				new Handler().postDelayed(new Runnable(){
-					@Override
-					public void run()
-					{
-						startActivity(new Intent(CamerasActivity.this, AboutDialog.class));
-					}
-				}, slideoutMenuAnimationTime);
-
-				break;
-
-			case R.id.slidemenu_settings:
-				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu, R.string.action_settings, R.string.label_settings);
-				new Handler().postDelayed(new Runnable(){
-					@Override
-					public void run()
-					{
-						startActivity(new Intent(CamerasActivity.this, CameraPrefsActivity.class));
-					}
-				}, slideoutMenuAnimationTime);
-
-				break;
-
-			case R.id.slidemenu_manage:
-				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu, R.string.action_manage_account, R.string.label_account);
-				new Handler().postDelayed(new Runnable(){
-					@Override
-					public void run()
-					{
-						startActivity(new Intent(CamerasActivity.this, ManageAccountsActivity.class));
-						isUsersAccountsActivityStarted = true;
-					}
-				}, slideoutMenuAnimationTime);
-				break;
+//			case R.id.slidemenu_settings:
+//				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
+//						R.string.action_settings, R.string.label_settings);
+//				new Handler().postDelayed(new Runnable(){
+//					@Override
+//					public void run()
+//					{
+//						startActivity(new Intent(CamerasActivity.this, CameraPrefsActivity.class));
+//					}
+//				}, slideoutMenuAnimationTime);
+//
+//				break;
+//
+//			case R.id.slidemenu_manage:
+//				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
+//						R.string.action_manage_account, R.string.label_account);
+//				new Handler().postDelayed(new Runnable(){
+//					@Override
+//					public void run()
+//					{
+//						startActivity(new Intent(CamerasActivity.this, ManageAccountsActivity.class));
+//						isUsersAccountsActivityStarted = true;
+//					}
+//				}, slideoutMenuAnimationTime);
+//				break;
 
 			// default: // starting the notification activity
 			//
@@ -279,8 +321,10 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			if (isUsersAccountsActivityStarted)
 			{
+				//FIXME: Why camera list need reload when account manage activity started?
 				isUsersAccountsActivityStarted = false;
-				addUsersToDropdownActionBar();
+				// addUsersToDropdownActionBar();
+				startLoadingCameras();
 			}
 
 			int camsOldValue = camerasPerRow;
@@ -290,8 +334,9 @@ public class CamerasActivity extends ParentActivity implements
 			if (camsOldValue != camerasPerRow)
 			{
 				removeAllCameraViews();
-				addAllCameraViews(false); // do not reload cameras beacuse it
-											// may be an activity for orentation
+				addAllCameraViews(false); // do not reload cameras because it
+											// may be an activity for
+											// orientation
 											// changed or notification might
 											// have arrived.
 			}
@@ -309,34 +354,44 @@ public class CamerasActivity extends ParentActivity implements
 
 	}
 
-	private void addUsersToDropdownActionBar()
+	private void startLoadingCameras()
 	{
-		boolean taskStarted = false;
-
-		while (!taskStarted)
-		{
-			try
-			{
-				stopAllCameraViews();
-
-				if (AppData.defaultUser == null)
-				{
-					startActivity(new Intent(this, MainActivity.class));
-					CamerasActivity.this.finish();
-					return;
-				}
-
-				new UserLoadingTask().execute();
-
-				taskStarted = true;
-			}
-			catch (Exception e)
-			{
-				Log.e(TAG, e.getMessage(), e);
-				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-			}
-		}
+		LoadCameraListTask loadTask = new LoadCameraListTask(AppData.defaultUser,
+				CamerasActivity.this);
+		loadTask.reload = true; // be default do not refresh until there
+								// is
+		// any change in cameras in database
+		loadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
+
+	// private void addUsersToDropdownActionBar()
+	// {
+	// boolean taskStarted = false;
+	//
+	// while (!taskStarted)
+	// {
+	// try
+	// {
+	// stopAllCameraViews();
+	//
+	// if (AppData.defaultUser == null)
+	// {
+	// startActivity(new Intent(this, MainActivity.class));
+	// CamerasActivity.this.finish();
+	// return;
+	// }
+	//
+	// new UserLoadingTask().execute();
+	//
+	// taskStarted = true;
+	// }
+	// catch (Exception e)
+	// {
+	// Log.e(TAG, e.getMessage(), e);
+	// if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+	// }
+	// }
+	// }
 
 	// Stop All Camera Views
 	public void stopAllCameraViews()
@@ -563,7 +618,7 @@ public class CamerasActivity extends ParentActivity implements
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 			PrefsManager.removeUserEmail(sharedPrefs);
 
-			// clear realtime default app data
+			// clear real-time default app data
 			AppData.defaultUser = null;
 			AppData.evercamCameraList.clear();
 
@@ -586,116 +641,117 @@ public class CamerasActivity extends ParentActivity implements
 		startActivity(new Intent(this, MainActivity.class));
 	}
 
-	private class UserLoadingTask extends AsyncTask<String, String, String[]>
-	{
-		int defaultUserIndex = 0;
-
-		@Override
-		protected String[] doInBackground(String... arg0)
-		{
-			try
-			{
-				DbAppUser dbUser = new DbAppUser(CamerasActivity.this);
-				AppData.appUsers = dbUser.getAllAppUsers(1000);
-
-				final String[] userEmailArray = new String[AppData.appUsers.size()];
-
-				for (int count = 0; count < AppData.appUsers.size(); count++)
-				{
-					userEmailArray[count] = AppData.appUsers.get(count).getEmail();
-					if (AppData.appUsers.get(count).getIsDefault())
-					{
-						defaultUserIndex = count;
-					}
-				}
-
-				return userEmailArray;
-
-			}
-			catch (Exception e)
-			{
-				Log.e(TAG, e.getMessage(), e);
-				if (Constants.isAppTrackingEnabled)
-				{
-					BugSenseHandler.sendException(e);
-				}
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(String[] userEmailArray)
-		{
-			try
-			{
-				ArrayAdapter<String> dropdownListAdapter = new ArrayAdapter<String>(
-						CamerasActivity.this, android.R.layout.simple_spinner_dropdown_item,
-						userEmailArray);
-				CamerasActivity.this.getActionBar().setNavigationMode(
-						ActionBar.NAVIGATION_MODE_LIST);
-				OnNavigationListener navigationListener = new OnNavigationListener(){
-					@Override
-					public boolean onNavigationItemSelected(int itemPosition, long itemId)
-					{
-						try
-						{
-							// set all current users default to false
-							for (AppUser user : AppData.appUsers)
-							{
-								user.setIsDefault(false);
-							}
-
-							// set all db app users as false
-							DbAppUser dbUser = new DbAppUser(CamerasActivity.this);
-							dbUser.updateAllIsDefaultFalse();
-
-							// set selected user's default to true
-							AppUser user = AppData.appUsers.get(itemPosition);
-							user.setIsDefault(true);
-
-							dbUser.updateAppUser(user);
-							AppData.defaultUser = user;
-
-							// load local cameras for default user
-							AppData.evercamCameraList = new DbCamera(CamerasActivity.this)
-									.getCamerasByOwner(user.getUsername(), 500);
-
-							removeAllCameraViews();
-
-							// FIXME: Time consuming and freeze UI
-							addAllCameraViews(true);
-
-							// start the task for default user to refresh camera
-							// list
-							new LoadCameraListTask(AppData.defaultUser, CamerasActivity.this)
-									.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-							if (totalCamerasInGrid == 0 && refresh != null)
-							{
-								refresh.setActionView(null);
-								refresh.setActionView(R.layout.actionbar_indeterminate_progress);
-							}
-						}
-						catch (Exception e)
-						{
-							Log.e(TAG, e.getMessage(), e);
-							if (Constants.isAppTrackingEnabled)
-							{
-								BugSenseHandler.sendException(e);
-							}
-						}
-						return false;
-					}
-				};
-
-				getActionBar().setListNavigationCallbacks(dropdownListAdapter, navigationListener);
-				getActionBar().setSelectedNavigationItem(defaultUserIndex);
-
-			}
-			catch (Exception e)
-			{
-				Log.e(TAG, e.getMessage(), e);
-				if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-			}
-		}
-	}
+	// private class UserLoadingTask extends AsyncTask<String, String, String[]>
+	// {
+	// int defaultUserIndex = 0;
+	//
+	// @Override
+	// protected String[] doInBackground(String... arg0)
+	// {
+	// try
+	// {
+	// DbAppUser dbUser = new DbAppUser(CamerasActivity.this);
+	// AppData.appUsers = dbUser.getAllAppUsers(1000);
+	//
+	// final String[] userEmailArray = new String[AppData.appUsers.size()];
+	//
+	// for (int count = 0; count < AppData.appUsers.size(); count++)
+	// {
+	// userEmailArray[count] = AppData.appUsers.get(count).getEmail();
+	// if (AppData.appUsers.get(count).getIsDefault())
+	// {
+	// defaultUserIndex = count;
+	// }
+	// }
+	//
+	// return userEmailArray;
+	//
+	// }
+	// catch (Exception e)
+	// {
+	// Log.e(TAG, e.getMessage(), e);
+	// if (Constants.isAppTrackingEnabled)
+	// {
+	// BugSenseHandler.sendException(e);
+	// }
+	// }
+	// return null;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(String[] userEmailArray)
+	// {
+	// try
+	// {
+	// ArrayAdapter<String> dropdownListAdapter = new ArrayAdapter<String>(
+	// CamerasActivity.this, android.R.layout.simple_spinner_dropdown_item,
+	// userEmailArray);
+	// CamerasActivity.this.getActionBar().setNavigationMode(
+	// ActionBar.NAVIGATION_MODE_LIST);
+	// OnNavigationListener navigationListener = new OnNavigationListener(){
+	// @Override
+	// public boolean onNavigationItemSelected(int itemPosition, long itemId)
+	// {
+	// try
+	// {
+	// // set all current users default to false
+	// for (AppUser user : AppData.appUsers)
+	// {
+	// user.setIsDefault(false);
+	// }
+	//
+	// // set all db app users as false
+	// DbAppUser dbUser = new DbAppUser(CamerasActivity.this);
+	// dbUser.updateAllIsDefaultFalse();
+	//
+	// // set selected user's default to true
+	// AppUser user = AppData.appUsers.get(itemPosition);
+	// user.setIsDefault(true);
+	//
+	// dbUser.updateAppUser(user);
+	// AppData.defaultUser = user;
+	//
+	// // load local cameras for default user
+	// AppData.evercamCameraList = new DbCamera(CamerasActivity.this)
+	// .getCamerasByOwner(user.getUsername(), 500);
+	//
+	// removeAllCameraViews();
+	//
+	// // FIXME: Time consuming and freeze UI
+	// addAllCameraViews(true);
+	//
+	// // start the task for default user to refresh camera
+	// // list
+	// new LoadCameraListTask(AppData.defaultUser, CamerasActivity.this)
+	// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	// if (totalCamerasInGrid == 0 && refresh != null)
+	// {
+	// refresh.setActionView(null);
+	// refresh.setActionView(R.layout.actionbar_indeterminate_progress);
+	// }
+	// }
+	// catch (Exception e)
+	// {
+	// Log.e(TAG, e.getMessage(), e);
+	// if (Constants.isAppTrackingEnabled)
+	// {
+	// BugSenseHandler.sendException(e);
+	// }
+	// }
+	// return false;
+	// }
+	// };
+	//
+	// getActionBar().setListNavigationCallbacks(dropdownListAdapter,
+	// navigationListener);
+	// getActionBar().setSelectedNavigationItem(defaultUserIndex);
+	//
+	// }
+	// catch (Exception e)
+	// {
+	// Log.e(TAG, e.getMessage(), e);
+	// if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+	// }
+	// }
+	// }
 }
