@@ -132,18 +132,6 @@ public class MainActivity extends Activity
 		return (AppData.defaultUser != null);
 	}
 
-	private void showInternetNotConnectDialog()
-	{
-		CustomedDialog.getNoInternetDialog(this, new DialogInterface.OnClickListener(){
-			@Override
-			public void onClick(DialogInterface dialog, int which)
-			{
-				dialog.dismiss();
-				finish();
-			}
-		}).show();
-	}
-
 	class MainCheckInternetTask extends CheckInternetTask
 	{
 
@@ -171,13 +159,14 @@ public class MainActivity extends Activity
 				}
 				else
 				{
-					showInternetNotConnectDialog();
+					CustomedDialog.showInternetNotConnectDialog(MainActivity.this);
 				}
 			}
 			catch (Exception e)
 			{
 				BugSenseHandler.sendException(e);
-				CustomedDialog.getAlertDialog(MainActivity.this, "Error Occured", e.toString()).show();
+				CustomedDialog.getAlertDialog(MainActivity.this, "Error Occured", e.toString())
+						.show();
 				Log.e(TAG, Log.getStackTraceString(e));
 			}
 		}

@@ -28,14 +28,14 @@ public class EvercamPlayApplication extends Application
 	{
 		super();
 	}
-	
-//	@Override
-//	public void onCreate()
-//	{
-//		super.onCreate();
-//		//Redirect URL, just for temporary testing 
-//		API.URL = "http://proxy.evr.cm:9292/v1/";
-//	}
+
+	// @Override
+	// public void onCreate()
+	// {
+	// super.onCreate();
+	// //Redirect URL, just for temporary testing
+	// API.URL = "http://proxy.evr.cm:9292/v1/";
+	// }
 
 	synchronized Tracker getTracker(TrackerName trackerId)
 	{
@@ -70,11 +70,10 @@ public class EvercamPlayApplication extends Application
 		tracker.send(new HitBuilders.AppViewBuilder().build());
 	}
 
-	public static void sendEventAnalytics(Activity activity, int cateory, int action,
-			int label)
+	public static void sendEventAnalytics(Activity activity, int cateory, int action, int label)
 	{
 		Tracker tracker = getAppTracker(activity);
-		tracker.send(new HitBuilders.EventBuilder().setCategory(activity.getString(cateory)).setAction(activity.getString(action))
-				.setLabel(activity.getString(label)).build());
+		tracker.send(new HitBuilders.EventBuilder().setCategory(activity.getString(cateory))
+				.setAction(activity.getString(action)).setLabel(activity.getString(label)).build());
 	}
 }

@@ -158,7 +158,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			{
 				BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 			}
-			
+
 			EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_video));
 
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -339,29 +339,30 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			BugSenseHandler.closeSession(this);
 		}
 	}
-//
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu)
-//	{
-//		try
-//		{
-//			MenuInflater inflater = getMenuInflater();
-//			inflater.inflate(R.menu.videomenulayout, menu);
-//
-//			return true;
-//		}
-//		catch (Exception ex)
-//		{
-//			Log.e(TAG, ex.toString());
-//			if (Constants.isAppTrackingEnabled)
-//			{
-//				BugSenseHandler.sendException(ex);
-//			}
-//		}
-//		return true;
-//	}
-//
- 
+
+	//
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu)
+	// {
+	// try
+	// {
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(R.menu.videomenulayout, menu);
+	//
+	// return true;
+	// }
+	// catch (Exception ex)
+	// {
+	// Log.e(TAG, ex.toString());
+	// if (Constants.isAppTrackingEnabled)
+	// {
+	// BugSenseHandler.sendException(ex);
+	// }
+	// }
+	// return true;
+	// }
+	//
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{

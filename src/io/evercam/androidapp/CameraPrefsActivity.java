@@ -20,7 +20,7 @@ public class CameraPrefsActivity extends PreferenceActivity
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
-		
+
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_preference));
 
 		this.getActionBar().hide();

@@ -434,8 +434,8 @@ public class CameraLayout extends LinearLayout
 	{
 		try
 		{
-		this.setBackgroundColor(Color.GRAY);
-		cameraRelativeLayout.getBackground().setAlpha(70);
+			this.setBackgroundColor(Color.GRAY);
+			cameraRelativeLayout.getBackground().setAlpha(70);
 		}
 		catch (Exception e)
 		{

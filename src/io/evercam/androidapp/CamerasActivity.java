@@ -50,8 +50,11 @@ public class CamerasActivity extends ParentActivity implements
 	private int slideoutMenuAnimationTime = 255;
 	private boolean isUsersAccountsActivityStarted = false;
 	private static int camerasPerRow = 2;
-	
-	private enum InternetCheckType {START, RESTART};
+
+	private enum InternetCheckType
+	{
+		START, RESTART
+	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -82,7 +85,7 @@ public class CamerasActivity extends ParentActivity implements
 			// Start loading camera list directly.
 			// addUsersToDropdownActionBar();
 			new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.START)
-			.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 			// Disable slide menu until the functionality is required.
 			// slideMenu = (SlideMenu) findViewById(R.id.slideMenu);
@@ -327,7 +330,7 @@ public class CamerasActivity extends ParentActivity implements
 	{
 		super.onRestart();
 		new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.RESTART)
-		.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
 	@Override
@@ -622,11 +625,11 @@ public class CamerasActivity extends ParentActivity implements
 		}
 		startActivity(new Intent(this, MainActivity.class));
 	}
-	
+
 	class CamerasCheckInternetTask extends CheckInternetTask
 	{
 		InternetCheckType type;
-		
+
 		public CamerasCheckInternetTask(Context context, InternetCheckType type)
 		{
 			super(context);
@@ -638,17 +641,18 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			if (hasNetwork)
 			{
-				if(type == InternetCheckType.START)
+				if (type == InternetCheckType.START)
 				{
-				startLoadingCameras();
+					startLoadingCameras();
 				}
-				else if(type == InternetCheckType.RESTART)
+				else if (type == InternetCheckType.RESTART)
 				{
 					try
 					{
 						if (isUsersAccountsActivityStarted)
 						{
-							// FIXME: Why camera list need reload when account manage
+							// FIXME: Why camera list need reload when account
+							// manage
 							// activity started?
 							isUsersAccountsActivityStarted = false;
 							// addUsersToDropdownActionBar();
@@ -656,16 +660,20 @@ public class CamerasActivity extends ParentActivity implements
 						}
 
 						int camsOldValue = camerasPerRow;
-						SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(CamerasActivity.this);
+						SharedPreferences sharedPrefs = PreferenceManager
+								.getDefaultSharedPreferences(CamerasActivity.this);
 						camerasPerRow = PrefsManager.getCameraPerRow(sharedPrefs, 2);
 
 						if (camsOldValue != camerasPerRow)
 						{
 							removeAllCameraViews();
-							addAllCameraViews(false); // do not reload cameras because it
-														// may be an activity for
+							addAllCameraViews(false); // do not reload cameras
+														// because it
+														// may be an activity
+														// for
 														// orientation
-														// changed or notification might
+														// changed or
+														// notification might
 														// have arrived.
 						}
 
@@ -678,21 +686,9 @@ public class CamerasActivity extends ParentActivity implements
 			}
 			else
 			{
-				showInternetNotConnectDialog();
+				CustomedDialog.showInternetNotConnectDialog(CamerasActivity.this);
 			}
 		}
-	}
-	
-	private void showInternetNotConnectDialog()
-	{
-		CustomedDialog.getNoInternetDialog(this, new DialogInterface.OnClickListener(){
-			@Override
-			public void onClick(DialogInterface dialog, int which)
-			{
-				dialog.dismiss();
-				finish();
-			}
-		}).show();
 	}
 
 	// private class UserLoadingTask extends AsyncTask<String, String, String[]>

@@ -283,11 +283,11 @@ public class RVideoViewActivity extends ParentActivity
 		{
 			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
 			CustomedDialog.getAlertDialog(context, "Exception", e.toString()).show();// +
-																				// "::cam.getCameraImageUrl() ["
-																				// +
-																				// cam.getCameraImageUrl()
-																				// +
-																				// "], cam.getLowResolutionSnapshotUrl() ["+cam.getLowResolutionSnapshotUrl()+"]").show();
+			// "::cam.getCameraImageUrl() ["
+			// +
+			// cam.getCameraImageUrl()
+			// +
+			// "], cam.getLowResolutionSnapshotUrl() ["+cam.getLowResolutionSnapshotUrl()+"]").show();
 
 		}
 	}

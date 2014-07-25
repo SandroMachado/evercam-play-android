@@ -50,8 +50,12 @@ public class LoginActivity extends ParentActivity
 	private SharedPreferences sharedPrefs;
 	private String TAG = "evercamplay-LoginActivity";
 	private CustomProgressDialog customProgressDialog;
-	private TextView signUpLink;    
-	private enum InternetCheckType {LOGIN, SIGNUP};
+	private TextView signUpLink;
+
+	private enum InternetCheckType
+	{
+		LOGIN, SIGNUP
+	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -59,10 +63,10 @@ public class LoginActivity extends ParentActivity
 		super.onCreate(savedInstanceState);
 
 		customProgressDialog = new CustomProgressDialog(this);
-		
+
 		launchBugsense();
 
-		getWindow().requestFeature(Window.FEATURE_NO_TITLE);    
+		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.login);
 		setUnderLine();
 
@@ -70,7 +74,7 @@ public class LoginActivity extends ParentActivity
 		{
 			BugSenseHandler.initAndStartSession(LoginActivity.this, Constants.bugsense_ApiKey);
 		}
-		
+
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_login));
 
 		setEvercamDeveloperKeypair();
@@ -91,7 +95,7 @@ public class LoginActivity extends ParentActivity
 			public void onClick(View v)
 			{
 				new LoginCheckInternetTask(LoginActivity.this, InternetCheckType.LOGIN)
-				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			}
 		});
 
@@ -101,7 +105,7 @@ public class LoginActivity extends ParentActivity
 			public void onClick(View v)
 			{
 				new LoginCheckInternetTask(LoginActivity.this, InternetCheckType.SIGNUP)
-				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			}
 		});
 	}
@@ -194,13 +198,15 @@ public class LoginActivity extends ParentActivity
 			catch (EvercamException e)
 			{
 				Log.e(TAG, e.toString());
-				
-				if(e.getMessage().contains(getString(R.string.prefix_invalid)) || e.getMessage().contains(getString(R.string.prefix_no_user)))
+
+				if (e.getMessage().contains(getString(R.string.prefix_invalid))
+						|| e.getMessage().contains(getString(R.string.prefix_no_user)))
 				{
 					errorMessage = e.getMessage();
 				}
 				else
 				{
+					// Do nothing, show alert dialog in onPostExecute
 				}
 			}
 			return false;
@@ -231,7 +237,7 @@ public class LoginActivity extends ParentActivity
 			}
 			else
 			{
-				if(errorMessage!=null)
+				if (errorMessage != null)
 				{
 					Toast toast = Toast.makeText(getApplicationContext(), errorMessage,
 							Toast.LENGTH_SHORT);
@@ -240,9 +246,10 @@ public class LoginActivity extends ParentActivity
 				}
 				else
 				{
-					//FIXME: Unexpected error happened with login, should show an error dialog
+					// FIXME: Unexpected error happened with login, should show
+					// an error dialog
 				}
-				
+
 				passwordEdit.setText(null);
 			}
 		}
@@ -333,18 +340,6 @@ public class LoginActivity extends ParentActivity
 		signUpLink.setText(spanString);
 	}
 
-	private void showInternetNotConnectDialog()
-	{
-		CustomedDialog.getNoInternetDialog(this, new DialogInterface.OnClickListener(){
-			@Override
-			public void onClick(DialogInterface dialog, int which)
-			{
-				dialog.dismiss();
-				finish();
-			}
-		}).show();
-	}
-
 	private void startCamerasActivity()
 	{
 		if (CamerasActivity.activity != null)
@@ -362,11 +357,11 @@ public class LoginActivity extends ParentActivity
 		Intent intent = new Intent(this, CamerasActivity.class);
 		this.startActivity(intent);
 	}
-	
+
 	class LoginCheckInternetTask extends CheckInternetTask
 	{
 		InternetCheckType type;
-		
+
 		public LoginCheckInternetTask(Context context, InternetCheckType type)
 		{
 			super(context);
@@ -390,7 +385,7 @@ public class LoginActivity extends ParentActivity
 			}
 			else
 			{
-				showInternetNotConnectDialog();
+				CustomedDialog.showInternetNotConnectDialog(LoginActivity.this);
 			}
 		}
 	}

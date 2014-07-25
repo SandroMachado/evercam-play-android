@@ -1,6 +1,7 @@
 package io.evercam.androidapp.utils;
 
 import io.evercam.androidapp.R;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -120,6 +121,18 @@ public class CustomedDialog
 		dialogNoInternet.setCanceledOnTouchOutside(false);
 		dialogNoInternet.closeOptionsMenu();
 		return dialogNoInternet;
+	}
+
+	public static void showInternetNotConnectDialog(final Activity activity)
+	{
+		CustomedDialog.getNoInternetDialog(activity, new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				dialog.dismiss();
+				activity.finish();
+			}
+		}).show();
 	}
 
 	public static AlertDialog getAlertDialogNoTitleNoButton(Context ctx, View view)

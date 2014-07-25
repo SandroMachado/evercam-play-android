@@ -7,6 +7,7 @@ import io.evercam.User;
 import io.evercam.androidapp.custom.CustomAdapter;
 import io.evercam.androidapp.dal.*;
 import io.evercam.androidapp.dto.AppUser;
+import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PropertyReader;
@@ -19,11 +20,13 @@ import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,6 +38,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ManageAccountsActivity extends ParentActivity
 {
@@ -51,7 +55,7 @@ public class ManageAccountsActivity extends ParentActivity
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
-		
+
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_manage_account));
 
 		if (this.getActionBar() != null)
@@ -264,55 +268,56 @@ public class ManageAccountsActivity extends ParentActivity
 					@Override
 					public void onClick(View view)
 					{
-						boolean isDefault = false;
-						EditText usernameEdit = (EditText) dialog_layout
-								.findViewById(R.id.username_edit);
-						EditText passwordEdit = (EditText) dialog_layout
-								.findViewById(R.id.user_password);
-
-						String username = usernameEdit.getText().toString();
-						String password = passwordEdit.getText().toString();
-
-						TextView textError = (TextView) dialog_layout
-								.findViewById(R.id.txt_error_user_authentication);
-						if (TextUtils.isEmpty(password))
-						{
-							showErrorMessageOnDialog(textError, R.string.error_password_required);
-							return;
-						}
-						else if (password.contains(" "))
-						{
-							showErrorMessageOnDialog(textError, R.string.error_invalid_password);
-							return;
-						}
-
-						if (TextUtils.isEmpty(username))
-						{
-							showErrorMessageOnDialog(textError, R.string.error_username_required);
-							return;
-						}
-						else if (username.contains("@"))
-						{
-							showErrorMessageOnDialog(textError, R.string.please_use_username);
-							return;
-						}
-						else if (username.contains(" "))
-						{
-							showErrorMessageOnDialog(textError, R.string.error_invalid_username);
-							return;
-						}
-						ProgressBar progressBar = (ProgressBar) alertDialog
-								.findViewById(R.id.pb_loadinguser);
-						progressBar.setVisibility(View.VISIBLE);
-						AddAccountTask task = new AddAccountTask(username, password, isDefault,
-								alertDialog);
-						task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						new AccountCheckInternetTask(ManageAccountsActivity.this, dialog_layout)
+								.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 					}
 				});
 			}
 		});
 
 		alertDialog.show();
+	}
+
+	private void launchLogin(View view)
+	{
+		boolean isDefault = false;
+		EditText usernameEdit = (EditText) view.findViewById(R.id.username_edit);
+		EditText passwordEdit = (EditText) view.findViewById(R.id.user_password);
+
+		String username = usernameEdit.getText().toString();
+		String password = passwordEdit.getText().toString();
+
+		TextView textError = (TextView) view.findViewById(R.id.txt_error_user_authentication);
+		if (TextUtils.isEmpty(password))
+		{
+			showErrorMessageOnDialog(textError, R.string.error_password_required);
+			return;
+		}
+		else if (password.contains(" "))
+		{
+			showErrorMessageOnDialog(textError, R.string.error_invalid_password);
+			return;
+		}
+
+		if (TextUtils.isEmpty(username))
+		{
+			showErrorMessageOnDialog(textError, R.string.error_username_required);
+			return;
+		}
+		else if (username.contains("@"))
+		{
+			showErrorMessageOnDialog(textError, R.string.please_use_username);
+			return;
+		}
+		else if (username.contains(" "))
+		{
+			showErrorMessageOnDialog(textError, R.string.error_invalid_username);
+			return;
+		}
+		ProgressBar progressBar = (ProgressBar) alertDialog.findViewById(R.id.pb_loadinguser);
+		progressBar.setVisibility(View.VISIBLE);
+		AddAccountTask task = new AddAccountTask(username, password, isDefault, alertDialog);
+		task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
 	public void setDefaultUser(final String userId, final Boolean closeActivity,
@@ -363,7 +368,8 @@ public class ManageAccountsActivity extends ParentActivity
 			{
 				if (error != null && error.length() > 0)
 				{
-					CustomedDialog.getAlertDialog(ManageAccountsActivity.this, "Error Occured", error);
+					CustomedDialog.getAlertDialog(ManageAccountsActivity.this, "Error Occured",
+							error);
 				}
 				if (closeActivity) ManageAccountsActivity.this.finish();
 				else new ShowAllAccountsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -411,13 +417,14 @@ public class ManageAccountsActivity extends ParentActivity
 		}
 	}
 
-	private class AddAccountTask extends AsyncTask<String, Void, String>
+	private class AddAccountTask extends AsyncTask<String, Void, Boolean>
 	{
 		String username;
 		String password;
 		boolean isDefault = false;
 		AlertDialog alertDialog = null;
 		AppUser newUser;
+		String errorMessage = null;
 
 		public AddAccountTask(String username, String password, boolean isDefault,
 				AlertDialog alertDialog)
@@ -429,7 +436,7 @@ public class ManageAccountsActivity extends ParentActivity
 		}
 
 		@Override
-		protected String doInBackground(String... values)
+		protected Boolean doInBackground(String... values)
 		{
 			setEvercamDeveloperKeypair();
 			try
@@ -446,26 +453,33 @@ public class ManageAccountsActivity extends ParentActivity
 				newUser.setEmail(evercamUser.getEmail());
 				newUser.setApiKey(userApiKey);
 				newUser.setApiId(userApiId);
-				return null;
+				return true;
 			}
 			catch (EvercamException e)
 			{
-				return e.getMessage();
+				if (e.getMessage().contains(getString(R.string.prefix_invalid))
+						|| e.getMessage().contains(getString(R.string.prefix_no_user)))
+				{
+					errorMessage = e.getMessage();
+				}
+				return false;
 			}
 		}
 
 		@Override
-		protected void onPostExecute(String result)
+		protected void onPostExecute(Boolean success)
 		{
-			if (result != null)
+			if (!success)
 			{
 				ProgressBar progressBar = (ProgressBar) alertDialog
 						.findViewById(R.id.pb_loadinguser);
 				progressBar.setVisibility(View.GONE);
-				TextView tverror = (TextView) alertDialog
-						.findViewById(R.id.txt_error_user_authentication);
-				tverror.setVisibility(View.VISIBLE);
-				tverror.setText(result);
+
+				if (errorMessage != null)
+				{
+					showToast(errorMessage);
+				}
+
 				return;
 			}
 			else
@@ -527,5 +541,36 @@ public class ManageAccountsActivity extends ParentActivity
 	{
 		errorTextView.setVisibility(View.VISIBLE);
 		errorTextView.setText(message);
+	}
+
+	private void showToast(String message)
+	{
+		Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+		toast.setGravity(Gravity.CENTER, 0, 0);
+		toast.show();
+	}
+
+	class AccountCheckInternetTask extends CheckInternetTask
+	{
+		View dialogView;
+
+		public AccountCheckInternetTask(Context context, View view)
+		{
+			super(context);
+			this.dialogView = view;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean hasNetwork)
+		{
+			if (hasNetwork)
+			{
+				launchLogin(dialogView);
+			}
+			else
+			{
+				CustomedDialog.showInternetNotConnectDialog(ManageAccountsActivity.this);
+			}
+		}
 	}
 }

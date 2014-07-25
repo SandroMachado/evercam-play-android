@@ -260,11 +260,11 @@ public class IVideoViewActivity extends ParentActivity implements
 		{
 			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
 			CustomedDialog.getAlertDialog(context, "Exception", e.toString()).show();// +
-																				// "::cam.getCameraImageUrl() ["
-																				// +
-																				// cam.getCameraImageUrl()
-																				// +
-																				// "], cam.getLowResolutionSnapshotUrl() ["+cam.getLowResolutionSnapshotUrl()+"]").show();
+			// "::cam.getCameraImageUrl() ["
+			// +
+			// cam.getCameraImageUrl()
+			// +
+			// "], cam.getLowResolutionSnapshotUrl() ["+cam.getLowResolutionSnapshotUrl()+"]").show();
 		}
 	}
 
@@ -335,11 +335,11 @@ public class IVideoViewActivity extends ParentActivity implements
 		{
 			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
 			CustomedDialog.getAlertDialog(context, "Exception", e.toString()).show();// +
-																				// "::cam.getCameraImageUrl() ["
-																				// +
-																				// cam.getCameraImageUrl()
-																				// +
-																				// "], cam.getLowResolutionSnapshotUrl() ["+cam.getLowResolutionSnapshotUrl()+"]").show();
+			// "::cam.getCameraImageUrl() ["
+			// +
+			// cam.getCameraImageUrl()
+			// +
+			// "], cam.getLowResolutionSnapshotUrl() ["+cam.getLowResolutionSnapshotUrl()+"]").show();
 		}
 
 	}

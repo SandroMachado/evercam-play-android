@@ -24,7 +24,7 @@ public class AccountUtils
 	 * @param context
 	 *            the context from which to retrieve the user profile
 	 * @return the user profile
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static UserProfile getUserProfile(Context context) throws Exception
 	{

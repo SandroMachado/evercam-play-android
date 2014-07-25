@@ -1,4 +1,5 @@
 package io.evercam.androidapp.custom;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 
@@ -8,12 +9,12 @@ import android.app.ProgressDialog;
 public class CustomProgressDialog
 {
 	private ProgressDialog progressDialog;
-	
+
 	public CustomProgressDialog(Activity activity)
 	{
 		progressDialog = new ProgressDialog(activity);
 	}
-	
+
 	public void show(String message)
 	{
 		progressDialog.setMessage(message);

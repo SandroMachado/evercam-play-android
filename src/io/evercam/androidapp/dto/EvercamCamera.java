@@ -49,7 +49,7 @@ public class EvercamCamera
 		{
 			cameraId = camera.getId();
 			name = camera.getName();
-			if(AppData.defaultUser!=null)
+			if (AppData.defaultUser != null)
 			{
 				owner = AppData.defaultUser.getUsername();
 			}
