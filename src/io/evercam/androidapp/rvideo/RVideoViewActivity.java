@@ -9,7 +9,7 @@ import io.evercam.androidapp.utils.CLog;
 import io.evercam.androidapp.utils.CambaRecordingApiManager;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
-import io.evercam.androidapp.utils.UIUtils;
+import io.evercam.androidapp.utils.CustomedDialog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -282,7 +282,7 @@ public class RVideoViewActivity extends ParentActivity
 		catch (Exception e)
 		{
 			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.getAlertDialog(context, "Exception", e.toString()).show();// +
+			CustomedDialog.getAlertDialog(context, "Exception", e.toString()).show();// +
 																				// "::cam.getCameraImageUrl() ["
 																				// +
 																				// cam.getCameraImageUrl()
@@ -494,7 +494,7 @@ public class RVideoViewActivity extends ParentActivity
 			{
 				try
 				{
-					UIUtils.getAlertDialog(RVideoViewActivity.this, "Network not available",
+					CustomedDialog.getAlertDialog(RVideoViewActivity.this, "Network not available",
 							"Please connect to internat and try again",
 							new DialogInterface.OnClickListener(){
 
@@ -1194,7 +1194,7 @@ public class RVideoViewActivity extends ParentActivity
 				{
 					isShowingFailureMessage = true;
 					hideProgressView();
-					UIUtils.getAlertDialog(RVideoViewActivity.this, "Unable to connect",
+					CustomedDialog.getAlertDialog(RVideoViewActivity.this, "Unable to connect",
 							"Internet connectivity is lost.",
 							new DialogInterface.OnClickListener(){
 
@@ -1293,7 +1293,7 @@ public class RVideoViewActivity extends ParentActivity
 					// RVideoDateTimeDialog.GetDateTimeStringFullNoSpaces()));
 					// if(camera.getHourServerIp() == null)
 					// {
-					// // UIUtils.GetAlertDialog(RVideoViewActivity.this,
+					// // CustomedDialog.GetAlertDialog(RVideoViewActivity.this,
 					// "Recording not found",
 					// "Unable to find recordings for the given time. Please try later.").show();
 					// return null;
@@ -1332,7 +1332,7 @@ public class RVideoViewActivity extends ParentActivity
 		{// DownloadImage Live
 			if (!isImageUrlsDownloadStarted)
 
-			UIUtils.getAlertDialog(RVideoViewActivity.this, "Recordings Unavailable",
+			CustomedDialog.getAlertDialog(RVideoViewActivity.this, "Recordings Unavailable",
 					"No recordings available for this time.").show();
 		}
 	}

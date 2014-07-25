@@ -16,7 +16,7 @@ import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.PrefsManager;
-import io.evercam.androidapp.utils.UIUtils;
+import io.evercam.androidapp.utils.CustomedDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -133,7 +133,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 		{
 			if (!camerasActivity.isFinishing())
 			{
-				UIUtils.getAlertDialog(camerasActivity, "Error Occured", "",
+				CustomedDialog.getAlertDialog(camerasActivity, "Error Occured", "",
 						new DialogInterface.OnClickListener(){
 							@Override
 							public void onClick(DialogInterface dialog, int which)

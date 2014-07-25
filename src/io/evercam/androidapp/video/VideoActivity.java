@@ -11,7 +11,7 @@ import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamFile;
-import io.evercam.androidapp.utils.UIUtils;
+import io.evercam.androidapp.utils.CustomedDialog;
 
 import java.io.File;
 import java.io.InputStream;
@@ -487,7 +487,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.getAlertDialog(context, "Exception", e.toString()).show();
+			CustomedDialog.getAlertDialog(context, "Exception", e.toString()).show();
 		}
 	}
 
@@ -950,7 +950,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 	void showMediaFailureDialog()
 	{
-		UIUtils.getAlertDialog(VideoActivity.this, "Unable to play",
+		CustomedDialog.getAlertDialog(VideoActivity.this, "Unable to play",
 				"Please check camera and try again.", new DialogInterface.OnClickListener(){
 
 					@Override
@@ -998,7 +998,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			try
 			{
-				UIUtils.getNoInternetDialog(this, new DialogInterface.OnClickListener(){
+				CustomedDialog.getNoInternetDialog(this, new DialogInterface.OnClickListener(){
 					@Override
 					public void onClick(DialogInterface dialog, int which)
 					{

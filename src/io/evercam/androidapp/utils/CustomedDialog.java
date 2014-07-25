@@ -11,7 +11,7 @@ import android.text.util.Linkify;
 import android.view.View;
 import android.widget.TextView;
 
-public class UIUtils
+public class CustomedDialog
 {
 	public static AlertDialog getAlertDialog(Context ctx, String title, String message)
 	{

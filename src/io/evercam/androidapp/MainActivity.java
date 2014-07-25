@@ -2,20 +2,21 @@ package io.evercam.androidapp;
 
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppUser;
+import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.AppData;
-import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
-import io.evercam.androidapp.utils.UIUtils;
+import io.evercam.androidapp.utils.CustomedDialog;
 
 import com.bugsense.trace.BugSenseHandler;
-import com.google.android.gms.analytics.Tracker;
 
 import io.evercam.androidapp.R;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,7 +49,7 @@ public class MainActivity extends Activity
 		}
 		catch (Exception ex)
 		{
-			UIUtils.getAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
+			CustomedDialog.getAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
 			Log.e(TAG, Log.getStackTraceString(ex));
 		}
 	}
@@ -57,72 +58,29 @@ public class MainActivity extends Activity
 	{
 		try
 		{
-			if (!Commons.isOnline(this))
-			{
-				try
-				{
-					UIUtils.getNoInternetDialog(this, new DialogInterface.OnClickListener(){
-						@Override
-						public void onClick(DialogInterface dialog, int which)
-						{
-							dialog.dismiss();
-							finish();
-						}
-					}).show();
-					return;
-				}
-				catch (Exception ex)
-				{
-					if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(ex);
-				}
-			}
-			else
-			{
-				if (isUserLogged())
-				{
-					startCamerasActivity();
-				}
-				else
-				{
-					Intent slideIntent = new Intent(MainActivity.this, SlideActivity.class);
-					startActivity(slideIntent);
-				}
-			}
+			new MainCheckInternetTask(MainActivity.this)
+					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		}
 		catch (Exception ex)
 		{
-			UIUtils.getAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
+			BugSenseHandler.sendException(ex);
+			CustomedDialog.getAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
 			Log.e(TAG, Log.getStackTraceString(ex));
 		}
-
 	}
 
 	private void startCamerasActivity()
 	{
 		int notificationID = 0;
-		try
-		{
-			String strNotificationID = this.getIntent().getStringExtra(
-					Constants.GCMNotificationIDString);
+		String strNotificationID = this.getIntent().getStringExtra(
+				Constants.GCMNotificationIDString);
 
-			if (strNotificationID != null && !strNotificationID.equals("")) notificationID = Integer
-					.parseInt(strNotificationID);
-
-		}
-		catch (Exception e)
-		{
-		}
+		if (strNotificationID != null && !strNotificationID.equals("")) notificationID = Integer
+				.parseInt(strNotificationID);
 
 		if (CamerasActivity.activity != null)
 		{
-			try
-			{
-				CamerasActivity.activity.finish();
-			}
-			catch (Exception e)
-			{
-				Log.e(TAG, e.toString(), e);
-			}
+			CamerasActivity.activity.finish();
 		}
 
 		Intent intent = new Intent(this, CamerasActivity.class);
@@ -130,7 +88,6 @@ public class MainActivity extends Activity
 		this.startActivity(intent);
 
 		MainActivity.this.finish();
-
 	}
 
 	@Override
@@ -173,6 +130,56 @@ public class MainActivity extends Activity
 		}
 
 		return (AppData.defaultUser != null);
+	}
 
+	private void showInternetNotConnectDialog()
+	{
+		CustomedDialog.getNoInternetDialog(this, new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				dialog.dismiss();
+				finish();
+			}
+		}).show();
+	}
+
+	class MainCheckInternetTask extends CheckInternetTask
+	{
+
+		public MainCheckInternetTask(Context context)
+		{
+			super(context);
+		}
+
+		@Override
+		protected void onPostExecute(Boolean hasNetwork)
+		{
+			try
+			{
+				if (hasNetwork)
+				{
+					if (isUserLogged())
+					{
+						startCamerasActivity();
+					}
+					else
+					{
+						Intent slideIntent = new Intent(MainActivity.this, SlideActivity.class);
+						startActivity(slideIntent);
+					}
+				}
+				else
+				{
+					showInternetNotConnectDialog();
+				}
+			}
+			catch (Exception e)
+			{
+				BugSenseHandler.sendException(e);
+				CustomedDialog.getAlertDialog(MainActivity.this, "Error Occured", e.toString()).show();
+				Log.e(TAG, Log.getStackTraceString(e));
+			}
+		}
 	}
 }

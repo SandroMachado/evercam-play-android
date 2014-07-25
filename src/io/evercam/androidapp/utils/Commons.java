@@ -53,12 +53,6 @@ public class Commons
 	{
 		try
 		{
-			if (Constants.isOfflineDebugging)// if the offline debugging is
-												// enabled always tell that
-												// system is
-			{
-				return true;
-			}
 			ConnectivityManager cm = (ConnectivityManager) ctx
 					.getSystemService(Context.CONNECTIVITY_SERVICE);
 			return cm.getActiveNetworkInfo() != null

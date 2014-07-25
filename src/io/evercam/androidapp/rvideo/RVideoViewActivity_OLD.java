@@ -27,7 +27,7 @@ package io.evercam.androidapp.rvideo;
 //import io.evercam.androidapp.utils.CambaRecordingApiManager;
 //import io.evercam.androidapp.utils.Commons;
 //import io.evercam.androidapp.utils.Constants;
-//import io.evercam.androidapp.utils.UIUtils;
+//import io.evercam.androidapp.utils.CustomedDialog;
 //import io.evercam.androidapp.R;
 //import com.google.analytics.tracking.android.EasyTracker;
 //
@@ -282,7 +282,7 @@ package io.evercam.androidapp.rvideo;
 //		catch(Exception e)
 //		{
 //			if(enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-//			UIUtils.GetAlertDialog(context, "Exception", e.toString()).show();// + "::cam.getCameraImageUrl() [" +  cam.getCameraImageUrl() + "], cam.getLowResolutionSnapshotUrl() ["+cam.getLowResolutionSnapshotUrl()+"]").show();
+//			CustomedDialog.GetAlertDialog(context, "Exception", e.toString()).show();// + "::cam.getCameraImageUrl() [" +  cam.getCameraImageUrl() + "], cam.getLowResolutionSnapshotUrl() ["+cam.getLowResolutionSnapshotUrl()+"]").show();
 //
 //
 //
@@ -468,7 +468,7 @@ package io.evercam.androidapp.rvideo;
 //			if(!Commons.isOnline(this)) // check whether the network is available or not?
 //			{
 //				try{
-//					UIUtils.GetAlertDialog(RVideoViewActivity_OLD.this, "Network not available", "Please connect to internat and try again", new DialogInterface.OnClickListener() {
+//					CustomedDialog.GetAlertDialog(RVideoViewActivity_OLD.this, "Network not available", "Please connect to internat and try again", new DialogInterface.OnClickListener() {
 //
 //						public void onClick(DialogInterface dialog, int which) {
 //							try{
@@ -1116,7 +1116,7 @@ package io.evercam.androidapp.rvideo;
 //				{
 //					isShowingFailureMessage = true;
 //					hideProgressView();
-//					UIUtils.GetAlertDialog(RVideoViewActivity_OLD.this
+//					CustomedDialog.GetAlertDialog(RVideoViewActivity_OLD.this
 //							, "Unable to connect"
 //							, "Internet connectivity is lost."
 //							, new DialogInterface.OnClickListener() {
@@ -1182,7 +1182,7 @@ package io.evercam.androidapp.rvideo;
 //					camera.setHourServerIp(CambaRecordingApiManager.GetCameraInfoOptimized(camera.getCameraID(), camera.getCameraStatusIntVal(), camera.getIsMdEnabled(),camera.getAlarmLevelInteger(), camera.getCameraTimeZone(), camera.getCameraGroup(), RVideoDateTimeDialog.GetDateTimeStringFullNoSpaces(), RVideoDateTimeDialog.GetDateTimeStringFullNoSpacesAddMinutes(20), RVideoDateTimeDialog.GetDateTimeStringFullNoSpaces()));
 //					if(camera.getHourServerIp() == null)
 //					{
-//						//						UIUtils.GetAlertDialog(RVideoViewActivity.this, "Recording not found", "Unable to find recordings for the given time. Please try later.").show();
+//						//						CustomedDialog.GetAlertDialog(RVideoViewActivity.this, "Recording not found", "Unable to find recordings for the given time. Please try later.").show();
 //						return null;
 //					}
 //
@@ -1220,7 +1220,7 @@ package io.evercam.androidapp.rvideo;
 //		protected void onPostExecute(Drawable result) {// DownloadImage Live
 //			if(!isImageUrlsDownloadStarted)
 //
-//				UIUtils.GetAlertDialog(RVideoViewActivity_OLD.this, "Recordings Unavailable", "No recordings available for this time.").show();}
+//				CustomedDialog.GetAlertDialog(RVideoViewActivity_OLD.this, "Recordings Unavailable", "No recordings available for this time.").show();}
 //	}
 //
 // }

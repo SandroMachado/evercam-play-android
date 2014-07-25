@@ -2,13 +2,11 @@ package io.evercam.androidapp;
 
 import java.util.List;
 
-import android.app.ActionBar;
-import android.app.ActionBar.OnNavigationListener;
 import android.os.Bundle;
-import android.os.Handler;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -22,16 +20,16 @@ import android.widget.*;
 import io.evercam.androidapp.custom.AboutDialog;
 import io.evercam.androidapp.custom.CameraLayout;
 import io.evercam.androidapp.dal.DbAppUser;
-import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.dto.ImageLoadingStatus;
 import io.evercam.androidapp.slidemenu.*;
+import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.tasks.LoadCameraListTask;
 import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
-import io.evercam.androidapp.utils.UIUtils;
+import io.evercam.androidapp.utils.CustomedDialog;
 
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
@@ -52,6 +50,8 @@ public class CamerasActivity extends ParentActivity implements
 	private int slideoutMenuAnimationTime = 255;
 	private boolean isUsersAccountsActivityStarted = false;
 	private static int camerasPerRow = 2;
+	
+	private enum InternetCheckType {START, RESTART};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -81,11 +81,13 @@ public class CamerasActivity extends ParentActivity implements
 			// Disable add user to drop down list to hide user Email
 			// Start loading camera list directly.
 			// addUsersToDropdownActionBar();
-			startLoadingCameras();
+			new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.START)
+			.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-			//Disable slide menu until the functionality is required.
-//			slideMenu = (SlideMenu) findViewById(R.id.slideMenu);
-//			slideMenu.init(this, R.menu.slide, this, slideoutMenuAnimationTime);
+			// Disable slide menu until the functionality is required.
+			// slideMenu = (SlideMenu) findViewById(R.id.slideMenu);
+			// slideMenu.init(this, R.menu.slide, this,
+			// slideoutMenuAnimationTime);
 
 			int notificationID = 0;
 			try
@@ -107,7 +109,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			UIUtils.getAlertDialog(
+			CustomedDialog.getAlertDialog(
 					CamerasActivity.this,
 					"Error Occured",
 					Constants.ErrorMessageGeneric + e.toString() + "::"
@@ -171,7 +173,7 @@ public class CamerasActivity extends ParentActivity implements
 				loadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 				return true;
-				
+
 			case R.id.menu_settings:
 				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
 						R.string.action_settings, R.string.label_settings);
@@ -179,7 +181,7 @@ public class CamerasActivity extends ParentActivity implements
 				startActivity(new Intent(CamerasActivity.this, CameraPrefsActivity.class));
 
 				return true;
-				
+
 			case R.id.menu_manage_accounts:
 				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
 						R.string.action_manage_account, R.string.label_account);
@@ -188,7 +190,7 @@ public class CamerasActivity extends ParentActivity implements
 				isUsersAccountsActivityStarted = true;
 
 				return true;
-				
+
 			case R.id.menu_about:
 				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
 						R.string.action_about, R.string.label_about);
@@ -196,16 +198,17 @@ public class CamerasActivity extends ParentActivity implements
 				startActivity(new Intent(CamerasActivity.this, AboutDialog.class));
 
 				return true;
-				
+
 			case R.id.menu_logout:
 				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
 						R.string.action_logout, R.string.label_user_logout);
 				logOutUser();
-				
+
 				return true;
-				
-			case android.R.id.home:
-				slideMenu.show();
+
+				// Temporarily disable slide menu
+				// case android.R.id.home:
+				// slideMenu.show();
 
 			default:
 				return super.onOptionsItemSelected(item);
@@ -214,7 +217,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			UIUtils.getAlertDialog(
+			CustomedDialog.getAlertDialog(
 					this,
 					"Error Occured",
 					"Some error occured while saving your options. Technical details are: "
@@ -222,7 +225,6 @@ public class CamerasActivity extends ParentActivity implements
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 		}
 		return super.onOptionsItemSelected(item);
-
 	}
 
 	@Override
@@ -237,51 +239,58 @@ public class CamerasActivity extends ParentActivity implements
 
 			switch (itemId)
 			{
-//			case R.id.slidemenu_logout:
-//				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
-//						R.string.action_logout, R.string.label_user_logout);
-//				logOutUser();
-//
-//				break;
-//
-//			case R.id.slidemenu_about:
-//				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
-//						R.string.action_about, R.string.label_about);
-//				new Handler().postDelayed(new Runnable(){
-//					@Override
-//					public void run()
-//					{
-//						startActivity(new Intent(CamerasActivity.this, AboutDialog.class));
-//					}
-//				}, slideoutMenuAnimationTime);
-//
-//				break;
+			// case R.id.slidemenu_logout:
+			// EvercamPlayApplication.sendEventAnalytics(this,
+			// R.string.category_menu,
+			// R.string.action_logout, R.string.label_user_logout);
+			// logOutUser();
+			//
+			// break;
+			//
+			// case R.id.slidemenu_about:
+			// EvercamPlayApplication.sendEventAnalytics(this,
+			// R.string.category_menu,
+			// R.string.action_about, R.string.label_about);
+			// new Handler().postDelayed(new Runnable(){
+			// @Override
+			// public void run()
+			// {
+			// startActivity(new Intent(CamerasActivity.this,
+			// AboutDialog.class));
+			// }
+			// }, slideoutMenuAnimationTime);
+			//
+			// break;
 
-//			case R.id.slidemenu_settings:
-//				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
-//						R.string.action_settings, R.string.label_settings);
-//				new Handler().postDelayed(new Runnable(){
-//					@Override
-//					public void run()
-//					{
-//						startActivity(new Intent(CamerasActivity.this, CameraPrefsActivity.class));
-//					}
-//				}, slideoutMenuAnimationTime);
-//
-//				break;
-//
-//			case R.id.slidemenu_manage:
-//				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
-//						R.string.action_manage_account, R.string.label_account);
-//				new Handler().postDelayed(new Runnable(){
-//					@Override
-//					public void run()
-//					{
-//						startActivity(new Intent(CamerasActivity.this, ManageAccountsActivity.class));
-//						isUsersAccountsActivityStarted = true;
-//					}
-//				}, slideoutMenuAnimationTime);
-//				break;
+			// case R.id.slidemenu_settings:
+			// EvercamPlayApplication.sendEventAnalytics(this,
+			// R.string.category_menu,
+			// R.string.action_settings, R.string.label_settings);
+			// new Handler().postDelayed(new Runnable(){
+			// @Override
+			// public void run()
+			// {
+			// startActivity(new Intent(CamerasActivity.this,
+			// CameraPrefsActivity.class));
+			// }
+			// }, slideoutMenuAnimationTime);
+			//
+			// break;
+			//
+			// case R.id.slidemenu_manage:
+			// EvercamPlayApplication.sendEventAnalytics(this,
+			// R.string.category_menu,
+			// R.string.action_manage_account, R.string.label_account);
+			// new Handler().postDelayed(new Runnable(){
+			// @Override
+			// public void run()
+			// {
+			// startActivity(new Intent(CamerasActivity.this,
+			// ManageAccountsActivity.class));
+			// isUsersAccountsActivityStarted = true;
+			// }
+			// }, slideoutMenuAnimationTime);
+			// break;
 
 			// default: // starting the notification activity
 			//
@@ -305,7 +314,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			UIUtils.getAlertDialog(
+			CustomedDialog.getAlertDialog(
 					this,
 					"Error Occured",
 					"Error occured while saving your options. Technical details are: "
@@ -317,35 +326,8 @@ public class CamerasActivity extends ParentActivity implements
 	public void onRestart()
 	{
 		super.onRestart();
-		try
-		{
-			if (isUsersAccountsActivityStarted)
-			{
-				//FIXME: Why camera list need reload when account manage activity started?
-				isUsersAccountsActivityStarted = false;
-				// addUsersToDropdownActionBar();
-				startLoadingCameras();
-			}
-
-			int camsOldValue = camerasPerRow;
-			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-			camerasPerRow = PrefsManager.getCameraPerRow(sharedPrefs, 2);
-
-			if (camsOldValue != camerasPerRow)
-			{
-				removeAllCameraViews();
-				addAllCameraViews(false); // do not reload cameras because it
-											// may be an activity for
-											// orientation
-											// changed or notification might
-											// have arrived.
-			}
-
-		}
-		catch (Exception e)
-		{
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-		}
+		new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.RESTART)
+		.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
 	@Override
@@ -433,7 +415,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.getAlertDialog(CamerasActivity.this, "Error Occured",
+			CustomedDialog.getAlertDialog(CamerasActivity.this, "Error Occured",
 					Constants.ErrorMessageGeneric).show();
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 
@@ -460,7 +442,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.getAlertDialog(CamerasActivity.this, "Error Occured",
+			CustomedDialog.getAlertDialog(CamerasActivity.this, "Error Occured",
 					Constants.ErrorMessageGeneric).show();
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 
@@ -520,7 +502,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			UIUtils.getAlertDialog(CamerasActivity.this, "Error Occured",
+			CustomedDialog.getAlertDialog(CamerasActivity.this, "Error Occured",
 					Constants.ErrorMessageGeneric).show();
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 
@@ -639,6 +621,78 @@ public class CamerasActivity extends ParentActivity implements
 			Log.e(TAG, "Error: delete user" + e.toString());
 		}
 		startActivity(new Intent(this, MainActivity.class));
+	}
+	
+	class CamerasCheckInternetTask extends CheckInternetTask
+	{
+		InternetCheckType type;
+		
+		public CamerasCheckInternetTask(Context context, InternetCheckType type)
+		{
+			super(context);
+			this.type = type;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean hasNetwork)
+		{
+			if (hasNetwork)
+			{
+				if(type == InternetCheckType.START)
+				{
+				startLoadingCameras();
+				}
+				else if(type == InternetCheckType.RESTART)
+				{
+					try
+					{
+						if (isUsersAccountsActivityStarted)
+						{
+							// FIXME: Why camera list need reload when account manage
+							// activity started?
+							isUsersAccountsActivityStarted = false;
+							// addUsersToDropdownActionBar();
+							startLoadingCameras();
+						}
+
+						int camsOldValue = camerasPerRow;
+						SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(CamerasActivity.this);
+						camerasPerRow = PrefsManager.getCameraPerRow(sharedPrefs, 2);
+
+						if (camsOldValue != camerasPerRow)
+						{
+							removeAllCameraViews();
+							addAllCameraViews(false); // do not reload cameras because it
+														// may be an activity for
+														// orientation
+														// changed or notification might
+														// have arrived.
+						}
+
+					}
+					catch (Exception e)
+					{
+						if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+					}
+				}
+			}
+			else
+			{
+				showInternetNotConnectDialog();
+			}
+		}
+	}
+	
+	private void showInternetNotConnectDialog()
+	{
+		CustomedDialog.getNoInternetDialog(this, new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				dialog.dismiss();
+				finish();
+			}
+		}).show();
 	}
 
 	// private class UserLoadingTask extends AsyncTask<String, String, String[]>

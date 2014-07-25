@@ -8,13 +8,14 @@ import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppUser;
+import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.AppData;
-import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.androidapp.utils.PropertyReader;
-import io.evercam.androidapp.utils.UIUtils;
+import io.evercam.androidapp.utils.CustomedDialog;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,9 +48,10 @@ public class LoginActivity extends ParentActivity
 	private String password;
 	private LoginTask loginTask;
 	private SharedPreferences sharedPrefs;
-	private String TAG = "evercamapp-LoginActivity";
+	private String TAG = "evercamplay-LoginActivity";
 	private CustomProgressDialog customProgressDialog;
-	private TextView signUpLink;
+	private TextView signUpLink;    
+	private enum InternetCheckType {LOGIN, SIGNUP};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -60,7 +62,7 @@ public class LoginActivity extends ParentActivity
 		
 		launchBugsense();
 
-		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+		getWindow().requestFeature(Window.FEATURE_NO_TITLE);    
 		setContentView(R.layout.login);
 		setUnderLine();
 
@@ -88,7 +90,8 @@ public class LoginActivity extends ParentActivity
 			@Override
 			public void onClick(View v)
 			{
-				attemptLogin();
+				new LoginCheckInternetTask(LoginActivity.this, InternetCheckType.LOGIN)
+				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			}
 		});
 
@@ -97,16 +100,8 @@ public class LoginActivity extends ParentActivity
 			@Override
 			public void onClick(View v)
 			{
-				if (Commons.isOnline(LoginActivity.this))
-				{
-					Intent signupIntent = new Intent();
-					signupIntent.setClass(LoginActivity.this, SignUpActivity.class);
-					startActivity(signupIntent);
-				}
-				else
-				{
-					showInternetNotConnectDialog();
-				}
+				new LoginCheckInternetTask(LoginActivity.this, InternetCheckType.SIGNUP)
+				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			}
 		});
 	}
@@ -173,7 +168,7 @@ public class LoginActivity extends ParentActivity
 
 	public class LoginTask extends AsyncTask<Void, Void, Boolean>
 	{
-		private String errorMessage = "LoginTaskMessage";
+		private String errorMessage = null;
 		private AppUser newUser = null;
 
 		@Override
@@ -199,7 +194,14 @@ public class LoginActivity extends ParentActivity
 			catch (EvercamException e)
 			{
 				Log.e(TAG, e.toString());
-				errorMessage = e.getMessage();
+				
+				if(e.getMessage().contains(getString(R.string.prefix_invalid)) || e.getMessage().contains(getString(R.string.prefix_no_user)))
+				{
+					errorMessage = e.getMessage();
+				}
+				else
+				{
+				}
 			}
 			return false;
 		}
@@ -229,10 +231,18 @@ public class LoginActivity extends ParentActivity
 			}
 			else
 			{
-				Toast toast = Toast.makeText(getApplicationContext(), errorMessage,
-						Toast.LENGTH_SHORT);
-				toast.setGravity(Gravity.CENTER, 0, 0);
-				toast.show();
+				if(errorMessage!=null)
+				{
+					Toast toast = Toast.makeText(getApplicationContext(), errorMessage,
+							Toast.LENGTH_SHORT);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
+				}
+				else
+				{
+					//FIXME: Unexpected error happened with login, should show an error dialog
+				}
+				
 				passwordEdit.setText(null);
 			}
 		}
@@ -325,7 +335,7 @@ public class LoginActivity extends ParentActivity
 
 	private void showInternetNotConnectDialog()
 	{
-		UIUtils.getNoInternetDialog(this, new DialogInterface.OnClickListener(){
+		CustomedDialog.getNoInternetDialog(this, new DialogInterface.OnClickListener(){
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
@@ -351,5 +361,37 @@ public class LoginActivity extends ParentActivity
 
 		Intent intent = new Intent(this, CamerasActivity.class);
 		this.startActivity(intent);
+	}
+	
+	class LoginCheckInternetTask extends CheckInternetTask
+	{
+		InternetCheckType type;
+		
+		public LoginCheckInternetTask(Context context, InternetCheckType type)
+		{
+			super(context);
+			this.type = type;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean hasNetwork)
+		{
+			if (hasNetwork)
+			{
+				if (type == InternetCheckType.LOGIN)
+				{
+					attemptLogin();
+				}
+				else if (type == InternetCheckType.SIGNUP)
+				{
+					Intent signupIntent = new Intent(LoginActivity.this, SignUpActivity.class);
+					startActivity(signupIntent);
+				}
+			}
+			else
+			{
+				showInternetNotConnectDialog();
+			}
+		}
 	}
 }

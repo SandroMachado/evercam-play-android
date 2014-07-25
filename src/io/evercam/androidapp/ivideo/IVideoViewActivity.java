@@ -7,7 +7,7 @@ import io.evercam.androidapp.slidemenu.SlideMenuInterface;
 import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
-import io.evercam.androidapp.utils.UIUtils;
+import io.evercam.androidapp.utils.CustomedDialog;
 
 import java.io.File;
 
@@ -259,7 +259,7 @@ public class IVideoViewActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.getAlertDialog(context, "Exception", e.toString()).show();// +
+			CustomedDialog.getAlertDialog(context, "Exception", e.toString()).show();// +
 																				// "::cam.getCameraImageUrl() ["
 																				// +
 																				// cam.getCameraImageUrl()
@@ -284,7 +284,7 @@ public class IVideoViewActivity extends ParentActivity implements
 
 			if (!URLUtil.isValidUrl(imageUrl))
 			{
-				UIUtils.getAlertDialog(context, "Camera URL Error",
+				CustomedDialog.getAlertDialog(context, "Camera URL Error",
 						"Invalid camera settings. Please contact camba.tv team.").show();
 				return;
 			}
@@ -334,7 +334,7 @@ public class IVideoViewActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			if (enableLogs) Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.getAlertDialog(context, "Exception", e.toString()).show();// +
+			CustomedDialog.getAlertDialog(context, "Exception", e.toString()).show();// +
 																				// "::cam.getCameraImageUrl() ["
 																				// +
 																				// cam.getCameraImageUrl()
@@ -544,7 +544,7 @@ public class IVideoViewActivity extends ParentActivity implements
 			{
 				try
 				{
-					UIUtils.getAlertDialog(IVideoViewActivity.this, "Network not available",
+					CustomedDialog.getAlertDialog(IVideoViewActivity.this, "Network not available",
 							"Please connect to internat and try again",
 							new DialogInterface.OnClickListener(){
 
@@ -1352,7 +1352,7 @@ public class IVideoViewActivity extends ParentActivity implements
 			try
 			{
 				// if(pdLoading.isShowing())pdLoading.dismiss();
-				adLocalNetwork = UIUtils.getAlertDialog(IVideoViewActivity.this,
+				adLocalNetwork = CustomedDialog.getAlertDialog(IVideoViewActivity.this,
 						"Stream Not Found",
 						"Camera stream not found. In settings, try turning on/off local network.",
 						new DialogInterface.OnClickListener(){
@@ -1489,7 +1489,7 @@ public class IVideoViewActivity extends ParentActivity implements
 				{
 					isShowingFailureMessage = true;
 					hideProgressView();
-					UIUtils.getAlertDialog(IVideoViewActivity.this, "Unable to connect",
+					CustomedDialog.getAlertDialog(IVideoViewActivity.this, "Unable to connect",
 							"Check camera and try again.", new DialogInterface.OnClickListener(){
 
 								@Override

@@ -7,7 +7,7 @@ import io.evercam.androidapp.tasks.SaveImageTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamFile;
-import io.evercam.androidapp.utils.UIUtils;
+import io.evercam.androidapp.utils.CustomedDialog;
 import io.evercam.androidapp.video.VideoActivity;
 
 import java.io.File;
@@ -145,7 +145,7 @@ public class CameraLayout extends LinearLayout
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			UIUtils.getAlertDialog(context, "Exception", e.toString()).show();
+			CustomedDialog.getAlertDialog(context, "Exception", e.toString()).show();
 			if (Constants.isAppTrackingEnabled)
 			{
 				BugSenseHandler.sendException(e);

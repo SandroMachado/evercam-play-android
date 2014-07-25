@@ -10,7 +10,7 @@ import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PropertyReader;
-import io.evercam.androidapp.utils.UIUtils;
+import io.evercam.androidapp.utils.CustomedDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +96,7 @@ public class ManageAccountsActivity extends ParentActivity
 				final View ed_dialog_layout = getLayoutInflater().inflate(
 						R.layout.manageaccountsactivity_listitemoptions, null);
 
-				final AlertDialog dialog = UIUtils.getAlertDialogNoTitleNoButton(
+				final AlertDialog dialog = CustomedDialog.getAlertDialogNoTitleNoButton(
 						ManageAccountsActivity.this, ed_dialog_layout);
 				dialog.show();
 
@@ -363,7 +363,7 @@ public class ManageAccountsActivity extends ParentActivity
 			{
 				if (error != null && error.length() > 0)
 				{
-					UIUtils.getAlertDialog(ManageAccountsActivity.this, "Error Occured", error);
+					CustomedDialog.getAlertDialog(ManageAccountsActivity.this, "Error Occured", error);
 				}
 				if (closeActivity) ManageAccountsActivity.this.finish();
 				else new ShowAllAccountsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
