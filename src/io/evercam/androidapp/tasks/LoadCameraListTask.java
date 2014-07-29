@@ -9,7 +9,6 @@ import io.evercam.EvercamException;
 import io.evercam.User;
 import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.MainActivity;
-import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppUser;
@@ -41,8 +40,8 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 	@Override
 	protected void onPreExecute()
 	{
-		customProgressDialog = new CustomProgressDialog(camerasActivity);
-		customProgressDialog.show(camerasActivity.getString(R.string.loading_cameras));
+//		customProgressDialog = new CustomProgressDialog(camerasActivity);
+//		customProgressDialog.show(camerasActivity.getString(R.string.loading_cameras));
 		API.setUserKeyPair(user.getApiKey(), user.getApiId());
 	}
 
@@ -120,7 +119,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 	protected void onPostExecute(Boolean success)
 	{
 		Log.d(TAG, "Done");
-		customProgressDialog.dismiss();
+	//	customProgressDialog.dismiss();
 		if (success)
 		{
 			if (reload)

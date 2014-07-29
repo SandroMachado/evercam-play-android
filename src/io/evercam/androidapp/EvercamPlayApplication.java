@@ -6,8 +6,6 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import io.evercam.API;
-
 import java.util.HashMap;
 
 public class EvercamPlayApplication extends Application

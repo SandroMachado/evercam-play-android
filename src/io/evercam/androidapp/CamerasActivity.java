@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -165,8 +164,8 @@ public class CamerasActivity extends ParentActivity implements
 				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
 						R.string.action_refresh, R.string.label_list_refresh);
 				// Moved refresh under menu, so disabled indeterminate progress.
-				// if (refresh != null) refresh
-				// .setActionView(R.layout.actionbar_indeterminate_progress);
+				 if (refresh != null) refresh
+				 .setActionView(R.layout.actionbar_indeterminate_progress);
 
 				LoadCameraListTask loadTask = new LoadCameraListTask(AppData.defaultUser,
 						CamerasActivity.this);

@@ -9,8 +9,10 @@ import io.evercam.androidapp.account.AccountUtils;
 import io.evercam.androidapp.account.UserProfile;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppUser;
+import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
+import io.evercam.androidapp.utils.CustomedDialog;
 import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.androidapp.utils.PropertyReader;
 
@@ -25,6 +27,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -33,6 +36,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
@@ -119,23 +123,8 @@ public class SignUpActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				UserDetail userDetail = checkDetails();
-				if (userDetail != null)
-				{
-					if (createUserTask != null)
-					{
-						createUserTask = null;
-					}
-					createUserTask = new CreateUserTask(userDetail);
-					createUserTask.execute();
-				}
-				else
-				{
-					if (focusView != null)
-					{
-						focusView.requestFocus();
-					}
-				}
+				new SignUpCheckInternetTask(SignUpActivity.this)
+				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			}
 		});
 	}
@@ -285,12 +274,16 @@ public class SignUpActivity extends Activity
 
 	private void makeShortToast(int message)
 	{
-		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+		Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+		toast.setGravity(Gravity.CENTER, 0, 0);
+		toast.show();
 	}
 
 	private void makeShortToast(String message)
 	{
-		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+		Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+		toast.setGravity(Gravity.CENTER, 0, 0);
+		toast.show();
 	}
 
 	private void setSpinnerAdapter()
@@ -435,5 +428,48 @@ public class SignUpActivity extends Activity
 		String developerAppKey = propertyReader.getPropertyStr(PropertyReader.KEY_API_KEY);
 		String developerAppID = propertyReader.getPropertyStr(PropertyReader.KEY_API_ID);
 		API.setDeveloperKeyPair(developerAppKey, developerAppID);
+	}
+	
+	private void attemptSignUp()
+	{
+		UserDetail userDetail = checkDetails();
+		if (userDetail != null)
+		{
+			if (createUserTask != null)
+			{
+				createUserTask = null;
+			}
+			createUserTask = new CreateUserTask(userDetail);
+			createUserTask.execute();
+		}
+		else
+		{
+			if (focusView != null)
+			{
+				focusView.requestFocus();
+			}
+		}
+	}
+	
+	class SignUpCheckInternetTask extends CheckInternetTask
+	{
+
+		public SignUpCheckInternetTask(Context context)
+		{
+			super(context);
+		}
+
+		@Override
+		protected void onPostExecute(Boolean hasNetwork)
+		{
+			if (hasNetwork)
+			{
+				attemptSignUp();
+			}
+			else
+			{
+				CustomedDialog.showInternetNotConnectDialog(SignUpActivity.this);
+			}
+		}
 	}
 }

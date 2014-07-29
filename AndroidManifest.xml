@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.evercam.androidapp"
-    android:versionCode="12"
-    android:versionName="1.1.1" >
+    android:versionCode="13"
+    android:versionName="1.1.2" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -89,10 +89,12 @@
             android:logo="@drawable/icon_192x192"
             android:windowSoftInputMode="stateHidden" >
         </activity>
+        <!-- 
         <activity
             android:name=".ReleaseNotesActivity"
             android:label="@string/app_name" >
         </activity>
+         -->
         <activity
             android:name=".custom.AboutDialog"
             android:label="@string/app_name"
@@ -124,6 +126,7 @@
         </activity>
 
         <!-- Video Showing Activities -->
+        <!-- 
         <activity
             android:name=".ivideo.IVideoViewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -132,15 +135,17 @@
         </activity>
         <activity android:name=".ivideo.IVideoPrefsActivity" >
         </activity>
+         -->
         <activity android:name=".video.VideoPrefsActivity" >
         </activity>
+        <!-- 
         <activity
             android:name=".rtspvideo.RTSPVideoViewActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
         </activity>
-
+ -->
         <!--
           BroadcastReceiver that will receive intents from GCM
           services and handle them to the custom IntentService.
