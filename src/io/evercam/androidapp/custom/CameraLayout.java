@@ -69,17 +69,18 @@ public class CameraLayout extends LinearLayout
 			titleLayout.setLayoutParams(new LinearLayout.LayoutParams(
 					android.view.ViewGroup.LayoutParams.MATCH_PARENT,
 					android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-			titleLayout.setBackgroundColor(Color.parseColor("#E0E0E0"));
+			titleLayout.setBackgroundColor(Color.parseColor("#414042"));
 			titleLayout.setOrientation(LinearLayout.HORIZONTAL);
 			titleLayout.setGravity(Gravity.CENTER_HORIZONTAL);
 
-			// text view to show the camera name on the top grey band of cmaera
+			// text view to show the camera name on the top grey band of camera
 			TextView titleText = new TextView(context);
 			titleText.setText(evercamCamera.getName());
 			titleText.setLayoutParams(new LinearLayout.LayoutParams(
 					android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 					android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-			titleText.setTextColor(Color.parseColor("#372c24"));
+			titleText.setTextColor(Color.parseColor("#f1f1f1"));
+			
 			titleLayout.addView(titleText);
 
 			this.addView(titleLayout);

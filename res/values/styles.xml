@@ -28,10 +28,11 @@
         <item name="android:icon">@drawable/ic_launcher</item>
         <item name="android:background">@color/slidemenu_listitem_background_color</item>
         <item name="android:titleTextStyle">@style/ActionBarTitle</item>
-        -->
-        <item name="android:icon">@drawable/evercam_play_192x192</item>
-        <item name="android:horizontalSpacing">15sp</item>
         <item name="android:background">#414042</item> 
+        -->
+       
+        <item name="android:horizontalSpacing">15sp</item>
+        <item name="android:background">@drawable/title_background</item> 
     </style>
 
     <style name="ActionBarTitle">
