@@ -245,8 +245,7 @@ public class LoginActivity extends ParentActivity
 				}
 				else
 				{
-					// FIXME: Unexpected error happened with login, should show
-					// an error dialog
+					CustomedDialog.showUnexpectedErrorDialog(LoginActivity.this);
 				}
 
 				passwordEdit.setText(null);

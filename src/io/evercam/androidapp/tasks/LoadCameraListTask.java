@@ -9,6 +9,7 @@ import io.evercam.EvercamException;
 import io.evercam.User;
 import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.MainActivity;
+import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppUser;
@@ -40,8 +41,8 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 	@Override
 	protected void onPreExecute()
 	{
-//		customProgressDialog = new CustomProgressDialog(camerasActivity);
-//		customProgressDialog.show(camerasActivity.getString(R.string.loading_cameras));
+		// customProgressDialog = new CustomProgressDialog(camerasActivity);
+		// customProgressDialog.show(camerasActivity.getString(R.string.loading_cameras));
 		API.setUserKeyPair(user.getApiKey(), user.getApiId());
 	}
 
@@ -119,7 +120,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 	protected void onPostExecute(Boolean success)
 	{
 		Log.d(TAG, "Done");
-	//	customProgressDialog.dismiss();
+		// customProgressDialog.dismiss();
 		if (success)
 		{
 			if (reload)
@@ -132,7 +133,9 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 		{
 			if (!camerasActivity.isFinishing())
 			{
-				CustomedDialog.getAlertDialog(camerasActivity, "Error Occured", "",
+				CustomedDialog.getAlertDialog(camerasActivity,
+						camerasActivity.getString(R.string.msg_error_occurred),
+						camerasActivity.getString(R.string.msg_exception),
 						new DialogInterface.OnClickListener(){
 							@Override
 							public void onClick(DialogInterface dialog, int which)

@@ -48,7 +48,7 @@ public class MainActivity extends Activity
 		}
 		catch (Exception ex)
 		{
-			CustomedDialog.getAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
+			CustomedDialog.showUnexpectedErrorDialog(MainActivity.this);
 			Log.e(TAG, Log.getStackTraceString(ex));
 		}
 	}
@@ -63,7 +63,7 @@ public class MainActivity extends Activity
 		catch (Exception ex)
 		{
 			BugSenseHandler.sendException(ex);
-			CustomedDialog.getAlertDialog(MainActivity.this, "Error Occured", ex.toString()).show();
+			CustomedDialog.showUnexpectedErrorDialog(MainActivity.this);
 			Log.e(TAG, Log.getStackTraceString(ex));
 		}
 	}
@@ -164,8 +164,7 @@ public class MainActivity extends Activity
 			catch (Exception e)
 			{
 				BugSenseHandler.sendException(e);
-				CustomedDialog.getAlertDialog(MainActivity.this, "Error Occured", e.toString())
-						.show();
+				CustomedDialog.showUnexpectedErrorDialog(MainActivity.this);
 				Log.e(TAG, Log.getStackTraceString(e));
 			}
 		}

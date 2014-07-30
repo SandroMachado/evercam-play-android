@@ -7,13 +7,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
-import android.text.Spanned;
-import android.text.util.Linkify;
 import android.view.View;
-import android.widget.TextView;
 
 public class CustomedDialog
 {
+	/**
+	 * Alert dialog with title, message, and OK button.
+	 */
 	public static AlertDialog getAlertDialog(Context ctx, String title, String message)
 	{
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ctx,
@@ -33,55 +33,18 @@ public class CustomedDialog
 		return dialog;
 	}
 
-	public static AlertDialog getAlertDialog(Context ctx, String title, String message,
-			Spanned messageText)
+	/**
+	 * Helper method to show unexpected error dialog.
+	 */
+	public static void showUnexpectedErrorDialog(Context context)
 	{
-		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ctx,
-				io.evercam.androidapp.R.style.ThemeDialog);
-		dialogBuilder.setTitle(title);
-		TextView textView = new TextView(ctx);
-		if ((message + "").length() > 0) dialogBuilder.setMessage(message);
-		textView.setText(messageText);
-		textView.setPadding(14, 10, 5, 21);
-
-		Linkify.addLinks(textView, Linkify.ALL);
-		dialogBuilder.setView(textView);
-		dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener(){
-
-			@Override
-			public void onClick(DialogInterface dialog, int which)
-			{
-				dialog.dismiss();
-			}
-		});
-		AlertDialog alertDialog = dialogBuilder.create();
-		alertDialog.setCanceledOnTouchOutside(false);
-		return alertDialog;
+		getAlertDialog(context, context.getString(R.string.msg_error_occurred),
+				context.getString(R.string.msg_exception)).show();
 	}
 
-	public static AlertDialog getAlertDialog(Context ctx, String title, String Message, View view)
-	{
-		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ctx,
-				io.evercam.androidapp.R.style.ThemeDialog);
-		dialogBuilder.setTitle(title);
-
-		view.setPadding(14, 10, 5, 21);
-
-		dialogBuilder.setView(view);
-		dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener(){
-
-			@Override
-			public void onClick(DialogInterface dialog, int which)
-			{
-				dialog.dismiss();
-			}
-		});
-		AlertDialog ad = dialogBuilder.create();
-		ad.setCanceledOnTouchOutside(false);
-		return ad;
-	}
-
-	// Alert dialog with single click
+	/**
+	 * Alert dialog with single click listener
+	 */
 	public static AlertDialog getAlertDialog(Context ctx, String title, String message,
 			DialogInterface.OnClickListener listener)
 	{
@@ -98,6 +61,9 @@ public class CustomedDialog
 		return dialogWithOneButton;
 	}
 
+	/**
+	 * The dialog that prompt to connect Internet, with listener.
+	 */
 	public static AlertDialog getNoInternetDialog(final Context context,
 			DialogInterface.OnClickListener negativeistener)
 	{
@@ -123,6 +89,9 @@ public class CustomedDialog
 		return dialogNoInternet;
 	}
 
+	/**
+	 * The helper method to show Internet alert dialog and finish the activity.
+	 */
 	public static void showInternetNotConnectDialog(final Activity activity)
 	{
 		CustomedDialog.getNoInternetDialog(activity, new DialogInterface.OnClickListener(){
@@ -135,6 +104,9 @@ public class CustomedDialog
 		}).show();
 	}
 
+	/**
+	 * The alert dialog for account management
+	 */
 	public static AlertDialog getAlertDialogNoTitleNoButton(Context ctx, View view)
 	{
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ctx,
@@ -146,13 +118,5 @@ public class CustomedDialog
 		AlertDialog dialog = dialogBuilder.create();
 		dialog.setCanceledOnTouchOutside(false);
 		return dialog;
-	}
-
-	public static AlertDialog.Builder getAlertDialogBuilderNoTitle(Context ctx)
-	{
-		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ctx,
-				io.evercam.androidapp.R.style.ThemeDialogNoTitle);
-
-		return dialogBuilder;
 	}
 }

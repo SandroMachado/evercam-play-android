@@ -88,4 +88,4 @@
 //			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
 //		}
 //	}
-//}
+// }

@@ -486,7 +486,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			CustomedDialog.getAlertDialog(context, "Exception", e.toString()).show();
+			BugSenseHandler.sendException(e);
+			CustomedDialog.showUnexpectedErrorDialog(VideoActivity.this);
 		}
 	}
 
@@ -949,8 +950,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 	void showMediaFailureDialog()
 	{
-		CustomedDialog.getAlertDialog(VideoActivity.this, "Unable to play",
-				"Please check camera and try again.", new DialogInterface.OnClickListener(){
+		CustomedDialog.getAlertDialog(VideoActivity.this, getString(R.string.msg_unable_to_play),
+				getString(R.string.msg_please_check_camera), new DialogInterface.OnClickListener(){
 
 					@Override
 					public void onClick(DialogInterface dialog, int which)

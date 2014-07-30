@@ -359,6 +359,7 @@ public class ManageAccountsActivity extends ParentActivity
 				catch (Exception e)
 				{
 					Log.e(TAG, e.toString());
+					BugSenseHandler.sendException(e);
 					return e.getLocalizedMessage();
 				}
 			}
@@ -368,8 +369,7 @@ public class ManageAccountsActivity extends ParentActivity
 			{
 				if (error != null && error.length() > 0)
 				{
-					CustomedDialog.getAlertDialog(ManageAccountsActivity.this, "Error Occured",
-							error);
+					CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
 				}
 				if (closeActivity) ManageAccountsActivity.this.finish();
 				else new ShowAllAccountsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -462,6 +462,10 @@ public class ManageAccountsActivity extends ParentActivity
 				{
 					errorMessage = e.getMessage();
 				}
+				else
+				{
+					// Do nothing, show alert dialog in onPostExecute
+				}
 				return false;
 			}
 		}
@@ -478,6 +482,10 @@ public class ManageAccountsActivity extends ParentActivity
 				if (errorMessage != null)
 				{
 					showToast(errorMessage);
+				}
+				else
+				{
+					CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
 				}
 
 				return;

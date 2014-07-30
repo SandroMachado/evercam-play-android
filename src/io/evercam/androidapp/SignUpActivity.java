@@ -124,7 +124,7 @@ public class SignUpActivity extends Activity
 			public void onClick(View v)
 			{
 				new SignUpCheckInternetTask(SignUpActivity.this)
-				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			}
 		});
 	}
@@ -371,6 +371,7 @@ public class SignUpActivity extends Activity
 			}
 			catch (EvercamException e)
 			{
+				BugSenseHandler.sendException(e);
 				return e.getMessage();
 			}
 		}
@@ -429,7 +430,7 @@ public class SignUpActivity extends Activity
 		String developerAppID = propertyReader.getPropertyStr(PropertyReader.KEY_API_ID);
 		API.setDeveloperKeyPair(developerAppKey, developerAppID);
 	}
-	
+
 	private void attemptSignUp()
 	{
 		UserDetail userDetail = checkDetails();
@@ -450,7 +451,7 @@ public class SignUpActivity extends Activity
 			}
 		}
 	}
-	
+
 	class SignUpCheckInternetTask extends CheckInternetTask
 	{
 

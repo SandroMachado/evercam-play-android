@@ -80,7 +80,7 @@ public class CameraLayout extends LinearLayout
 					android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 					android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 			titleText.setTextColor(Color.parseColor("#f1f1f1"));
-			
+
 			titleLayout.addView(titleText);
 
 			this.addView(titleLayout);
@@ -146,7 +146,7 @@ public class CameraLayout extends LinearLayout
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			CustomedDialog.getAlertDialog(context, "Exception", e.toString()).show();
+			CustomedDialog.showUnexpectedErrorDialog(context);
 			if (Constants.isAppTrackingEnabled)
 			{
 				BugSenseHandler.sendException(e);

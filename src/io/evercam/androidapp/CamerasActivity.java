@@ -92,17 +92,12 @@ public class CamerasActivity extends ParentActivity implements
 			// slideoutMenuAnimationTime);
 
 			int notificationID = 0;
-			try
-			{
-				activity = this;
 
-				notificationID = this.getIntent().getIntExtra(Constants.GCMNotificationIDString, 0);
-				this.getIntent().putExtra(Constants.GCMNotificationIDString, 0);
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
+			activity = this;
+
+			notificationID = this.getIntent().getIntExtra(Constants.GCMNotificationIDString, 0);
+			this.getIntent().putExtra(Constants.GCMNotificationIDString, 0);
+
 			if (notificationID > 0)
 			{
 				CamerasActivity.this.onSlideMenuItemClick(notificationID);
@@ -111,11 +106,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			CustomedDialog.getAlertDialog(
-					CamerasActivity.this,
-					"Error Occured",
-					Constants.ErrorMessageGeneric + e.toString() + "::"
-							+ Log.getStackTraceString(e)).show();
+			CustomedDialog.showUnexpectedErrorDialog(CamerasActivity.this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 		}
 	}
@@ -151,7 +142,7 @@ public class CamerasActivity extends ParentActivity implements
 	}
 
 	// Tells that the item has been selected from the menu. Now check and get
-	// the selected item and perform the relevent action
+	// the selected item and perform the relevant action
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
@@ -164,8 +155,8 @@ public class CamerasActivity extends ParentActivity implements
 				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
 						R.string.action_refresh, R.string.label_list_refresh);
 				// Moved refresh under menu, so disabled indeterminate progress.
-				 if (refresh != null) refresh
-				 .setActionView(R.layout.actionbar_indeterminate_progress);
+				if (refresh != null) refresh
+						.setActionView(R.layout.actionbar_indeterminate_progress);
 
 				LoadCameraListTask loadTask = new LoadCameraListTask(AppData.defaultUser,
 						CamerasActivity.this);
@@ -219,11 +210,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			CustomedDialog.getAlertDialog(
-					this,
-					"Error Occured",
-					"Some error occured while saving your options. Technical details are: "
-							+ e.toString());
+			CustomedDialog.showUnexpectedErrorDialog(this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 		}
 		return super.onOptionsItemSelected(item);
@@ -316,11 +303,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			CustomedDialog.getAlertDialog(
-					this,
-					"Error Occured",
-					"Error occured while saving your options. Technical details are: "
-							+ e.toString());
+			CustomedDialog.showUnexpectedErrorDialog(this);
 		}
 	}
 
@@ -417,8 +400,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			CustomedDialog.getAlertDialog(CamerasActivity.this, "Error Occured",
-					Constants.ErrorMessageGeneric).show();
+			CustomedDialog.showUnexpectedErrorDialog(CamerasActivity.this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 
 		}
@@ -444,8 +426,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			CustomedDialog.getAlertDialog(CamerasActivity.this, "Error Occured",
-					Constants.ErrorMessageGeneric).show();
+			CustomedDialog.showUnexpectedErrorDialog(CamerasActivity.this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 
 		}
@@ -504,8 +485,7 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			CustomedDialog.getAlertDialog(CamerasActivity.this, "Error Occured",
-					Constants.ErrorMessageGeneric).show();
+			CustomedDialog.showUnexpectedErrorDialog(CamerasActivity.this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 
 		}
