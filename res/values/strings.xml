@@ -50,6 +50,8 @@
 
     <!-- General -->
     <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="add">Add</string>
     <string name="ok">OK</string>
     <string name="notNow">NOT NOW</string>
     <string name="settings_capital">SETTINGS</string>

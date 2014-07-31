@@ -10,6 +10,7 @@ import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
+import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.androidapp.utils.PropertyReader;
 import io.evercam.androidapp.utils.CustomedDialog;
 
@@ -24,6 +25,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -42,7 +44,7 @@ import android.widget.Toast;
 
 public class ManageAccountsActivity extends ParentActivity
 {
-	static String TAG = "evercamapp-ManageAccountsActivity";
+	static String TAG = "evercamplay-ManageAccountsActivity";
 
 	private AlertDialog alertDialog = null;
 
@@ -98,7 +100,7 @@ public class ManageAccountsActivity extends ParentActivity
 				}
 
 				final View ed_dialog_layout = getLayoutInflater().inflate(
-						R.layout.manageaccountsactivity_listitemoptions, null);
+						R.layout.manage_account_option_list, null);
 
 				final AlertDialog dialog = CustomedDialog.getAlertDialogNoTitleNoButton(
 						ManageAccountsActivity.this, ed_dialog_layout);
@@ -153,7 +155,10 @@ public class ManageAccountsActivity extends ParentActivity
 								AppUser user = users.getAppUserByID(maxid);
 								user.setIsDefault(true);
 								users.updateAppUser(user);
-
+								PrefsManager.saveUserEmail(PreferenceManager
+										.getDefaultSharedPreferences(ManageAccountsActivity.this),
+										user.getEmail());
+								AppData.defaultUser = user;
 							}
 							new ShowAllAccountsTask()
 									.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -240,14 +245,18 @@ public class ManageAccountsActivity extends ParentActivity
 				R.layout.manageaccountsactivity_adduser_dialogue, null);
 		View title_layout = getLayoutInflater().inflate(
 				R.layout.manageaccountsactivity_adduser_dialogue_title, null);
-		alertDialog = new AlertDialog.Builder(this).setCustomTitle(title_layout)
-				.setView(dialog_layout).setCancelable(false)
+		alertDialog = new AlertDialog.Builder(this)
+				.setCustomTitle(title_layout)
+				.setView(dialog_layout)
+				.setCancelable(false)
 				.setNegativeButton(R.string.cancel, null)
-				.setPositiveButton((isEdit ? "Save" : "Add"), null).create();
+				.setPositiveButton((isEdit ? getString(R.string.save) : getString(R.string.add)),
+						null).create();
 
 		if (isEdit)
 		{
-			((TextView) title_layout.findViewById(R.id.txt_adduser_title)).setText("Edit Account");
+			((TextView) title_layout.findViewById(R.id.txt_adduser_title))
+					.setText(R.string.account_edit);
 		}
 		if (username != null)
 		{
@@ -342,6 +351,9 @@ public class ManageAccountsActivity extends ParentActivity
 							{
 								user.setIsDefault(true);
 								dbUser.updateAppUser(user);
+								PrefsManager.saveUserEmail(PreferenceManager
+										.getDefaultSharedPreferences(ManageAccountsActivity.this),
+										user.getEmail());
 								AppData.defaultUser = user;
 							}
 						}

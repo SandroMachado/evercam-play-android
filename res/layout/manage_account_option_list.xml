@@ -8,30 +8,30 @@
         android:id="@+id/btn_open_account"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Open Account" />
+        android:text="@string/open_account" />
 
     <Button
         android:id="@+id/btn_set_default_account"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Set as Default" />
+        android:text="@string/set_default" />
 
     <Button
         android:id="@+id/btn_edit_account"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Edit Account" />
+        android:text="@string/account_edit" />
 
     <Button
         android:id="@+id/btn_delete_account"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Remove Account" />
+        android:text="@string/remove_account" />
 
     <Button
         android:id="@+id/btn_cancel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Cancel" />
+        android:text="@string/cancel" />
 
 </LinearLayout>

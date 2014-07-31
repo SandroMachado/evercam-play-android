@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <!-- Keeps the processor from sleeping when a message is received. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!-- To kow if connected to internet or not. -->
+    <!-- To kow if connected to Internet or not. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- To know about phone state whether sleeping or awake etc. -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,7 +48,7 @@ public class CamerasActivity extends ParentActivity implements
 	private SlideMenu slideMenu;
 	private int totalCamerasInGrid = 0;
 	private int slideoutMenuAnimationTime = 255;
-	private boolean isUsersAccountsActivityStarted = false;
+	public boolean isUsersAccountsActivityStarted = false;
 	private static int camerasPerRow = 2;
 
 	private enum InternetCheckType
@@ -377,8 +378,7 @@ public class CamerasActivity extends ParentActivity implements
 	{
 		try
 		{
-			Display display = getWindowManager().getDefaultDisplay();
-			int screen_width = display.getWidth();
+			int screen_width = readScreenWidth();
 
 			io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
 					.findViewById(R.id.camsLV);
@@ -402,7 +402,6 @@ public class CamerasActivity extends ParentActivity implements
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
 			CustomedDialog.showUnexpectedErrorDialog(CamerasActivity.this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-
 		}
 		return false;
 	}
@@ -444,8 +443,7 @@ public class CamerasActivity extends ParentActivity implements
 			io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
 					.findViewById(R.id.camsLV);
 
-			Display display = getWindowManager().getDefaultDisplay();
-			int screen_width = display.getWidth();
+			int screen_width = readScreenWidth();
 
 			int index = 0;
 			totalCamerasInGrid = 0;
@@ -487,7 +485,6 @@ public class CamerasActivity extends ParentActivity implements
 			Log.e(TAG, e.toString(), e);
 			CustomedDialog.showUnexpectedErrorDialog(CamerasActivity.this);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-
 		}
 		return false;
 	}
@@ -630,12 +627,14 @@ public class CamerasActivity extends ParentActivity implements
 					{
 						if (isUsersAccountsActivityStarted)
 						{
-							// FIXME: Why camera list need reload when account
-							// manage
-							// activity started?
-							isUsersAccountsActivityStarted = false;
-							// addUsersToDropdownActionBar();
+							// If returned from account management, the 
+							// default user could possibly changed, 
+							// so remove all cameras and reload.
+							
+							// addUsersToDropdownActionBar(); 
+							removeAllCameraViews();
 							startLoadingCameras();
+							isUsersAccountsActivityStarted = false;
 						}
 
 						int camsOldValue = camerasPerRow;
@@ -646,14 +645,7 @@ public class CamerasActivity extends ParentActivity implements
 						if (camsOldValue != camerasPerRow)
 						{
 							removeAllCameraViews();
-							addAllCameraViews(false); // do not reload cameras
-														// because it
-														// may be an activity
-														// for
-														// orientation
-														// changed or
-														// notification might
-														// have arrived.
+							addAllCameraViews(false); 
 						}
 
 					}
@@ -668,6 +660,14 @@ public class CamerasActivity extends ParentActivity implements
 				CustomedDialog.showInternetNotConnectDialog(CamerasActivity.this);
 			}
 		}
+	}
+	
+	private int readScreenWidth()
+	{
+		Display display = getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		return size.x;
 	}
 
 	// private class UserLoadingTask extends AsyncTask<String, String, String[]>

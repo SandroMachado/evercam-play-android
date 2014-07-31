@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_edit">Edit Account</string>
+    <string name="open_account">Open Account</string>
+    <string name="set_default">Set as default</string>
+    <string name="remove_account">Remove Account</string>
+</resources>

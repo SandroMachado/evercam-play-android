@@ -226,8 +226,7 @@ public class DbAppUser extends DatabaseMaster
 		values.put(KEY_IS_DEFAULT, 0);
 		// updating rows
 		int return_value = db.update(TABLE_APP_USER, values, KEY_IS_DEFAULT + " = ?",
-				new String[] { "1" }); // update teh isdefault with 0 at all
-										// places where isdefault is 1
+				new String[] { "1" }); 
 		db.close();
 		return return_value;
 	}
