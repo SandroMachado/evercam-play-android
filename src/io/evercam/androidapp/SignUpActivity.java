@@ -371,7 +371,6 @@ public class SignUpActivity extends Activity
 			}
 			catch (EvercamException e)
 			{
-				BugSenseHandler.sendException(e);
 				return e.getMessage();
 			}
 		}

@@ -41,12 +41,21 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 	@Override
 	protected void onPreExecute()
 	{
-		if(camerasActivity.isUsersAccountsActivityStarted)
+		if (camerasActivity.isUsersAccountsActivityStarted)
 		{
-		 customProgressDialog = new CustomProgressDialog(camerasActivity);
-		 customProgressDialog.show(camerasActivity.getString(R.string.loading_cameras));
+			customProgressDialog = new CustomProgressDialog(camerasActivity);
+			customProgressDialog.show(camerasActivity.getString(R.string.loading_cameras));
 		}
-		API.setUserKeyPair(user.getApiKey(), user.getApiId());
+
+		if (user != null)
+		{
+			API.setUserKeyPair(user.getApiKey(), user.getApiId());
+		}
+		else
+		{
+			CustomedDialog.showUnexpectedErrorDialog(camerasActivity);
+			cancel(true);
+		}
 	}
 
 	@Override
@@ -161,7 +170,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 						}).show();
 			}
 		}
-		if(customProgressDialog != null)
+		if (customProgressDialog != null)
 		{
 			customProgressDialog.dismiss();
 		}

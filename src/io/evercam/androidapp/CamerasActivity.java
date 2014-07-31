@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.os.Bundle;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -378,7 +379,7 @@ public class CamerasActivity extends ParentActivity implements
 	{
 		try
 		{
-			int screen_width = readScreenWidth();
+			int screen_width = readScreenWidth(this);
 
 			io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
 					.findViewById(R.id.camsLV);
@@ -443,7 +444,7 @@ public class CamerasActivity extends ParentActivity implements
 			io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
 					.findViewById(R.id.camsLV);
 
-			int screen_width = readScreenWidth();
+			int screen_width = readScreenWidth(this);
 
 			int index = 0;
 			totalCamerasInGrid = 0;
@@ -627,11 +628,11 @@ public class CamerasActivity extends ParentActivity implements
 					{
 						if (isUsersAccountsActivityStarted)
 						{
-							// If returned from account management, the 
-							// default user could possibly changed, 
+							// If returned from account management, the
+							// default user could possibly changed,
 							// so remove all cameras and reload.
-							
-							// addUsersToDropdownActionBar(); 
+
+							// addUsersToDropdownActionBar();
 							removeAllCameraViews();
 							startLoadingCameras();
 							isUsersAccountsActivityStarted = false;
@@ -645,7 +646,7 @@ public class CamerasActivity extends ParentActivity implements
 						if (camsOldValue != camerasPerRow)
 						{
 							removeAllCameraViews();
-							addAllCameraViews(false); 
+							addAllCameraViews(false);
 						}
 
 					}
@@ -661,10 +662,10 @@ public class CamerasActivity extends ParentActivity implements
 			}
 		}
 	}
-	
-	private int readScreenWidth()
+
+	public static int readScreenWidth(Activity activity)
 	{
-		Display display = getWindowManager().getDefaultDisplay();
+		Display display = activity.getWindowManager().getDefaultDisplay();
 		Point size = new Point();
 		display.getSize(size);
 		return size.x;
