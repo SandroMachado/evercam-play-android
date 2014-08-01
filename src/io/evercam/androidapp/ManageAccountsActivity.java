@@ -5,6 +5,7 @@ import io.evercam.ApiKeyPair;
 import io.evercam.EvercamException;
 import io.evercam.User;
 import io.evercam.androidapp.custom.CustomAdapter;
+import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.dal.*;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
@@ -493,7 +494,7 @@ public class ManageAccountsActivity extends ParentActivity
 
 				if (errorMessage != null)
 				{
-					showToast(errorMessage);
+					CustomToast.showInCenter(getApplicationContext(), errorMessage);
 				}
 				else
 				{
@@ -561,13 +562,6 @@ public class ManageAccountsActivity extends ParentActivity
 	{
 		errorTextView.setVisibility(View.VISIBLE);
 		errorTextView.setText(message);
-	}
-
-	private void showToast(String message)
-	{
-		Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
-		toast.setGravity(Gravity.CENTER, 0, 0);
-		toast.show();
 	}
 
 	class AccountCheckInternetTask extends CheckInternetTask

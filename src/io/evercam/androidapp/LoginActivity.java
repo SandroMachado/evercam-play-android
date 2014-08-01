@@ -6,6 +6,7 @@ import io.evercam.EvercamException;
 import io.evercam.User;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
+import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
@@ -25,15 +26,12 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.bugsense.trace.BugSenseHandler;
 
 public class LoginActivity extends ParentActivity
@@ -125,35 +123,34 @@ public class LoginActivity extends ParentActivity
 		boolean cancel = false;
 		View focusView = null;
 
-		if (TextUtils.isEmpty(password))
-		{
-			passwordEdit.setError(getString(R.string.error_password_required));
-			focusView = passwordEdit;
-			cancel = true;
-		}
-		else if (password.contains(" "))
-		{
-			passwordEdit.setError(getString(R.string.error_invalid_password));
-			focusView = passwordEdit;
-			cancel = true;
-		}
-
 		if (TextUtils.isEmpty(username))
 		{
-			usernameEdit.setError(getString(R.string.error_username_required));
+			CustomToast.showInCenter(getApplicationContext(), R.string.error_username_required);
 			focusView = usernameEdit;
 			cancel = true;
 		}
 		else if (username.contains("@"))
 		{
-			usernameEdit.setError(getString(R.string.please_use_username));
+			CustomToast.showInCenter(getApplicationContext(), R.string.please_use_username);
 			focusView = usernameEdit;
 			cancel = true;
 		}
 		else if (username.contains(" "))
 		{
-			usernameEdit.setError(getString(R.string.error_invalid_username));
+			CustomToast.showInCenter(getApplicationContext(), R.string.error_invalid_username);
 			focusView = usernameEdit;
+			cancel = true;
+		}
+		else if (TextUtils.isEmpty(password))
+		{
+			CustomToast.showInCenter(getApplicationContext(), R.string.error_password_required);
+			focusView = passwordEdit;
+			cancel = true;
+		}
+		else if (password.contains(" "))
+		{
+			CustomToast.showInCenter(getApplicationContext(), R.string.error_invalid_password);
+			focusView = passwordEdit;
 			cancel = true;
 		}
 
@@ -238,10 +235,7 @@ public class LoginActivity extends ParentActivity
 			{
 				if (errorMessage != null)
 				{
-					Toast toast = Toast.makeText(getApplicationContext(), errorMessage,
-							Toast.LENGTH_SHORT);
-					toast.setGravity(Gravity.CENTER, 0, 0);
-					toast.show();
+					CustomToast.showInCenter(getApplicationContext(), errorMessage);
 				}
 				else
 				{

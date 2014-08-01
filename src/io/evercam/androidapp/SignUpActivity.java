@@ -7,6 +7,7 @@ import io.evercam.User;
 import io.evercam.UserDetail;
 import io.evercam.androidapp.account.AccountUtils;
 import io.evercam.androidapp.account.UserProfile;
+import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
@@ -27,14 +28,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -149,7 +148,7 @@ public class SignUpActivity extends Activity
 
 		if (TextUtils.isEmpty(firstname))
 		{
-			firstnameEdit.setError(getString(R.string.error_field_required));
+			CustomToast.showInCenter(this, R.string.error_firstname_required);
 			focusView = firstnameEdit;
 			return null;
 		}
@@ -160,7 +159,7 @@ public class SignUpActivity extends Activity
 
 		if (TextUtils.isEmpty(lastname))
 		{
-			lastnameEdit.setError(getString(R.string.error_field_required));
+			CustomToast.showInCenter(this, R.string.error_lastname_required);
 			focusView = lastnameEdit;
 			return null;
 		}
@@ -171,7 +170,7 @@ public class SignUpActivity extends Activity
 
 		if (countryname.equals(getResources().getString(R.string.spinnerFistItem)))
 		{
-			makeShortToast(R.string.countryNotSelected);
+			CustomToast.showInCenter(this, R.string.countryNotSelected);
 			return null;
 		}
 		else
@@ -182,19 +181,19 @@ public class SignUpActivity extends Activity
 
 		if (TextUtils.isEmpty(username))
 		{
-			usernameEdit.setError(getString(R.string.error_field_required));
+			CustomToast.showInCenter(this, R.string.error_username_required);
 			focusView = usernameEdit;
 			return null;
 		}
 		else if (username.length() < 3)
 		{
-			usernameEdit.setError(getString(R.string.username_too_short));
+			CustomToast.showInCenter(this, R.string.username_too_short);
 			focusView = usernameEdit;
 			return null;
 		}
 		else if (username.contains(" "))
 		{
-			usernameEdit.setError(getString(R.string.error_invalid_username));
+			CustomToast.showInCenter(this, R.string.error_invalid_username);
 			focusView = usernameEdit;
 			return null;
 		}
@@ -205,13 +204,13 @@ public class SignUpActivity extends Activity
 
 		if (TextUtils.isEmpty(email))
 		{
-			emailEdit.setError(getString(R.string.error_field_required));
+			CustomToast.showInCenter(this, R.string.error_email_required);
 			focusView = emailEdit;
 			return null;
 		}
 		else if (!email.contains("@"))
 		{
-			makeShortToast(R.string.invalidEmail);
+			CustomToast.showInCenter(this, R.string.invalidEmail);
 			focusView = emailEdit;
 			return null;
 		}
@@ -222,20 +221,20 @@ public class SignUpActivity extends Activity
 
 		if (TextUtils.isEmpty(password))
 		{
-			passwordEdit.setError(getString(R.string.error_field_required));
+			CustomToast.showInCenter(this, R.string.error_password_required);
 			focusView = passwordEdit;
 			return null;
 		}
 
 		if (TextUtils.isEmpty(repassword))
 		{
-			repasswordEdit.setError(getString(R.string.error_field_required));
+			CustomToast.showInCenter(this, R.string.error_confirmpassword_required);
 			focusView = repasswordEdit;
 			return null;
 		}
 		else if (!password.equals(repassword))
 		{
-			makeShortToast(R.string.passwordNotMatch);
+			CustomToast.showInCenter(this, R.string.passwordNotMatch);
 			return null;
 		}
 		else
@@ -270,20 +269,6 @@ public class SignUpActivity extends Activity
 			list.addAll(java.util.Arrays.asList(array));
 		}
 		return (String[]) list.toArray(new String[size]);
-	}
-
-	private void makeShortToast(int message)
-	{
-		Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
-		toast.setGravity(Gravity.CENTER, 0, 0);
-		toast.show();
-	}
-
-	private void makeShortToast(String message)
-	{
-		Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
-		toast.setGravity(Gravity.CENTER, 0, 0);
-		toast.show();
 	}
 
 	private void setSpinnerAdapter()
@@ -327,14 +312,14 @@ public class SignUpActivity extends Activity
 				SharedPreferences sharedPrefs = PreferenceManager
 						.getDefaultSharedPreferences(SignUpActivity.this);
 				PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
-				makeShortToast(R.string.confirmSignUp);
+				CustomToast.showInCenter(SignUpActivity.this, R.string.confirmSignUp);
 				showProgress(false);
 				startActivity(new Intent(SignUpActivity.this, MainActivity.class));
 			}
 			else
 			{
 				showProgress(false);
-				makeShortToast(message);
+				CustomToast.showInCenter(SignUpActivity.this, message);
 			}
 		}
 
