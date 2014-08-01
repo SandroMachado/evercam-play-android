@@ -30,7 +30,6 @@ public class AccountUtils
 	{
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH ? getUserProfileOnIcsDevice(context)
 				: getUserProfileOnGingerbreadDevice(context);
-		// return getUserProfileOnGingerbreadDevice(context);
 	}
 
 	/**
