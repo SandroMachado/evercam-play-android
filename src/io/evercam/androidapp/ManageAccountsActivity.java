@@ -239,10 +239,10 @@ public class ManageAccountsActivity extends ParentActivity
 	{
 		final View dialog_layout = getLayoutInflater().inflate(
 				R.layout.manageaccountsactivity_adduser_dialogue, null);
-//		View title_layout = getLayoutInflater().inflate(
-//				R.layout.manageaccountsactivity_adduser_dialogue_title, null);
+		// View title_layout = getLayoutInflater().inflate(
+		// R.layout.manageaccountsactivity_adduser_dialogue_title, null);
 		alertDialog = new AlertDialog.Builder(this)
-			//	.setCustomTitle(title_layout)
+				// .setCustomTitle(title_layout)
 				.setView(dialog_layout)
 				.setCancelable(false)
 				.setNegativeButton(R.string.cancel, null)
@@ -307,7 +307,7 @@ public class ManageAccountsActivity extends ParentActivity
 			CustomToast.showInCenter(this, R.string.error_invalid_username);
 			return;
 		}
-		
+
 		if (TextUtils.isEmpty(password))
 		{
 			CustomToast.showInCenter(this, R.string.error_password_required);

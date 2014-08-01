@@ -119,13 +119,14 @@ public class CustomedDialog
 		dialog.setCanceledOnTouchOutside(false);
 		return dialog;
 	}
-	
-	public static AlertDialog getConfirmLogoutDialog(Activity activity, DialogInterface.OnClickListener listener)
+
+	public static AlertDialog getConfirmLogoutDialog(Activity activity,
+			DialogInterface.OnClickListener listener)
 	{
 		AlertDialog comfirmLogoutDialog = new AlertDialog.Builder(activity)
 
-		.setMessage(R.string.msg_confirm_sign_out)
-				.setPositiveButton(R.string.yes, listener).setNegativeButton(R.string.no, new DialogInterface.OnClickListener(){
+		.setMessage(R.string.msg_confirm_sign_out).setPositiveButton(R.string.yes, listener)
+				.setNegativeButton(R.string.no, new DialogInterface.OnClickListener(){
 					@Override
 					public void onClick(DialogInterface dialog, int which)
 					{

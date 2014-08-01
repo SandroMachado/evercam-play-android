@@ -5,7 +5,6 @@ import java.util.List;
 import android.os.Bundle;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -580,8 +579,8 @@ public class CamerasActivity extends ParentActivity implements
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
-				EvercamPlayApplication.sendEventAnalytics(CamerasActivity.this, R.string.category_menu,
-						R.string.action_logout, R.string.label_user_logout);
+				EvercamPlayApplication.sendEventAnalytics(CamerasActivity.this,
+						R.string.category_menu, R.string.action_logout, R.string.label_user_logout);
 				logOutUser();
 			}
 		}).show();
