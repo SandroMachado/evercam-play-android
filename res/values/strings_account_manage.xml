@@ -4,4 +4,6 @@
     <string name="open_account">Open Account</string>
     <string name="set_default">Set as default</string>
     <string name="remove_account">Remove Account</string>
+    <string name="add_new_account">Add New Account</string>
+    <string name="add_account">Add Account</string>
 </resources>

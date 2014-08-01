@@ -29,7 +29,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,7 +40,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ManageAccountsActivity extends ParentActivity
 {
@@ -68,7 +66,7 @@ public class ManageAccountsActivity extends ParentActivity
 			this.getActionBar().setIcon(R.drawable.ic_navigation_back);
 		}
 
-		setContentView(R.layout.manageaccountsactivity_layout);
+		setContentView(R.layout.manage_account_activity);
 
 		// create and start the task to show all user accounts
 		ListView listview = (ListView) findViewById(R.id.email_list);
@@ -221,9 +219,6 @@ public class ManageAccountsActivity extends ParentActivity
 			// Handle item selection
 			switch (item.getItemId())
 			{
-			case R.id.menu_account_add:
-				showAddEditUserDialogue(null, null, false, false);
-				return true;
 			case android.R.id.home:
 				this.finish();
 				return true;
@@ -244,10 +239,10 @@ public class ManageAccountsActivity extends ParentActivity
 	{
 		final View dialog_layout = getLayoutInflater().inflate(
 				R.layout.manageaccountsactivity_adduser_dialogue, null);
-		View title_layout = getLayoutInflater().inflate(
-				R.layout.manageaccountsactivity_adduser_dialogue_title, null);
+//		View title_layout = getLayoutInflater().inflate(
+//				R.layout.manageaccountsactivity_adduser_dialogue_title, null);
 		alertDialog = new AlertDialog.Builder(this)
-				.setCustomTitle(title_layout)
+			//	.setCustomTitle(title_layout)
 				.setView(dialog_layout)
 				.setCancelable(false)
 				.setNegativeButton(R.string.cancel, null)
@@ -256,7 +251,7 @@ public class ManageAccountsActivity extends ParentActivity
 
 		if (isEdit)
 		{
-			((TextView) title_layout.findViewById(R.id.txt_adduser_title))
+			((TextView) dialog_layout.findViewById(R.id.txt_adduser_title))
 					.setText(R.string.account_edit);
 		}
 		if (username != null)
@@ -297,33 +292,33 @@ public class ManageAccountsActivity extends ParentActivity
 		String username = usernameEdit.getText().toString();
 		String password = passwordEdit.getText().toString();
 
-		TextView textError = (TextView) view.findViewById(R.id.txt_error_user_authentication);
-		if (TextUtils.isEmpty(password))
-		{
-			showErrorMessageOnDialog(textError, R.string.error_password_required);
-			return;
-		}
-		else if (password.contains(" "))
-		{
-			showErrorMessageOnDialog(textError, R.string.error_invalid_password);
-			return;
-		}
-
 		if (TextUtils.isEmpty(username))
 		{
-			showErrorMessageOnDialog(textError, R.string.error_username_required);
+			CustomToast.showInCenter(this, R.string.error_username_required);
 			return;
 		}
 		else if (username.contains("@"))
 		{
-			showErrorMessageOnDialog(textError, R.string.please_use_username);
+			CustomToast.showInCenter(this, R.string.please_use_username);
 			return;
 		}
 		else if (username.contains(" "))
 		{
-			showErrorMessageOnDialog(textError, R.string.error_invalid_username);
+			CustomToast.showInCenter(this, R.string.error_invalid_username);
 			return;
 		}
+		
+		if (TextUtils.isEmpty(password))
+		{
+			CustomToast.showInCenter(this, R.string.error_password_required);
+			return;
+		}
+		else if (password.contains(" "))
+		{
+			CustomToast.showInCenter(this, R.string.error_invalid_password);
+			return;
+		}
+
 		ProgressBar progressBar = (ProgressBar) alertDialog.findViewById(R.id.pb_loadinguser);
 		progressBar.setVisibility(View.VISIBLE);
 		AddAccountTask task = new AddAccountTask(username, password, isDefault, alertDialog);
@@ -556,12 +551,6 @@ public class ManageAccountsActivity extends ParentActivity
 		String developerAppKey = propertyReader.getPropertyStr(PropertyReader.KEY_API_KEY);
 		String developerAppID = propertyReader.getPropertyStr(PropertyReader.KEY_API_ID);
 		API.setDeveloperKeyPair(developerAppKey, developerAppID);
-	}
-
-	private void showErrorMessageOnDialog(TextView errorTextView, int message)
-	{
-		errorTextView.setVisibility(View.VISIBLE);
-		errorTextView.setText(message);
 	}
 
 	class AccountCheckInternetTask extends CheckInternetTask
