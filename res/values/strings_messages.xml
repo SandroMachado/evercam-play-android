@@ -12,5 +12,6 @@
     <string name="msg_error_occurred">Error Occurred</string>
     <string name="msg_unable_to_play">Unable to play</string>
     <string name="msg_please_check_camera">Please check camera and try again.</string>
+    <string name="msg_confirm_sign_out">Are you sure you want to sign out?</string>
 
 </resources>

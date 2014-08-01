@@ -5,8 +5,10 @@ import java.util.List;
 import android.os.Bundle;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -195,9 +197,7 @@ public class CamerasActivity extends ParentActivity implements
 				return true;
 
 			case R.id.menu_logout:
-				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
-						R.string.action_logout, R.string.label_user_logout);
-				logOutUser();
+				showSignOutDialog();
 
 				return true;
 
@@ -332,35 +332,6 @@ public class CamerasActivity extends ParentActivity implements
 		// any change in cameras in database
 		loadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
-
-	// private void addUsersToDropdownActionBar()
-	// {
-	// boolean taskStarted = false;
-	//
-	// while (!taskStarted)
-	// {
-	// try
-	// {
-	// stopAllCameraViews();
-	//
-	// if (AppData.defaultUser == null)
-	// {
-	// startActivity(new Intent(this, MainActivity.class));
-	// CamerasActivity.this.finish();
-	// return;
-	// }
-	//
-	// new UserLoadingTask().execute();
-	//
-	// taskStarted = true;
-	// }
-	// catch (Exception e)
-	// {
-	// Log.e(TAG, e.getMessage(), e);
-	// if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-	// }
-	// }
-	// }
 
 	// Stop All Camera Views
 	public void stopAllCameraViews()
@@ -598,9 +569,23 @@ public class CamerasActivity extends ParentActivity implements
 		}
 		catch (Exception e)
 		{
-			Log.e(TAG, "Error: delete user" + e.toString());
+			Log.e(TAG, "Error: sign out" + e.toString());
 		}
 		startActivity(new Intent(this, MainActivity.class));
+	}
+
+	private void showSignOutDialog()
+	{
+		CustomedDialog.getConfirmLogoutDialog(this, new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				EvercamPlayApplication.sendEventAnalytics(CamerasActivity.this, R.string.category_menu,
+						R.string.action_logout, R.string.label_user_logout);
+				logOutUser();
+			}
+		}).show();
+
 	}
 
 	class CamerasCheckInternetTask extends CheckInternetTask
@@ -670,118 +655,4 @@ public class CamerasActivity extends ParentActivity implements
 		display.getSize(size);
 		return size.x;
 	}
-
-	// private class UserLoadingTask extends AsyncTask<String, String, String[]>
-	// {
-	// int defaultUserIndex = 0;
-	//
-	// @Override
-	// protected String[] doInBackground(String... arg0)
-	// {
-	// try
-	// {
-	// DbAppUser dbUser = new DbAppUser(CamerasActivity.this);
-	// AppData.appUsers = dbUser.getAllAppUsers(1000);
-	//
-	// final String[] userEmailArray = new String[AppData.appUsers.size()];
-	//
-	// for (int count = 0; count < AppData.appUsers.size(); count++)
-	// {
-	// userEmailArray[count] = AppData.appUsers.get(count).getEmail();
-	// if (AppData.appUsers.get(count).getIsDefault())
-	// {
-	// defaultUserIndex = count;
-	// }
-	// }
-	//
-	// return userEmailArray;
-	//
-	// }
-	// catch (Exception e)
-	// {
-	// Log.e(TAG, e.getMessage(), e);
-	// if (Constants.isAppTrackingEnabled)
-	// {
-	// BugSenseHandler.sendException(e);
-	// }
-	// }
-	// return null;
-	// }
-	//
-	// @Override
-	// protected void onPostExecute(String[] userEmailArray)
-	// {
-	// try
-	// {
-	// ArrayAdapter<String> dropdownListAdapter = new ArrayAdapter<String>(
-	// CamerasActivity.this, android.R.layout.simple_spinner_dropdown_item,
-	// userEmailArray);
-	// CamerasActivity.this.getActionBar().setNavigationMode(
-	// ActionBar.NAVIGATION_MODE_LIST);
-	// OnNavigationListener navigationListener = new OnNavigationListener(){
-	// @Override
-	// public boolean onNavigationItemSelected(int itemPosition, long itemId)
-	// {
-	// try
-	// {
-	// // set all current users default to false
-	// for (AppUser user : AppData.appUsers)
-	// {
-	// user.setIsDefault(false);
-	// }
-	//
-	// // set all db app users as false
-	// DbAppUser dbUser = new DbAppUser(CamerasActivity.this);
-	// dbUser.updateAllIsDefaultFalse();
-	//
-	// // set selected user's default to true
-	// AppUser user = AppData.appUsers.get(itemPosition);
-	// user.setIsDefault(true);
-	//
-	// dbUser.updateAppUser(user);
-	// AppData.defaultUser = user;
-	//
-	// // load local cameras for default user
-	// AppData.evercamCameraList = new DbCamera(CamerasActivity.this)
-	// .getCamerasByOwner(user.getUsername(), 500);
-	//
-	// removeAllCameraViews();
-	//
-	// // FIXME: Time consuming and freeze UI
-	// addAllCameraViews(true);
-	//
-	// // start the task for default user to refresh camera
-	// // list
-	// new LoadCameraListTask(AppData.defaultUser, CamerasActivity.this)
-	// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-	// if (totalCamerasInGrid == 0 && refresh != null)
-	// {
-	// refresh.setActionView(null);
-	// refresh.setActionView(R.layout.actionbar_indeterminate_progress);
-	// }
-	// }
-	// catch (Exception e)
-	// {
-	// Log.e(TAG, e.getMessage(), e);
-	// if (Constants.isAppTrackingEnabled)
-	// {
-	// BugSenseHandler.sendException(e);
-	// }
-	// }
-	// return false;
-	// }
-	// };
-	//
-	// getActionBar().setListNavigationCallbacks(dropdownListAdapter,
-	// navigationListener);
-	// getActionBar().setSelectedNavigationItem(defaultUserIndex);
-	//
-	// }
-	// catch (Exception e)
-	// {
-	// Log.e(TAG, e.getMessage(), e);
-	// if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-	// }
-	// }
-	// }
 }
