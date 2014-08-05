@@ -79,7 +79,7 @@ public class ManageAccountsActivity extends ParentActivity
 		}
 		else
 		{
-			new ShowAllAccountsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			showAllAccounts();
 		}
 
 		listview.setOnItemClickListener(new OnItemClickListener(){
@@ -93,7 +93,7 @@ public class ManageAccountsActivity extends ParentActivity
 
 				if (user.getId() < 0) // add new user item
 				{
-					showAddEditUserDialogue(null, null, false);
+					showAddUserDialogue(null, null, false);
 					return;
 				}
 
@@ -118,7 +118,7 @@ public class ManageAccountsActivity extends ParentActivity
 					}
 				});
 
-				if(user.getIsDefault())
+				if (user.getIsDefault())
 				{
 					openDefault.setVisibility(View.GONE);
 					setDefault.setVisibility(View.GONE);
@@ -134,7 +134,7 @@ public class ManageAccountsActivity extends ParentActivity
 							ed_dialog_layout.setClickable(false);
 						}
 					});
-					
+
 					setDefault.setOnClickListener(new OnClickListener(){
 						@Override
 						public void onClick(View v)
@@ -168,15 +168,15 @@ public class ManageAccountsActivity extends ParentActivity
 												int maxid = users.getMaxID();
 												AppUser user = users.getAppUserByID(maxid);
 												user.setIsDefault(true);
-									   			users.updateAppUser(user);
+												users.updateAppUser(user);
 												PrefsManager.saveUserEmail(
 														PreferenceManager
 																.getDefaultSharedPreferences(ManageAccountsActivity.this),
 														user.getEmail());
 												AppData.defaultUser = user;
 											}
-											new ShowAllAccountsTask()
-													.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+											showAllAccounts();
 											dialog.dismiss();
 										}
 										catch (Exception e)
@@ -241,7 +241,7 @@ public class ManageAccountsActivity extends ParentActivity
 		}
 	}
 
-	private void showAddEditUserDialogue(String username, String password, boolean isdefault)
+	private void showAddUserDialogue(String username, String password, boolean isdefault)
 	{
 		final View dialog_layout = getLayoutInflater().inflate(
 				R.layout.manageaccountsactivity_adduser_dialogue, null);
@@ -249,11 +249,9 @@ public class ManageAccountsActivity extends ParentActivity
 		// R.layout.manageaccountsactivity_adduser_dialogue_title, null);
 		alertDialog = new AlertDialog.Builder(this)
 				// .setCustomTitle(title_layout)
-				.setView(dialog_layout)
-				.setCancelable(false)
+				.setView(dialog_layout).setCancelable(false)
 				.setNegativeButton(R.string.cancel, null)
-				.setPositiveButton((getString(R.string.add)),
-						null).create();
+				.setPositiveButton((getString(R.string.add)), null).create();
 
 		if (username != null)
 		{
@@ -380,8 +378,14 @@ public class ManageAccountsActivity extends ParentActivity
 				{
 					CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
 				}
-				if (closeActivity) ManageAccountsActivity.this.finish();
-				else new ShowAllAccountsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				if (closeActivity)
+				{
+					ManageAccountsActivity.this.finish();
+				}
+				else
+				{
+					showAllAccounts();
+				}
 
 				if (dialogToDismiss != null) dialogToDismiss.dismiss();
 			}
@@ -389,39 +393,26 @@ public class ManageAccountsActivity extends ParentActivity
 		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, userId);
 	}
 
-	public class ShowAllAccountsTask extends AsyncTask<String, String, Boolean>
+	private void showAllAccounts()
 	{
-		@Override
-		protected Boolean doInBackground(String... params)
+		try
 		{
-			try
-			{
-				DbAppUser dbuser = new DbAppUser(ManageAccountsActivity.this);
-				AppData.appUsers = dbuser.getAllAppUsers(100);
-				return true;
-			}
-			catch (Exception e)
-			{
-				if (Constants.isAppTrackingEnabled)
-				{
-					BugSenseHandler.sendException(e);
-				}
-			}
-			return true;
-		}
+			DbAppUser dbuser = new DbAppUser(ManageAccountsActivity.this);
+			AppData.appUsers = dbuser.getAllAppUsers(100);
 
-		@Override
-		protected void onPostExecute(Boolean showAccounts)
+			ListAdapter listAdapter = new CustomAdapter(ManageAccountsActivity.this,
+					R.layout.manageaccountsactivity_listitem,
+					R.layout.manageaccountsactivity_listitem_add_new_user_account,
+					R.id.manageactivity_listitemtextvie, (ArrayList<AppUser>) AppData.appUsers);
+			ListView listview = (ListView) findViewById(R.id.email_list);
+			listview.setAdapter(null);
+			listview.setAdapter(listAdapter);
+		}
+		catch (Exception e)
 		{
-			if (showAccounts)
+			if (Constants.isAppTrackingEnabled)
 			{
-				ListAdapter listAdapter = new CustomAdapter(ManageAccountsActivity.this,
-						R.layout.manageaccountsactivity_listitem,
-						R.layout.manageaccountsactivity_listitem_add_new_user_account,
-						R.id.manageactivity_listitemtextvie, (ArrayList<AppUser>) AppData.appUsers);
-				ListView listview = (ListView) findViewById(R.id.email_list);
-				listview.setAdapter(null);
-				listview.setAdapter(listAdapter);
+				BugSenseHandler.sendException(e);
 			}
 		}
 	}
@@ -538,7 +529,8 @@ public class ManageAccountsActivity extends ParentActivity
 					@Override
 					protected void onPostExecute(String result)
 					{
-						new ShowAllAccountsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						showAllAccounts();
+
 						alertDialog.dismiss();
 					}
 				}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
