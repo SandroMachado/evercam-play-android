@@ -135,7 +135,7 @@ public class CustomedDialog
 				}).create();
 		return comfirmLogoutDialog;
 	}
-	
+
 	public static AlertDialog getConfirmRemoveDialog(Activity activity,
 			DialogInterface.OnClickListener listener)
 	{

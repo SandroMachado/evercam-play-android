@@ -69,7 +69,7 @@ public class ManageAccountsActivity extends ParentActivity
 
 		// create and start the task to show all user accounts
 		ListView listview = (ListView) findViewById(R.id.email_list);
-		if (AppData.appUsers != null)
+		if (AppData.appUsers != null && AppData.appUsers.size() != 0)
 		{
 			ListAdapter listAdapter = new CustomAdapter(ManageAccountsActivity.this,
 					R.layout.manageaccountsactivity_listitem,
@@ -120,8 +120,8 @@ public class ManageAccountsActivity extends ParentActivity
 
 				if (user.getIsDefault())
 				{
-					openDefault.setVisibility(View.GONE);
-					setDefault.setVisibility(View.GONE);
+					openDefault.setEnabled(false);
+					setDefault.setEnabled(false);
 				}
 				else
 				{
@@ -146,50 +146,57 @@ public class ManageAccountsActivity extends ParentActivity
 					});
 				}
 
-				delete.setOnClickListener(new OnClickListener(){
-					@Override
-					public void onClick(View v)
-					{
+				if (AppData.appUsers != null && AppData.appUsers.size() == 2 )
+				{
+					//If only one user exists, don't allow to remove this user
+					delete.setEnabled(false);
+				}
+				else
+				{
+					delete.setOnClickListener(new OnClickListener(){
+						@Override
+						public void onClick(View v)
+						{
+							CustomedDialog.getConfirmRemoveDialog(ManageAccountsActivity.this,
+									new DialogInterface.OnClickListener(){
 
-						CustomedDialog.getConfirmRemoveDialog(ManageAccountsActivity.this,
-								new DialogInterface.OnClickListener(){
-
-									@Override
-									public void onClick(DialogInterface warningDialog, int which)
-									{
-										try
+										@Override
+										public void onClick(DialogInterface warningDialog, int which)
 										{
-											DbAppUser users = new DbAppUser(
-													ManageAccountsActivity.this);
-											users.deleteAppUserByEmail(user.getEmail());
-											if (users.getDefaultUsersCount() == 0
-													&& users.getAppUsersCount() > 0)
+											try
 											{
-												int maxid = users.getMaxID();
-												AppUser user = users.getAppUserByID(maxid);
-												user.setIsDefault(true);
-												users.updateAppUser(user);
-												PrefsManager.saveUserEmail(
-														PreferenceManager
-																.getDefaultSharedPreferences(ManageAccountsActivity.this),
-														user.getEmail());
-												AppData.defaultUser = user;
-											}
+												DbAppUser users = new DbAppUser(
+														ManageAccountsActivity.this);
+												users.deleteAppUserByEmail(user.getEmail());
+												if (users.getDefaultUsersCount() == 0
+														&& users.getAppUsersCount() > 0)
+												{
+													int maxid = users.getMaxID();
+													AppUser user = users.getAppUserByID(maxid);
+													user.setIsDefault(true);
+													users.updateAppUser(user);
+													PrefsManager.saveUserEmail(
+															PreferenceManager
+																	.getDefaultSharedPreferences(ManageAccountsActivity.this),
+															user.getEmail());
+													AppData.defaultUser = user;
+												}
 
-											showAllAccounts();
-											dialog.dismiss();
-										}
-										catch (Exception e)
-										{
-											if (Constants.isAppTrackingEnabled)
+												showAllAccounts();
+												dialog.dismiss();
+											}
+											catch (Exception e)
 											{
-												BugSenseHandler.sendException(e);
+												if (Constants.isAppTrackingEnabled)
+												{
+													BugSenseHandler.sendException(e);
+												}
 											}
 										}
-									}
-								}).show();
-					}
-				});
+									}).show();
+						}
+					});
+				}
 			}
 		});
 	}
@@ -217,7 +224,7 @@ public class ManageAccountsActivity extends ParentActivity
 	}
 
 	// Tells that what item has been selected from options. We need to call the
-	// relevent code for that item.
+	// relevant code for that item.
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{

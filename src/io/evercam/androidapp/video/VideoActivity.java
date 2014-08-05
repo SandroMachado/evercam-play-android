@@ -135,6 +135,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private static String imageLiveLocalURL = "";
 
 	private boolean paused = false;
+	private static boolean isPlayingJpg = false;// If true, stop trying video
+												// URL for reconnecting.
 
 	private Animation fadeInAnimation = null; // animation that shows the
 												// playing icon
@@ -820,8 +822,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		}
 		catch (Exception e)
 		{
-			Toast.makeText(this, "Error reconnecting! " + media + " ::::: " + e.getMessage(),
-					Toast.LENGTH_LONG).show();
+			if (!isPlayingJpg)
+			{
+				Toast.makeText(this, "Error reconnecting! " + media + " ::::: " + e.getMessage(),
+						Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 
@@ -1275,6 +1280,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					break;
 				case EventHandler.MediaPlayerPlaying:
 
+					isPlayingJpg = false;
 					player.surfaceView.setVisibility(View.VISIBLE);
 					player.imageView.setVisibility(View.GONE);
 					player.mrlPlaying = player.getCurrentMRL();
@@ -1305,6 +1311,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					}
 					else
 					{
+						isPlayingJpg = true;
 						player.showToast(videoActivity.get().getString(R.string.msg_switch_to_jpg));
 						player.showImagesVideo = true;
 						player.createNewImageThread();
@@ -1329,6 +1336,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					}
 					catch (Exception ex)
 					{
+
 					}
 
 					break;

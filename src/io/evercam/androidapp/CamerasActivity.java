@@ -552,6 +552,7 @@ public class CamerasActivity extends ParentActivity implements
 
 			// clear real-time default app data
 			AppData.defaultUser = null;
+			AppData.appUsers.clear();
 			AppData.evercamCameraList.clear();
 
 			// delete app user
