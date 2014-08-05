@@ -144,32 +144,44 @@ public class ManageAccountsActivity extends ParentActivity
 					@Override
 					public void onClick(View v)
 					{
-						try
-						{
-							DbAppUser users = new DbAppUser(ManageAccountsActivity.this);
-							users.deleteAppUserByEmail(user.getEmail());
-							if (users.getDefaultUsersCount() == 0 && users.getAppUsersCount() > 0)
-							{
-								int maxid = users.getMaxID();
-								AppUser user = users.getAppUserByID(maxid);
-								user.setIsDefault(true);
-								users.updateAppUser(user);
-								PrefsManager.saveUserEmail(PreferenceManager
-										.getDefaultSharedPreferences(ManageAccountsActivity.this),
-										user.getEmail());
-								AppData.defaultUser = user;
-							}
-							new ShowAllAccountsTask()
-									.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-							dialog.dismiss();
-						}
-						catch (Exception e)
-						{
-							if (Constants.isAppTrackingEnabled)
-							{
-								BugSenseHandler.sendException(e);
-							}
-						}
+
+						CustomedDialog.getConfirmRemoveDialog(ManageAccountsActivity.this,
+								new DialogInterface.OnClickListener(){
+
+									@Override
+									public void onClick(DialogInterface warningDialog, int which)
+									{
+										try
+										{
+											DbAppUser users = new DbAppUser(
+													ManageAccountsActivity.this);
+											users.deleteAppUserByEmail(user.getEmail());
+											if (users.getDefaultUsersCount() == 0
+													&& users.getAppUsersCount() > 0)
+											{
+												int maxid = users.getMaxID();
+												AppUser user = users.getAppUserByID(maxid);
+												user.setIsDefault(true);
+												users.updateAppUser(user);
+												PrefsManager.saveUserEmail(
+														PreferenceManager
+																.getDefaultSharedPreferences(ManageAccountsActivity.this),
+														user.getEmail());
+												AppData.defaultUser = user;
+											}
+											new ShowAllAccountsTask()
+													.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+											dialog.dismiss();
+										}
+										catch (Exception e)
+										{
+											if (Constants.isAppTrackingEnabled)
+											{
+												BugSenseHandler.sendException(e);
+											}
+										}
+									}
+								}).show();
 					}
 				});
 
