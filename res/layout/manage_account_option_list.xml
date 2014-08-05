@@ -17,12 +17,6 @@
         android:text="@string/set_default" />
 
     <Button
-        android:id="@+id/btn_edit_account"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/account_edit" />
-
-    <Button
         android:id="@+id/btn_delete_account"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

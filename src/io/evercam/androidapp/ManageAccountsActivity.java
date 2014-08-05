@@ -39,7 +39,6 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 public class ManageAccountsActivity extends ParentActivity
 {
@@ -94,7 +93,7 @@ public class ManageAccountsActivity extends ParentActivity
 
 				if (user.getId() < 0) // add new user item
 				{
-					showAddEditUserDialogue(null, null, false, false);
+					showAddEditUserDialogue(null, null, false);
 					return;
 				}
 
@@ -110,7 +109,6 @@ public class ManageAccountsActivity extends ParentActivity
 				Button setDefault = (Button) ed_dialog_layout
 						.findViewById(R.id.btn_set_default_account);
 				Button delete = (Button) ed_dialog_layout.findViewById(R.id.btn_delete_account);
-				Button edit = (Button) ed_dialog_layout.findViewById(R.id.btn_edit_account);
 
 				cancel.setOnClickListener(new OnClickListener(){
 					@Override
@@ -120,25 +118,33 @@ public class ManageAccountsActivity extends ParentActivity
 					}
 				});
 
-				openDefault.setOnClickListener(new OnClickListener(){
-					@Override
-					public void onClick(View v)
-					{
-						setDefaultUser(user.getId() + "", true, dialog);
-						ed_dialog_layout.setEnabled(false);
-						ed_dialog_layout.setClickable(false);
-					}
-				});
-
-				setDefault.setOnClickListener(new OnClickListener(){
-					@Override
-					public void onClick(View v)
-					{
-						setDefaultUser(user.getId() + "", false, dialog);
-						ed_dialog_layout.setEnabled(false);
-						ed_dialog_layout.setClickable(false);
-					}
-				});
+				if(user.getIsDefault())
+				{
+					openDefault.setVisibility(View.GONE);
+					setDefault.setVisibility(View.GONE);
+				}
+				else
+				{
+					openDefault.setOnClickListener(new OnClickListener(){
+						@Override
+						public void onClick(View v)
+						{
+							setDefaultUser(user.getId() + "", true, dialog);
+							ed_dialog_layout.setEnabled(false);
+							ed_dialog_layout.setClickable(false);
+						}
+					});
+					
+					setDefault.setOnClickListener(new OnClickListener(){
+						@Override
+						public void onClick(View v)
+						{
+							setDefaultUser(user.getId() + "", false, dialog);
+							ed_dialog_layout.setEnabled(false);
+							ed_dialog_layout.setClickable(false);
+						}
+					});
+				}
 
 				delete.setOnClickListener(new OnClickListener(){
 					@Override
@@ -162,7 +168,7 @@ public class ManageAccountsActivity extends ParentActivity
 												int maxid = users.getMaxID();
 												AppUser user = users.getAppUserByID(maxid);
 												user.setIsDefault(true);
-												users.updateAppUser(user);
+									   			users.updateAppUser(user);
 												PrefsManager.saveUserEmail(
 														PreferenceManager
 																.getDefaultSharedPreferences(ManageAccountsActivity.this),
@@ -182,17 +188,6 @@ public class ManageAccountsActivity extends ParentActivity
 										}
 									}
 								}).show();
-					}
-				});
-
-				edit.setOnClickListener(new OnClickListener(){
-
-					@Override
-					public void onClick(View v)
-					{
-						dialog.dismiss();
-						showAddEditUserDialogue(user.getEmail(), user.getPassword(),
-								user.getIsDefault(), true);
 					}
 				});
 			}
@@ -246,8 +241,7 @@ public class ManageAccountsActivity extends ParentActivity
 		}
 	}
 
-	private void showAddEditUserDialogue(String username, String password, boolean isdefault,
-			boolean isEdit)
+	private void showAddEditUserDialogue(String username, String password, boolean isdefault)
 	{
 		final View dialog_layout = getLayoutInflater().inflate(
 				R.layout.manageaccountsactivity_adduser_dialogue, null);
@@ -258,14 +252,9 @@ public class ManageAccountsActivity extends ParentActivity
 				.setView(dialog_layout)
 				.setCancelable(false)
 				.setNegativeButton(R.string.cancel, null)
-				.setPositiveButton((isEdit ? getString(R.string.save) : getString(R.string.add)),
+				.setPositiveButton((getString(R.string.add)),
 						null).create();
 
-		if (isEdit)
-		{
-			((TextView) dialog_layout.findViewById(R.id.txt_adduser_title))
-					.setText(R.string.account_edit);
-		}
 		if (username != null)
 		{
 			((EditText) dialog_layout.findViewById(R.id.username_edit)).setText(username);
