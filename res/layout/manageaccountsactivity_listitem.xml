@@ -17,11 +17,10 @@
         android:id="@+id/manageactivity_listitemtextvie"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
         android:layout_gravity="center_vertical"
         android:layout_marginBottom="10dip"
         android:layout_marginTop="10dip"
-        android:textColor="@android:color/white" />
-
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
 
 </LinearLayout>

@@ -15,7 +15,7 @@
 
     <TextView
         android:id="@+id/manageactivity_listitemtextvie_additem"
-        android:layout_width="match_parent" 
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginBottom="10dip"

@@ -27,8 +27,8 @@
             android:layout_marginBottom="10dip"
             android:layout_marginLeft="10dip"
             android:layout_marginTop="25dip"
-            android:visibility="gone"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:visibility="gone" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -60,17 +60,17 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dip"
-            android:visibility="gone"
-            android:background="@color/notificationcolor" />
+            android:background="@color/notificationcolor"
+            android:visibility="gone" />
 
         <ListView
             android:id="@+id/cams_menu_ListNotif"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:divider="@android:color/black"
-            android:visibility="gone"
             android:dividerHeight="1dip"
-            android:footerDividersEnabled="false" />
+            android:footerDividersEnabled="false"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/slidemenu_NoNotif"
@@ -81,15 +81,15 @@
             android:layout_marginTop="50dip"
             android:gravity="center_horizontal"
             android:text="No Events."
-            android:visibility="gone"
             android:textColor="@color/notificationcolor"
-            android:textSize="14dp"/>
+            android:textSize="14dp"
+            android:visibility="gone" />
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dip"
-            android:visibility="gone"
-            android:background="#000000" />
+            android:background="#000000"
+            android:visibility="gone" />
     </LinearLayout>
 
     <FrameLayout

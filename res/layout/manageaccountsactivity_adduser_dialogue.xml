@@ -6,8 +6,8 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-        
+        android:layout_height="wrap_content" >
+
         <TextView
             android:id="@+id/txt_adduser_title"
             android:layout_width="wrap_content"
@@ -31,39 +31,40 @@
             android:layout_marginRight="10dp"
             android:indeterminateOnly="true"
             android:visibility="gone" />
-<!-- #ff33b5e5 -->
+        <!-- #ff33b5e5 -->
+
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="#dc4c3f"
-            android:layout_below="@+id/txt_adduser_title"/>
+            android:layout_below="@+id/txt_adduser_title"
+            android:background="#dc4c3f" />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="35sp"
         android:layout_marginLeft="15sp"
         android:layout_marginRight="15sp"
+        android:layout_marginTop="35sp"
         android:descendantFocusability="beforeDescendants"
-		android:focusableInTouchMode="true"
+        android:focusableInTouchMode="true"
         android:orientation="vertical" >
 
         <EditText
             android:id="@+id/username_edit"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" 
-            android:inputType="text"
-            android:hint="@string/username"/>
+            android:layout_height="wrap_content"
+            android:hint="@string/username"
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/user_password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10sp"
             android:layout_marginBottom="50dp"
-            android:inputType="textPassword" 
-            android:hint="@string/password"/>
+            android:layout_marginTop="10sp"
+            android:hint="@string/password"
+            android:inputType="textPassword" />
     </LinearLayout>
 
 </LinearLayout>

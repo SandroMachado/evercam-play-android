@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.evercam.androidapp"
-    android:versionCode="16"
-    android:versionName="1.1.2 Alpha4" >
+    android:versionCode="17"
+    android:versionName="1.1.2 Alpha5" >
     
     <!-- versionCode15 - versionName1.1.2 Alpha3 - 31/07/2014 - Limit camera per row, account manage changes, removed some permissions.-->
     <!-- versionCode16 - versionName1.1.2 Alpha4 - 01/08/2014 - Account management style changes, log out confirm, error message style-->
@@ -24,6 +24,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     
     <application
+        android:allowBackup="false"
         android:name="EvercamPlayApplication"
         android:icon="@drawable/evercam_play_192x192"
         android:label="@string/app_name"

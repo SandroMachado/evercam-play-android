@@ -20,7 +20,6 @@
     <string name="error_lastname_required">Last name required</string>
     <string name="error_email_required">Email address required</string>
     <string name="error_confirmpassword_required">Please repeat password</string>
-    
     <string name="create_account">Create Account</string>
     <string name="username_too_short">Username is too short</string>
     <string name="prefix_invalid">Invalid</string>

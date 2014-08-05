@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <integer name="ga_sessionTimeout">300</integer>
+
+    <integer name="ga_sessionTimeout">300</integer>
 
     <!-- Enable automatic Activity measurement -->
     <bool name="ga_autoActivityTracking">true</bool>
-    
+
     <!-- Enable automatic exception tracking -->
-    <bool name="ga_reportUncaughtExceptions">true</bool>    
-    
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+
     <!-- If true, treat events as test events and don't send to Google -->
     <bool name="ga_dryRun">false</bool>
 
     <string name="ga_trackingId">UA-52483995-1</string>
+
 </resources>

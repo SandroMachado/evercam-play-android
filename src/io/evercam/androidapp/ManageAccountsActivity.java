@@ -146,9 +146,9 @@ public class ManageAccountsActivity extends ParentActivity
 					});
 				}
 
-				if (AppData.appUsers != null && AppData.appUsers.size() == 2 )
+				if (AppData.appUsers != null && AppData.appUsers.size() == 2)
 				{
-					//If only one user exists, don't allow to remove this user
+					// If only one user exists, don't allow to remove this user
 					delete.setEnabled(false);
 				}
 				else

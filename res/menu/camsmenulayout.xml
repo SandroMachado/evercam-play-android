@@ -3,15 +3,15 @@
 
     <item
         android:id="@+id/menurefresh"
+        android:icon="@drawable/ic_menu_refresh"
         android:orderInCategory="1"
         android:showAsAction="always"
-        android:icon="@drawable/ic_menu_refresh"
         android:title="@string/menu_refresh"/>
     <item
         android:id="@+id/menu_settings"
         android:orderInCategory="2"
         android:title="@string/menu_settings"/>
-        <item
+    <item
         android:id="@+id/menu_manage_accounts"
         android:orderInCategory="2"
         android:title="@string/menu_manage_accounts"/>
@@ -23,4 +23,5 @@
         android:id="@+id/menu_about"
         android:orderInCategory="4"
         android:title="@string/menu_about"/>
+
 </menu>
