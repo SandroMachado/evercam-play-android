@@ -129,12 +129,6 @@ public class LoginActivity extends ParentActivity
 			focusView = usernameEdit;
 			cancel = true;
 		}
-		else if (username.contains("@"))
-		{
-			CustomToast.showInCenter(getApplicationContext(), R.string.please_use_username);
-			focusView = usernameEdit;
-			cancel = true;
-		}
 		else if (username.contains(" "))
 		{
 			CustomToast.showInCenter(getApplicationContext(), R.string.error_invalid_username);

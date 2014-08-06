@@ -4,8 +4,8 @@
     <string name="title_activity_sign_up">Sign Up</string>
 
     <!-- Login Strings -->
-    <string name="prompt_email">Evercam Username</string>
-    <string name="prompt_password">Password</string>
+    <string name="hint_email">Email / Username</string>
+    <string name="hint_password">Password</string>
     <string name="action_sign_in_with_evercam"><b>Sign in</b> with Evercam</string>
     <string name="action_sign_in_short">Sign in&#8230;</string>
     <string name="action_forgot_password">Recover lost password</string>
@@ -45,7 +45,6 @@
     <string name="countryNotSelected">Please select a country!</string>
     <string name="invalidEmail">Invalid Email address!</string>
     <string name="passwordNotMatch">Two different password!</string>
-    <string name="please_use_username">Please sign in with your Evercam USERNAME, NOT Email address.</string>
     <string name="confirmSignUp">Congratulations, now you are logged in with your Evercam account.</string>
 
 </resources>

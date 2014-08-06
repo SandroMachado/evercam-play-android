@@ -303,11 +303,6 @@ public class ManageAccountsActivity extends ParentActivity
 			CustomToast.showInCenter(this, R.string.error_username_required);
 			return;
 		}
-		else if (username.contains("@"))
-		{
-			CustomToast.showInCenter(this, R.string.please_use_username);
-			return;
-		}
 		else if (username.contains(" "))
 		{
 			CustomToast.showInCenter(this, R.string.error_invalid_username);
