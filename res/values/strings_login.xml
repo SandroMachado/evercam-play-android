@@ -8,7 +8,6 @@
     <string name="hint_password">Password</string>
     <string name="action_sign_in_with_evercam"><b>Sign in</b> with Evercam</string>
     <string name="action_sign_in_short">Sign in&#8230;</string>
-    <string name="action_forgot_password">Recover lost password</string>
     <string name="login_progress_signing_in">Signing in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_username">Invalid username</string>

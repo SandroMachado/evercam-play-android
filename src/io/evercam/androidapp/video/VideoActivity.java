@@ -1424,7 +1424,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							downloadStartCount++;
 							myStartImageTime = SystemClock.uptimeMillis();
 
-							response = Commons.getDrawablefromUrlAuthenticated1(url,
+							response = Commons.getDrawablefromUrlAuthenticated(url,
 									evercamCamera.getUsername(), evercamCamera.getPassword(),
 									evercamCamera.cookies, 3000);
 							if (response != null) successiveFailureCount = 0;

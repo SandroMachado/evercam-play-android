@@ -462,7 +462,7 @@ public class CameraLayout extends LinearLayout
 					{
 						if (!url.isEmpty())
 						{
-							drawable = Commons.getDrawablefromUrlAuthenticated1(url,
+							drawable = Commons.getDrawablefromUrlAuthenticated(url,
 									evercamCamera.getUsername(), evercamCamera.getPassword(),
 									cookies, 3000);
 						}

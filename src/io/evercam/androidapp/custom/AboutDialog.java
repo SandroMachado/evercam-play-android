@@ -19,7 +19,7 @@ import io.evercam.androidapp.R;
 
 public class AboutDialog extends Activity
 {
-	private static String TAG = "evercamapp-AboutDialog";
+	private static String TAG = "evercamplay-AboutDialog";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)

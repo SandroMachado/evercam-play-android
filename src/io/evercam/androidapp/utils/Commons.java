@@ -1,15 +1,11 @@
 package io.evercam.androidapp.utils;
 
-import io.evercam.androidapp.exceptions.*;
+import io.evercam.androidapp.exceptions.ConnectivityException;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -19,17 +15,21 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.params.ConnManagerPNames;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
@@ -41,6 +41,7 @@ import org.apache.http.protocol.HttpContext;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
+import android.net.http.AndroidHttpClient;
 import android.util.Base64;
 import android.util.Log;
 
@@ -66,47 +67,46 @@ public class Commons
 		return false;
 	}
 
-	public static Drawable getDrawablefromUrlAuthenticated_Deprecated(String URL, String login,
-			String pass) throws Exception
+	/**
+	 * Request image from URL, support digest authentication.
+	 */
+	public static Drawable getDrawable(String url, String username, String password)
+			throws Exception
 	{
-		Drawable rv = null;
-
-		HttpClient client = new DefaultHttpClient();
-		HttpGet get = new HttpGet(URL);
-		get.setHeader("Accept", "image/jpeg");
-		get.setHeader("User-Agent", "Apache-HttpClient/4.1 (java 1.5)");
-		get.setHeader("Authorization", getB64Auth(login, pass));
-		Commons.setTimeouts(get.getParams());
-		HttpResponse response = client.execute(get);
-		HttpEntity entity = response.getEntity();
-		InputStream input = entity.getContent();
-		if (enableLogs) Log.i(TAG,
-				"getDrawablefromUrlAuthenticated. Can read is " + input.available());
-
-		if (entity.getContentType().getValue().contains("html")
-				&& !entity.getContentType().getValue().contains("image"))
+		Drawable drawable = null;
+		try
 		{
-			if (enableLogs) Log.i(TAG, "Content Type:" + entity.getContentType());
-			BufferedReader r = new BufferedReader(new InputStreamReader(input));
+			AndroidHttpClient httpClient = AndroidHttpClient.newInstance("Evercam Play");
 
-			if (enableLogs) Log.i(TAG, "Content Type:" + entity.getContentType());
-			String res = null;
-			while ((res += r.readLine()) != null)
-				;
-			if (enableLogs) Log.i(TAG, "Content Data:" + res);
+			URL urlObject = new URL(url);
+			HttpHost host = new HttpHost(urlObject.getHost(), urlObject.getPort(),
+					urlObject.getProtocol());
+			AuthScope scope = new AuthScope(urlObject.getHost(), urlObject.getPort());
+			UsernamePasswordCredentials creds = new UsernamePasswordCredentials(username, password);
+
+			CredentialsProvider credentialProvider = new BasicCredentialsProvider();
+			credentialProvider.setCredentials(scope, creds);
+			HttpContext credContext = new BasicHttpContext();
+			credContext.setAttribute(ClientContext.CREDS_PROVIDER, credentialProvider);
+
+			HttpGet get = new HttpGet(url);
+			HttpResponse response = httpClient.execute(host, get, credContext);
+			drawable = Drawable.createFromStream(response.getEntity().getContent(), "src");
+			httpClient.close();
 		}
-		else
+		catch (Exception e)
 		{
-			rv = Drawable.createFromStream(input, "src");
+			Log.d(TAG, e.toString());
+			e.printStackTrace();
 		}
 
-		return rv;
-
+		return drawable;
 	}
 
-	// get the drawable image from the camera with authentication (cookies or
+	// get the drawable image from the camera with authentication (cookies,
+	// digest or
 	// http)
-	public static Drawable getDrawablefromUrlAuthenticated1(String URL, String login, String pass,
+	public static Drawable getDrawablefromUrlAuthenticated(String URL, String login, String pass,
 			ArrayList<Cookie> cookies, int timeoutMillies) throws Exception
 	{
 		Drawable rv = null;
@@ -130,29 +130,13 @@ public class Commons
 		HttpResponse response = client.execute(get, httpcontext);
 		HttpEntity entity = response.getEntity();
 		InputStream input = entity.getContent();
-		if (enableLogs) Log.i(TAG,
-				"getDrawablefromUrlAuthenticated1. Can read is " + input.available());
 
-		// Checking the response, if image was returned or the html. if html
-		// reatunred, that will be to redirect to login page
-		if (entity.getContentType().getValue().contains("image")
-				&& !entity.getContentType().getValue().contains("html")) // if
-																			// the
-																			// image
-																			// was
-																			// returned
-																			// i.e.
-																			// authentication
-																			// approved
+		rv = getDrawable(URL, login, pass);
+		if (rv != null)
 		{
-			rv = Drawable.createFromStream(input, "src");
-			if (enableLogs) Log.i(TAG, "Returning drawabale : " + rv);
-			// Log.i(TAG, "Requesting cookies for URL [" + URL +
-			// "] image returned");
 			return rv;
 		}
 		else
-		// imagge was not retunred. Rather login html page was returned.
 		{
 			// Log.i(TAG, "Requesting cookies for URL [" + URL + "], login [" +
 			// login + "], pass [" + pass + "]");
@@ -176,8 +160,8 @@ public class Commons
 								+ c.getValue() + "] , cokie.toString() [" + c.toString()
 								+ "] , URL [" + URL + "]");
 				if (cookies.contains(c)) cookies.remove(c); // remove old
-															// cookies with old
-															// values
+				// cookies with old
+				// values
 				cookies.add(c); // add new cookies
 			}
 
@@ -198,10 +182,9 @@ public class Commons
 
 			// Making the second post request with usernames and password to get
 			// authenticated on login url.
-			HttpPost post = GetPostMethod(currentUrl, responseHtml, login, pass);// new
-																					// HttpGet(URL);
+			HttpPost post = GetPostMethod(currentUrl, responseHtml, login, pass);
 			if (cookies != null && cookies.size() > 0) // adding cookies to
-														// store
+			// store
 			{
 				CookieStore store = new BasicCookieStore();
 				for (Cookie c : cookies)
@@ -226,22 +209,6 @@ public class Commons
 			// password
 			if (entity.getContentType().getValue().contains("html")
 					&& !entity.getContentType().getValue().contains("image")) // html
-																				// has
-																				// been
-																				// returned.
-																				// We
-																				// may
-																				// need
-																				// to
-																				// make
-																				// a
-																				// request
-																				// with
-																				// get
-																				// method
-																				// on
-																				// image
-																				// url.
 			{
 				r = new BufferedReader(new InputStreamReader(input));
 				responseHtml = "";
@@ -285,22 +252,22 @@ public class Commons
 
 				if (entity.getContentType().getValue().contains("html")
 						&& !entity.getContentType().getValue().contains("image")) // html
-																					// has
-																					// been
-																					// returned.
-																					// We
-																					// may
-																					// need
-																					// to
-																					// make
-																					// a
-																					// request
-																					// with
-																					// get
-																					// method
-																					// on
-																					// image
-																					// url.
+				// has
+				// been
+				// returned.
+				// We
+				// may
+				// need
+				// to
+				// make
+				// a
+				// request
+				// with
+				// get
+				// method
+				// on
+				// image
+				// url.
 				{
 					r = new BufferedReader(new InputStreamReader(input));
 					responseHtml = "";
@@ -323,7 +290,7 @@ public class Commons
 				}
 			}
 			else
-			// image has been retunred. This will be reutned.
+			// image has been returned. This will be returned.
 			{
 				if (enableLogs) Log.i(TAG,
 						"3rd request for getting image was successful Get method having input stream size "
@@ -331,6 +298,25 @@ public class Commons
 				rv = Drawable.createFromStream(input, "src");
 			}
 		}
+		// if (enableLogs) Log.i(TAG,
+		// "getDrawablefromUrlAuthenticated1. Can read is " +
+		// input.available());
+		//
+		// // Checking the response, if image was returned or the html. if html
+		// // reatunred, that will be to redirect to login page
+		// if (entity.getContentType().getValue().contains("image")
+		// && !entity.getContentType().getValue().contains("html")) // if
+		//
+		// {
+		// rv = Drawable.createFromStream(input, "src");
+		// if (enableLogs) Log.i(TAG, "Returning drawabale : " + rv);
+		// return rv;
+		// }
+		// else
+		// // image was not returned. Rather login html page was returned.
+		// {
+		//
+		// }
 
 		return rv;
 
@@ -471,42 +457,6 @@ public class Commons
 		return Drawable.createFromStream(input, "src");
 	}
 
-	// private static String getB64AuthKey(String login, String pass) throws
-	// IllegalArgumentException,
-	// Exception
-	// {
-	//
-	// String source = login + ":" + pass;
-	// String ret;
-	// ret = Base64.encodeToString(source.getBytes(), Base64.URL_SAFE |
-	// Base64.NO_WRAP);
-	// return ret;
-	// }
-
-	// public static void setDefaultUserForApp(Context cont, String email,
-	// String password,
-	// String apiKey, boolean clearCamsList)
-	// {
-	// if (email != null && email.length() == 0) email = null;
-	//
-	// if (password != null && password.length() == 0) email = null;
-	//
-	// if (apiKey != null && apiKey.length() == 0) apiKey = null;
-	//
-	// AppData.AppUserEmail = email;
-	// AppData.AppUserPassword = password;
-	// AppData.cambaApiKey = apiKey;
-	// if (AppData.camesList != null && clearCamsList)
-	// AppData.camesList.clear();
-	//
-	// SharedPreferences sharedPrefs =
-	// PreferenceManager.getDefaultSharedPreferences(cont);
-	// SharedPreferences.Editor editor = sharedPrefs.edit();
-	// editor.putString("AppUserEmail", email);
-	// editor.putString("AppUserPassword", password);
-	// editor.commit();
-	// }
-
 	public static String readRawTextFile(int id, Context ctx)
 	{
 		InputStream inputStream = ctx.getResources().openRawResource(id);
@@ -525,124 +475,4 @@ public class Commons
 		}
 		return text.toString();
 	}
-
-	public static void copyFile(File src, File dst) throws IOException
-	{
-		InputStream in = new FileInputStream(src);
-		OutputStream out = new FileOutputStream(dst);
-
-		// Transfer bytes from in to out
-		byte[] buf = new byte[1024];
-		int len;
-		while ((len = in.read(buf)) > 0)
-		{
-			out.write(buf, 0, len);
-		}
-		in.close();
-		out.close();
-	}
-
-	// public static Drawable GetImageFromCache(Context context, String
-	// fileName)
-	// {
-	// Drawable d = null;
-	// try{
-	// String filePath = context.getCacheDir().getAbsolutePath() + "/" +
-	// fileName;
-	// if(new File(filePath).exists())
-	// {
-	// d = Drawable.createFromPath(filePath);
-	// if(d == null)
-	// new File(filePath).delete();
-	// }
-	//
-	// if(d == null)
-	// {
-	// filePath = context.getExternalFilesDir(null) + "/" + fileName;
-	// if(new File(filePath).exists())
-	// {
-	// d = Drawable.createFromPath(filePath);
-	// if(d == null)
-	// new File(filePath).delete();
-	// }
-	// }
-	//
-	// }
-	// catch(OutOfMemoryError e)
-	// {
-	// }
-	// catch(Exception e)
-	// {
-	// }
-	//
-	// return d;
-	// }
-	//
-	// public static void SaveImageToCache(Context context,Drawable d, String
-	// fileName)
-	// {
-	// if(d == null)
-	// return;
-	// try
-	// {
-	// String extCachePath = context.getExternalFilesDir(null) + "/" + fileName
-	// + ".jpg";
-	// File extfile= new File(extCachePath);
-	// if (d!= null)
-	// {
-	// Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
-	// if(extfile.exists())
-	// extfile.delete();
-	// extfile.createNewFile();
-	// FileOutputStream fos = new FileOutputStream(extfile);
-	// bitmap.compress(CompressFormat.PNG, 0, fos);
-	// fos.close();
-	// }
-	// }
-	// catch(Exception e)
-	// {}
-	//
-	// String pathString = context.getCacheDir() + "/" + fileName + ".jpg";
-	// File file= new File(pathString);
-	//
-	// if (d!= null)
-	// {
-	// Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
-	//
-	// if(file.exists())
-	// {
-	// file.delete();
-	// }
-	// file.createNewFile();
-	// FileOutputStream fos = new FileOutputStream(file);
-	//
-	// bitmap.compress(CompressFormat.PNG, 0, fos);
-	//
-	// fos.close();
-	// }
-	//
-	//
-	// if(file.exists() && file.length() > 0)
-	// {
-	// return pathString;
-	// }
-	// else if(file.exists())
-	// {
-	// file.delete();
-	// if(enableLogs) Log.e(TAG, "File Error" + "::" +
-	// "Unable to get the full file for the camera [" + cam.getCameraID() + ":"
-	// + cam.getName() +"]. File Deleted. File was empty.");
-	// return null;
-	// }
-	// else
-	// {
-	// if(enableLogs) Log.e(TAG, "File Error" + "::" +
-	// "Unable to get the full file for the camera [" + cam.getCameraID() + ":"
-	// + cam.getName() +"]");
-	// return null;
-	// }
-	//
-	// }
-	//
-
 }
