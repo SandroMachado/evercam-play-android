@@ -68,5 +68,8 @@
     <string name="menu_about">About</string>
     <string name="menu_logout">Log Out</string>
     <string name="menu_refresh">Refresh All</string>
+    <string name="menu_add_camera">Add Camera</string>
+    <string name="title_activity_add_camera">Add Camera</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

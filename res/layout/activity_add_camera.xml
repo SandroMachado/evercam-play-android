@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+   <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:layout_marginTop="10sp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/add_id_txt"
+                android:layout_width="100sp"
+                android:layout_height="20sp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/evercam_id"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/add_id_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_id"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/add_name_txt"
+                android:layout_width="100sp"
+                android:layout_height="20sp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/friendly_name"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/add_name_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_name"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp" >
+
+            <TextView
+                android:id="@+id/vendor_txt"
+                android:layout_width="100sp"
+                android:layout_height="20sp"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/vendor"
+                android:textSize="17sp" />
+
+            <Spinner
+                android:id="@+id/vendor_spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp" >
+
+            <TextView
+                android:id="@+id/model_txt"
+                android:layout_width="100sp"
+                android:layout_height="20sp"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/model"
+                android:textSize="17sp" />
+
+            <Spinner
+                android:id="@+id/model_spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp" >
+
+            <TextView
+                android:id="@+id/credentials_txt"
+                android:layout_width="100sp"
+                android:layout_height="20sp"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/credentials"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/add_username_edit"
+                android:layout_width="120sp"
+                android:layout_height="wrap_content"
+                android:hint="Username"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/add_colon"
+                android:layout_width="wrap_content"
+                android:layout_height="20sp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/colon"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/add_password_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+        <!--
+        <TextView
+            android:id="@+id/external_title_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="5dip"
+            android:layout_marginTop="15dip"
+            android:text="@string/external_title"
+            android:textSize="17sp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="1dp"
+            android:background="#808080" />
+        -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/add_host_txt"
+                android:layout_width="100sp"
+                android:layout_height="20sp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/external_host"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/add_host_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_external_host"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/add_http_txt"
+                android:layout_width="100sp"
+                android:layout_height="20sp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/http_port"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/add_http_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_external_http"
+                android:inputType="number"
+                android:singleLine="true"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/add_rtsp_txt"
+                android:layout_width="100sp"
+                android:layout_height="20sp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/rtsp_port"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/add_rtsp_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_external_rtsp"
+                android:inputType="number"
+                android:singleLine="true"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/add_jpg_url_txt"
+                android:layout_width="100sp"
+                android:layout_height="20sp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/jpg_url"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/addCameraJpg_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_jpg_path"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textSize="17sp" />
+        </LinearLayout>
+        <!--
+
+        <Button
+            android:id="@+id/additional_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:text="@string/additional_settings"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:text="@string/cancel"
+            android:textSize="17sp" />
+  -->
+
+        <Button
+            android:id="@+id/button_add_camera"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10sp"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:layout_marginTop="40dp"
+            android:background="@+drawable/signup_btn_selector"
+            android:text="@string/finish_and_add"
+            android:textColor="@+drawable/signup_btn_txt_selector" />
+    </LinearLayout>
+
+</ScrollView>

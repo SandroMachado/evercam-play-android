@@ -14,16 +14,4 @@ public class ParentActivity extends Activity
 		super.onCreate(savedInstanceState);
 		getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
 	}
-
-	// @Override
-	// public void onStart() {
-	// super.onStart();
-	//
-	// }
-	//
-	// @Override
-	// public void onStop() {
-	// super.onStop();
-	//
-	// }
 }

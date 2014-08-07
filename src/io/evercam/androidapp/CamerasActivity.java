@@ -157,7 +157,7 @@ public class CamerasActivity extends ParentActivity implements
 
 				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
 						R.string.action_refresh, R.string.label_list_refresh);
-				// Moved refresh under menu, so disabled indeterminate progress.
+
 				if (refresh != null) refresh
 						.setActionView(R.layout.actionbar_indeterminate_progress);
 
@@ -168,6 +168,14 @@ public class CamerasActivity extends ParentActivity implements
 				// any change in cameras in database
 				loadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
+				return true;
+				
+			case R.id.menu_add_camera:
+				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
+						R.string.action_add_camera, R.string.label_add_camera);
+				
+				startActivity(new Intent(CamerasActivity.this, AddCameraActivity.class));
+				
 				return true;
 
 			case R.id.menu_settings:

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="evercam_id">Evercam ID*</string>
+    <string name="friendly_name">Name*</string>
+    <string name="vendor">Vendor *</string>
+    <string name="model">Model *</string>
+    <string name="select_model">Select Model</string>
+    <string name="select_vendor">Select Make</string>
+    <string name="credentials">Credentials*</string>
+    <string name="external_host">Host / IP:</string>
+    <string name="colon">:</string>
+    <string name="external_title">External:</string>
+    <string name="jpg_url">JPEG URL:</string>
+    <string name="http_port">HTTP Port:</string>
+    <string name="rtsp_port">RTSP Port:</string>
+    <string name="finish_and_add">Finish &amp; Add</string>
+    <string name="test">Test</string>
+    <string name="additional_settings">>> Additional Settings</string>
+    
+    <string name="hint_id">roof-cam</string>
+    <string name="hint_name">Rooftop Camera</string>
+    <string name="hint_jpg_path">/snapshot.jpg</string>
+    <string name="hint_external_host">149.5.43.10</string>
+    <string name="hint_external_http">External HTTP Port</string>
+    <string name="hint_external_rtsp">External RTSP Port</string>
+
+
+</resources>

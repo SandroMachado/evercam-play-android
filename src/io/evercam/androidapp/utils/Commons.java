@@ -475,4 +475,20 @@ public class Commons
 		}
 		return text.toString();
 	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static String[] joinStringArray(String[]... arrays)
+	{
+		int size = 0;
+		for (String[] array : arrays)
+		{
+			size += array.length;
+		}
+		java.util.List list = new java.util.ArrayList(size);
+		for (String[] array : arrays)
+		{
+			list.addAll(java.util.Arrays.asList(array));
+		}
+		return (String[]) list.toArray(new String[size]);
+	}
 }

@@ -12,6 +12,7 @@ import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.AppData;
+import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.CustomedDialog;
 import io.evercam.androidapp.utils.PrefsManager;
@@ -139,13 +140,6 @@ public class SignUpActivity extends Activity
 		String password = passwordEdit.getText().toString();
 		String repassword = repasswordEdit.getText().toString();
 
-		firstnameEdit.setError(null);
-		lastnameEdit.setError(null);
-		usernameEdit.setError(null);
-		emailEdit.setError(null);
-		passwordEdit.setError(null);
-		repasswordEdit.setError(null);
-
 		if (TextUtils.isEmpty(firstname))
 		{
 			CustomToast.showInCenter(this, R.string.error_firstname_required);
@@ -254,28 +248,12 @@ public class SignUpActivity extends Activity
 			countryMap.put(locale.getDisplayName(), countryCode);
 		}
 	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private String[] join(String[]... arrays)
-	{
-		int size = 0;
-		for (String[] array : arrays)
-		{
-			size += array.length;
-		}
-		java.util.List list = new java.util.ArrayList(size);
-		for (String[] array : arrays)
-		{
-			list.addAll(java.util.Arrays.asList(array));
-		}
-		return (String[]) list.toArray(new String[size]);
-	}
-
+	
 	private void setSpinnerAdapter()
 	{
 		initCountryMap();
 		Set<String> set = countryMap.keySet();
-		String[] countryArray = join(
+		String[] countryArray = Commons.joinStringArray(
 				new String[] { getResources().getString(R.string.spinnerFistItem) },
 				set.toArray(new String[0]));
 		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(SignUpActivity.this,
