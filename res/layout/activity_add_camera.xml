@@ -252,7 +252,7 @@
                 android:textSize="17sp" />
 
             <EditText
-                android:id="@+id/addCameraJpg_edit"
+                android:id="@+id/add_jpg_edit"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_jpg_path"

@@ -1,16 +1,20 @@
 package io.evercam.androidapp;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeMap;
 
+import io.evercam.Auth;
 import io.evercam.CameraBuilder;
 import io.evercam.CameraDetail;
+import io.evercam.Defaults;
 import io.evercam.EvercamException;
 import io.evercam.Model;
 import io.evercam.Vendor;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
+import io.evercam.androidapp.utils.EvercamApiHelper;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -18,6 +22,8 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +38,9 @@ public class AddCameraActivity extends Activity
 	private EditText cameraNameEdit;
 	private Spinner vendorSpinner;
 	private Spinner modelSpinner;
+	private EditText usernameEdit;
+	private EditText passwordEdit;
+	private EditText jpgUrlEdit;
 	private Button addButton;
 	private TreeMap<String, String> vendorMap;
 	private TreeMap<String, String> modelMap;
@@ -48,6 +57,8 @@ public class AddCameraActivity extends Activity
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
+		
+		EvercamApiHelper.setEvercamDeveloperKeypair(this);
 
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_add_camera));
 		
@@ -87,9 +98,64 @@ public class AddCameraActivity extends Activity
 		cameraNameEdit = (EditText)findViewById(R.id.add_name_edit);
 		vendorSpinner = (Spinner) findViewById(R.id.vendor_spinner);
 		modelSpinner = (Spinner) findViewById(R.id.model_spinner);
+		usernameEdit = (EditText)findViewById(R.id.add_username_edit);
+		passwordEdit = (EditText)findViewById(R.id.add_password_edit);
+		jpgUrlEdit = (EditText)findViewById(R.id.add_jpg_edit);
 		addButton = (Button)findViewById(R.id.button_add_camera);
 		
 		new RequestVendorListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		
+		vendorSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+		    @Override
+		    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+		        
+		    	if(position == 0)
+		    	{
+		    		buildModelSpinner(new ArrayList<String>());
+		    	}
+		    	else
+		    	{
+		    		String vendorName = vendorSpinner.getSelectedItem().toString();
+		    		String vendorId = vendorMap.get(vendorName).toLowerCase(Locale.UK);
+		    		
+		    		if(!vendorName.equals(getString(R.string.vendor_other)))
+		    		{
+		    			new RequestModelListTask(vendorId).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		    		}
+		    		else
+		    		{
+		    			modelSpinner.setEnabled(false);
+		    		}
+		    	}
+		    }
+			@Override
+			public void onNothingSelected(AdapterView<?> parent)
+			{}
+		});
+		
+		modelSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+		    @Override
+		    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+		        
+		    	if(position == 0)
+		    	{
+		    		//FIXME: Clear auto filled details?
+		    	}
+		    	else
+		    	{
+		    		String vendorName = vendorSpinner.getSelectedItem().toString();
+		    		String vendorId = vendorMap.get(vendorName).toLowerCase(Locale.UK);
+		    		
+		    		String modelName = modelSpinner.getSelectedItem().toString();
+		    		String modelId = modelMap.get(modelName).toLowerCase(Locale.UK);
+		    		
+		    		new RequestDefaultsTask(vendorId, modelId).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		    	}
+		    }
+			@Override
+			public void onNothingSelected(AdapterView<?> parent)
+			{}
+		});
 		addButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v)
@@ -160,30 +226,62 @@ public class AddCameraActivity extends Activity
 		vendorSpinner.setAdapter(spinnerArrayAdapter);
 	}
 	
-	private void buildModelSpinner(ArrayList<Model> modelList)
+	private void buildModelSpinner(ArrayList<String> modelList)
 	{
+		if(modelList.size() == 0)
+		{
+			modelSpinner.setEnabled(false);
+		}
+		else
+		{
+			modelSpinner.setEnabled(true);
+		}
 		modelMap = new TreeMap<String, String>();
 
-		for(Model model: modelList)
+		for(String modelId : modelList)
 		{
-			try
+			if(modelId.equals("*"))
 			{
-				modelMap.put(model.getName(), model.getName());
+				modelMap.put(getString(R.string.model_default), modelId);
 			}
-			catch (EvercamException e)
+			else
 			{
-				Log.e(TAG, e.toString());
+				modelMap.put(modelId, modelId);
 			}
 		}
-
 		Set<String> set = modelMap.keySet();
-		String[] vendorArray = Commons.joinStringArray(
+		String[] fullModelArray = Commons.joinStringArray(
 				new String[] { getResources().getString(R.string.select_model) },
 				set.toArray(new String[0]));
 		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, vendorArray);
+				android.R.layout.simple_spinner_item, fullModelArray);
 		spinnerArrayAdapter.setDropDownViewResource(R.layout.country_spinner);
 		modelSpinner.setAdapter(spinnerArrayAdapter);
+	}
+	
+	private void fillDefaults(Model model)
+	{
+		try
+		{
+			//FIXME: Sometimes vendor with no default model, contains default jpg url.
+			//FIXME: Consider if no default values associated, clear defaults that has been filled.
+			Defaults defaults = model.getDefaults();
+			Auth basicAuth = defaults.getAuth(Auth.TYPE_BASIC);
+			usernameEdit.setText(basicAuth.getUsername());
+			passwordEdit.setText(basicAuth.getPassword());
+			jpgUrlEdit.setText(defaults.getJpgURL());
+		}
+		catch (EvercamException e)
+		{
+			Log.e(TAG, "Fill defaults: " + e.toString());
+		}
+	}
+	
+	private void clearDefaults()
+	{
+		usernameEdit.setText("");
+		passwordEdit.setText("");
+		jpgUrlEdit.setText("");
 	}
 	
 	class RequestVendorListTask extends AsyncTask<Void, Void, ArrayList<Vendor>>
@@ -195,6 +293,10 @@ public class AddCameraActivity extends Activity
 			if(vendorList != null)
 			{
 				buildVendorSpinner(vendorList);
+			}
+			else
+			{
+				Log.e(TAG, "Vendor list is null");
 			}
 		}
 
@@ -213,7 +315,7 @@ public class AddCameraActivity extends Activity
 		}
 	}
 	
-	class RequestModelListTask extends AsyncTask<Void, Void, ArrayList<Model>>
+	class RequestModelListTask extends AsyncTask<Void, Void, ArrayList<String>>
 	{
 		private String vendorId;
 		
@@ -223,27 +325,68 @@ public class AddCameraActivity extends Activity
 		}
 		
 		@Override
-		protected ArrayList<Model> doInBackground(Void... params)
+		protected ArrayList<String> doInBackground(Void... params)
 		{
-			//FIXME: Request model list from Evercam.
-//			try
-//			{
-//				
-//				return Vendor.getById(vendorId).
-//			}
-//			catch (EvercamException e)
-//			{
-//				Log.e(TAG, e.toString());
-//			}
+			try
+			{
+				
+				Vendor vendor = Vendor.getById(vendorId);
+				return vendor.getModelNames();
+			}
+			catch (EvercamException e)
+			{
+				Log.e(TAG, e.toString());
+			}
 			return null;
 		}
 		
 		@Override
-		protected void onPostExecute(ArrayList<Model> modelList)
+		protected void onPostExecute(ArrayList<String> modelList)
 		{
 			if(modelList != null)
 			{
 				buildModelSpinner(modelList);
+			}
+		}
+	}
+	
+	class RequestDefaultsTask extends AsyncTask<Void, Void, Model>
+	{
+		private String vendorId;
+		private String modelId;
+		
+		public RequestDefaultsTask(String vendorId, String modelId)
+		{
+			this.vendorId = vendorId;
+			this.modelId = modelId;
+		}
+
+		@Override
+		protected void onPreExecute()
+		{
+			clearDefaults();
+		}
+
+		@Override
+		protected Model doInBackground(Void... params)
+		{
+			try
+			{
+				return Model.getModel(vendorId, modelId);
+			}
+			catch (EvercamException e)
+			{
+				Log.e(TAG, e.toString());
+			}
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Model model)
+		{
+			if(model != null)
+			{
+				fillDefaults(model);
 			}
 		}
 	}

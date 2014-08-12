@@ -2,7 +2,7 @@
 <resources>
     
     <string name="evercam_id">Evercam ID*</string>
-    <string name="friendly_name">Name*</string>
+    <string name="friendly_name">Name *</string>
     <string name="vendor">Vendor *</string>
     <string name="model">Model *</string>
     <string name="select_model">Select Model</string>
@@ -24,6 +24,8 @@
     <string name="hint_external_host">149.5.43.10</string>
     <string name="hint_external_http">External HTTP Port</string>
     <string name="hint_external_rtsp">External RTSP Port</string>
-
+    
+    <string name="vendor_other">Other</string>
+    <string name="model_default">Default</string>
 
 </resources>
