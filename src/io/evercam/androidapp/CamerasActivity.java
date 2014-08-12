@@ -169,13 +169,13 @@ public class CamerasActivity extends ParentActivity implements
 				loadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 				return true;
-				
+
 			case R.id.menu_add_camera:
 				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
 						R.string.action_add_camera, R.string.label_add_camera);
-				
+
 				startActivity(new Intent(CamerasActivity.this, AddCameraActivity.class));
-				
+
 				return true;
 
 			case R.id.menu_settings:

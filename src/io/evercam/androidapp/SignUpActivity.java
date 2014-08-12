@@ -248,7 +248,7 @@ public class SignUpActivity extends Activity
 			countryMap.put(locale.getDisplayName(), countryCode);
 		}
 	}
-	
+
 	private void setSpinnerAdapter()
 	{
 		initCountryMap();

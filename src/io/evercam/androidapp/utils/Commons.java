@@ -475,7 +475,7 @@ public class Commons
 		}
 		return text.toString();
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static String[] joinStringArray(String[]... arrays)
 	{

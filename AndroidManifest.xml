@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.evercam.androidapp"
-    android:versionCode="19"
-    android:versionName="1.1.2 Alpha 07/08/2014" >
+    android:versionCode="20"
+    android:versionName="1.1.2 Alpha 12/08/2014" >
 
     <!-- versionCode15 - versionName1.1.2 Alpha3 - 31/07/2014 - Limit camera per row, account manage changes, removed some permissions. -->
     <!-- versionCode16 - versionName1.1.2 Alpha4 - 01/08/2014 - Account management style changes, log out confirm, error message style -->
     <!-- versionCode18 - versionName1.1.2 Alpha - 06/08/2014 - Sign in with Email, digest authentication -->
     <!-- versionCode19 - versionName1.1.2 Alpha - 07/08/2014 - Basic add camera page -->
+    <!-- versionCode20 - versionName1.1.2 Alpha - 12/08/2014 - Fill vendor model and defaults -->
 
     <uses-sdk
         android:minSdkVersion="14"
