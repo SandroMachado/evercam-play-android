@@ -12,6 +12,7 @@ import io.evercam.Defaults;
 import io.evercam.EvercamException;
 import io.evercam.Model;
 import io.evercam.Vendor;
+import io.evercam.androidapp.tasks.AddCameraTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamApiHelper;
@@ -40,14 +41,13 @@ public class AddCameraActivity extends Activity
 	private Spinner modelSpinner;
 	private EditText usernameEdit;
 	private EditText passwordEdit;
+	private EditText externalHostEdit;
+	private EditText externalHttpEdit;
+	private EditText externalRtspEdit;
 	private EditText jpgUrlEdit;
 	private Button addButton;
 	private TreeMap<String, String> vendorMap;
 	private TreeMap<String, String> modelMap;
-
-	// User's input
-	private String cameraId;
-	private String cameraName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -99,6 +99,9 @@ public class AddCameraActivity extends Activity
 		modelSpinner = (Spinner) findViewById(R.id.model_spinner);
 		usernameEdit = (EditText) findViewById(R.id.add_username_edit);
 		passwordEdit = (EditText) findViewById(R.id.add_password_edit);
+		externalHostEdit = (EditText) findViewById(R.id.add_external_host_edit);
+		externalHttpEdit = (EditText) findViewById(R.id.add_external_http_edit);
+		externalRtspEdit = (EditText) findViewById(R.id.add_external_rtsp_edit);
 		jpgUrlEdit = (EditText) findViewById(R.id.add_jpg_edit);
 		addButton = (Button) findViewById(R.id.button_add_camera);
 
@@ -169,13 +172,15 @@ public class AddCameraActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				if (launchLocalCheck())
+				CameraBuilder cameraBuilder = buildCameraWithLocalCheck();
+				if (cameraBuilder != null)
 				{
-
+					new AddCameraTask(cameraBuilder.build(), AddCameraActivity.this)
+					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 				}
 				else
 				{
-
+					Log.e(TAG, "Camera is null");
 				}
 			}
 		});
@@ -184,20 +189,11 @@ public class AddCameraActivity extends Activity
 	/**
 	 * Read and validate user input from user interface.
 	 */
-	private boolean launchLocalCheck()
-	{
-		cameraId = cameraIdEdit.getText().toString();
-		cameraName = cameraNameEdit.getText().toString();
-		return true;
-	}
-
-	/**
-	 * Build camera detail object for creating camera API request. Return null
-	 * if EvercamException occurred
-	 */
-	private CameraDetail buildCamera()
+	private CameraBuilder buildCameraWithLocalCheck()
 	{
 		CameraBuilder cameraBuilder = null;
+		String cameraId = cameraIdEdit.getText().toString();
+		String cameraName = cameraNameEdit.getText().toString();
 		try
 		{
 			cameraBuilder = new CameraBuilder(cameraId, cameraName, false);
@@ -206,7 +202,31 @@ public class AddCameraActivity extends Activity
 		{
 			Log.e(TAG, e.toString());
 		}
-		return cameraBuilder.build();
+		
+		String vendorId = vendorSpinner.getSelectedItem().toString();
+	//	cameraBuilder.setVendor(vendorId);
+		
+		String modelId = modelSpinner.getSelectedItem().toString();
+	//	cameraBuilder.setModel(modelId);
+		
+		String username = usernameEdit.getText().toString();
+		cameraBuilder.setCameraUsername(username);
+		
+		String password = passwordEdit.getText().toString();
+		cameraBuilder.setCameraPassword(password);
+		
+		String externalHost = externalHostEdit.getText().toString();
+		cameraBuilder.setExternalHost(externalHost);
+		
+		String externalHttp = externalHttpEdit.getText().toString();
+		int externalHttpInt = Integer.valueOf(externalHttp);
+		cameraBuilder.setExternalHttpPort(externalHttpInt);
+		
+		String externalRtsp = externalRtspEdit.getText().toString();
+		int externalRtspInt = Integer.valueOf(externalRtsp);
+		cameraBuilder.setExternalRtspPort(externalRtspInt);
+		
+		return cameraBuilder;
 	}
 
 	private void buildVendorSpinner(ArrayList<Vendor> vendorList)

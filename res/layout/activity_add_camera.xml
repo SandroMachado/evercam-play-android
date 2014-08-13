@@ -120,7 +120,7 @@
                 android:id="@+id/add_username_edit"
                 android:layout_width="120sp"
                 android:layout_height="wrap_content"
-                android:hint="Username"
+                android:hint="@string/hint_username"
                 android:inputType="text"
                 android:singleLine="true"
                 android:textSize="17sp" />
@@ -137,8 +137,7 @@
                 android:id="@+id/add_password_edit"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="Password"
-                android:inputType="text"
+                android:hint="@string/hint_password"
                 android:singleLine="true"
                 android:textSize="17sp" />
         </LinearLayout>
@@ -169,7 +168,7 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:id="@+id/add_host_txt"
+                android:id="@+id/add_external_host_txt"
                 android:layout_width="100sp"
                 android:layout_height="20sp"
                 android:fontFamily="sans-serif-light"
@@ -177,7 +176,7 @@
                 android:textSize="17sp" />
 
             <EditText
-                android:id="@+id/add_host_edit"
+                android:id="@+id/add_external_host_edit"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_external_host"
@@ -194,7 +193,7 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:id="@+id/add_http_txt"
+                android:id="@+id/add_external_http_txt"
                 android:layout_width="100sp"
                 android:layout_height="20sp"
                 android:fontFamily="sans-serif-light"
@@ -202,7 +201,7 @@
                 android:textSize="17sp" />
 
             <EditText
-                android:id="@+id/add_http_edit"
+                android:id="@+id/add_external_http_edit"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_external_http"
@@ -219,7 +218,7 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:id="@+id/add_rtsp_txt"
+                android:id="@+id/add_external_rtsp_txt"
                 android:layout_width="100sp"
                 android:layout_height="20sp"
                 android:fontFamily="sans-serif-light"
@@ -227,7 +226,7 @@
                 android:textSize="17sp" />
 
             <EditText
-                android:id="@+id/add_rtsp_edit"
+                android:id="@+id/add_external_rtsp_edit"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_external_rtsp"
