@@ -6,10 +6,10 @@ import com.bugsense.trace.BugSenseHandler;
 import io.evercam.Camera;
 import io.evercam.CameraDetail;
 import io.evercam.EvercamException;
+import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
 import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -19,6 +19,7 @@ public class AddCameraTask extends AsyncTask<Void, Void, Boolean>
 	private CameraDetail cameraDetail;
 	private Activity activity;
 	private CustomProgressDialog customProgressDialog;
+	private String errorMessage;
 
 	public AddCameraTask(CameraDetail cameraDetail, Activity activity)
 	{
@@ -29,8 +30,9 @@ public class AddCameraTask extends AsyncTask<Void, Void, Boolean>
 	@Override
 	protected void onPreExecute()
 	{
+		errorMessage = activity.getString(R.string.unknown_error);
 		customProgressDialog = new CustomProgressDialog(activity);
-		customProgressDialog.show("starts");
+		customProgressDialog.show(activity.getString(R.string.creating_camera));
 	}
 
 	@Override
@@ -39,11 +41,11 @@ public class AddCameraTask extends AsyncTask<Void, Void, Boolean>
 		customProgressDialog.dismiss();
 		if(success)
 		{
-			CustomToast.showInCenter(activity, "success");
+			CustomToast.showInCenter(activity, activity.getString(R.string.create_success));
 		}
 		else
 		{
-			CustomToast.showInCenter(activity, "error");
+			CustomToast.showInCenterLong(activity, errorMessage);
 		}
 	}
 
@@ -57,21 +59,13 @@ public class AddCameraTask extends AsyncTask<Void, Void, Boolean>
 	{
 		try
 		{
-			Log.d(TAG, "Creating camera" + detail.toString());
 			Camera camera = Camera.create(detail);
-			Log.d(TAG, "After creating camera");
-			if(camera!=null)
-			{
-			Log.d(TAG, camera.toString());
-			}
-			else
-			{
-				Log.d(TAG, "Camera is null");
-			}
+
 			return true;
 		}
 		catch (EvercamException e)
 		{
+			errorMessage = e.getMessage();
 			Log.e(TAG, "add camera to evercam: " + e.getMessage());
 			//sendBugReportWithCameraDetails(e, detail);
 			return false;

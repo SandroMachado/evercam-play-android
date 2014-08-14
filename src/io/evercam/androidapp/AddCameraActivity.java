@@ -7,11 +7,11 @@ import java.util.TreeMap;
 
 import io.evercam.Auth;
 import io.evercam.CameraBuilder;
-import io.evercam.CameraDetail;
 import io.evercam.Defaults;
 import io.evercam.EvercamException;
 import io.evercam.Model;
 import io.evercam.Vendor;
+import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.tasks.AddCameraTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
@@ -46,6 +46,7 @@ public class AddCameraActivity extends Activity
 	private EditText externalRtspEdit;
 	private EditText jpgUrlEdit;
 	private Button addButton;
+	private Button testButton;
 	private TreeMap<String, String> vendorMap;
 	private TreeMap<String, String> modelMap;
 
@@ -104,6 +105,10 @@ public class AddCameraActivity extends Activity
 		externalRtspEdit = (EditText) findViewById(R.id.add_external_rtsp_edit);
 		jpgUrlEdit = (EditText) findViewById(R.id.add_jpg_edit);
 		addButton = (Button) findViewById(R.id.button_add_camera);
+		testButton = (Button) findViewById(R.id.button_test_snapshot);
+
+		buildVendorSpinner(null);
+		buildModelSpinner(null);
 
 		new RequestVendorListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -112,7 +117,6 @@ public class AddCameraActivity extends Activity
 			public void onItemSelected(AdapterView<?> parentView, View selectedItemView,
 					int position, long id)
 			{
-
 				if (position == 0)
 				{
 					buildModelSpinner(new ArrayList<String>());
@@ -148,15 +152,12 @@ public class AddCameraActivity extends Activity
 
 				if (position == 0)
 				{
-					// FIXME: Clear auto filled details?
+					clearDefaults();
 				}
 				else
 				{
-					String vendorName = vendorSpinner.getSelectedItem().toString();
-					String vendorId = vendorMap.get(vendorName).toLowerCase(Locale.UK);
-
-					String modelName = modelSpinner.getSelectedItem().toString();
-					String modelId = modelMap.get(modelName).toLowerCase(Locale.UK);
+					String vendorId = getVendorIdFromSpinner();
+					String modelId = getModelIdFromSpinner();
 
 					new RequestDefaultsTask(vendorId, modelId)
 							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -176,12 +177,20 @@ public class AddCameraActivity extends Activity
 				if (cameraBuilder != null)
 				{
 					new AddCameraTask(cameraBuilder.build(), AddCameraActivity.this)
-					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 				}
 				else
 				{
 					Log.e(TAG, "Camera is null");
 				}
+			}
+		});
+		
+		testButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v)
+			{
+				
 			}
 		});
 	}
@@ -193,7 +202,19 @@ public class AddCameraActivity extends Activity
 	{
 		CameraBuilder cameraBuilder = null;
 		String cameraId = cameraIdEdit.getText().toString();
+
 		String cameraName = cameraNameEdit.getText().toString();
+
+		if (cameraId.isEmpty())
+		{
+			CustomToast.showInCenter(this, getString(R.string.id_required));
+			return null;
+		}
+		if (cameraName.isEmpty())
+		{
+			CustomToast.showInCenter(this, getString(R.string.name_required));
+			return null;
+		}
 		try
 		{
 			cameraBuilder = new CameraBuilder(cameraId, cameraName, false);
@@ -202,46 +223,78 @@ public class AddCameraActivity extends Activity
 		{
 			Log.e(TAG, e.toString());
 		}
-		
-		String vendorId = vendorSpinner.getSelectedItem().toString();
-	//	cameraBuilder.setVendor(vendorId);
-		
-		String modelId = modelSpinner.getSelectedItem().toString();
-	//	cameraBuilder.setModel(modelId);
-		
+
+		String vendorId = getVendorIdFromSpinner();
+		if (!vendorId.isEmpty())
+		{
+			cameraBuilder.setVendor(vendorId);
+		}
+
+		String modelId = getModelIdFromSpinner();
+		if (!modelId.isEmpty())
+		{
+			cameraBuilder.setModel(modelId);
+		}
+
 		String username = usernameEdit.getText().toString();
-		cameraBuilder.setCameraUsername(username);
-		
+		if (!username.isEmpty())
+		{
+			cameraBuilder.setCameraUsername(username);
+		}
+
 		String password = passwordEdit.getText().toString();
-		cameraBuilder.setCameraPassword(password);
-		
+		if (!password.isEmpty())
+		{
+			cameraBuilder.setCameraPassword(password);
+		}
+
 		String externalHost = externalHostEdit.getText().toString();
-		cameraBuilder.setExternalHost(externalHost);
-		
+		if(externalHost.isEmpty())
+		{
+			CustomToast.showInCenter(this, getString(R.string.host_required));
+			return null;
+		}
+		else
+		{
+			cameraBuilder.setExternalHost(externalHost);
+		}
+
 		String externalHttp = externalHttpEdit.getText().toString();
-		int externalHttpInt = Integer.valueOf(externalHttp);
-		cameraBuilder.setExternalHttpPort(externalHttpInt);
-		
+		if (!externalHttp.isEmpty())
+		{
+			int externalHttpInt = Integer.valueOf(externalHttp);
+			cameraBuilder.setExternalHttpPort(externalHttpInt);
+		}
+
 		String externalRtsp = externalRtspEdit.getText().toString();
-		int externalRtspInt = Integer.valueOf(externalRtsp);
-		cameraBuilder.setExternalRtspPort(externalRtspInt);
-		
+		if (!externalRtsp.isEmpty())
+		{
+			int externalRtspInt = Integer.valueOf(externalRtsp);
+			cameraBuilder.setExternalRtspPort(externalRtspInt);
+		}
+
 		return cameraBuilder;
 	}
 
 	private void buildVendorSpinner(ArrayList<Vendor> vendorList)
 	{
-		vendorMap = new TreeMap<String, String>();
-
-		for (Vendor vendor : vendorList)
+		if (vendorMap == null)
 		{
-			try
+			vendorMap = new TreeMap<String, String>();
+		}
+
+		if (vendorList != null)
+		{
+			for (Vendor vendor : vendorList)
 			{
-				vendorMap.put(vendor.getName(), vendor.getId());
-			}
-			catch (EvercamException e)
-			{
-				Log.e(TAG, e.toString());
+				try
+				{
+					vendorMap.put(vendor.getName(), vendor.getId());
+				}
+				catch (EvercamException e)
+				{
+					Log.e(TAG, e.toString());
+				}
 			}
 		}
 
@@ -257,25 +310,36 @@ public class AddCameraActivity extends Activity
 
 	private void buildModelSpinner(ArrayList<String> modelList)
 	{
-		if (modelList.size() == 0)
+		if (modelMap == null)
+		{
+			modelMap = new TreeMap<String, String>();
+		}
+
+		if (modelList == null)
 		{
 			modelSpinner.setEnabled(false);
 		}
 		else
 		{
-			modelSpinner.setEnabled(true);
-		}
-		modelMap = new TreeMap<String, String>();
-
-		for (String modelId : modelList)
-		{
-			if (modelId.equals("*"))
+			if (modelList.size() == 0)
 			{
-				modelMap.put(getString(R.string.model_default), modelId);
+				modelSpinner.setEnabled(false);
 			}
 			else
 			{
-				modelMap.put(modelId, modelId);
+				modelSpinner.setEnabled(true);
+			}
+
+			for (String modelId : modelList)
+			{
+				if (modelId.equals("*"))
+				{
+					modelMap.put(getString(R.string.model_default), modelId);
+				}
+				else
+				{
+					modelMap.put(modelId, modelId);
+				}
 			}
 		}
 		Set<String> set = modelMap.keySet();
@@ -313,6 +377,33 @@ public class AddCameraActivity extends Activity
 		usernameEdit.setText("");
 		passwordEdit.setText("");
 		jpgUrlEdit.setText("");
+	}
+
+	private String getVendorIdFromSpinner()
+	{
+		String vendorName = vendorSpinner.getSelectedItem().toString();
+		if (vendorName.equals(getString(R.string.select_vendor)))
+		{
+			return "";
+		}
+		else
+		{
+			return vendorMap.get(vendorName).toLowerCase(Locale.UK);
+		}
+
+	}
+
+	private String getModelIdFromSpinner()
+	{
+		String modelName = modelSpinner.getSelectedItem().toString();
+		if (modelName.equals(getString(R.string.select_model)))
+		{
+			return "";
+		}
+		else
+		{
+			return modelMap.get(modelName).toLowerCase(Locale.UK);
+		}
 	}
 
 	class RequestVendorListTask extends AsyncTask<Void, Void, ArrayList<Vendor>>
