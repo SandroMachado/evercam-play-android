@@ -58,6 +58,7 @@
     <string name="notNow">NOT NOW</string>
     <string name="settings_capital">SETTINGS</string>
     <string name="remove">Remove</string>
+    <string name="prefix_http">http://</string>
 
     <!-- Preferences -->
     <string name="prefs_camera_per_row">Cameras Per Row</string>
@@ -70,6 +71,5 @@
     <string name="menu_refresh">Refresh All</string>
     <string name="menu_add_camera">Add Camera</string>
     <string name="title_activity_add_camera">Add Camera</string>
-    <string name="hello_world">Hello world!</string>
 
 </resources>

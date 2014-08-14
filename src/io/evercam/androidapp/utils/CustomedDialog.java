@@ -6,8 +6,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.provider.Settings;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 
 public class CustomedDialog
 {
@@ -150,5 +153,20 @@ public class CustomedDialog
 					}
 				}).create();
 		return comfirmLogoutDialog;
+	}
+
+	/**
+	 * Return a pop up dialog that shows camera snapshot.
+	 * @param drawable the image drawable returned to show in pop up dialog
+	 */
+	public static AlertDialog getSnapshotDialog(Activity activity, Drawable drawable)
+	{
+		AlertDialog snapshotDialog = new AlertDialog.Builder(activity).create();
+		LayoutInflater mInflater = LayoutInflater.from(activity);
+		final View snapshotView = mInflater.inflate(R.layout.test_snapshot_dialog, null);
+		ImageView snapshotImageView = (ImageView) snapshotView.findViewById(R.id.test_snapshot_image);
+		snapshotImageView.setBackgroundDrawable(drawable);
+		snapshotDialog.setView(snapshotView);
+		return snapshotDialog;
 	}
 }

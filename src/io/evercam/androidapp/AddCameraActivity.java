@@ -13,6 +13,7 @@ import io.evercam.Model;
 import io.evercam.Vendor;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.tasks.AddCameraTask;
+import io.evercam.androidapp.tasks.TestSnapshotTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamApiHelper;
@@ -190,7 +191,7 @@ public class AddCameraActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				
+				launchTestSnapshot();
 			}
 		});
 	}
@@ -402,8 +403,38 @@ public class AddCameraActivity extends Activity
 		}
 		else
 		{
-			return modelMap.get(modelName).toLowerCase(Locale.UK);
+			return modelName;
 		}
+	}
+	
+	private void launchTestSnapshot()
+	{
+		String username = usernameEdit.getText().toString();
+		String password = passwordEdit.getText().toString();
+
+
+		String externalHost = externalHostEdit.getText().toString();
+		if(externalHost.isEmpty())
+		{
+			CustomToast.showInCenter(this, getString(R.string.host_required));
+			return;
+		}
+		
+		String externalHttp = externalHttpEdit.getText().toString();
+		if (externalHttp.isEmpty())
+		{
+			CustomToast.showInCenter(this, getString(R.string.external_http_required));
+			return;
+		}
+		
+		String jpgUrl = jpgUrlEdit.getText().toString();
+		if(!jpgUrl.startsWith("/"))
+		{
+			jpgUrl = "/" + jpgUrl;
+		}
+
+		String url = getString(R.string.prefix_http) + externalHost + ":" + externalHttp + jpgUrl;
+		new TestSnapshotTask(url,username,password,this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
 	class RequestVendorListTask extends AsyncTask<Void, Void, ArrayList<Vendor>>

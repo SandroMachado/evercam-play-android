@@ -67,17 +67,7 @@ public class AddCameraTask extends AsyncTask<Void, Void, Boolean>
 		{
 			errorMessage = e.getMessage();
 			Log.e(TAG, "add camera to evercam: " + e.getMessage());
-			//sendBugReportWithCameraDetails(e, detail);
 			return false;
 		}
-	}
-
-	private void sendBugReportWithCameraDetails(EvercamException e, CameraDetail detail)
-	{
-		HashMap<String, String> errorDetails = new HashMap<String, String>();
-		errorDetails.put("Camera timezone:", detail.getTimezone());
-		errorDetails.put("Camera id", detail.getId());
-		errorDetails.put("Camera mac address", detail.getMacAddress());
-		BugSenseHandler.sendExceptionMap(errorDetails, e);
 	}
 }

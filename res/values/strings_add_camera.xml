@@ -37,5 +37,9 @@
     <string name="create_success">Camera created!</string>
     <string name="unknown_error">Unknown error, please contact support.</string>
     <string name="host_required">You have to specify either internal or external host address.</string>
+    <string name="external_http_required">HTTP port required.</string>
+    <string name="snapshot_test_failed">Could not retrieve an image from the given host and port.</string>
+    <string name="snapshot_test_success">Successfully retrieved image from camera!</string>
+    <string name="retrieving_snapshot">Retrieving snapshot&#8230;</string>
 
 </resources>

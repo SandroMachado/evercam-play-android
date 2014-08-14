@@ -70,7 +70,7 @@ public class Commons
 	/**
 	 * Request image from URL, support digest authentication.
 	 */
-	public static Drawable getDrawable(String url, String username, String password)
+	private static Drawable getDrawable(String url, String username, String password)
 			throws Exception
 	{
 		Drawable drawable = null;
