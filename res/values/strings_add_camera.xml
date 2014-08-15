@@ -16,7 +16,6 @@
     <string name="rtsp_port">RTSP Port:</string>
     <string name="finish_and_add">Finish &amp; Add</string>
     <string name="test">Test</string>
-    <string name="additional_settings">>> Additional Settings</string>
     
     <string name="hint_id">roof-cam</string>
     <string name="hint_name">Rooftop Camera</string>
@@ -31,12 +30,12 @@
     <string name="model_default">Default</string>
     
     <!-- Messages -->
-    <string name="id_required">You have to specify the unique camera ID.</string>
+    <string name="id_required">You must specify the unique camera ID.</string>
     <string name="name_required">Camera friendly name required</string>
     <string name="creating_camera">Creating camera&#8230;</string>
     <string name="create_success">Camera created!</string>
     <string name="unknown_error">Unknown error, please contact support.</string>
-    <string name="host_required">You have to specify either internal or external host address.</string>
+    <string name="host_required">You must specify either internal or external host address.</string>
     <string name="external_http_required">HTTP port required.</string>
     <string name="snapshot_test_failed">Could not retrieve an image from the given host and port.</string>
     <string name="snapshot_test_success">Successfully retrieved image from camera!</string>
