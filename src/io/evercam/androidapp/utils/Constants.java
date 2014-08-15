@@ -15,4 +15,11 @@ public final class Constants
 
 	// Preference keys
 	public static final String KEY_CAMERA_PER_ROW = "lstgridcamerasperrow";
+	
+	/**
+	 * Values of start activity for result
+	 */
+	public static final int REQUEST_CODE_ADD_CAMERA = 1;
+	public static final int RESULT_TRUE = 1;
+	public static final int RESULT_FALSE = 0;
 }

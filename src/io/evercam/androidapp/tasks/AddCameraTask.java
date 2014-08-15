@@ -1,15 +1,14 @@
 package io.evercam.androidapp.tasks;
 
-import java.util.HashMap;
-import com.bugsense.trace.BugSenseHandler;
-
 import io.evercam.Camera;
 import io.evercam.CameraDetail;
 import io.evercam.EvercamException;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
+import io.evercam.androidapp.utils.Constants;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -42,6 +41,13 @@ public class AddCameraTask extends AsyncTask<Void, Void, Boolean>
 		if(success)
 		{
 			CustomToast.showInCenter(activity, activity.getString(R.string.create_success));
+			
+			/**
+			 * Successfully added a camera, so refresh camera list.
+			 */
+			Intent returnIntent = new Intent();
+			activity.setResult(Constants.RESULT_TRUE,returnIntent);
+			activity.finish();
 		}
 		else
 		{

@@ -3,11 +3,11 @@
     
     <string name="evercam_id">Evercam ID*</string>
     <string name="friendly_name">Name *</string>
-    <string name="vendor">Vendor</string>
-    <string name="model">Model</string>
+    <string name="vendor">Vendor:</string>
+    <string name="model">Model:</string>
     <string name="select_model">Select Model</string>
     <string name="select_vendor">Select Make</string>
-    <string name="credentials">Credentials</string>
+    <string name="credentials">Credentials:</string>
     <string name="external_host">Host / IP:</string>
     <string name="colon">:</string>
     <string name="external_title">External:</string>

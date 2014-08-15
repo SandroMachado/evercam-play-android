@@ -52,6 +52,7 @@ public class CamerasActivity extends ParentActivity implements
 	private int slideoutMenuAnimationTime = 255;
 	public boolean isUsersAccountsActivityStarted = false;
 	private static int camerasPerRow = 2;
+	private boolean reloadCameraList = false;
 
 	private enum InternetCheckType
 	{
@@ -174,7 +175,8 @@ public class CamerasActivity extends ParentActivity implements
 				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
 						R.string.action_add_camera, R.string.label_add_camera);
 
-				startActivity(new Intent(CamerasActivity.this, AddCameraActivity.class));
+				startActivityForResult(new Intent(CamerasActivity.this, AddCameraActivity.class), 
+						Constants.REQUEST_CODE_ADD_CAMERA);
 
 				return true;
 
@@ -328,6 +330,21 @@ public class CamerasActivity extends ParentActivity implements
 	public void onBackPressed()
 	{
 
+	}
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if(requestCode == Constants.REQUEST_CODE_ADD_CAMERA)
+		{
+			if(resultCode == Constants.RESULT_TRUE)
+			{
+				reloadCameraList = true;
+			}
+			else
+			{
+				reloadCameraList = false;
+			}
+		}
 	}
 
 	private void startLoadingCameras()
@@ -619,7 +636,7 @@ public class CamerasActivity extends ParentActivity implements
 				{
 					try
 					{
-						if (isUsersAccountsActivityStarted)
+						if (isUsersAccountsActivityStarted || reloadCameraList)
 						{
 							// If returned from account management, the
 							// default user could possibly changed,
@@ -629,6 +646,7 @@ public class CamerasActivity extends ParentActivity implements
 							removeAllCameraViews();
 							startLoadingCameras();
 							isUsersAccountsActivityStarted = false;
+							reloadCameraList = false;
 						}
 
 						int camsOldValue = camerasPerRow;

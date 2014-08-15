@@ -14,7 +14,6 @@ import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamApiHelper;
 import io.evercam.androidapp.utils.PrefsManager;
-import io.evercam.androidapp.utils.PropertyReader;
 import io.evercam.androidapp.utils.CustomedDialog;
 
 import android.content.Context;
