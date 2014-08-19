@@ -12,7 +12,7 @@
   - distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
   - WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
   - License for the specific language governing permissions and limitations
-  - under the License.
+  - under the License.
 -->
 <resources>
 
@@ -71,5 +71,6 @@
     <string name="menu_refresh">Refresh All</string>
     <string name="menu_add_camera">Add Camera</string>
     <string name="title_activity_add_camera">Add Camera</string>
+    <string name="title_activity_scan">Network Scan</string>
 
 </resources>

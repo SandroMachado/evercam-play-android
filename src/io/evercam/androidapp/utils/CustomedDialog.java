@@ -106,11 +106,12 @@ public class CustomedDialog
 			}
 		}).show();
 	}
-
+	
 	/**
-	 * The alert dialog for account management
+	 * The alert dialog with no title, but with a cancel button
+	 * Used as add camera option dialog and account management.
 	 */
-	public static AlertDialog getAlertDialogNoTitleNoButton(Context ctx, View view)
+	public static AlertDialog getAlertDialogNoTitle(Context ctx, View view)
 	{
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ctx,
 				io.evercam.androidapp.R.style.ThemeDialogNoTitle);
@@ -118,6 +119,13 @@ public class CustomedDialog
 		view.setPadding(14, 10, 5, 21);
 
 		dialogBuilder.setView(view);
+		dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				dialog.dismiss();
+			}
+		});
 		AlertDialog dialog = dialogBuilder.create();
 		dialog.setCanceledOnTouchOutside(false);
 		return dialog;

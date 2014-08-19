@@ -40,5 +40,12 @@
     <string name="snapshot_test_failed">Could not retrieve an image from the given host and port.</string>
     <string name="snapshot_test_success">Successfully retrieved image from camera!</string>
     <string name="retrieving_snapshot">Retrieving snapshot&#8230;</string>
-
+    
+    <!-- Option Items -->
+    <string name="add_ip_camera">Add camera manually</string>
+	<string name="scan_for_cameras">Scan for cameras</string>
+	
+	<!-- Network Scan -->
+	<string name="msg_scanning">Scanning for cameras&#8230;</string>
+	
 </resources>

@@ -100,23 +100,14 @@ public class ManageAccountsActivity extends ParentActivity
 				final View ed_dialog_layout = getLayoutInflater().inflate(
 						R.layout.manage_account_option_list, null);
 
-				final AlertDialog dialog = CustomedDialog.getAlertDialogNoTitleNoButton(
+				final AlertDialog dialog = CustomedDialog.getAlertDialogNoTitle(
 						ManageAccountsActivity.this, ed_dialog_layout);
 				dialog.show();
-
-				Button cancel = (Button) ed_dialog_layout.findViewById(R.id.btn_cancel);
+				
 				Button openDefault = (Button) ed_dialog_layout.findViewById(R.id.btn_open_account);
 				Button setDefault = (Button) ed_dialog_layout
 						.findViewById(R.id.btn_set_default_account);
 				Button delete = (Button) ed_dialog_layout.findViewById(R.id.btn_delete_account);
-
-				cancel.setOnClickListener(new OnClickListener(){
-					@Override
-					public void onClick(View v)
-					{
-						dialog.dismiss();
-					}
-				});
 
 				if (user.getIsDefault())
 				{

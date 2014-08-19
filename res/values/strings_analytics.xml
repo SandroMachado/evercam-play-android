@@ -18,7 +18,8 @@
     <string name="label_about">Click on about menu</string>
     <string name="label_settings">Click on settings menu</string>
     <string name="label_account">Click on manage account</string>
-    <string name="label_add_camera">Click on add camera in menu</string>
+    <string name="label_add_camera_manually">Click on add camera in menu, and choose manually.</string>
+    <string name="label_add_camera_scan">Click on add camera in menu, and choose scan.</string>
 
     <!-- Screen Names -->
     <string name="screen_login">Login</string>

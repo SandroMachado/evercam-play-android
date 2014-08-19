@@ -5,6 +5,7 @@ import java.util.List;
 import android.os.Bundle;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,7 +17,9 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.widget.*;
 
 import io.evercam.androidapp.custom.AboutDialog;
@@ -28,8 +31,10 @@ import io.evercam.androidapp.dto.ImageLoadingStatus;
 import io.evercam.androidapp.slidemenu.*;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.tasks.LoadCameraListTask;
+import io.evercam.androidapp.tasks.ScanForCameraTask;
 import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
+import io.evercam.androidapp.utils.EvercamApiHelper;
 import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.androidapp.utils.CustomedDialog;
 
@@ -172,11 +177,8 @@ public class CamerasActivity extends ParentActivity implements
 				return true;
 
 			case R.id.menu_add_camera:
-				EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
-						R.string.action_add_camera, R.string.label_add_camera);
 
-				startActivityForResult(new Intent(CamerasActivity.this, AddCameraActivity.class), 
-						Constants.REQUEST_CODE_ADD_CAMERA);
+				showAddCameraOptionsDialog();
 
 				return true;
 
@@ -331,12 +333,13 @@ public class CamerasActivity extends ParentActivity implements
 	{
 
 	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		if(requestCode == Constants.REQUEST_CODE_ADD_CAMERA)
+		if (requestCode == Constants.REQUEST_CODE_ADD_CAMERA)
 		{
-			if(resultCode == Constants.RESULT_TRUE)
+			if (resultCode == Constants.RESULT_TRUE)
 			{
 				reloadCameraList = true;
 			}
@@ -565,6 +568,47 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
 		}
+	}
+
+	private void showAddCameraOptionsDialog()
+	{
+		final View optionsView = getLayoutInflater()
+				.inflate(R.layout.add_camera_options_list, null);
+		final AlertDialog dialog = CustomedDialog.getAlertDialogNoTitle(CamerasActivity.this,
+				optionsView);
+		dialog.show();
+
+		Button addCameraButton = (Button) optionsView.findViewById(R.id.btn_add_ip_camera);
+		Button scanCameraButton = (Button) optionsView.findViewById(R.id.btn_scan_for_camera);
+
+		addCameraButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v)
+			{
+				dialog.dismiss();
+				
+				EvercamPlayApplication.sendEventAnalytics(CamerasActivity.this,
+						R.string.category_menu, R.string.action_add_camera,
+						R.string.label_add_camera_manually);
+
+				startActivityForResult(new Intent(CamerasActivity.this, AddCameraActivity.class),
+						Constants.REQUEST_CODE_ADD_CAMERA);
+			}
+		});
+
+		scanCameraButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v)
+			{
+				dialog.dismiss();
+				
+				EvercamPlayApplication.sendEventAnalytics(CamerasActivity.this,
+						R.string.category_menu, R.string.action_add_camera,
+						R.string.label_add_camera_scan);
+				
+				startActivity(new Intent(CamerasActivity.this, ScanActivity.class));
+			}
+		});
 	}
 
 	private void logOutUser()
