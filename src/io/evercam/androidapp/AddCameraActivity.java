@@ -17,6 +17,7 @@ import io.evercam.androidapp.tasks.TestSnapshotTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamApiHelper;
+import io.evercam.network.camera.DiscoveredCamera;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -68,6 +69,17 @@ public class AddCameraActivity extends Activity
 
 		// Initial UI elements
 		initialScreen();
+		
+		DiscoveredCamera camera = (DiscoveredCamera) getIntent().getSerializableExtra("camera");
+		if(camera != null)
+		{
+			Log.d(TAG, camera.toString());
+			//FIXME: fill discovered details
+		}
+		else
+		{
+			Log.d(TAG, "transfered camera is null");
+		}
 
 	}
 

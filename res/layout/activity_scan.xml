@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical" >
 
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
@@ -19,11 +19,12 @@
             android:layout_marginBottom="8dp" />
 
         <TextView
-            android:id="@+id/login_status_message"
+            android:id="@+id/scan_status_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:fontFamily="sans-serif-light"
+            android:gravity="center"
             android:text="@string/msg_scanning"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
@@ -34,18 +35,47 @@
         android:id="@+id/scan_result_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10sp" 
-        android:visibility="gone">
+        android:layout_marginBottom="10sp"
+        android:visibility="gone" >
 
+        <ListView
+            android:id="@+id/scan_result_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
+    </RelativeLayout>
+
+    <!-- No Camera Found -->
+    <LinearLayout
+        android:id="@+id/scan_result_no_camera_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone" >
 
         <TextView
-            android:id="@+id/signupLink"
+            android:id="@+id/scan_result_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:textColor="@drawable/txt_selector"
-            android:textSize="16sp" />
-    </RelativeLayout>
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:text="@string/msg_no_camera_found"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        
+        <Button
+                android:id="@+id/button_add_camera_manually"
+                android:layout_width="wrap_content"
+                android:paddingLeft="10sp"
+                android:paddingRight="10sp"
+                android:layout_height="35dp"
+                android:background="@drawable/btn_selector"
+                android:text="@string/btn_text_add_manually"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                android:textSize="17sp" />
+    </LinearLayout>
 
 </merge>

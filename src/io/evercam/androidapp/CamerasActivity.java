@@ -606,7 +606,7 @@ public class CamerasActivity extends ParentActivity implements
 						R.string.category_menu, R.string.action_add_camera,
 						R.string.label_add_camera_scan);
 				
-				startActivity(new Intent(CamerasActivity.this, ScanActivity.class));
+				startActivityForResult(new Intent(CamerasActivity.this, ScanActivity.class),Constants.REQUEST_CODE_ADD_CAMERA);
 			}
 		});
 	}

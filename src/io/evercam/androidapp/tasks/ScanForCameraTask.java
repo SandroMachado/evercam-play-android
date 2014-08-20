@@ -1,6 +1,7 @@
 package io.evercam.androidapp.tasks;
 
 import io.evercam.androidapp.ScanActivity;
+import io.evercam.androidapp.utils.NetInfo;
 import io.evercam.network.camera.DiscoveredCamera;
 import io.evercam.network.ipscan.EvercamDiscover;
 import io.evercam.network.ipscan.ScanRange;
@@ -14,10 +15,12 @@ public class ScanForCameraTask extends AsyncTask<Void, Void, ArrayList<Discovere
 {
 	private final String TAG = "evercamplay-ScanForCameraTask";
 	private ScanActivity scanActivity;
+	private NetInfo netInfo;
 
 	public ScanForCameraTask(ScanActivity scanActivity)
 	{
 		this.scanActivity = scanActivity;
+		netInfo = new NetInfo(scanActivity);
 	}
 	
 	@Override
@@ -33,7 +36,7 @@ public class ScanForCameraTask extends AsyncTask<Void, Void, ArrayList<Discovere
 		try
 		{
 			EvercamDiscover evercamDiscover = new EvercamDiscover();
-			ScanRange scanRange = new ScanRange("192.168.1.122", "255.255.255.0");
+			ScanRange scanRange = new ScanRange(netInfo.getLocalIp(), netInfo.getNetmaskIp());
 			cameraList = evercamDiscover.discoverAllCamerasAndroid(scanRange);
 		}
 		catch (Exception e)
@@ -46,18 +49,8 @@ public class ScanForCameraTask extends AsyncTask<Void, Void, ArrayList<Discovere
 	@Override
 	protected void onPostExecute(ArrayList<DiscoveredCamera> cameraList)
 	{
-		scanActivity.showResult(true);
+		scanActivity.showProgress(false);
 		
-		if (cameraList != null)
-		{
-			for (DiscoveredCamera camera : cameraList)
-			{
-				Log.d(TAG, camera.toString());
-			}
-		}
-		else
-		{
-			Log.e(TAG, "Camera list is null");
-		}
+		scanActivity.showScanResults(cameraList);
 	}
 }

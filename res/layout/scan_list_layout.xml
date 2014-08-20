@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/camera_img"
+        android:layout_width="50dip"
+        android:layout_height="50dip"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="5dip"
+        android:src="@drawable/icon_192x192" />
+
+    <LinearLayout
+        android:id="@+id/text_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="5sp"
+        android:layout_marginTop="5dip"
+        android:layout_toRightOf="@+id/camera_img"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/camera_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/camera_model"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:layout_marginTop="5dip"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+</RelativeLayout>
