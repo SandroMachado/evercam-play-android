@@ -37,7 +37,7 @@ public class ScanForCameraTask extends AsyncTask<Void, Void, ArrayList<Discovere
 		{
 			EvercamDiscover evercamDiscover = new EvercamDiscover();
 			ScanRange scanRange = new ScanRange(netInfo.getLocalIp(), netInfo.getNetmaskIp());
-			cameraList = evercamDiscover.discoverAllCamerasAndroid(scanRange);
+			cameraList = evercamDiscover.discoverAllCamerasAndroid(scanRange, netInfo.getGatewayIp());
 		}
 		catch (Exception e)
 		{

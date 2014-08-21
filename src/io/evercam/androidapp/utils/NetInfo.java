@@ -11,6 +11,7 @@ public class NetInfo
 {
 	private String localIp = EMPTY_IP;
 	private String netmaskIp = EMPTY_IP;
+	private String gatewayIp = EMPTY_IP;
 	public static final String EMPTY_IP = "0.0.0.0";
 	
 	public NetInfo(Context context)
@@ -21,6 +22,7 @@ public class NetInfo
 			WifiInfo wifiInfo = wifi.getConnectionInfo();
 			localIp = IpTranslator.getIpFromIntSigned(wifiInfo.getIpAddress());
 			netmaskIp = IpTranslator.getIpFromIntSigned(wifi.getDhcpInfo().netmask);
+			gatewayIp = IpTranslator.getIpFromIntSigned(wifi.getDhcpInfo().gateway);
 		}
 	}
 	
@@ -47,5 +49,10 @@ public class NetInfo
 	public String getNetmaskIp()
 	{
 		return netmaskIp;
+	}
+	
+	public String getGatewayIp()
+	{
+		return gatewayIp;
 	}
 }

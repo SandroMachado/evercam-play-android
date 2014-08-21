@@ -50,7 +50,10 @@ public class AddCameraActivity extends Activity
 	private Button addButton;
 	private Button testButton;
 	private TreeMap<String, String> vendorMap;
+	private TreeMap<String, String> vendorMapIdAsKey;
 	private TreeMap<String, String> modelMap;
+
+	private DiscoveredCamera camera;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -67,19 +70,14 @@ public class AddCameraActivity extends Activity
 
 		setContentView(R.layout.activity_add_camera);
 
+		// Get camera object from the previous activity before initial screen
+		// elements
+		camera = (DiscoveredCamera) getIntent().getSerializableExtra("camera");
+
 		// Initial UI elements
 		initialScreen();
-		
-		DiscoveredCamera camera = (DiscoveredCamera) getIntent().getSerializableExtra("camera");
-		if(camera != null)
-		{
-			Log.d(TAG, camera.toString());
-			//FIXME: fill discovered details
-		}
-		else
-		{
-			Log.d(TAG, "transfered camera is null");
-		}
+
+		fillDiscoveredCameraDetails();
 
 	}
 
@@ -198,7 +196,7 @@ public class AddCameraActivity extends Activity
 				}
 			}
 		});
-		
+
 		testButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v)
@@ -206,6 +204,26 @@ public class AddCameraActivity extends Activity
 				launchTestSnapshot();
 			}
 		});
+	}
+
+	private void fillDiscoveredCameraDetails()
+	{
+		if (camera != null)
+		{
+			Log.d(TAG, camera.toString());
+			if (camera.hasExternalIp())
+			{
+				externalHostEdit.setText(camera.getExternalIp());
+			}
+			if (camera.hasExternalHttp())
+			{
+				externalHttpEdit.setText(String.valueOf(camera.getExthttp()));
+			}
+			if (camera.hasExternalRtsp())
+			{
+				externalRtspEdit.setText(String.valueOf(camera.getExtrtsp()));
+			}
+		}
 	}
 
 	/**
@@ -262,7 +280,7 @@ public class AddCameraActivity extends Activity
 		}
 
 		String externalHost = externalHostEdit.getText().toString();
-		if(externalHost.isEmpty())
+		if (externalHost.isEmpty())
 		{
 			CustomToast.showInCenter(this, getString(R.string.host_required));
 			return null;
@@ -295,6 +313,11 @@ public class AddCameraActivity extends Activity
 		{
 			vendorMap = new TreeMap<String, String>();
 		}
+		
+		if (vendorMapIdAsKey == null)
+		{
+			vendorMapIdAsKey = new TreeMap<String, String>();
+		}
 
 		if (vendorList != null)
 		{
@@ -303,6 +326,7 @@ public class AddCameraActivity extends Activity
 				try
 				{
 					vendorMap.put(vendor.getName(), vendor.getId());
+					vendorMapIdAsKey.put(vendor.getId(),vendor.getName());
 				}
 				catch (EvercamException e)
 				{
@@ -318,7 +342,23 @@ public class AddCameraActivity extends Activity
 		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, vendorArray);
 		spinnerArrayAdapter.setDropDownViewResource(R.layout.country_spinner);
+
+		int selectedPosition = 0;
+		if(camera != null)
+		{
+			if(camera.hasVendor())
+			{
+				String vendorId = camera.getVendor();
+				String vendorName = vendorMapIdAsKey.get(vendorId);
+				selectedPosition = spinnerArrayAdapter.getPosition(vendorName);
+			}
+		}
 		vendorSpinner.setAdapter(spinnerArrayAdapter);
+		
+		if (selectedPosition != 0)
+		{
+			vendorSpinner.setSelection(selectedPosition);
+		}
 	}
 
 	private void buildModelSpinner(ArrayList<String> modelList)
@@ -363,6 +403,7 @@ public class AddCameraActivity extends Activity
 				android.R.layout.simple_spinner_item, fullModelArray);
 		spinnerArrayAdapter.setDropDownViewResource(R.layout.country_spinner);
 		modelSpinner.setAdapter(spinnerArrayAdapter);
+		modelSpinner.setSelection(spinnerArrayAdapter.getPosition(getString(R.string.model_default)));
 	}
 
 	private void fillDefaults(Model model)
@@ -418,35 +459,35 @@ public class AddCameraActivity extends Activity
 			return modelName;
 		}
 	}
-	
+
 	private void launchTestSnapshot()
 	{
 		String username = usernameEdit.getText().toString();
 		String password = passwordEdit.getText().toString();
 
-
 		String externalHost = externalHostEdit.getText().toString();
-		if(externalHost.isEmpty())
+		if (externalHost.isEmpty())
 		{
 			CustomToast.showInCenter(this, getString(R.string.host_required));
 			return;
 		}
-		
+
 		String externalHttp = externalHttpEdit.getText().toString();
 		if (externalHttp.isEmpty())
 		{
 			CustomToast.showInCenter(this, getString(R.string.external_http_required));
 			return;
 		}
-		
+
 		String jpgUrl = jpgUrlEdit.getText().toString();
-		if(!jpgUrl.startsWith("/"))
+		if (!jpgUrl.startsWith("/"))
 		{
 			jpgUrl = "/" + jpgUrl;
 		}
 
 		String url = getString(R.string.prefix_http) + externalHost + ":" + externalHttp + jpgUrl;
-		new TestSnapshotTask(url,username,password,this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		new TestSnapshotTask(url, username, password, this)
+				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
 	class RequestVendorListTask extends AsyncTask<Void, Void, ArrayList<Vendor>>
