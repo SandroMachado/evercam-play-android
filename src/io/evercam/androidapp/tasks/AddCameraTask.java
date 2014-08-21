@@ -40,7 +40,7 @@ public class AddCameraTask extends AsyncTask<Void, Void, Boolean>
 		customProgressDialog.dismiss();
 		if(success)
 		{
-			CustomToast.showInCenter(activity, activity.getString(R.string.create_success));
+			CustomToast.showInBottom(activity, R.string.create_success);
 			
 			/**
 			 * Successfully added a camera, so refresh camera list.

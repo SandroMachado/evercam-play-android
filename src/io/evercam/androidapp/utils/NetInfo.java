@@ -1,6 +1,6 @@
 package io.evercam.androidapp.utils;
 
-import io.evercam.network.ipscan.IpTranslator;
+import io.evercam.network.discovery.IpTranslator;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;

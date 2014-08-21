@@ -57,7 +57,7 @@ public class CamerasActivity extends ParentActivity implements
 	private int slideoutMenuAnimationTime = 255;
 	public boolean isUsersAccountsActivityStarted = false;
 	private static int camerasPerRow = 2;
-	private boolean reloadCameraList = false;
+	public boolean reloadCameraList = false;
 
 	private enum InternetCheckType
 	{

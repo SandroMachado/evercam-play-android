@@ -17,7 +17,7 @@ import io.evercam.androidapp.tasks.TestSnapshotTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamApiHelper;
-import io.evercam.network.camera.DiscoveredCamera;
+import io.evercam.network.discovery.DiscoveredCamera;
 
 import com.bugsense.trace.BugSenseHandler;
 

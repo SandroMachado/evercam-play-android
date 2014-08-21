@@ -9,7 +9,7 @@
         android:layout_height="50dip"
         android:layout_alignParentLeft="true"
         android:layout_margin="5dip"
-        android:src="@drawable/icon_192x192" />
+        android:src="@drawable/hikvision" />
 
     <LinearLayout
         android:id="@+id/text_layout"

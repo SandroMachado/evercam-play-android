@@ -2,9 +2,9 @@ package io.evercam.androidapp.tasks;
 
 import io.evercam.androidapp.ScanActivity;
 import io.evercam.androidapp.utils.NetInfo;
-import io.evercam.network.camera.DiscoveredCamera;
-import io.evercam.network.ipscan.EvercamDiscover;
-import io.evercam.network.ipscan.ScanRange;
+import io.evercam.network.EvercamDiscover;
+import io.evercam.network.discovery.DiscoveredCamera;
+import io.evercam.network.discovery.ScanRange;
 
 import java.util.ArrayList;
 

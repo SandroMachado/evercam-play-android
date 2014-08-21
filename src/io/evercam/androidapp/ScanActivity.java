@@ -7,7 +7,7 @@ import java.util.Locale;
 import io.evercam.androidapp.tasks.ScanForCameraTask;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamApiHelper;
-import io.evercam.network.camera.DiscoveredCamera;
+import io.evercam.network.discovery.DiscoveredCamera;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -62,7 +62,8 @@ public class ScanActivity extends Activity
 				@SuppressWarnings("unchecked")
 				HashMap<String, Object> map = (HashMap<String, Object>) cameraListView
 						.getItemAtPosition(position);
-				String cameraIp = (String) map.get(ADAPTER_KEY_IP);
+				String cameraIpText = (String) map.get(ADAPTER_KEY_IP);
+				String cameraIp = cameraIpText.substring(0,cameraIpText.indexOf(":")-1);
 				for (DiscoveredCamera camera : discoveredCameras)
 				{
 					if (camera.getIP().equals(cameraIp))
@@ -146,7 +147,12 @@ public class ScanActivity extends Activity
 			for (DiscoveredCamera camera : discoveredCameras)
 			{
 				HashMap<String, Object> deviceMap = new HashMap<String, Object>();
-				deviceMap.put(ADAPTER_KEY_IP, camera.getIP());
+				String ipTextShowing = camera.getIP();
+				if(camera.hasHTTP())
+				{
+					ipTextShowing = ipTextShowing + ":" + camera.getHttp();
+				}
+				deviceMap.put(ADAPTER_KEY_IP, ipTextShowing);
 
 				String vendor = camera.getVendor().toUpperCase(Locale.UK);
 

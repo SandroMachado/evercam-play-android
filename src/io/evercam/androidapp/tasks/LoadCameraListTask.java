@@ -41,7 +41,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 	@Override
 	protected void onPreExecute()
 	{
-		if (camerasActivity.isUsersAccountsActivityStarted)
+		if (camerasActivity.isUsersAccountsActivityStarted || camerasActivity.reloadCameraList)
 		{
 			customProgressDialog = new CustomProgressDialog(camerasActivity);
 			customProgressDialog.show(camerasActivity.getString(R.string.loading_cameras));
