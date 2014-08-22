@@ -4,15 +4,20 @@ import io.evercam.Camera;
 import io.evercam.CameraDetail;
 import io.evercam.EvercamException;
 import io.evercam.androidapp.R;
+import io.evercam.androidapp.custom.CameraLayout;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
+import io.evercam.androidapp.dal.DbCamera;
+import io.evercam.androidapp.dto.EvercamCamera;
+import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
+import io.evercam.androidapp.video.VideoActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class AddCameraTask extends AsyncTask<Void, Void, Boolean>
+public class AddCameraTask extends AsyncTask<Void, Void, EvercamCamera>
 {
 	private final String TAG = "evercamplay-AddCameraTask";
 	private CameraDetail cameraDetail;
@@ -35,10 +40,10 @@ public class AddCameraTask extends AsyncTask<Void, Void, Boolean>
 	}
 
 	@Override
-	protected void onPostExecute(Boolean success)
+	protected void onPostExecute(EvercamCamera evercamCamera)
 	{
 		customProgressDialog.dismiss();
-		if(success)
+		if(evercamCamera != null)
 		{
 			CustomToast.showInBottom(activity, R.string.create_success);
 			
@@ -47,6 +52,14 @@ public class AddCameraTask extends AsyncTask<Void, Void, Boolean>
 			 */
 			Intent returnIntent = new Intent();
 			activity.setResult(Constants.RESULT_TRUE,returnIntent);
+//			activity.finish();
+			
+			/**
+			 * Successfully added camera, show camera live view
+			 * and finish add camera activity
+			 */
+			VideoActivity.startPlayingVideoForCamera(activity,
+					evercamCamera.getCameraId());
 			activity.finish();
 		}
 		else
@@ -56,24 +69,28 @@ public class AddCameraTask extends AsyncTask<Void, Void, Boolean>
 	}
 
 	@Override
-	protected Boolean doInBackground(Void... params)
+	protected EvercamCamera doInBackground(Void... params)
 	{
 		return createCamera(cameraDetail);
 	}
 
-	private boolean createCamera(CameraDetail detail)
+	private EvercamCamera createCamera(CameraDetail detail)
 	{
 		try
 		{
 			Camera camera = Camera.create(detail);
-
-			return true;
+			EvercamCamera evercamCamera = new EvercamCamera().convertFromEvercam(camera);
+			DbCamera dbCamera = new DbCamera(activity);
+			dbCamera.addCamera(evercamCamera);
+			AppData.evercamCameraList.add(evercamCamera);
+			
+			return evercamCamera;
 		}
 		catch (EvercamException e)
 		{
 			errorMessage = e.getMessage();
 			Log.e(TAG, "add camera to evercam: " + e.getMessage());
-			return false;
+			return null;
 		}
 	}
 }

@@ -31,10 +31,8 @@ import io.evercam.androidapp.dto.ImageLoadingStatus;
 import io.evercam.androidapp.slidemenu.*;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.tasks.LoadCameraListTask;
-import io.evercam.androidapp.tasks.ScanForCameraTask;
 import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
-import io.evercam.androidapp.utils.EvercamApiHelper;
 import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.androidapp.utils.CustomedDialog;
 

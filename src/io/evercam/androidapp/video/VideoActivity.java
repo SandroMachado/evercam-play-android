@@ -1566,16 +1566,18 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 			for (int count = 0; count < AppData.evercamCameraList.size(); count++)
 			{
-				if (!AppData.evercamCameraList.get(count).getStatus()
-						.equalsIgnoreCase(CameraStatus.OFFLINE))
-				{
+				//Disabled online status check in drop down camera list because we want
+				//offline camera show in live view page as well.
+//				if (!AppData.evercamCameraList.get(count).getStatus()
+//						.equalsIgnoreCase(CameraStatus.OFFLINE))
+//				{
 					activeCameras.add(AppData.evercamCameraList.get(count));
 					cameraNames.add(AppData.evercamCameraList.get(count).getName());
 					if (AppData.evercamCameraList.get(count).getCameraId() == startingCameraID)
 					{
 						defaultCameraIndex = cameraNames.size() - 1;
 					}
-				}
+	//			}
 			}
 
 			String[] cameraArray = new String[cameraNames.size()];

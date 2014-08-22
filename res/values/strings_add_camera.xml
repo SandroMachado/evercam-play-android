@@ -46,7 +46,7 @@
 	<string name="scan_for_cameras">Scan for cameras</string>
 	
 	<!-- Network Scan -->
-	<string name="msg_scanning">Scanning for cameras&#8230;\n\nPlease be patient,\nthis may take up to a minute&#8230;</string>
+	<string name="msg_scanning">Scanning for cameras.\n\nPlease be patient,\nthis may take up to a minute&#8230;</string>
 	<string name="msg_no_camera_found">No camera found in your local network.</string>
 	<string name="btn_text_add_manually">Add camera manually</string>
 	

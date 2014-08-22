@@ -12,17 +12,19 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class ScanActivity extends Activity
 {
+	private final String TAG = "evercamplay-ScanActivity";
+	
 	private View scanProgressView;
 	private View scanResultListView;
 	private View scanResultNoCameraView;
@@ -63,7 +65,11 @@ public class ScanActivity extends Activity
 				HashMap<String, Object> map = (HashMap<String, Object>) cameraListView
 						.getItemAtPosition(position);
 				String cameraIpText = (String) map.get(ADAPTER_KEY_IP);
-				String cameraIp = cameraIpText.substring(0,cameraIpText.indexOf(":")-1);
+				String cameraIp = cameraIpText;
+				if(cameraIpText.contains(":"))
+				{
+					cameraIp = cameraIpText.substring(0,cameraIpText.indexOf(':'));
+				}
 				for (DiscoveredCamera camera : discoveredCameras)
 				{
 					if (camera.getIP().equals(cameraIp))
