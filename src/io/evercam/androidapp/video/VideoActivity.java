@@ -2,15 +2,21 @@ package io.evercam.androidapp.video;
 
 import io.evercam.Camera;
 import io.evercam.EvercamException;
+import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
+import io.evercam.androidapp.ManageAccountsActivity;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.custom.ProgressView;
+import io.evercam.androidapp.dal.DbAppUser;
+import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
+import io.evercam.androidapp.tasks.DeleteCameraTask;
 import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamFile;
+import io.evercam.androidapp.utils.PrefsManager;
 
 import java.io.File;
 import java.io.InputStream;
@@ -27,6 +33,7 @@ import org.videolan.libvlc.MediaList;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,6 +51,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -339,28 +348,28 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		}
 	}
 
-	//
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu)
-	// {
-	// try
-	// {
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.videomenulayout, menu);
-	//
-	// return true;
-	// }
-	// catch (Exception ex)
-	// {
-	// Log.e(TAG, ex.toString());
-	// if (Constants.isAppTrackingEnabled)
-	// {
-	// BugSenseHandler.sendException(ex);
-	// }
-	// }
-	// return true;
-	// }
-	//
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		try
+		{
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.video_menu, menu);
+
+			return true;
+		}
+		catch (Exception ex)
+		{
+			Log.e(TAG, ex.toString());
+			if (Constants.isAppTrackingEnabled)
+			{
+				BugSenseHandler.sendException(ex);
+			}
+		}
+		return true;
+	}
+	
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
@@ -369,27 +378,35 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			switch (item.getItemId())
 			{
-			case R.id.menusettings_video:
-				optionsActivityStarted = true;
-				paused = true;
-				startActivity(new Intent(this, VideoPrefsActivity.class));
-				mediaPlayerView.setVisibility(View.GONE);
+			case R.id.video_menu_delete_camera:
+				
+				CustomedDialog.getConfirmRemoveDialog(VideoActivity.this,
+						new DialogInterface.OnClickListener(){
 
-				showProgressView();
-
+							@Override
+							public void onClick(DialogInterface warningDialog, int which)
+							{
+								new DeleteCameraTask(evercamCamera.getCameraId(),VideoActivity.this)
+								.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+							}
+						}, R.string.msg_confirm_remove_camera).show();
+				
 				return true;
+				
+//			case R.id.menusettings_video:
+//				optionsActivityStarted = true;
+//				paused = true;
+//				startActivity(new Intent(this, VideoPrefsActivity.class));
+//				mediaPlayerView.setVisibility(View.GONE);
+//
+//				showProgressView();
+//
+//				return true;
 			case android.R.id.home:
 				this.finish();
 				return true;
+
 			default:
-
-				optionsActivityStarted = true;
-				paused = true;
-				startActivity(new Intent(this, VideoPrefsActivity.class));
-				mediaPlayerView.setVisibility(View.GONE);
-
-				showProgressView();
-
 				return true;
 
 			}
@@ -416,11 +433,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		new LoadActiveCamerasTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
-	public static boolean startPlayingVideoForCamera(Context context, String cameraId)
+	public static boolean startPlayingVideoForCamera(Activity activity, String cameraId)
 	{
 		startingCameraID = cameraId;
-		Intent intent = new Intent(context, VideoActivity.class);
-		context.startActivity(intent);
+		Intent intent = new Intent(activity, VideoActivity.class);
+		
+		activity.startActivityForResult(intent, Constants.REQUEST_CODE_DELETE_CAMERA);
 
 		return false;
 	}

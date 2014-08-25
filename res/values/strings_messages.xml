@@ -8,12 +8,16 @@
     <string name="msg_camera_offline">Camera offline!</string>
     <string name="msg_unable_to_connect">Unable to Connect.</string>
     <string name="loading_cameras">Loading cameras&#8230;</string>
+    <string name="deleting_camera">Deleting camera&#8230;</string>
+    <string name="msg_delete_success">Camera deleted!</string>
+    <string name="msg_delete_failed">Failed to delete camera, please try again.</string>
     <string name="msg_exception">Unexpected error. Please close and retry.</string>
     <string name="msg_error_occurred">Error Occurred</string>
     <string name="msg_unable_to_play">Unable to play</string>
     <string name="msg_please_check_camera">Please check camera and try again.</string>
     <string name="msg_confirm_sign_out">Are you sure you want to sign out?</string>
     <string name="msg_confirm_remove">Are you sure you want to remove this user?</string>
+    <string name="msg_confirm_remove_camera">Are you sure you want to remove this camera?</string>
     <string name="msg_confirm_cancel_scan">Scanning is in process, are you sure you want to cancel?</string>
 
 </resources>

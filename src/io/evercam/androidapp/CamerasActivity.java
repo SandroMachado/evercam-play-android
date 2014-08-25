@@ -335,7 +335,7 @@ public class CamerasActivity extends ParentActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		if (requestCode == Constants.REQUEST_CODE_ADD_CAMERA)
+		if (requestCode == Constants.REQUEST_CODE_ADD_CAMERA || requestCode == Constants.REQUEST_CODE_DELETE_CAMERA)
 		{
 			if (resultCode == Constants.RESULT_TRUE)
 			{

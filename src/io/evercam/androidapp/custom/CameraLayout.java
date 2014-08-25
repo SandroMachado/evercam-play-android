@@ -14,8 +14,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import org.apache.http.cookie.Cookie;
 import com.bugsense.trace.BugSenseHandler;
+
+import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.R;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -33,6 +36,7 @@ public class CameraLayout extends LinearLayout
 
 	public RelativeLayout cameraRelativeLayout;
 	public Context context;
+	private Activity activity;
 	public EvercamCamera evercamCamera;
 	private DownloadLiveImageTask liveImageTask;
 	private DownloadLiveImageTask liveImageTaskLocal;
@@ -50,10 +54,11 @@ public class CameraLayout extends LinearLayout
 	// thread so that it can proceed with next step.
 	public final Handler handler = new Handler();
 
-	public CameraLayout(Context context, EvercamCamera camera)
+	public CameraLayout(final Activity activity, EvercamCamera camera)
 	{
-		super(context);
-		this.context = context;
+		super(activity.getApplicationContext());
+		this.context = activity.getApplicationContext();
+		this.activity = activity;
 
 		try
 		{
@@ -130,7 +135,7 @@ public class CameraLayout extends LinearLayout
 					else
 					{
 
-						VideoActivity.startPlayingVideoForCamera(CameraLayout.this.context,
+						VideoActivity.startPlayingVideoForCamera(activity,
 								evercamCamera.getCameraId());
 					}
 				}

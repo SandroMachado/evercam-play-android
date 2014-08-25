@@ -164,11 +164,11 @@ public class CustomedDialog
 	}
 
 	public static AlertDialog getConfirmRemoveDialog(Activity activity,
-			DialogInterface.OnClickListener listener)
+			DialogInterface.OnClickListener listener,int message)
 	{
 		AlertDialog comfirmLogoutDialog = new AlertDialog.Builder(activity)
 
-		.setMessage(R.string.msg_confirm_remove).setPositiveButton(R.string.remove, listener)
+		.setMessage(message).setPositiveButton(R.string.remove, listener)
 				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
 					@Override
 					public void onClick(DialogInterface dialog, int which)

@@ -103,7 +103,7 @@ public class ManageAccountsActivity extends ParentActivity
 				final AlertDialog dialog = CustomedDialog.getAlertDialogNoTitle(
 						ManageAccountsActivity.this, ed_dialog_layout);
 				dialog.show();
-				
+
 				Button openDefault = (Button) ed_dialog_layout.findViewById(R.id.btn_open_account);
 				Button setDefault = (Button) ed_dialog_layout
 						.findViewById(R.id.btn_set_default_account);
@@ -184,7 +184,7 @@ public class ManageAccountsActivity extends ParentActivity
 												}
 											}
 										}
-									}).show();
+									}, R.string.msg_confirm_remove).show();
 						}
 					});
 				}
@@ -380,7 +380,10 @@ public class ManageAccountsActivity extends ParentActivity
 					showAllAccounts();
 				}
 
-				if (dialogToDismiss != null) dialogToDismiss.dismiss();
+				if (dialogToDismiss != null && dialogToDismiss.isShowing())
+				{
+					dialogToDismiss.dismiss();
+				}
 			}
 
 		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, userId);

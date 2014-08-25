@@ -20,6 +20,7 @@ public final class Constants
 	 * Values of start activity for result
 	 */
 	public static final int REQUEST_CODE_ADD_CAMERA = 1;
+	public static final int REQUEST_CODE_DELETE_CAMERA = 2;
 	public static final int RESULT_TRUE = 1;
 	public static final int RESULT_FALSE = 0;
 }
