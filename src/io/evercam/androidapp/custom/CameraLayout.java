@@ -7,7 +7,6 @@ import io.evercam.androidapp.tasks.SaveImageTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamFile;
-import io.evercam.androidapp.utils.CustomedDialog;
 import io.evercam.androidapp.video.VideoActivity;
 
 import java.io.File;

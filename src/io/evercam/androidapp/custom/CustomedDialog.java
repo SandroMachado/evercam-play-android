@@ -1,4 +1,4 @@
-package io.evercam.androidapp.utils;
+package io.evercam.androidapp.custom;
 
 import io.evercam.androidapp.R;
 import android.app.Activity;
@@ -145,6 +145,22 @@ public class CustomedDialog
 					}
 				}).create();
 		return comfirmLogoutDialog;
+	}
+	
+	public static AlertDialog getConfirmCancelScanDialog(Activity activity,
+			DialogInterface.OnClickListener listener)
+	{
+		AlertDialog comfirmCancelDialog = new AlertDialog.Builder(activity)
+
+		.setMessage(R.string.msg_confirm_cancel_scan).setPositiveButton(R.string.yes, listener)
+				.setNegativeButton(R.string.no, new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						return;
+					}
+				}).create();
+		return comfirmCancelDialog;
 	}
 
 	public static AlertDialog getConfirmRemoveDialog(Activity activity,

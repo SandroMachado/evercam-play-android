@@ -43,7 +43,7 @@
     
     <!-- Option Items -->
     <string name="add_ip_camera">Add camera manually</string>
-	<string name="scan_for_cameras">Scan for cameras</string>
+	<string name="scan_for_cameras">Scan for cameras (beta)</string>
 	
 	<!-- Network Scan -->
 	<string name="msg_scanning">Scanning for cameras.\n\nPlease be patient,\nthis may take up to a minute&#8230;</string>

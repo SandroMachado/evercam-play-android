@@ -1,6 +1,7 @@
 package io.evercam.androidapp.rvideo;
 
 import io.evercam.androidapp.ParentActivity;
+import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.custom.ProgressView;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.dto.ImageRecord;
@@ -9,7 +10,6 @@ import io.evercam.androidapp.utils.CLog;
 import io.evercam.androidapp.utils.CambaRecordingApiManager;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
-import io.evercam.androidapp.utils.CustomedDialog;
 
 import java.io.File;
 import java.io.FileOutputStream;

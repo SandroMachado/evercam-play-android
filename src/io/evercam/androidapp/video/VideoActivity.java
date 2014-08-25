@@ -4,14 +4,13 @@ import io.evercam.Camera;
 import io.evercam.EvercamException;
 import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.ParentActivity;
+import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.custom.ProgressView;
-import io.evercam.androidapp.dto.CameraStatus;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamFile;
-import io.evercam.androidapp.utils.CustomedDialog;
 
 import java.io.File;
 import java.io.InputStream;

@@ -4,7 +4,6 @@ import io.evercam.Camera;
 import io.evercam.CameraDetail;
 import io.evercam.EvercamException;
 import io.evercam.androidapp.R;
-import io.evercam.androidapp.custom.CameraLayout;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.dal.DbCamera;

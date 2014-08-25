@@ -24,6 +24,7 @@ import android.widget.*;
 
 import io.evercam.androidapp.custom.AboutDialog;
 import io.evercam.androidapp.custom.CameraLayout;
+import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
@@ -34,7 +35,6 @@ import io.evercam.androidapp.tasks.LoadCameraListTask;
 import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
-import io.evercam.androidapp.utils.CustomedDialog;
 
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;

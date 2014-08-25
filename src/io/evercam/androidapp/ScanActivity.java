@@ -7,21 +7,22 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 import io.evercam.androidapp.cambase.CambaseAPI;
 import io.evercam.androidapp.cambase.CambaseModel;
 import io.evercam.androidapp.cambase.Manufacturer;
+import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.tasks.ScanForCameraTask;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamApiHelper;
 import io.evercam.network.discovery.DiscoveredCamera;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,7 +37,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class ScanActivity extends Activity
@@ -57,6 +57,8 @@ public class ScanActivity extends Activity
 	private final String ADAPTER_KEY_LOGO = "camera_logo";
 	private final String ADAPTER_KEY_IP = "camera_id";
 	private final String ADAPTER_KEY_MODEL = "camera_model";
+	
+	private ScanForCameraTask scanTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -64,9 +66,17 @@ public class ScanActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scan);
 
+		if (Constants.isAppTrackingEnabled)
+		{
+			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
+		}
+		
+		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_scan_camera));
+		
 		scanProgressView = findViewById(R.id.scan_status_layout);
 		scanResultListView = findViewById(R.id.scan_result_layout);
 		scanResultNoCameraView = findViewById(R.id.scan_result_no_camera_layout);
+		Button cancelButton = (Button) findViewById(R.id.button_cancel_scan);
 
 		drawableArray = new SparseArray<Drawable>();
 
@@ -104,6 +114,21 @@ public class ScanActivity extends Activity
 				}
 			}
 		});
+		
+		cancelButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v)
+			{
+				CustomedDialog.getConfirmCancelScanDialog(ScanActivity.this, new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						stopDiscovery();
+						finish();
+					}
+				}).show();
+			}
+		});
 
 		addManuallyButton.setOnClickListener(new OnClickListener(){
 			@Override
@@ -115,6 +140,28 @@ public class ScanActivity extends Activity
 		});
 
 		startDiscovery();
+	}
+	
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+
+		if (Constants.isAppTrackingEnabled)
+		{
+			if (Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
+		}
+	}
+
+	@Override
+	public void onStop()
+	{
+		super.onStop();
+
+		if (Constants.isAppTrackingEnabled)
+		{
+			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
+		}
 	}
 
 	// Finish this activity and transfer the result from AddCameraActivity to
@@ -147,7 +194,16 @@ public class ScanActivity extends Activity
 	private void startDiscovery()
 	{
 		EvercamApiHelper.setEvercamDeveloperKeypair(this);
-		new ScanForCameraTask(ScanActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		scanTask = new ScanForCameraTask(ScanActivity.this);
+		scanTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	}
+	
+	private void stopDiscovery()
+	{
+		if(scanTask != null && !scanTask.isCancelled())
+		{
+			scanTask.cancel(true);
+		}
 	}
 
 	public void showProgress(boolean show)

@@ -3,8 +3,8 @@ package io.evercam.androidapp.tasks;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
+import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.utils.Commons;
-import io.evercam.androidapp.utils.CustomedDialog;
 
 import java.util.ArrayList;
 

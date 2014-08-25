@@ -14,5 +14,6 @@
     <string name="msg_please_check_camera">Please check camera and try again.</string>
     <string name="msg_confirm_sign_out">Are you sure you want to sign out?</string>
     <string name="msg_confirm_remove">Are you sure you want to remove this user?</string>
+    <string name="msg_confirm_cancel_scan">Scanning is in process, are you sure you want to cancel?</string>
 
 </resources>

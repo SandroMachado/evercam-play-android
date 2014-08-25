@@ -7,6 +7,7 @@ import io.evercam.User;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
+import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
@@ -14,7 +15,6 @@ import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamApiHelper;
 import io.evercam.androidapp.utils.PrefsManager;
-import io.evercam.androidapp.utils.CustomedDialog;
 
 import android.content.Context;
 import android.content.Intent;

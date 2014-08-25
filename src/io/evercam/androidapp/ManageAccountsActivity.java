@@ -6,6 +6,7 @@ import io.evercam.EvercamException;
 import io.evercam.User;
 import io.evercam.androidapp.custom.CustomAdapter;
 import io.evercam.androidapp.custom.CustomToast;
+import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.*;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
@@ -13,7 +14,6 @@ import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.androidapp.utils.PropertyReader;
-import io.evercam.androidapp.utils.CustomedDialog;
 
 import java.util.ArrayList;
 import java.util.List;

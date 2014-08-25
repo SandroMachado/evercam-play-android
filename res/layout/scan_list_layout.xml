@@ -3,6 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <RelativeLayout 
+        android:id="@+id/img_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
     <ImageView
         android:id="@+id/camera_img"
         android:layout_width="80dip"
@@ -24,7 +29,7 @@
         android:layout_gravity="center"
         android:layout_marginLeft="5sp"
         android:visibility="visible" />
-    
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/text_layout"
@@ -34,7 +39,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="5sp"
         android:layout_marginTop="5dip"
-        android:layout_toRightOf="@+id/camera_img"
+        android:layout_toRightOf="@+id/img_layout"
         android:orientation="vertical" >
 
         <TextView

@@ -27,6 +27,20 @@
             android:gravity="center"
             android:text="@string/msg_scanning"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+        
+        <Button
+                android:id="@+id/button_cancel_scan"
+                android:layout_width="wrap_content"
+                android:paddingLeft="20sp"
+                android:paddingRight="20sp"
+                android:layout_height="35dp"
+                android:layout_marginTop="10sp"
+                android:background="@+drawable/signup_btn_selector"
+                android:textColor="@+drawable/signup_btn_txt_selector"
+                android:text="@string/cancel"
+                android:gravity="center"
+                android:textSize="17sp" />
+        
     </LinearLayout>
 
     <!-- Scan Result -->
