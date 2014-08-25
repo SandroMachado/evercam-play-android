@@ -1,7 +1,5 @@
 package io.evercam.androidapp;
 
-import java.util.List;
-
 import android.os.Bundle;
 
 import android.app.Activity;
@@ -26,7 +24,6 @@ import io.evercam.androidapp.custom.AboutDialog;
 import io.evercam.androidapp.custom.CameraLayout;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbAppUser;
-import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.dto.ImageLoadingStatus;
 import io.evercam.androidapp.slidemenu.*;
@@ -48,6 +45,8 @@ public class CamerasActivity extends ParentActivity implements
 	public static CamerasActivity activity = null;
 	public MenuItem refresh;
 
+	public static boolean stopImageLoading = false;
+	
 	private static final String TAG = "evercamplay-CamerasActivity";
 
 	private SlideMenu slideMenu;
@@ -194,6 +193,7 @@ public class CamerasActivity extends ParentActivity implements
 
 				startActivity(new Intent(CamerasActivity.this, ManageAccountsActivity.class));
 				isUsersAccountsActivityStarted = true;
+				stopImageLoading = true;
 
 				return true;
 
@@ -350,6 +350,7 @@ public class CamerasActivity extends ParentActivity implements
 
 	private void startLoadingCameras()
 	{
+		stopImageLoading = false;
 		LoadCameraListTask loadTask = new LoadCameraListTask(AppData.defaultUser,
 				CamerasActivity.this);
 		loadTask.reload = true; // be default do not refresh until there
@@ -617,22 +618,14 @@ public class CamerasActivity extends ParentActivity implements
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 			PrefsManager.removeUserEmail(sharedPrefs);
 
+			// Instead of deleting all users, only delete the default one
+			DbAppUser dbUser = new DbAppUser(this);
+			dbUser.deleteAppUserByEmail(AppData.defaultUser.getEmail());
+			
 			// clear real-time default app data
 			AppData.defaultUser = null;
 			AppData.appUsers.clear();
 			AppData.evercamCameraList.clear();
-
-			// delete app user
-			DbAppUser dbUser = new DbAppUser(this);
-			List<AppUser> list = dbUser.getAllAppUsers(10000);
-
-			if (list != null && list.size() > 0)
-			{
-				for (AppUser user : list)
-				{
-					dbUser.deleteAppUserByEmail(user.getEmail());
-				}
-			}
 		}
 		catch (Exception e)
 		{

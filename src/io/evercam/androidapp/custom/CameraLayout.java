@@ -249,7 +249,7 @@ public class CameraLayout extends LinearLayout
 		}
 	}
 
-	// Stop the image laoding process. May be need to end current activity
+	// Stop the image loading process. May be need to end current activity
 	public boolean stopAllActivity()
 	{
 		try
@@ -374,6 +374,11 @@ public class CameraLayout extends LinearLayout
 			try
 			{
 				if (end) return;
+				
+				if(CamerasActivity.stopImageLoading)
+				{
+					return;
+				}
 
 				if (evercamCamera.loadingStatus == ImageLoadingStatus.not_started)
 				{
@@ -458,6 +463,10 @@ public class CameraLayout extends LinearLayout
 		{
 			for (String url : urls)
 			{
+				if(CamerasActivity.stopImageLoading)
+				{
+					this.cancel(true);
+				}
 				try
 				{
 					ArrayList<Cookie> cookies = new ArrayList<Cookie>();

@@ -2,22 +2,16 @@ package io.evercam.androidapp.video;
 
 import io.evercam.Camera;
 import io.evercam.EvercamException;
-import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
-import io.evercam.androidapp.ManageAccountsActivity;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.custom.ProgressView;
-import io.evercam.androidapp.dal.DbAppUser;
-import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.tasks.DeleteCameraTask;
 import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamFile;
-import io.evercam.androidapp.utils.PrefsManager;
-
 import java.io.File;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;

@@ -310,9 +310,7 @@ public class ManageAccountsActivity extends ParentActivity
 			CustomToast.showInCenter(this, R.string.error_invalid_password);
 			return;
 		}
-
-		ProgressBar progressBar = (ProgressBar) alertDialog.findViewById(R.id.pb_loadinguser);
-		progressBar.setVisibility(View.VISIBLE);
+		
 		AddAccountTask task = new AddAccountTask(username, password, isDefault, alertDialog);
 		task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
@@ -434,6 +432,7 @@ public class ManageAccountsActivity extends ParentActivity
 		@Override
 		protected Boolean doInBackground(String... values)
 		{
+			Log.d(TAG, "Start sign in");
 			setEvercamDeveloperKeypair();
 			try
 			{
@@ -553,10 +552,19 @@ public class ManageAccountsActivity extends ParentActivity
 		}
 
 		@Override
+		protected void onPreExecute()
+		{
+			//Show the progress bar before the task starts
+			ProgressBar progressBar = (ProgressBar) alertDialog.findViewById(R.id.pb_loadinguser);
+			progressBar.setVisibility(View.VISIBLE);
+		}
+
+		@Override
 		protected void onPostExecute(Boolean hasNetwork)
 		{
 			if (hasNetwork)
 			{
+				Log.d(TAG, "Network check done, launch login");
 				launchLogin(dialogView);
 			}
 			else
