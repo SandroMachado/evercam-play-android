@@ -2,30 +2,32 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/menurefresh"
-        android:icon="@drawable/ic_menu_refresh"
+        android:id="@+id/menu_add_camera"
+        android:icon="@drawable/ic_action_new"
         android:orderInCategory="1"
+        android:showAsAction="always"
+        android:title="@string/menu_add_camera"/>
+    <item
+        android:id="@+id/menurefresh"
+        android:icon="@drawable/ic_action_refresh"
+        android:orderInCategory="2"
         android:showAsAction="always"
         android:title="@string/menu_refresh"/>
     <item
-        android:id="@+id/menu_add_camera"
-        android:orderInCategory="2"
-        android:title="@string/menu_add_camera"/>
-    <item
-        android:id="@+id/menu_settings"
-        android:orderInCategory="3"
-        android:title="@string/menu_settings"/>
-    <item
         android:id="@+id/menu_manage_accounts"
-        android:orderInCategory="4"
+        android:orderInCategory="3"
         android:title="@string/menu_manage_accounts"/>
     <item
-        android:id="@+id/menu_logout"
-        android:orderInCategory="5"
-        android:title="@string/menu_logout"/>
+        android:id="@+id/menu_settings"
+        android:orderInCategory="4"
+        android:title="@string/menu_settings"/>
     <item
         android:id="@+id/menu_about"
-        android:orderInCategory="6"
+        android:orderInCategory="5"
         android:title="@string/menu_about"/>
+    <item
+        android:id="@+id/menu_logout"
+        android:orderInCategory="6"
+        android:title="@string/menu_logout"/>
 
 </menu>
