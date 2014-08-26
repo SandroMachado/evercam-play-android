@@ -22,6 +22,7 @@ import android.widget.*;
 
 import io.evercam.androidapp.custom.AboutDialog;
 import io.evercam.androidapp.custom.CameraLayout;
+import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
@@ -55,6 +56,8 @@ public class CamerasActivity extends ParentActivity implements
 	public boolean isUsersAccountsActivityStarted = false;
 	private static int camerasPerRow = 2;
 	public boolean reloadCameraList = false;
+	
+	public CustomProgressDialog reloadProgressDialog;
 
 	private enum InternetCheckType
 	{
@@ -322,8 +325,24 @@ public class CamerasActivity extends ParentActivity implements
 	public void onRestart()
 	{
 		super.onRestart();
-		new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.RESTART)
-				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		
+		if (isUsersAccountsActivityStarted || reloadCameraList)
+		{
+			// If returned from account management, the
+			// default user could possibly changed,
+			// so remove all cameras and reload.
+
+			// addUsersToDropdownActionBar();
+			removeAllCameraViews();
+			startLoadingCameras();
+			isUsersAccountsActivityStarted = false;
+			reloadCameraList = false;
+		}
+		else
+		{
+			new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.RESTART)
+			.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		}
 	}
 
 	@Override
@@ -351,6 +370,13 @@ public class CamerasActivity extends ParentActivity implements
 	private void startLoadingCameras()
 	{
 		stopImageLoading = false;
+		
+		reloadProgressDialog = new CustomProgressDialog(this);
+		if (isUsersAccountsActivityStarted || reloadCameraList)
+		{
+			reloadProgressDialog.show(getString(R.string.loading_cameras));
+		}
+		
 		LoadCameraListTask loadTask = new LoadCameraListTask(AppData.defaultUser,
 				CamerasActivity.this);
 		loadTask.reload = true; // be default do not refresh until there
@@ -671,19 +697,6 @@ public class CamerasActivity extends ParentActivity implements
 				{
 					try
 					{
-						if (isUsersAccountsActivityStarted || reloadCameraList)
-						{
-							// If returned from account management, the
-							// default user could possibly changed,
-							// so remove all cameras and reload.
-
-							// addUsersToDropdownActionBar();
-							removeAllCameraViews();
-							startLoadingCameras();
-							isUsersAccountsActivityStarted = false;
-							reloadCameraList = false;
-						}
-
 						int camsOldValue = camerasPerRow;
 						SharedPreferences sharedPrefs = PreferenceManager
 								.getDefaultSharedPreferences(CamerasActivity.this);

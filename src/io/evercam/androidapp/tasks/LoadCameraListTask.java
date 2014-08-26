@@ -30,7 +30,6 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 	private CamerasActivity camerasActivity;
 	private String TAG = "evercamplay-LoadCameraListTask";
 	public boolean reload = false;
-	private CustomProgressDialog customProgressDialog;
 
 	public LoadCameraListTask(AppUser user, CamerasActivity camerasActivity)
 	{
@@ -41,12 +40,6 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 	@Override
 	protected void onPreExecute()
 	{
-		if (camerasActivity.isUsersAccountsActivityStarted || camerasActivity.reloadCameraList)
-		{
-			customProgressDialog = new CustomProgressDialog(camerasActivity);
-			customProgressDialog.show(camerasActivity.getString(R.string.loading_cameras));
-		}
-
 		if (user != null)
 		{
 			API.setUserKeyPair(user.getApiKey(), user.getApiId());
@@ -70,7 +63,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 			// FIXME: Time consuming at this line
 			ArrayList<Camera> cameras = User.getCameras(user.getUsername(), true);
 			ArrayList<EvercamCamera> evercamCameras = new ArrayList<EvercamCamera>();
-
+			Log.d(TAG, "Total cameras from Evercam:" + cameras.size());
 			for (io.evercam.Camera camera : cameras)
 			{
 				evercamCameras.add(new EvercamCamera().convertFromEvercam(camera));
@@ -83,6 +76,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 			{
 				if (!AppData.evercamCameraList.contains(camera))
 				{
+					Log.d(TAG, "new camera detected!" + camera.getCameraId());
 					updateDB = true;
 					break;
 				}
@@ -96,6 +90,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 				{
 					if (!evercamCameras.contains(camera))
 					{
+						Log.d(TAG, "camera deleted!"  + camera.getCameraId());
 						updateDB = true;
 						break;
 					}
@@ -106,6 +101,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 			Log.d(TAG, "Step 4: If any different camera, replace all local camera data.");
 			if (updateDB)
 			{
+				Log.d(TAG, "Updating db");
 				reload = true;
 
 				AppData.evercamCameraList = evercamCameras;
@@ -170,9 +166,9 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 						}).show();
 			}
 		}
-		if (customProgressDialog != null)
+		if (camerasActivity.reloadProgressDialog != null)
 		{
-			customProgressDialog.dismiss();
+			camerasActivity.reloadProgressDialog.dismiss();
 		}
 	}
 }

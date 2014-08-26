@@ -318,58 +318,36 @@ public class ManageAccountsActivity extends ParentActivity
 	public void setDefaultUser(final String userId, final Boolean closeActivity,
 			final AlertDialog dialogToDismiss)
 	{
-		new AsyncTask<String, String, String>(){
+		try
+		{
+			DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
 
-			@Override
-			protected String doInBackground(String... params)
+			List<AppUser> appUsers = dbUser.getAllAppUsers(1000);
+			for (int count = 0; count < appUsers.size(); count++)
 			{
-				try
+				AppUser user = appUsers.get(count);
+				if ((user.getId() + "").equalsIgnoreCase(userId))
 				{
-					DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
-
-					List<AppUser> appUsers = dbUser.getAllAppUsers(1000);
-					for (int count = 0; count < appUsers.size(); count++)
+					if (!user.getIsDefault())
 					{
-						AppUser user = appUsers.get(count);
-						if ((user.getId() + "").equalsIgnoreCase(params[0]))
-						{
-							if (!user.getIsDefault())
-							{
-								user.setIsDefault(true);
-								dbUser.updateAppUser(user);
-								PrefsManager.saveUserEmail(PreferenceManager
-										.getDefaultSharedPreferences(ManageAccountsActivity.this),
-										user.getEmail());
-								AppData.defaultUser = user;
-							}
-						}
-						else if (user.getIsDefault())
-						{
-							user.setIsDefault(false);
-							dbUser.updateAppUser(user);
-						}
+						user.setIsDefault(true);
+						dbUser.updateAppUser(user);
+						PrefsManager.saveUserEmail(PreferenceManager
+								.getDefaultSharedPreferences(ManageAccountsActivity.this),
+								user.getEmail());
+						AppData.defaultUser = user;
 					}
-
-					AppData.appUsers = dbUser.getAllAppUsers(1000);
-
-					return null;
 				}
-				catch (Exception e)
+				else if (user.getIsDefault())
 				{
-					Log.e(TAG, e.toString());
-					BugSenseHandler.sendException(e);
-					return e.getLocalizedMessage();
+					user.setIsDefault(false);
+					dbUser.updateAppUser(user);
 				}
 			}
 
-			@Override
-			protected void onPostExecute(String error)
-			{
-				if (error != null && error.length() > 0)
-				{
-					CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
-				}
-				if (closeActivity)
+			AppData.appUsers = dbUser.getAllAppUsers(1000);
+			
+			if (closeActivity)
 				{
 					ManageAccountsActivity.this.finish();
 				}
@@ -382,9 +360,82 @@ public class ManageAccountsActivity extends ParentActivity
 				{
 					dialogToDismiss.dismiss();
 				}
-			}
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.toString());
+			BugSenseHandler.sendException(e);
+			CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
+		}
 
-		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, userId);
+		
+//		new AsyncTask<String, String, String>(){
+//
+//			@Override
+//			protected String doInBackground(String... params)
+//			{
+//				try
+//				{
+//					DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
+//
+//					List<AppUser> appUsers = dbUser.getAllAppUsers(1000);
+//					for (int count = 0; count < appUsers.size(); count++)
+//					{
+//						AppUser user = appUsers.get(count);
+//						if ((user.getId() + "").equalsIgnoreCase(params[0]))
+//						{
+//							if (!user.getIsDefault())
+//							{
+//								user.setIsDefault(true);
+//								dbUser.updateAppUser(user);
+//								PrefsManager.saveUserEmail(PreferenceManager
+//										.getDefaultSharedPreferences(ManageAccountsActivity.this),
+//										user.getEmail());
+//								AppData.defaultUser = user;
+//							}
+//						}
+//						else if (user.getIsDefault())
+//						{
+//							user.setIsDefault(false);
+//							dbUser.updateAppUser(user);
+//						}
+//					}
+//
+//					AppData.appUsers = dbUser.getAllAppUsers(1000);
+//
+//					return null;
+//				}
+//				catch (Exception e)
+//				{
+//					Log.e(TAG, e.toString());
+//					BugSenseHandler.sendException(e);
+//					return e.getLocalizedMessage();
+//				}
+//			}
+//
+//			@Override
+//			protected void onPostExecute(String error)
+//			{
+//				if (error != null && error.length() > 0)
+//				{
+//					CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
+//				}
+//				if (closeActivity)
+//				{
+//					ManageAccountsActivity.this.finish();
+//				}
+//				else
+//				{
+//					showAllAccounts();
+//				}
+//
+//				if (dialogToDismiss != null && dialogToDismiss.isShowing())
+//				{
+//					dialogToDismiss.dismiss();
+//				}
+//			}
+//
+//		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, userId);
 	}
 
 	private void showAllAccounts()
@@ -432,7 +483,6 @@ public class ManageAccountsActivity extends ParentActivity
 		@Override
 		protected Boolean doInBackground(String... values)
 		{
-			Log.d(TAG, "Start sign in");
 			setEvercamDeveloperKeypair();
 			try
 			{
@@ -564,7 +614,6 @@ public class ManageAccountsActivity extends ParentActivity
 		{
 			if (hasNetwork)
 			{
-				Log.d(TAG, "Network check done, launch login");
 				launchLogin(dialogView);
 			}
 			else
