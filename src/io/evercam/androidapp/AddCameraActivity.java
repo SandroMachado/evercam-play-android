@@ -46,6 +46,9 @@ public class AddCameraActivity extends Activity
 	private EditText externalHostEdit;
 	private EditText externalHttpEdit;
 	private EditText externalRtspEdit;
+	private EditText internalHostEdit;
+	private EditText internalHttpEdit;
+	private EditText internalRtspEdit;
 	private EditText jpgUrlEdit;
 	private Button addButton;
 	private Button testButton;
@@ -114,6 +117,9 @@ public class AddCameraActivity extends Activity
 		externalHostEdit = (EditText) findViewById(R.id.add_external_host_edit);
 		externalHttpEdit = (EditText) findViewById(R.id.add_external_http_edit);
 		externalRtspEdit = (EditText) findViewById(R.id.add_external_rtsp_edit);
+		internalHostEdit = (EditText) findViewById(R.id.add_internal_host_edit);
+		internalHttpEdit = (EditText) findViewById(R.id.add_internal_http_edit);
+		internalRtspEdit = (EditText) findViewById(R.id.add_internal_rtsp_edit);
 		jpgUrlEdit = (EditText) findViewById(R.id.add_jpg_edit);
 		addButton = (Button) findViewById(R.id.button_add_camera);
 		testButton = (Button) findViewById(R.id.button_test_snapshot);
@@ -223,6 +229,15 @@ public class AddCameraActivity extends Activity
 			{
 				externalRtspEdit.setText(String.valueOf(camera.getExtrtsp()));
 			}
+			internalHostEdit.setText(camera.getIP());
+			if(camera.hasHTTP())
+			{
+				internalHttpEdit.setText(String.valueOf(camera.getHttp()));
+			}
+			if(camera.hasRTSP())
+			{
+				internalRtspEdit.setText(String.valueOf(camera.getRtsp()));
+			}
 		}
 	}
 
@@ -280,28 +295,50 @@ public class AddCameraActivity extends Activity
 		}
 
 		String externalHost = externalHostEdit.getText().toString();
-		if (externalHost.isEmpty())
+		String internalHost = internalHostEdit.getText().toString();
+		if (externalHost.isEmpty() && internalHost.isEmpty())
 		{
 			CustomToast.showInCenter(this, getString(R.string.host_required));
 			return null;
 		}
 		else
 		{
-			cameraBuilder.setExternalHost(externalHost);
-		}
+			if(!internalHost.isEmpty())
+			{
+				cameraBuilder.setInternalHost(internalHost);
+				
+				String internalHttp = internalHttpEdit.getText().toString();
+				if (!internalHttp.isEmpty())
+				{
+					int internalHttpInt = Integer.valueOf(internalHttp);
+					cameraBuilder.setInternalHttpPort(internalHttpInt);
+				}
 
-		String externalHttp = externalHttpEdit.getText().toString();
-		if (!externalHttp.isEmpty())
-		{
-			int externalHttpInt = Integer.valueOf(externalHttp);
-			cameraBuilder.setExternalHttpPort(externalHttpInt);
-		}
+				String internalRtsp = internalRtspEdit.getText().toString();
+				if (!internalRtsp.isEmpty())
+				{
+					int internalRtspInt = Integer.valueOf(internalRtsp);
+					cameraBuilder.setInternalRtspPort(internalRtspInt);
+				}
+			}
+			if(!externalHost.isEmpty())
+			{
+				cameraBuilder.setExternalHost(externalHost);
+				
+				String externalHttp = externalHttpEdit.getText().toString();
+				if (!externalHttp.isEmpty())
+				{
+					int externalHttpInt = Integer.valueOf(externalHttp);
+					cameraBuilder.setExternalHttpPort(externalHttpInt);
+				}
 
-		String externalRtsp = externalRtspEdit.getText().toString();
-		if (!externalRtsp.isEmpty())
-		{
-			int externalRtspInt = Integer.valueOf(externalRtsp);
-			cameraBuilder.setExternalRtspPort(externalRtspInt);
+				String externalRtsp = externalRtspEdit.getText().toString();
+				if (!externalRtsp.isEmpty())
+				{
+					int externalRtspInt = Integer.valueOf(externalRtsp);
+					cameraBuilder.setExternalRtspPort(externalRtspInt);
+				}
+			}		
 		}
 
 		return cameraBuilder;
@@ -412,7 +449,7 @@ public class AddCameraActivity extends Activity
 		{
 			// FIXME: Sometimes vendor with no default model, contains default
 			// jpg url.
-			// FIXME: Consider if no default values associated, clear defaults
+			// TODO: Consider if no default values associated, clear defaults
 			// that has been filled.
 			Defaults defaults = model.getDefaults();
 			Auth basicAuth = defaults.getAuth(Auth.TYPE_BASIC);
