@@ -23,4 +23,8 @@ public final class Constants
 	public static final int REQUEST_CODE_DELETE_CAMERA = 2;
 	public static final int RESULT_TRUE = 1;
 	public static final int RESULT_FALSE = 0;
+	
+	//Values for intent bundle
+	public static final String KEY_IS_EDIT = "isEdit";
+	
 }

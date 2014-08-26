@@ -2,6 +2,8 @@ package io.evercam.androidapp.video;
 
 import io.evercam.Camera;
 import io.evercam.EvercamException;
+import io.evercam.androidapp.AddCameraActivity;
+import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.custom.CustomedDialog;
@@ -384,6 +386,14 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 								.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 							}
 						}, R.string.msg_confirm_remove_camera).show();
+				
+				return true;
+				
+			case R.id.video_menu_edit_camera:
+				
+				Intent editIntent = new Intent(VideoActivity.this, AddCameraActivity.class);
+				editIntent.putExtra(Constants.KEY_IS_EDIT, true);
+				startActivity(editIntent);
 				
 				return true;
 				

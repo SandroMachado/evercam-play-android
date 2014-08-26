@@ -12,11 +12,13 @@ import io.evercam.EvercamException;
 import io.evercam.Model;
 import io.evercam.Vendor;
 import io.evercam.androidapp.custom.CustomToast;
+import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.tasks.AddCameraTask;
 import io.evercam.androidapp.tasks.TestSnapshotTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamApiHelper;
+import io.evercam.androidapp.video.VideoActivity;
 import io.evercam.network.discovery.DiscoveredCamera;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -56,7 +58,8 @@ public class AddCameraActivity extends Activity
 	private TreeMap<String, String> vendorMapIdAsKey;
 	private TreeMap<String, String> modelMap;
 
-	private DiscoveredCamera camera;
+	private DiscoveredCamera discoveredCamera;
+	private EvercamCamera cameraEdit;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -66,21 +69,31 @@ public class AddCameraActivity extends Activity
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
-
+		
 		EvercamApiHelper.setEvercamDeveloperKeypair(this);
-
-		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_add_camera));
+		
+		Bundle bundle = getIntent().getExtras();
+		//Edit Camera
+		if(bundle != null && bundle.containsKey(Constants.KEY_IS_EDIT))
+		{
+			EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_edit_camera));
+			cameraEdit = VideoActivity.evercamCamera;
+		}
+		else //Add Camera
+		{
+			EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_add_camera));
+			
+			// Get camera object from the previous activity before initial screen
+			// elements
+			discoveredCamera = (DiscoveredCamera) getIntent().getSerializableExtra("camera");
+		}
 
 		setContentView(R.layout.activity_add_camera);
-
-		// Get camera object from the previous activity before initial screen
-		// elements
-		camera = (DiscoveredCamera) getIntent().getSerializableExtra("camera");
 
 		// Initial UI elements
 		initialScreen();
 
-		fillDiscoveredCameraDetails();
+		fillDiscoveredCameraDetails(discoveredCamera);
 
 	}
 
@@ -212,7 +225,7 @@ public class AddCameraActivity extends Activity
 		});
 	}
 
-	private void fillDiscoveredCameraDetails()
+	private void fillDiscoveredCameraDetails(DiscoveredCamera camera)
 	{
 		if (camera != null)
 		{
@@ -239,6 +252,31 @@ public class AddCameraActivity extends Activity
 				internalRtspEdit.setText(String.valueOf(camera.getRtsp()));
 			}
 		}
+	}
+	
+	private void fillEditCameraDetails(EvercamCamera camera)
+	{
+		//TODO
+//		if(cameraEdit != null)
+//		{
+//			cameraIdEdit.setText(camera.getCameraId());
+//			cameraNameEdit.setText(camera.getName());
+//			usernameEdit.setText(camera.getUsername());
+//			passwordEdit.setText(camera.getPassword());
+//
+//				externalHostEdit.setText(camera.getE);
+//
+//				externalHttpEdit.setText(String.valueOf(camera.get));
+//
+//				externalRtspEdit.setText(String.valueOf(camera.getExtrtsp()));
+//
+//			internalHostEdit.setText(camera.getIP());
+//
+//				internalHttpEdit.setText(String.valueOf(camera.getHttp()));
+//
+//				internalRtspEdit.setText(String.valueOf(camera.getRtsp()));
+//			
+//		}
 	}
 
 	/**
@@ -381,11 +419,11 @@ public class AddCameraActivity extends Activity
 		spinnerArrayAdapter.setDropDownViewResource(R.layout.country_spinner);
 
 		int selectedPosition = 0;
-		if(camera != null)
+		if(discoveredCamera != null)
 		{
-			if(camera.hasVendor())
+			if(discoveredCamera.hasVendor())
 			{
-				String vendorId = camera.getVendor();
+				String vendorId = discoveredCamera.getVendor();
 				String vendorName = vendorMapIdAsKey.get(vendorId);
 				selectedPosition = spinnerArrayAdapter.getPosition(vendorName);
 			}
