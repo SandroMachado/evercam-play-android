@@ -4,6 +4,8 @@ import io.evercam.Camera;
 import io.evercam.EvercamException;
 import io.evercam.androidapp.utils.AppData;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import org.apache.http.cookie.Cookie;
@@ -36,6 +38,14 @@ public class EvercamCamera
 	private String internalRtspUrl = "";
 	private String status = "";
 	private boolean hasCredentials = false;
+
+	// Fields for edit camera
+	private String internalHost = "";
+	private String externalHost = "";
+	private int internalHttp = 0;
+	private int internalRtsp = 0;
+	private int externalHttp = 0;
+	private int externalRtsp = 0;
 
 	public EvercamCamera()
 	{
@@ -75,6 +85,12 @@ public class EvercamCamera
 			{
 				status = CameraStatus.OFFLINE;
 			}
+			internalHost = camera.getInternalHost();
+			externalHost = camera.getExternalHost();
+			internalHttp = camera.getInternalHttpPort();
+			internalRtsp = camera.getInternalRtspPort();
+			externalHttp = camera.getExternalHttpPort();
+			externalRtsp = camera.getExternalRtspPort();
 		}
 		catch (EvercamException e)
 		{
@@ -263,6 +279,107 @@ public class EvercamCamera
 		this.hasCredentials = hasCredentials;
 	}
 
+	public String getInternalHost()
+	{
+		return internalHost;
+	}
+
+	public String getExternalHost()
+	{
+		return externalHost;
+	}
+
+	public int getInternalHttp()
+	{
+		return internalHttp;
+	}
+
+	public int getInternalRtsp()
+	{
+		return internalRtsp;
+	}
+
+	public int getExternalHttp()
+	{
+		return externalHttp;
+	}
+
+	public int getExternalRtsp()
+	{
+		return externalRtsp;
+	}
+
+	public String getJpgPath()
+	{
+		try
+		{
+			//TODO: Wrap this in the wrapper or API response
+			if (!internalSnapshotUrl.isEmpty())
+			{
+				return new URL(internalSnapshotUrl).getPath();
+			}
+			else if (!externalSnapshotUrl.isEmpty())
+			{
+				return new URL(externalSnapshotUrl).getPath();
+			}
+		}
+		catch (MalformedURLException e)
+		{
+			Log.e(TAG, e.toString());
+		}
+		return "";
+	}
+
+	public String getH264Pash()
+	{
+		try
+		{
+			if (!internalRtspUrl.isEmpty())
+			{
+				return new URL(internalRtspUrl).getPath();
+			}
+			else if (!externalRtspUrl.isEmpty())
+			{
+				return new URL(externalRtspUrl).getPath();
+			}
+		}
+		catch (MalformedURLException e)
+		{
+			Log.e(TAG, e.toString());
+		}
+		return "";
+	}
+
+	public void setInternalHost(String internalHost)
+	{
+		this.internalHost = internalHost;
+	}
+
+	public void setExternalHost(String externalHost)
+	{
+		this.externalHost = externalHost;
+	}
+
+	public void setInternalHttp(int internalHttp)
+	{
+		this.internalHttp = internalHttp;
+	}
+
+	public void setInternalRtsp(int internalRtsp)
+	{
+		this.internalRtsp = internalRtsp;
+	}
+
+	public void setExternalHttp(int externalHttp)
+	{
+		this.externalHttp = externalHttp;
+	}
+
+	public void setExternalRtsp(int externalRtsp)
+	{
+		this.externalRtsp = externalRtsp;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -277,7 +394,10 @@ public class EvercamCamera
 				&& model.equals(other.model) && name.equals(other.name)
 				&& owner.equals(other.owner) && password.equals(other.password)
 				&& status.equals(other.status) && timezone.equals(other.timezone)
-				&& username.equals(other.username) && vendor.equals(other.vendor))
+				&& username.equals(other.username) && vendor.equals(other.vendor)
+			    && internalHost.equals(other.internalHost) && externalHost.equals(other.externalHost)
+			    && internalHttp == other.internalHttp && externalHttp == other.externalHttp
+			    && internalRtsp== other.internalRtsp && externalRtsp == other.externalRtsp)
 		{
 			return true;
 		}
@@ -287,13 +407,14 @@ public class EvercamCamera
 	@Override
 	public String toString()
 	{
-		return "EvercamCamera [loadingStatus=" + loadingStatus + ", cookies=" + cookies
-				+ ", isLocal=" + isLocal + ", id=" + id + ", cameraId=" + cameraId + ", name="
-				+ name + ", owner=" + owner + ", username=" + username + ", password=" + password
+		return "EvercamCamera [camera=" + camera + ", cameraId=" + cameraId + ", name=" + name
+				+ ", owner=" + owner + ", username=" + username + ", password=" + password
 				+ ", timezone=" + timezone + ", vendor=" + vendor + ", model=" + model + ", mac="
 				+ mac + ", externalSnapshotUrl=" + externalSnapshotUrl + ", internalSnapshotUrl="
 				+ internalSnapshotUrl + ", externalRtspUrl=" + externalRtspUrl
-				+ ", internalRtspUrl=" + internalRtspUrl + ", status=" + status
-				+ ", hasCredentials=" + hasCredentials + "]\n";
+				+ ", internalRtspUrl=" + internalRtspUrl + ", internalHost=" + internalHost
+				+ ", externalHost=" + externalHost + ", internalHttp=" + internalHttp
+				+ ", internalRtsp=" + internalRtsp + ", externalHttp=" + externalHttp
+				+ ", externalRtsp=" + externalRtsp + "]";
 	}
 }

@@ -366,12 +366,11 @@
             android:orientation="horizontal" >
 
             <Button
-                android:id="@+id/button_add_camera"
+                android:id="@+id/button_add_edit_camera"
                 android:layout_width="0sp"
                 android:layout_height="40dp"
                 android:layout_weight=".75"
                 android:background="@+drawable/signup_btn_selector"
-                android:text="@string/finish_and_add"
                 android:textColor="@+drawable/signup_btn_txt_selector" />
 
             <Button

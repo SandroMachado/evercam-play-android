@@ -30,6 +30,14 @@ public class DbCamera extends DatabaseMaster
 	private final String KEY_INTERNAL_RTSP_URL = "internalRtspUrl";
 	private final String KEY_STATUS = "status";
 	private final String KEY_HAS_CREDENTIAL = "hasCredential";
+	
+	// Fields for edit camera
+	private final String KEY_INTERNAL_HOST = "internalHost";
+	private final String KEY_EXTERNAL_HOST = "externalHost";
+	private final String KEY_INTERNAL_HTTP = "internalHttp";
+	private final String KEY_INTERNAL_RTSP = "internalRtsp";
+	private final String KEY_EXTERNAL_HTTP = "externalHttp";
+	private final String KEY_EXTERNAL_RTSP = "externalRtsp";
 
 	public DbCamera(Context context)
 	{
@@ -47,6 +55,9 @@ public class DbCamera extends DatabaseMaster
 				+ " TEXT NULL " + "," + KEY_INTERNAL_JPG_URL + " TEXT NULL " + ","
 				+ KEY_EXTERNAL_RTSP_URL + " TEXT NULL" + "," + KEY_INTERNAL_RTSP_URL + " TEXT NULL"
 				+ "," + KEY_STATUS + " TEXT NULL" + "," + KEY_HAS_CREDENTIAL + " INT NULL" + ","
+				+ KEY_INTERNAL_HOST + " TEXT NULL" + "," + KEY_EXTERNAL_HOST + " TEXT NULL" + ","
+				+ KEY_INTERNAL_HTTP + "INT NULL" + "," + KEY_EXTERNAL_HTTP + " INT NULL" + ","
+				+ KEY_INTERNAL_RTSP + "INT NULL" + "," + KEY_EXTERNAL_RTSP + " INT NULL" + ","
 				+ "CONSTRAINT uniqueCamAndUser UNIQUE (" + KEY_CAMERA_ID + ", " + KEY_OWNER + ")"
 				+ ")";
 		db.execSQL(CREATE_TABLE_Cameras);
@@ -82,29 +93,16 @@ public class DbCamera extends DatabaseMaster
 		Cursor cursor = db.query(TABLE_CAMERA, new String[] { KEY_ID, KEY_CAMERA_ID,
 				KEY_CAMERA_NAME, KEY_OWNER, KEY_USERNAME, KEY_PASSWORD, KEY_TIMEZONE, KEY_VENDOR,
 				KEY_MODEL, KEY_MAC, KEY_EXTERNAL_JPG_URL, KEY_INTERNAL_JPG_URL,
-				KEY_EXTERNAL_RTSP_URL, KEY_INTERNAL_RTSP_URL, KEY_STATUS, KEY_HAS_CREDENTIAL },
+				KEY_EXTERNAL_RTSP_URL, KEY_INTERNAL_RTSP_URL, KEY_STATUS, KEY_HAS_CREDENTIAL,
+				KEY_INTERNAL_HOST, KEY_EXTERNAL_HOST, KEY_INTERNAL_HTTP, KEY_EXTERNAL_HTTP,
+				KEY_INTERNAL_RTSP, KEY_EXTERNAL_RTSP},
 				KEY_ID + "=?", new String[] { String.valueOf(id) }, null, null, null, null);
 		if (cursor != null)
 		{
 			if (cursor.moveToFirst())
 			{
 				evercamCamera = new EvercamCamera();
-				evercamCamera.setId(Integer.parseInt(cursor.getString(0)));
-				evercamCamera.setCameraId(cursor.getString(1));
-				evercamCamera.setName(cursor.getString(2));
-				evercamCamera.setOwner(cursor.getString(3));
-				evercamCamera.setUsername(cursor.getString(4));
-				evercamCamera.setPassword(cursor.getString(5));
-				evercamCamera.setTimezone(cursor.getString(6));
-				evercamCamera.setVendor(cursor.getString(7));
-				evercamCamera.setModel(cursor.getString(8));
-				evercamCamera.setMac(cursor.getString(9));
-				evercamCamera.setExternalSnapshotUrl(cursor.getString(10));
-				evercamCamera.setInternalSnapshotUrl(cursor.getString(11));
-				evercamCamera.setExternalRtspUrl(cursor.getString(12));
-				evercamCamera.setInternalRtspUrl(cursor.getString(13));
-				evercamCamera.setStatus(cursor.getString(14));
-				evercamCamera.setHasCredentials(cursor.getInt(15) == 1);
+				evercamCamera = getCameraFromCursor(cursor,evercamCamera);
 			}
 			cursor.close();
 		}
@@ -148,6 +146,14 @@ public class DbCamera extends DatabaseMaster
 				new String[] { String.valueOf(evercamCamera.getId()) });
 		db.close();
 	}
+	
+	public void deleteCamera(String cameraId)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.delete(TABLE_CAMERA, KEY_ID + " = ?",
+				new String[] { cameraId });
+		db.close();
+	}
 
 	public void deleteCameraByOwner(String ownerUsername)
 	{
@@ -184,6 +190,12 @@ public class DbCamera extends DatabaseMaster
 		values.put(KEY_EXTERNAL_RTSP_URL, evercamCamera.getExternalRtspUrl());
 		values.put(KEY_INTERNAL_RTSP_URL, evercamCamera.getInternalRtspUrl());
 		values.put(KEY_HAS_CREDENTIAL, evercamCamera.getHasCredentialsInt());
+		values.put(KEY_INTERNAL_HOST, evercamCamera.getInternalHost());
+		values.put(KEY_EXTERNAL_HOST, evercamCamera.getExternalHost());
+		values.put(KEY_INTERNAL_HTTP, evercamCamera.getInternalHttp());
+		values.put(KEY_EXTERNAL_HTTP, evercamCamera.getExternalHttp());
+		values.put(KEY_INTERNAL_RTSP, evercamCamera.getInternalRtsp());
+		values.put(KEY_EXTERNAL_RTSP, evercamCamera.getExternalRtsp());
 
 		return values;
 	}
@@ -201,22 +213,7 @@ public class DbCamera extends DatabaseMaster
 			do
 			{
 				EvercamCamera evercamCamera = new EvercamCamera();
-				evercamCamera.setId(Integer.parseInt(cursor.getString(0)));
-				evercamCamera.setCameraId(cursor.getString(1));
-				evercamCamera.setName(cursor.getString(2));
-				evercamCamera.setOwner(cursor.getString(3));
-				evercamCamera.setUsername(cursor.getString(4));
-				evercamCamera.setPassword(cursor.getString(5));
-				evercamCamera.setTimezone(cursor.getString(6));
-				evercamCamera.setVendor(cursor.getString(7));
-				evercamCamera.setModel(cursor.getString(8));
-				evercamCamera.setMac(cursor.getString(9));
-				evercamCamera.setExternalSnapshotUrl(cursor.getString(10));
-				evercamCamera.setInternalSnapshotUrl(cursor.getString(11));
-				evercamCamera.setExternalRtspUrl(cursor.getString(12));
-				evercamCamera.setInternalRtspUrl(cursor.getString(13));
-				evercamCamera.setStatus(cursor.getString(14));
-				evercamCamera.setHasCredentials(cursor.getInt(15) == 1);
+				evercamCamera = getCameraFromCursor(cursor, evercamCamera);
 
 				cameraList.add(evercamCamera);
 				count++;
@@ -227,5 +224,33 @@ public class DbCamera extends DatabaseMaster
 		db.close();
 
 		return cameraList;
+	}
+	
+	private EvercamCamera getCameraFromCursor(Cursor cursor, EvercamCamera evercamCamera)
+	{
+		evercamCamera.setId(Integer.parseInt(cursor.getString(0)));
+		evercamCamera.setCameraId(cursor.getString(1));
+		evercamCamera.setName(cursor.getString(2));
+		evercamCamera.setOwner(cursor.getString(3));
+		evercamCamera.setUsername(cursor.getString(4));
+		evercamCamera.setPassword(cursor.getString(5));
+		evercamCamera.setTimezone(cursor.getString(6));
+		evercamCamera.setVendor(cursor.getString(7));
+		evercamCamera.setModel(cursor.getString(8));
+		evercamCamera.setMac(cursor.getString(9));
+		evercamCamera.setExternalSnapshotUrl(cursor.getString(10));
+		evercamCamera.setInternalSnapshotUrl(cursor.getString(11));
+		evercamCamera.setExternalRtspUrl(cursor.getString(12));
+		evercamCamera.setInternalRtspUrl(cursor.getString(13));
+		evercamCamera.setStatus(cursor.getString(14));
+		evercamCamera.setHasCredentials(cursor.getInt(15) == 1);
+		evercamCamera.setInternalHost(cursor.getString(16));
+		evercamCamera.setExternalHost(cursor.getString(17));
+		evercamCamera.setInternalHttp(cursor.getInt(18));
+		evercamCamera.setExternalHttp(cursor.getInt(19));
+		evercamCamera.setInternalRtsp(cursor.getInt(20));
+		evercamCamera.setExternalRtsp(cursor.getInt(21));
+		
+		return evercamCamera;
 	}
 }

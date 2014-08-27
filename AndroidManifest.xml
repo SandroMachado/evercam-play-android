@@ -150,7 +150,7 @@
         </receiver>
 
         <activity
-            android:name=".AddCameraActivity"
+            android:name=".AddEditCameraActivity"
             android:label="@string/title_activity_add_camera"
             android:logo="@drawable/icon_192x192"
             android:windowSoftInputMode="stateHidden" >

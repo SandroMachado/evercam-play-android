@@ -2,7 +2,7 @@ package io.evercam.androidapp.video;
 
 import io.evercam.Camera;
 import io.evercam.EvercamException;
-import io.evercam.androidapp.AddCameraActivity;
+import io.evercam.androidapp.AddEditCameraActivity;
 import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.ParentActivity;
@@ -391,7 +391,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				
 			case R.id.video_menu_edit_camera:
 				
-				Intent editIntent = new Intent(VideoActivity.this, AddCameraActivity.class);
+				Intent editIntent = new Intent(VideoActivity.this, AddEditCameraActivity.class);
 				editIntent.putExtra(Constants.KEY_IS_EDIT, true);
 				startActivity(editIntent);
 				

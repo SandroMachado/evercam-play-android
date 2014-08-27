@@ -10,10 +10,12 @@ import io.evercam.CameraBuilder;
 import io.evercam.Defaults;
 import io.evercam.EvercamException;
 import io.evercam.Model;
+import io.evercam.PatchCameraBuilder;
 import io.evercam.Vendor;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.tasks.AddCameraTask;
+import io.evercam.androidapp.tasks.PatchCameraTask;
 import io.evercam.androidapp.tasks.TestSnapshotTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
@@ -36,9 +38,9 @@ import android.widget.Spinner;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class AddCameraActivity extends Activity
+public class AddEditCameraActivity extends Activity
 {
-	private final String TAG = "evercamplay-AddCameraActivity";
+	private final String TAG = "evercamplay-AddEditCameraActivity";
 	private EditText cameraIdEdit;
 	private EditText cameraNameEdit;
 	private Spinner vendorSpinner;
@@ -52,7 +54,7 @@ public class AddCameraActivity extends Activity
 	private EditText internalHttpEdit;
 	private EditText internalRtspEdit;
 	private EditText jpgUrlEdit;
-	private Button addButton;
+	private Button addEditButton;
 	private Button testButton;
 	private TreeMap<String, String> vendorMap;
 	private TreeMap<String, String> vendorMapIdAsKey;
@@ -69,22 +71,25 @@ public class AddCameraActivity extends Activity
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
-		
+
 		EvercamApiHelper.setEvercamDeveloperKeypair(this);
-		
+
 		Bundle bundle = getIntent().getExtras();
-		//Edit Camera
-		if(bundle != null && bundle.containsKey(Constants.KEY_IS_EDIT))
+		// Edit Camera
+		if (bundle != null && bundle.containsKey(Constants.KEY_IS_EDIT))
 		{
-			EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_edit_camera));
+			EvercamPlayApplication
+					.sendScreenAnalytics(this, getString(R.string.screen_edit_camera));
 			cameraEdit = VideoActivity.evercamCamera;
+
+			getActionBar().setTitle(R.string.title_edit_camera);
 		}
-		else //Add Camera
+		else
+		// Add Camera
 		{
 			EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_add_camera));
-			
-			// Get camera object from the previous activity before initial screen
-			// elements
+
+			// Get camera object from video activity before initial screen
 			discoveredCamera = (DiscoveredCamera) getIntent().getSerializableExtra("camera");
 		}
 
@@ -94,6 +99,8 @@ public class AddCameraActivity extends Activity
 		initialScreen();
 
 		fillDiscoveredCameraDetails(discoveredCamera);
+
+		fillEditCameraDetails(cameraEdit);
 
 	}
 
@@ -134,9 +141,17 @@ public class AddCameraActivity extends Activity
 		internalHttpEdit = (EditText) findViewById(R.id.add_internal_http_edit);
 		internalRtspEdit = (EditText) findViewById(R.id.add_internal_rtsp_edit);
 		jpgUrlEdit = (EditText) findViewById(R.id.add_jpg_edit);
-		addButton = (Button) findViewById(R.id.button_add_camera);
+		addEditButton = (Button) findViewById(R.id.button_add_edit_camera);
 		testButton = (Button) findViewById(R.id.button_test_snapshot);
 
+		if (cameraEdit != null)
+		{
+			addEditButton.setText(getString(R.string.save_changes));
+		}
+		else
+		{
+			addEditButton.setText(getString(R.string.finish_and_add));
+		}
 		buildVendorSpinner(null);
 		buildModelSpinner(null);
 
@@ -182,7 +197,10 @@ public class AddCameraActivity extends Activity
 
 				if (position == 0)
 				{
-					clearDefaults();
+					if (cameraEdit == null)
+					{
+						clearDefaults();
+					}
 				}
 				else
 				{
@@ -199,19 +217,35 @@ public class AddCameraActivity extends Activity
 			{
 			}
 		});
-		addButton.setOnClickListener(new OnClickListener(){
+		addEditButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v)
 			{
-				CameraBuilder cameraBuilder = buildCameraWithLocalCheck();
-				if (cameraBuilder != null)
+				if (addEditButton.getText().equals(getString(R.string.save_changes)))
 				{
-					new AddCameraTask(cameraBuilder.build(), AddCameraActivity.this)
-							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					PatchCameraBuilder patchCameraBuilder = buildPatchCameraWithLocalCheck();
+					if (patchCameraBuilder != null)
+					{
+						new PatchCameraTask(patchCameraBuilder.build(), AddEditCameraActivity.this)
+								.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					}
+					else
+					{
+						Log.e(TAG, "Camera to patch is null");
+					}
 				}
 				else
 				{
-					Log.e(TAG, "Camera is null");
+					CameraBuilder cameraBuilder = buildCameraWithLocalCheck();
+					if (cameraBuilder != null)
+					{
+						new AddCameraTask(cameraBuilder.build(), AddEditCameraActivity.this)
+								.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					}
+					else
+					{
+						Log.e(TAG, "Camera to add is null");
+					}
 				}
 			}
 		});
@@ -243,44 +277,53 @@ public class AddCameraActivity extends Activity
 				externalRtspEdit.setText(String.valueOf(camera.getExtrtsp()));
 			}
 			internalHostEdit.setText(camera.getIP());
-			if(camera.hasHTTP())
+			if (camera.hasHTTP())
 			{
 				internalHttpEdit.setText(String.valueOf(camera.getHttp()));
 			}
-			if(camera.hasRTSP())
+			if (camera.hasRTSP())
 			{
 				internalRtspEdit.setText(String.valueOf(camera.getRtsp()));
 			}
 		}
 	}
-	
+
 	private void fillEditCameraDetails(EvercamCamera camera)
 	{
-		//TODO
-//		if(cameraEdit != null)
-//		{
-//			cameraIdEdit.setText(camera.getCameraId());
-//			cameraNameEdit.setText(camera.getName());
-//			usernameEdit.setText(camera.getUsername());
-//			passwordEdit.setText(camera.getPassword());
-//
-//				externalHostEdit.setText(camera.getE);
-//
-//				externalHttpEdit.setText(String.valueOf(camera.get));
-//
-//				externalRtspEdit.setText(String.valueOf(camera.getExtrtsp()));
-//
-//			internalHostEdit.setText(camera.getIP());
-//
-//				internalHttpEdit.setText(String.valueOf(camera.getHttp()));
-//
-//				internalRtspEdit.setText(String.valueOf(camera.getRtsp()));
-//			
-//		}
+		if (camera != null)
+		{
+			cameraIdEdit.setText(camera.getCameraId());
+			cameraNameEdit.setText(camera.getName());
+			usernameEdit.setText(camera.getUsername());
+			passwordEdit.setText(camera.getPassword());
+			jpgUrlEdit.setText(camera.getJpgPath());
+			externalHostEdit.setText(camera.getExternalHost());
+			internalHostEdit.setText(camera.getInternalHost());
+			int externalHttp = camera.getExternalHttp();
+			int externalRtsp = camera.getExternalRtsp();
+			int internalHttp = camera.getInternalHttp();
+			int internalRtsp = camera.getInternalRtsp();
+			if (externalHttp != 0)
+			{
+				externalHttpEdit.setText(String.valueOf(externalHttp));
+			}
+			if (externalRtsp != 0)
+			{
+				externalRtspEdit.setText(String.valueOf(externalRtsp));
+			}
+			if (internalHttp != 0)
+			{
+				internalHttpEdit.setText(String.valueOf(camera.getInternalHttp()));
+			}
+			if (internalRtsp != 0)
+			{
+				internalRtspEdit.setText(String.valueOf(camera.getInternalRtsp()));
+			}
+		}
 	}
 
 	/**
-	 * Read and validate user input from user interface.
+	 * Read and validate user input for add camera.
 	 */
 	private CameraBuilder buildCameraWithLocalCheck()
 	{
@@ -341,10 +384,10 @@ public class AddCameraActivity extends Activity
 		}
 		else
 		{
-			if(!internalHost.isEmpty())
+			if (!internalHost.isEmpty())
 			{
 				cameraBuilder.setInternalHost(internalHost);
-				
+
 				String internalHttp = internalHttpEdit.getText().toString();
 				if (!internalHttp.isEmpty())
 				{
@@ -359,10 +402,10 @@ public class AddCameraActivity extends Activity
 					cameraBuilder.setInternalRtspPort(internalRtspInt);
 				}
 			}
-			if(!externalHost.isEmpty())
+			if (!externalHost.isEmpty())
 			{
 				cameraBuilder.setExternalHost(externalHost);
-				
+
 				String externalHttp = externalHttpEdit.getText().toString();
 				if (!externalHttp.isEmpty())
 				{
@@ -376,10 +419,100 @@ public class AddCameraActivity extends Activity
 					int externalRtspInt = Integer.valueOf(externalRtsp);
 					cameraBuilder.setExternalRtspPort(externalRtspInt);
 				}
-			}		
+			}
 		}
 
 		return cameraBuilder;
+	}
+
+	/**
+	 * Read and validate user input for edit camera.
+	 */
+	private PatchCameraBuilder buildPatchCameraWithLocalCheck()
+	{
+		PatchCameraBuilder patchCameraBuilder = null;
+
+		try
+		{
+			patchCameraBuilder = new PatchCameraBuilder(cameraEdit.getCameraId());
+		}
+		catch (EvercamException e)
+		{
+			Log.e(TAG, e.toString());
+		}
+
+		String cameraName = cameraNameEdit.getText().toString();
+		if (cameraName.isEmpty())
+		{
+			CustomToast.showInCenter(this, getString(R.string.name_required));
+			return null;
+		}
+		else if (!cameraName.equals(cameraEdit.getName()))
+		{
+			patchCameraBuilder.setName(cameraName);
+		}
+
+		String vendorId = getVendorIdFromSpinner();
+		patchCameraBuilder.setVendor(vendorId);
+
+		String modelId = getModelIdFromSpinner();
+		patchCameraBuilder.setModel(modelId);
+
+		String username = usernameEdit.getText().toString();
+		if (!username.equals(cameraEdit.getUsername()))
+		{
+			patchCameraBuilder.setCameraUsername(username);
+		}
+
+		String password = passwordEdit.getText().toString();
+		if (!password.equals(cameraEdit.getPassword()))
+		{
+			patchCameraBuilder.setCameraPassword(password);
+		}
+
+		String externalHost = externalHostEdit.getText().toString();
+		String internalHost = internalHostEdit.getText().toString();
+		if (externalHost.isEmpty() && internalHost.isEmpty())
+		{
+			CustomToast.showInCenter(this, getString(R.string.host_required));
+			return null;
+		}
+		else
+		{
+			patchCameraBuilder.setInternalHost(internalHost);
+
+			String internalHttp = internalHttpEdit.getText().toString();
+			if (!internalHttp.isEmpty())
+			{
+				int internalHttpInt = Integer.valueOf(internalHttp);
+				patchCameraBuilder.setInternalHttpPort(internalHttpInt);
+			}
+
+			String internalRtsp = internalRtspEdit.getText().toString();
+			if (!internalRtsp.isEmpty())
+			{
+				int internalRtspInt = Integer.valueOf(internalRtsp);
+				patchCameraBuilder.setInternalRtspPort(internalRtspInt);
+			}
+
+			patchCameraBuilder.setExternalHost(externalHost);
+
+			String externalHttp = externalHttpEdit.getText().toString();
+			if (!externalHttp.isEmpty())
+			{
+				int externalHttpInt = Integer.valueOf(externalHttp);
+				patchCameraBuilder.setExternalHttpPort(externalHttpInt);
+			}
+
+			String externalRtsp = externalRtspEdit.getText().toString();
+			if (!externalRtsp.isEmpty())
+			{
+				int externalRtspInt = Integer.valueOf(externalRtsp);
+				patchCameraBuilder.setExternalRtspPort(externalRtspInt);
+			}
+		}
+
+		return patchCameraBuilder;
 	}
 
 	private void buildVendorSpinner(ArrayList<Vendor> vendorList)
@@ -388,7 +521,7 @@ public class AddCameraActivity extends Activity
 		{
 			vendorMap = new TreeMap<String, String>();
 		}
-		
+
 		if (vendorMapIdAsKey == null)
 		{
 			vendorMapIdAsKey = new TreeMap<String, String>();
@@ -401,7 +534,7 @@ public class AddCameraActivity extends Activity
 				try
 				{
 					vendorMap.put(vendor.getName(), vendor.getId());
-					vendorMapIdAsKey.put(vendor.getId(),vendor.getName());
+					vendorMapIdAsKey.put(vendor.getId(), vendor.getName());
 				}
 				catch (EvercamException e)
 				{
@@ -419,9 +552,9 @@ public class AddCameraActivity extends Activity
 		spinnerArrayAdapter.setDropDownViewResource(R.layout.country_spinner);
 
 		int selectedPosition = 0;
-		if(discoveredCamera != null)
+		if (discoveredCamera != null)
 		{
-			if(discoveredCamera.hasVendor())
+			if (discoveredCamera.hasVendor())
 			{
 				String vendorId = discoveredCamera.getVendor();
 				String vendorName = vendorMapIdAsKey.get(vendorId);
@@ -429,7 +562,7 @@ public class AddCameraActivity extends Activity
 			}
 		}
 		vendorSpinner.setAdapter(spinnerArrayAdapter);
-		
+
 		if (selectedPosition != 0)
 		{
 			vendorSpinner.setSelection(selectedPosition);
@@ -478,7 +611,8 @@ public class AddCameraActivity extends Activity
 				android.R.layout.simple_spinner_item, fullModelArray);
 		spinnerArrayAdapter.setDropDownViewResource(R.layout.country_spinner);
 		modelSpinner.setAdapter(spinnerArrayAdapter);
-		modelSpinner.setSelection(spinnerArrayAdapter.getPosition(getString(R.string.model_default)));
+		modelSpinner.setSelection(spinnerArrayAdapter
+				.getPosition(getString(R.string.model_default)));
 	}
 
 	private void fillDefaults(Model model)

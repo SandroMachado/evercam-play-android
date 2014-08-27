@@ -107,7 +107,7 @@ public class ScanActivity extends Activity
 					if (camera.getIP().equals(cameraIp))
 					{
 						Intent intentAddCamera = new Intent(ScanActivity.this,
-								AddCameraActivity.class);
+								AddEditCameraActivity.class);
 						intentAddCamera.putExtra("camera", camera);
 						startActivityForResult(intentAddCamera, Constants.REQUEST_CODE_ADD_CAMERA);
 					}
@@ -134,7 +134,7 @@ public class ScanActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				startActivityForResult(new Intent(ScanActivity.this, AddCameraActivity.class),
+				startActivityForResult(new Intent(ScanActivity.this, AddEditCameraActivity.class),
 						Constants.REQUEST_CODE_ADD_CAMERA);
 			}
 		});
@@ -164,7 +164,7 @@ public class ScanActivity extends Activity
 		}
 	}
 
-	// Finish this activity and transfer the result from AddCameraActivity to
+	// Finish this activity and transfer the result from AddEditCameraActivity to
 	// CamerasActivity.
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)

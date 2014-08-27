@@ -17,7 +17,9 @@
     <string name="http_port">HTTP Port</string>
     <string name="rtsp_port">RTSP Port</string>
     <string name="finish_and_add">Finish &amp; Add</string>
+    <string name="save_changes">Save Changes</string>
     <string name="test">Test</string>
+    <string name="title_edit_camera">Edit Camera</string>
     
     <string name="hint_id">roof-cam</string>
     <string name="hint_name">Rooftop Camera</string>
@@ -39,6 +41,7 @@
     <string name="name_required">Camera friendly name required</string>
     <string name="creating_camera">Creating camera&#8230;</string>
     <string name="create_success">Camera created!</string>
+    <string name="patch_success">Settings updated successfully!</string>
     <string name="unknown_error">Unknown error, please contact support.</string>
     <string name="host_required">You must specify either internal or external host address.</string>
     <string name="external_http_required">HTTP port required.</string>
