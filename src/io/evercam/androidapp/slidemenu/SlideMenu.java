@@ -57,8 +57,8 @@ import android.widget.TextView;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.R.color;
 import io.evercam.androidapp.dal.*;
+import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.CameraNotification;
-import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.CLog;
 
 public class SlideMenu extends LinearLayout

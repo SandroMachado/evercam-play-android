@@ -7,9 +7,12 @@ import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.dal.DbCamera;
+import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.EvercamCamera;
-import io.evercam.androidapp.utils.AppData;
+import io.evercam.androidapp.utils.Constants;
+import io.evercam.androidapp.video.VideoActivity;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -51,19 +54,14 @@ public class PatchCameraTask extends AsyncTask<Void, Void, EvercamCamera>
 			CustomToast.showInBottom(activity, R.string.patch_success);
 			
 			/**
-			 * Successfully added a camera, so refresh camera list.
+			 * Successfully updated camera, update saved camera,
+			 * show camera live view,
+			 * and finish edit camera activity
 			 */
-//			Intent returnIntent = new Intent();
-//			activity.setResult(Constants.RESULT_TRUE,returnIntent);
-//			activity.finish();
-			
-			/**
-			 * Successfully added camera, show camera live view
-			 * and finish add camera activity
-			 */
-//			VideoActivity.startPlayingVideoForCamera(activity,
-//					evercamCamera.getCameraId());
-//			activity.finish();
+			VideoActivity.startingCameraID = evercamCamera.getCameraId();
+			VideoActivity.evercamCamera = evercamCamera;
+			activity.setResult(Constants.RESULT_TRUE);
+			activity.finish();
 		}
 		else
 		{

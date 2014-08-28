@@ -2,12 +2,13 @@ package io.evercam.androidapp.dal;
 
 import java.util.ArrayList;
 
+import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.EvercamCamera;
-import io.evercam.androidapp.utils.AppData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class DbCamera extends DatabaseMaster
 {
@@ -54,17 +55,17 @@ public class DbCamera extends DatabaseMaster
 				+ " TEXT NULL" + "," + KEY_MAC + " TEXT NULL " + "," + KEY_EXTERNAL_JPG_URL
 				+ " TEXT NULL " + "," + KEY_INTERNAL_JPG_URL + " TEXT NULL " + ","
 				+ KEY_EXTERNAL_RTSP_URL + " TEXT NULL" + "," + KEY_INTERNAL_RTSP_URL + " TEXT NULL"
-				+ "," + KEY_STATUS + " TEXT NULL" + "," + KEY_HAS_CREDENTIAL + " INT NULL" + ","
+				+ "," + KEY_STATUS + " TEXT NULL" + "," + KEY_HAS_CREDENTIAL + " INTEGER NULL" + ","
 				+ KEY_INTERNAL_HOST + " TEXT NULL" + "," + KEY_EXTERNAL_HOST + " TEXT NULL" + ","
-				+ KEY_INTERNAL_HTTP + "INT NULL" + "," + KEY_EXTERNAL_HTTP + " INT NULL" + ","
-				+ KEY_INTERNAL_RTSP + "INT NULL" + "," + KEY_EXTERNAL_RTSP + " INT NULL" + ","
-				+ "CONSTRAINT uniqueCamAndUser UNIQUE (" + KEY_CAMERA_ID + ", " + KEY_OWNER + ")"
+				+ KEY_INTERNAL_HTTP + " INTEGER NULL" + "," + KEY_EXTERNAL_HTTP + " INTEGER NULL" + ","
+				+ KEY_INTERNAL_RTSP + " INTEGER NULL" + "," + KEY_EXTERNAL_RTSP + " INTEGER NULL" 
+				//+ ","+ "CONSTRAINT uniqueCamAndUser UNIQUE (" + KEY_CAMERA_ID + ", " + KEY_OWNER + ")"
 				+ ")";
 		db.execSQL(CREATE_TABLE_Cameras);
 	}
 
 	public void onUpgradeCustom(SQLiteDatabase db, int oldVersion, int newVersion)
-	{
+	{	
 		// Drop older table if existed
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_CAMERA);
 

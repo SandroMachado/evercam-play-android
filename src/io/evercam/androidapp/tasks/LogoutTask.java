@@ -3,8 +3,8 @@ package io.evercam.androidapp.tasks;
 import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.MainActivity;
 import io.evercam.androidapp.dal.DbAppUser;
+import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
-import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.PrefsManager;
 
 import java.util.List;

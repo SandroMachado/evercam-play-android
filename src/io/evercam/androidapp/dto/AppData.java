@@ -1,7 +1,5 @@
-package io.evercam.androidapp.utils;
+package io.evercam.androidapp.dto;
 
-import io.evercam.androidapp.dto.AppUser;
-import io.evercam.androidapp.dto.EvercamCamera;
 
 import java.util.ArrayList;
 import java.util.List;

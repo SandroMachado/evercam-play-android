@@ -2,6 +2,7 @@ package io.evercam.androidapp.utils;
 
 import org.xmlpull.v1.XmlPullParserException;
 
+import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.ImageRecord;
 import io.evercam.androidapp.exceptions.*;
 import io.evercam.androidapp.utils.Commons;

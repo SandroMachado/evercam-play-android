@@ -2,7 +2,6 @@ package io.evercam.androidapp.dto;
 
 import io.evercam.Camera;
 import io.evercam.EvercamException;
-import io.evercam.androidapp.utils.AppData;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -393,7 +392,7 @@ public class EvercamCamera
 				&& internalSnapshotUrl.equals(other.internalSnapshotUrl) && mac.equals(other.mac)
 				&& model.equals(other.model) && name.equals(other.name)
 				&& owner.equals(other.owner) && password.equals(other.password)
-				&& status.equals(other.status) && timezone.equals(other.timezone)
+				&& timezone.equals(other.timezone)
 				&& username.equals(other.username) && vendor.equals(other.vendor)
 			    && internalHost.equals(other.internalHost) && externalHost.equals(other.externalHost)
 			    && internalHttp == other.internalHttp && externalHttp == other.externalHttp

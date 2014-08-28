@@ -9,9 +9,9 @@ import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbAppUser;
+import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
-import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamApiHelper;
 import io.evercam.androidapp.utils.PrefsManager;
@@ -196,7 +196,7 @@ public class LoginActivity extends ParentActivity
 				}
 				else
 				{
-					// Do nothing, show alert dialog in onPostExecute
+					
 				}
 			}
 			return false;
@@ -233,6 +233,8 @@ public class LoginActivity extends ParentActivity
 				}
 				else
 				{
+					EvercamPlayApplication.sendEventAnalytics(LoginActivity.this, R.string.category_error,
+							R.string.action_error_login, R.string.label_error_login);
 					CustomedDialog.showUnexpectedErrorDialog(LoginActivity.this);
 				}
 

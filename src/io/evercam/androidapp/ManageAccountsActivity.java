@@ -8,9 +8,9 @@ import io.evercam.androidapp.custom.CustomAdapter;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.*;
+import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
-import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.androidapp.utils.PropertyReader;
@@ -199,7 +199,7 @@ public class ManageAccountsActivity extends ParentActivity
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
+			BugSenseHandler.startSession(this);
 		}
 	}
 
@@ -210,7 +210,7 @@ public class ManageAccountsActivity extends ParentActivity
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
+			BugSenseHandler.closeSession(this);
 		}
 	}
 
@@ -365,6 +365,8 @@ public class ManageAccountsActivity extends ParentActivity
 		{
 			Log.e(TAG, e.toString());
 			BugSenseHandler.sendException(e);
+			EvercamPlayApplication.sendEventAnalytics(this, R.string.category_error,
+					R.string.action_error_manage_account, R.string.label_error_set_default);
 			CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
 		}
 
@@ -530,6 +532,8 @@ public class ManageAccountsActivity extends ParentActivity
 				}
 				else
 				{
+					EvercamPlayApplication.sendEventAnalytics(ManageAccountsActivity.this, R.string.category_error,
+							R.string.action_error_manage_account, R.string.label_error_login);
 					CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
 				}
 

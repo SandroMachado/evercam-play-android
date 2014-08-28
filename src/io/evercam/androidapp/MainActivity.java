@@ -2,9 +2,9 @@ package io.evercam.androidapp;
 
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbAppUser;
+import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
-import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
 
@@ -32,8 +32,6 @@ public class MainActivity extends Activity
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		try
-		{
 			super.onCreate(savedInstanceState);
 
 			if (Constants.isAppTrackingEnabled)
@@ -44,28 +42,12 @@ public class MainActivity extends Activity
 			setContentView(R.layout.mainactivitylayout);
 
 			startApplication();
-
-		}
-		catch (Exception ex)
-		{
-			CustomedDialog.showUnexpectedErrorDialog(MainActivity.this);
-			Log.e(TAG, Log.getStackTraceString(ex));
-		}
 	}
 
 	private void startApplication()
 	{
-		try
-		{
 			new MainCheckInternetTask(MainActivity.this)
 					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		}
-		catch (Exception ex)
-		{
-			BugSenseHandler.sendException(ex);
-			CustomedDialog.showUnexpectedErrorDialog(MainActivity.this);
-			Log.e(TAG, Log.getStackTraceString(ex));
-		}
 	}
 
 	private void startCamerasActivity()
@@ -117,8 +99,10 @@ public class MainActivity extends Activity
 		}
 	}
 
-	private boolean isUserLogged() throws Exception
+	private boolean isUserLogged()
 	{
+		try
+		{
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		String defaultEmail = PrefsManager.getUserEmail(sharedPrefs);
 		if (defaultEmail != null)
@@ -127,7 +111,15 @@ public class MainActivity extends Activity
 			AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
 			AppData.defaultUser = defaultUser;
 		}
-
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, Log.getStackTraceString(e));
+			BugSenseHandler.sendException(e);
+			EvercamPlayApplication.sendEventAnalytics(this, R.string.category_error,
+					R.string.action_error_main, R.string.label_error_islogged);
+			CustomedDialog.showUnexpectedErrorDialog(MainActivity.this);
+		}
 		return (AppData.defaultUser != null);
 	}
 
@@ -142,8 +134,6 @@ public class MainActivity extends Activity
 		@Override
 		protected void onPostExecute(Boolean hasNetwork)
 		{
-			try
-			{
 				if (hasNetwork)
 				{
 					if (isUserLogged())
@@ -160,13 +150,7 @@ public class MainActivity extends Activity
 				{
 					CustomedDialog.showInternetNotConnectDialog(MainActivity.this);
 				}
-			}
-			catch (Exception e)
-			{
-				BugSenseHandler.sendException(e);
-				CustomedDialog.showUnexpectedErrorDialog(MainActivity.this);
-				Log.e(TAG, Log.getStackTraceString(e));
-			}
+
 		}
 	}
 }

@@ -2,7 +2,7 @@ package io.evercam.androidapp.utils;
 
 public final class Constants
 {
-	public static final boolean isAppTrackingEnabled = false;
+	public static final boolean isAppTrackingEnabled = true;
 
 	public static final String bugsense_ApiKey = "560565cb";
 
@@ -21,6 +21,7 @@ public final class Constants
 	 */
 	public static final int REQUEST_CODE_ADD_CAMERA = 1;
 	public static final int REQUEST_CODE_DELETE_CAMERA = 2;
+	public static final int REQUEST_CODE_PATCH_CAMERA = 3;
 	public static final int RESULT_TRUE = 1;
 	public static final int RESULT_FALSE = 0;
 	

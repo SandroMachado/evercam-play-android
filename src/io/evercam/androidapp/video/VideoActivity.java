@@ -5,12 +5,13 @@ import io.evercam.EvercamException;
 import io.evercam.androidapp.AddEditCameraActivity;
 import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
+import io.evercam.androidapp.LoginActivity;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.custom.ProgressView;
+import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.tasks.DeleteCameraTask;
-import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamFile;
@@ -129,7 +130,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 													// activity is showing or
 													// not
 
-	private static String startingCameraID;
+	public static String startingCameraID;
 	private int defaultCameraIndex;
 	// preferences options
 	private String localnetworkSettings = "0";
@@ -150,6 +151,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private boolean end = false; // whether to end this activity or not
 
 	private Handler handler = new MyHandler(this);
+	
+	private boolean editStarted = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -180,13 +183,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 			initialPageElements();
 
-			loadImageFromCache(startingCameraID);
-
-			checkNetworkStatus();
-
-			addCamerasToDropdownActionBar();
-
-			readSetPreferences();
+			startPlay();
 		}
 		catch (OutOfMemoryError e)
 		{
@@ -201,6 +198,18 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			}
 		}
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if(requestCode == Constants.REQUEST_CODE_PATCH_CAMERA)
+		{
+			if(resultCode == Constants.RESULT_TRUE)
+			{
+				startPlay();
+			}
+		}
+	}
 
 	@Override
 	public void onResume()
@@ -209,6 +218,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			super.onResume();
 			this.paused = false;
+			editStarted = false;
 
 			if (optionsActivityStarted)
 			{
@@ -263,6 +273,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			super.onRestart();
 			paused = false;
 			end = false;
+			editStarted = false;
 
 			if (optionsActivityStarted)
 			{
@@ -320,22 +331,20 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	@Override
 	public void onStop()
 	{
-		try
+		super.onStop();
+		releasePlayer();
+		end = true;
+		if (!optionsActivityStarted)
 		{
-			super.onStop();
-			releasePlayer();
-			end = true;
-			if (!optionsActivityStarted)
+			if (imageThread != null)
 			{
-				if (imageThread != null)
-				{
-					this.paused = true;
-				}
-				this.finish();
+				this.paused = true;
 			}
-		}
-		catch (Exception ex)
-		{
+		//Do not finish if user get into edit camera screen. 
+			if(!editStarted)
+			{
+			this.finish();
+			}
 		}
 
 		if (Constants.isAppTrackingEnabled)
@@ -344,7 +353,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		}
 	}
 
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -365,7 +373,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		}
 		return true;
 	}
-	
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
@@ -375,37 +382,39 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			switch (item.getItemId())
 			{
 			case R.id.video_menu_delete_camera:
-				
+
 				CustomedDialog.getConfirmRemoveDialog(VideoActivity.this,
 						new DialogInterface.OnClickListener(){
 
 							@Override
 							public void onClick(DialogInterface warningDialog, int which)
 							{
-								new DeleteCameraTask(evercamCamera.getCameraId(),VideoActivity.this)
-								.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+								new DeleteCameraTask(evercamCamera.getCameraId(),
+										VideoActivity.this)
+										.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 							}
 						}, R.string.msg_confirm_remove_camera).show();
-				
+
 				return true;
-				
+
 			case R.id.video_menu_edit_camera:
-				
+
+				editStarted = true;
 				Intent editIntent = new Intent(VideoActivity.this, AddEditCameraActivity.class);
 				editIntent.putExtra(Constants.KEY_IS_EDIT, true);
-				startActivity(editIntent);
-				
+				startActivityForResult(editIntent,Constants.REQUEST_CODE_PATCH_CAMERA);
+
 				return true;
-				
-//			case R.id.menusettings_video:
-//				optionsActivityStarted = true;
-//				paused = true;
-//				startActivity(new Intent(this, VideoPrefsActivity.class));
-//				mediaPlayerView.setVisibility(View.GONE);
-//
-//				showProgressView();
-//
-//				return true;
+
+				// case R.id.menusettings_video:
+				// optionsActivityStarted = true;
+				// paused = true;
+				// startActivity(new Intent(this, VideoPrefsActivity.class));
+				// mediaPlayerView.setVisibility(View.GONE);
+				//
+				// showProgressView();
+				//
+				// return true;
 			case android.R.id.home:
 				this.finish();
 				return true;
@@ -430,6 +439,17 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			return true;
 		}
 	}
+	
+	private void startPlay()
+	{
+		loadImageFromCache(startingCameraID);
+
+		checkNetworkStatus();
+
+		addCamerasToDropdownActionBar();
+
+		readSetPreferences();
+	}
 
 	public void addCamerasToDropdownActionBar()
 	{
@@ -441,7 +461,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	{
 		startingCameraID = cameraId;
 		Intent intent = new Intent(activity, VideoActivity.class);
-		
+
 		activity.startActivityForResult(intent, Constants.REQUEST_CODE_DELETE_CAMERA);
 
 		return false;
@@ -510,6 +530,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
 			BugSenseHandler.sendException(e);
+			EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_error,
+					R.string.action_error_video, R.string.label_error_play_video);
 			CustomedDialog.showUnexpectedErrorDialog(VideoActivity.this);
 		}
 	}
@@ -1587,18 +1609,19 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 			for (int count = 0; count < AppData.evercamCameraList.size(); count++)
 			{
-				//Disabled online status check in drop down camera list because we want
-				//offline camera show in live view page as well.
-//				if (!AppData.evercamCameraList.get(count).getStatus()
-//						.equalsIgnoreCase(CameraStatus.OFFLINE))
-//				{
-					activeCameras.add(AppData.evercamCameraList.get(count));
-					cameraNames.add(AppData.evercamCameraList.get(count).getName());
-					if (AppData.evercamCameraList.get(count).getCameraId() == startingCameraID)
-					{
-						defaultCameraIndex = cameraNames.size() - 1;
-					}
-	//			}
+				// Disabled online status check in drop down camera list because
+				// we want
+				// offline camera show in live view page as well.
+				// if (!AppData.evercamCameraList.get(count).getStatus()
+				// .equalsIgnoreCase(CameraStatus.OFFLINE))
+				// {
+				activeCameras.add(AppData.evercamCameraList.get(count));
+				cameraNames.add(AppData.evercamCameraList.get(count).getName());
+				if (AppData.evercamCameraList.get(count).getCameraId() == startingCameraID)
+				{
+					defaultCameraIndex = cameraNames.size() - 1;
+				}
+				// }
 			}
 
 			String[] cameraArray = new String[cameraNames.size()];

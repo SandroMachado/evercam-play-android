@@ -8,14 +8,15 @@ import io.evercam.Camera;
 import io.evercam.EvercamException;
 import io.evercam.User;
 import io.evercam.androidapp.CamerasActivity;
+import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.MainActivity;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbCamera;
+import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
-import io.evercam.androidapp.utils.AppData;
 import io.evercam.androidapp.utils.PrefsManager;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -47,6 +48,8 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 		else
 		{
 			CustomedDialog.showUnexpectedErrorDialog(camerasActivity);
+			EvercamPlayApplication.sendEventAnalytics(camerasActivity, R.string.category_error,
+					R.string.action_error_load_camera, R.string.label_error_empty_user);
 			cancel(true);
 		}
 	}
@@ -61,9 +64,9 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 			// Step 1: Load camera list from Evercam
 			Log.d(TAG, "Step 1: Load camera list from Evercam");
 			// FIXME: Time consuming at this line
+			AppData.evercamCameraList = new DbCamera(camerasActivity.getApplicationContext()).getCamerasByOwner(user.getUsername(), 500);
 			ArrayList<Camera> cameras = User.getCameras(user.getUsername(), true);
 			ArrayList<EvercamCamera> evercamCameras = new ArrayList<EvercamCamera>();
-			Log.d(TAG, "Total cameras from Evercam:" + cameras.size());
 			for (io.evercam.Camera camera : cameras)
 			{
 				evercamCameras.add(new EvercamCamera().convertFromEvercam(camera));
@@ -76,7 +79,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 			{
 				if (!AppData.evercamCameraList.contains(camera))
 				{
-					Log.d(TAG, "new camera detected!" + camera.getCameraId());
+					Log.d(TAG, "new camera detected!" + camera.toString() + "\n");
 					updateDB = true;
 					break;
 				}

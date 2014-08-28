@@ -32,6 +32,15 @@
                 android:inputType="text"
                 android:singleLine="true"
                 android:textSize="17sp" />
+            
+            <TextView
+                android:id="@+id/add_id_txt_view"
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="12sp"
+                android:layout_height="wrap_content"
+                android:textSize="17sp" 
+                android:textColor="#ffffff"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <LinearLayout

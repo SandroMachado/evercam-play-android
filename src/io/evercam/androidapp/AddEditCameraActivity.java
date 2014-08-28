@@ -26,6 +26,7 @@ import io.evercam.network.discovery.DiscoveredCamera;
 import com.bugsense.trace.BugSenseHandler;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +36,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -42,6 +45,7 @@ public class AddEditCameraActivity extends Activity
 {
 	private final String TAG = "evercamplay-AddEditCameraActivity";
 	private EditText cameraIdEdit;
+	private TextView cameraIdTextView;
 	private EditText cameraNameEdit;
 	private Spinner vendorSpinner;
 	private Spinner modelSpinner;
@@ -95,6 +99,12 @@ public class AddEditCameraActivity extends Activity
 
 		setContentView(R.layout.activity_add_camera);
 
+		if (this.getActionBar() != null)
+		{
+			this.getActionBar().setHomeButtonEnabled(true);
+			this.getActionBar().setIcon(R.drawable.ic_navigation_back);
+		}
+
 		// Initial UI elements
 		initialScreen();
 
@@ -111,7 +121,7 @@ public class AddEditCameraActivity extends Activity
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
+			BugSenseHandler.startSession(this);
 		}
 	}
 
@@ -122,13 +132,26 @@ public class AddEditCameraActivity extends Activity
 
 		if (Constants.isAppTrackingEnabled)
 		{
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
+			BugSenseHandler.closeSession(this);
 		}
+	}
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+		case android.R.id.home:
+			this.finish();
+			return true;
+		}
+		return true;
 	}
 
 	private void initialScreen()
 	{
 		cameraIdEdit = (EditText) findViewById(R.id.add_id_edit);
+		cameraIdTextView = (TextView) findViewById(R.id.add_id_txt_view);
 		cameraNameEdit = (EditText) findViewById(R.id.add_name_edit);
 		vendorSpinner = (Spinner) findViewById(R.id.vendor_spinner);
 		modelSpinner = (Spinner) findViewById(R.id.model_spinner);
@@ -147,13 +170,15 @@ public class AddEditCameraActivity extends Activity
 		if (cameraEdit != null)
 		{
 			addEditButton.setText(getString(R.string.save_changes));
+			cameraIdEdit.setVisibility(View.GONE);
+			cameraIdTextView.setVisibility(View.VISIBLE);
 		}
 		else
 		{
 			addEditButton.setText(getString(R.string.finish_and_add));
 		}
-		buildVendorSpinner(null);
-		buildModelSpinner(null);
+		buildVendorSpinner(null, null);
+		buildModelSpinner(null, null);
 
 		new RequestVendorListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -164,7 +189,7 @@ public class AddEditCameraActivity extends Activity
 			{
 				if (position == 0)
 				{
-					buildModelSpinner(new ArrayList<String>());
+					buildModelSpinner(new ArrayList<String>(), null);
 				}
 				else
 				{
@@ -194,21 +219,21 @@ public class AddEditCameraActivity extends Activity
 			public void onItemSelected(AdapterView<?> parentView, View selectedItemView,
 					int position, long id)
 			{
-
-				if (position == 0)
+				// Do not update camera defaults in edit screen.
+				if (cameraEdit == null)
 				{
-					if (cameraEdit == null)
+					if (position == 0)
 					{
 						clearDefaults();
 					}
-				}
-				else
-				{
-					String vendorId = getVendorIdFromSpinner();
-					String modelId = getModelIdFromSpinner();
+					else
+					{
+						String vendorId = getVendorIdFromSpinner();
+						String modelId = getModelIdFromSpinner();
 
-					new RequestDefaultsTask(vendorId, modelId)
-							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						new RequestDefaultsTask(vendorId, modelId)
+								.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					}
 				}
 			}
 
@@ -263,7 +288,7 @@ public class AddEditCameraActivity extends Activity
 	{
 		if (camera != null)
 		{
-			Log.d(TAG, camera.toString());
+			// Log.d(TAG, camera.toString());
 			if (camera.hasExternalIp())
 			{
 				externalHostEdit.setText(camera.getExternalIp());
@@ -292,7 +317,8 @@ public class AddEditCameraActivity extends Activity
 	{
 		if (camera != null)
 		{
-			cameraIdEdit.setText(camera.getCameraId());
+			// Log.d(TAG, cameraEdit.toString());
+			cameraIdTextView.setText(camera.getCameraId());
 			cameraNameEdit.setText(camera.getName());
 			usernameEdit.setText(camera.getUsername());
 			passwordEdit.setText(camera.getPassword());
@@ -459,14 +485,11 @@ public class AddEditCameraActivity extends Activity
 		patchCameraBuilder.setModel(modelId);
 
 		String username = usernameEdit.getText().toString();
-		if (!username.equals(cameraEdit.getUsername()))
+		String password = passwordEdit.getText().toString();
+		if (!username.equals(cameraEdit.getUsername())
+				|| !password.equals(cameraEdit.getPassword()))
 		{
 			patchCameraBuilder.setCameraUsername(username);
-		}
-
-		String password = passwordEdit.getText().toString();
-		if (!password.equals(cameraEdit.getPassword()))
-		{
 			patchCameraBuilder.setCameraPassword(password);
 		}
 
@@ -515,7 +538,7 @@ public class AddEditCameraActivity extends Activity
 		return patchCameraBuilder;
 	}
 
-	private void buildVendorSpinner(ArrayList<Vendor> vendorList)
+	private void buildVendorSpinner(ArrayList<Vendor> vendorList, String selectedVendor)
 	{
 		if (vendorMap == null)
 		{
@@ -561,6 +584,10 @@ public class AddEditCameraActivity extends Activity
 				selectedPosition = spinnerArrayAdapter.getPosition(vendorName);
 			}
 		}
+		if (selectedVendor != null)
+		{
+			selectedPosition = spinnerArrayAdapter.getPosition(selectedVendor);
+		}
 		vendorSpinner.setAdapter(spinnerArrayAdapter);
 
 		if (selectedPosition != 0)
@@ -569,7 +596,7 @@ public class AddEditCameraActivity extends Activity
 		}
 	}
 
-	private void buildModelSpinner(ArrayList<String> modelList)
+	private void buildModelSpinner(ArrayList<String> modelList, String selectedModel)
 	{
 		if (modelMap == null)
 		{
@@ -578,28 +605,30 @@ public class AddEditCameraActivity extends Activity
 
 		if (modelList == null)
 		{
+			modelMap.clear();
 			modelSpinner.setEnabled(false);
 		}
 		else
 		{
 			if (modelList.size() == 0)
 			{
+				modelMap.clear();
 				modelSpinner.setEnabled(false);
 			}
 			else
 			{
 				modelSpinner.setEnabled(true);
-			}
 
-			for (String modelId : modelList)
-			{
-				if (modelId.equals("*"))
+				for (String modelId : modelList)
 				{
-					modelMap.put(getString(R.string.model_default), modelId);
-				}
-				else
-				{
-					modelMap.put(modelId, modelId);
+					if (modelId.equals("*"))
+					{
+						modelMap.put(getString(R.string.model_default), modelId);
+					}
+					else
+					{
+						modelMap.put(modelId, modelId);
+					}
 				}
 			}
 		}
@@ -611,8 +640,24 @@ public class AddEditCameraActivity extends Activity
 				android.R.layout.simple_spinner_item, fullModelArray);
 		spinnerArrayAdapter.setDropDownViewResource(R.layout.country_spinner);
 		modelSpinner.setAdapter(spinnerArrayAdapter);
-		modelSpinner.setSelection(spinnerArrayAdapter
-				.getPosition(getString(R.string.model_default)));
+
+		int selectedPosition = 0;
+		if (selectedModel != null)
+		{
+			if (modelMap.get(selectedModel) != null)
+			{
+				selectedPosition = spinnerArrayAdapter.getPosition(selectedModel);
+			}
+		}
+		if (selectedPosition != 0)
+		{
+			modelSpinner.setSelection(selectedPosition);
+		}
+		else
+		{
+			modelSpinner.setSelection(spinnerArrayAdapter
+					.getPosition(getString(R.string.model_default)));
+		}
 	}
 
 	private void fillDefaults(Model model)
@@ -707,7 +752,15 @@ public class AddEditCameraActivity extends Activity
 		{
 			if (vendorList != null)
 			{
-				buildVendorSpinner(vendorList);
+				// If the camera has vendor, show as selected in spinner
+				if (cameraEdit != null && !cameraEdit.getVendor().isEmpty())
+				{
+					buildVendorSpinner(vendorList, cameraEdit.getVendor());
+				}
+				else
+				{
+					buildVendorSpinner(vendorList, null);
+				}
 			}
 			else
 			{
@@ -760,7 +813,14 @@ public class AddEditCameraActivity extends Activity
 		{
 			if (modelList != null)
 			{
-				buildModelSpinner(modelList);
+				if (cameraEdit != null && !cameraEdit.getModel().isEmpty())
+				{
+					buildModelSpinner(modelList, cameraEdit.getModel());
+				}
+				else
+				{
+					buildModelSpinner(modelList, null);
+				}
 			}
 		}
 	}

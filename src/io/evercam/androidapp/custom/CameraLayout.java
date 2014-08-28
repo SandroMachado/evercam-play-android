@@ -150,7 +150,7 @@ public class CameraLayout extends LinearLayout
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			CustomedDialog.showUnexpectedErrorDialog(context);
+			//CustomedDialog.showUnexpectedErrorDialog(context);
 			if (Constants.isAppTrackingEnabled)
 			{
 				BugSenseHandler.sendException(e);
