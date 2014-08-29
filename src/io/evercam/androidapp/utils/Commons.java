@@ -39,6 +39,8 @@ import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.http.AndroidHttpClient;
@@ -47,7 +49,7 @@ import android.util.Log;
 
 public class Commons
 {
-	static String TAG = "Commons";
+	static String TAG = "evercamplay-Commons";
 	static boolean enableLogs = false;
 
 	public static boolean isOnline(Context ctx)
@@ -65,6 +67,20 @@ public class Commons
 			if (enableLogs) Log.e(TAG, ex.toString());
 		}
 		return false;
+	}
+	
+	public static int getAppVersionCode(Context context)
+	{
+		try
+		{
+			PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			return packageInfo.versionCode;
+		}
+		catch (NameNotFoundException e)
+		{
+			Log.e(TAG, e.toString());
+		}
+		return 0;
 	}
 
 	/**

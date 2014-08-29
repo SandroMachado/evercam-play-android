@@ -22,6 +22,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="Ok" />
+        android:text="@string/ok" />
 
 </RelativeLayout>

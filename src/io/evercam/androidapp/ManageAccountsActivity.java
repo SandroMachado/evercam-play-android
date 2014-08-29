@@ -367,6 +367,7 @@ public class ManageAccountsActivity extends ParentActivity
 			BugSenseHandler.sendException(e);
 			EvercamPlayApplication.sendEventAnalytics(this, R.string.category_error,
 					R.string.action_error_manage_account, R.string.label_error_set_default);
+			EvercamPlayApplication.sendCaughtException(this, e);
 			CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
 		}
 
@@ -534,6 +535,7 @@ public class ManageAccountsActivity extends ParentActivity
 				{
 					EvercamPlayApplication.sendEventAnalytics(ManageAccountsActivity.this, R.string.category_error,
 							R.string.action_error_manage_account, R.string.label_error_login);
+					EvercamPlayApplication.sendCaughtException(ManageAccountsActivity.this, getString(R.string.label_error_login));
 					CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
 				}
 

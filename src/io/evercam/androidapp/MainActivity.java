@@ -5,6 +5,7 @@ import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
+import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
 
@@ -27,27 +28,42 @@ import android.util.Log;
  * */
 public class MainActivity extends Activity
 {
-	private static final String TAG = "evercamapp-MainActivity";
+	private static final String TAG = "evercamplay-MainActivity";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-			super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);
 
-			if (Constants.isAppTrackingEnabled)
+		if (Constants.isAppTrackingEnabled)
+		{
+			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
+		}
+
+		setContentView(R.layout.mainactivitylayout);
+
+		int versionCode = Commons.getAppVersionCode(this);
+		boolean isReleaseNotesShown = PrefsManager.isRleaseNotesShown(this, versionCode);
+
+		if (versionCode > 0)
+		{
+			if (isReleaseNotesShown)
 			{
-				BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
+				startApplication();
 			}
-
-			setContentView(R.layout.mainactivitylayout);
-
-			startApplication();
+			else
+			{
+				Intent act = new Intent(MainActivity.this, ReleaseNotesActivity.class);
+				startActivity(act);
+				this.finish();
+			}
+		}
 	}
 
 	private void startApplication()
 	{
-			new MainCheckInternetTask(MainActivity.this)
-					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		new MainCheckInternetTask(MainActivity.this)
+				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
 	private void startCamerasActivity()
@@ -103,14 +119,14 @@ public class MainActivity extends Activity
 	{
 		try
 		{
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		String defaultEmail = PrefsManager.getUserEmail(sharedPrefs);
-		if (defaultEmail != null)
-		{
-			DbAppUser dbUser = new DbAppUser(this);
-			AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
-			AppData.defaultUser = defaultUser;
-		}
+			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+			String defaultEmail = PrefsManager.getUserEmail(sharedPrefs);
+			if (defaultEmail != null)
+			{
+				DbAppUser dbUser = new DbAppUser(this);
+				AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
+				AppData.defaultUser = defaultUser;
+			}
 		}
 		catch (Exception e)
 		{
@@ -118,6 +134,7 @@ public class MainActivity extends Activity
 			BugSenseHandler.sendException(e);
 			EvercamPlayApplication.sendEventAnalytics(this, R.string.category_error,
 					R.string.action_error_main, R.string.label_error_islogged);
+			EvercamPlayApplication.sendCaughtException(this, e);
 			CustomedDialog.showUnexpectedErrorDialog(MainActivity.this);
 		}
 		return (AppData.defaultUser != null);
@@ -134,22 +151,22 @@ public class MainActivity extends Activity
 		@Override
 		protected void onPostExecute(Boolean hasNetwork)
 		{
-				if (hasNetwork)
+			if (hasNetwork)
+			{
+				if (isUserLogged())
 				{
-					if (isUserLogged())
-					{
-						startCamerasActivity();
-					}
-					else
-					{
-						Intent slideIntent = new Intent(MainActivity.this, SlideActivity.class);
-						startActivity(slideIntent);
-					}
+					startCamerasActivity();
 				}
 				else
 				{
-					CustomedDialog.showInternetNotConnectDialog(MainActivity.this);
+					Intent slideIntent = new Intent(MainActivity.this, SlideActivity.class);
+					startActivity(slideIntent);
 				}
+			}
+			else
+			{
+				CustomedDialog.showInternetNotConnectDialog(MainActivity.this);
+			}
 
 		}
 	}

@@ -11,7 +11,6 @@ import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.MainActivity;
 import io.evercam.androidapp.R;
-import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
@@ -47,9 +46,10 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 		}
 		else
 		{
-			CustomedDialog.showUnexpectedErrorDialog(camerasActivity);
 			EvercamPlayApplication.sendEventAnalytics(camerasActivity, R.string.category_error,
 					R.string.action_error_load_camera, R.string.label_error_empty_user);
+			EvercamPlayApplication.sendCaughtException(camerasActivity, camerasActivity.getString(R.string.label_error_empty_user));
+			CustomedDialog.showUnexpectedErrorDialog(camerasActivity);
 			cancel(true);
 		}
 	}

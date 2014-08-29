@@ -405,6 +405,7 @@ public class CamerasActivity extends ParentActivity implements
 			}
 			EvercamPlayApplication.sendEventAnalytics(this, R.string.category_error,
 					R.string.action_error_camera_list, R.string.label_error_resize);
+			EvercamPlayApplication.sendCaughtException(this, e);
 			CustomedDialog.showUnexpectedErrorDialog(CamerasActivity.this);
 		}
 		return false;
@@ -435,6 +436,7 @@ public class CamerasActivity extends ParentActivity implements
 			}
 		EvercamPlayApplication.sendEventAnalytics(this, R.string.category_error,
 				R.string.action_error_camera_list, R.string.label_error_remove_cameras);
+		EvercamPlayApplication.sendCaughtException(this, e);
 			CustomedDialog.showUnexpectedErrorDialog(CamerasActivity.this);
 		}
 		return false;
@@ -497,6 +499,7 @@ public class CamerasActivity extends ParentActivity implements
 			}
 			EvercamPlayApplication.sendEventAnalytics(this, R.string.category_error,
 					R.string.action_error_camera_list, R.string.label_error_add_cameras);
+			EvercamPlayApplication.sendCaughtException(this, e);
 			CustomedDialog.showUnexpectedErrorDialog(CamerasActivity.this);
 		}
 		return false;

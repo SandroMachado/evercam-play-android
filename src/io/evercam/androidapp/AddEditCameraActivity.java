@@ -26,7 +26,6 @@ import io.evercam.network.discovery.DiscoveredCamera;
 import com.bugsense.trace.BugSenseHandler;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;

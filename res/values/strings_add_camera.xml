@@ -40,6 +40,7 @@
     <string name="id_required">You must specify the unique camera ID.</string>
     <string name="name_required">Camera friendly name required</string>
     <string name="creating_camera">Creating camera&#8230;</string>
+    <string name="patching_camera">Updating camera details&#8230;</string>
     <string name="create_success">Camera created!</string>
     <string name="patch_success">Settings updated successfully!</string>
     <string name="unknown_error">Unknown error, please contact support.</string>
@@ -57,6 +58,5 @@
 	<string name="msg_scanning">Scanning for cameras.\n\nPlease be patient,\nthis may take up to a minute&#8230;</string>
 	<string name="msg_no_camera_found">No camera found in your local network.</string>
 	<string name="btn_text_add_manually">Add camera manually</string>
-	
 	
 </resources>

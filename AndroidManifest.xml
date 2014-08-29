@@ -160,6 +160,11 @@
             android:label="@string/title_activity_scan"
             android:logo="@drawable/icon_192x192" >
         </activity>
+        <activity
+            android:name=".ReleaseNotesActivity"
+            android:label="@string/title_release_notes"
+            android:logo="@drawable/icon_192x192" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,6 +1,8 @@
 package io.evercam.androidapp.utils;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 public class PrefsManager
 {
@@ -8,6 +10,7 @@ public class PrefsManager
 	public final static String KEY_USER_API_ID = "userApiId";
 	public final static String KEY_USER_EMAIL = "userEmail";
 	public final static String KEY_CAMERA_PER_ROW = "lstgridcamerasperrow";
+	public final static String KEY_RELEASE_NOTES_SHOWN = "isReleaseNotesShown";
 
 	public static void saveEvercamUserKeyPair(SharedPreferences sharedPrefs, String apiKey,
 			String apiId)
@@ -50,5 +53,22 @@ public class PrefsManager
 	public static int getCameraPerRow(SharedPreferences sharedPrefs, int oldNumber)
 	{
 		return Integer.parseInt(sharedPrefs.getString(KEY_CAMERA_PER_ROW, "" + oldNumber));
+	}
+
+	public static boolean isRleaseNotesShown(Context context, int versionCode)
+	{
+		SharedPreferences sharedPrefs = PreferenceManager
+				.getDefaultSharedPreferences(context);
+		
+		return sharedPrefs.getBoolean(KEY_RELEASE_NOTES_SHOWN + versionCode, false);
+	}
+
+	public static void setReleaseNotesShown(Context context, int versionCode)
+	{
+		SharedPreferences sharedPrefs = PreferenceManager
+				.getDefaultSharedPreferences(context);
+		SharedPreferences.Editor editor = sharedPrefs.edit();
+		editor.putBoolean(KEY_RELEASE_NOTES_SHOWN+ versionCode, true);
+		editor.commit();
 	}
 }

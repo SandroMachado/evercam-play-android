@@ -12,7 +12,6 @@ import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.video.VideoActivity;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -35,7 +34,7 @@ public class PatchCameraTask extends AsyncTask<Void, Void, EvercamCamera>
 	{
 		errorMessage = activity.getString(R.string.unknown_error);
 		customProgressDialog = new CustomProgressDialog(activity);
-		customProgressDialog.show(activity.getString(R.string.creating_camera));
+		customProgressDialog.show(activity.getString(R.string.patching_camera));
 	}
 	
 	@Override

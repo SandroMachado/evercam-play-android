@@ -58,6 +58,7 @@
     <string name="menu_add_camera">Add Camera</string>
     <string name="title_activity_add_camera">Add Camera</string>
     <string name="title_activity_scan">Network Scan</string>
+    <string name="title_release_notes">Release Notes</string>
     
     <string name="menu_delete_camera">Remove Camera</string>
     <string name="menu_edit_camera">Edit Camera</string>

@@ -3,9 +3,7 @@ package io.evercam.androidapp.video;
 import io.evercam.Camera;
 import io.evercam.EvercamException;
 import io.evercam.androidapp.AddEditCameraActivity;
-import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
-import io.evercam.androidapp.LoginActivity;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.custom.ProgressView;
@@ -532,6 +530,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			BugSenseHandler.sendException(e);
 			EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_error,
 					R.string.action_error_video, R.string.label_error_play_video);
+			EvercamPlayApplication.sendCaughtException(this, e);
 			CustomedDialog.showUnexpectedErrorDialog(VideoActivity.this);
 		}
 	}
