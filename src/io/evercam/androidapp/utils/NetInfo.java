@@ -13,7 +13,7 @@ public class NetInfo
 	private String netmaskIp = EMPTY_IP;
 	private String gatewayIp = EMPTY_IP;
 	public static final String EMPTY_IP = "0.0.0.0";
-	
+
 	public NetInfo(Context context)
 	{
 		WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
@@ -25,7 +25,7 @@ public class NetInfo
 			gatewayIp = IpTranslator.getIpFromIntSigned(wifi.getDhcpInfo().gateway);
 		}
 	}
-	
+
 	// Check WiFi connection
 	public boolean isWifiConnected(Context context)
 	{
@@ -50,7 +50,7 @@ public class NetInfo
 	{
 		return netmaskIp;
 	}
-	
+
 	public String getGatewayIp()
 	{
 		return gatewayIp;

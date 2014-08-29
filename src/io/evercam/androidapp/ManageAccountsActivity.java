@@ -310,7 +310,7 @@ public class ManageAccountsActivity extends ParentActivity
 			CustomToast.showInCenter(this, R.string.error_invalid_password);
 			return;
 		}
-		
+
 		AddAccountTask task = new AddAccountTask(username, password, isDefault, alertDialog);
 		task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
@@ -333,8 +333,8 @@ public class ManageAccountsActivity extends ParentActivity
 						user.setIsDefault(true);
 						dbUser.updateAppUser(user);
 						PrefsManager.saveUserEmail(PreferenceManager
-								.getDefaultSharedPreferences(ManageAccountsActivity.this),
-								user.getEmail());
+								.getDefaultSharedPreferences(ManageAccountsActivity.this), user
+								.getEmail());
 						AppData.defaultUser = user;
 					}
 				}
@@ -346,20 +346,20 @@ public class ManageAccountsActivity extends ParentActivity
 			}
 
 			AppData.appUsers = dbUser.getAllAppUsers(1000);
-			
-			if (closeActivity)
-				{
-					ManageAccountsActivity.this.finish();
-				}
-				else
-				{
-					showAllAccounts();
-				}
 
-				if (dialogToDismiss != null && dialogToDismiss.isShowing())
-				{
-					dialogToDismiss.dismiss();
-				}
+			if (closeActivity)
+			{
+				ManageAccountsActivity.this.finish();
+			}
+			else
+			{
+				showAllAccounts();
+			}
+
+			if (dialogToDismiss != null && dialogToDismiss.isShowing())
+			{
+				dialogToDismiss.dismiss();
+			}
 		}
 		catch (Exception e)
 		{
@@ -371,74 +371,73 @@ public class ManageAccountsActivity extends ParentActivity
 			CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
 		}
 
-		
-//		new AsyncTask<String, String, String>(){
-//
-//			@Override
-//			protected String doInBackground(String... params)
-//			{
-//				try
-//				{
-//					DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
-//
-//					List<AppUser> appUsers = dbUser.getAllAppUsers(1000);
-//					for (int count = 0; count < appUsers.size(); count++)
-//					{
-//						AppUser user = appUsers.get(count);
-//						if ((user.getId() + "").equalsIgnoreCase(params[0]))
-//						{
-//							if (!user.getIsDefault())
-//							{
-//								user.setIsDefault(true);
-//								dbUser.updateAppUser(user);
-//								PrefsManager.saveUserEmail(PreferenceManager
-//										.getDefaultSharedPreferences(ManageAccountsActivity.this),
-//										user.getEmail());
-//								AppData.defaultUser = user;
-//							}
-//						}
-//						else if (user.getIsDefault())
-//						{
-//							user.setIsDefault(false);
-//							dbUser.updateAppUser(user);
-//						}
-//					}
-//
-//					AppData.appUsers = dbUser.getAllAppUsers(1000);
-//
-//					return null;
-//				}
-//				catch (Exception e)
-//				{
-//					Log.e(TAG, e.toString());
-//					BugSenseHandler.sendException(e);
-//					return e.getLocalizedMessage();
-//				}
-//			}
-//
-//			@Override
-//			protected void onPostExecute(String error)
-//			{
-//				if (error != null && error.length() > 0)
-//				{
-//					CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
-//				}
-//				if (closeActivity)
-//				{
-//					ManageAccountsActivity.this.finish();
-//				}
-//				else
-//				{
-//					showAllAccounts();
-//				}
-//
-//				if (dialogToDismiss != null && dialogToDismiss.isShowing())
-//				{
-//					dialogToDismiss.dismiss();
-//				}
-//			}
-//
-//		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, userId);
+		// new AsyncTask<String, String, String>(){
+		//
+		// @Override
+		// protected String doInBackground(String... params)
+		// {
+		// try
+		// {
+		// DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
+		//
+		// List<AppUser> appUsers = dbUser.getAllAppUsers(1000);
+		// for (int count = 0; count < appUsers.size(); count++)
+		// {
+		// AppUser user = appUsers.get(count);
+		// if ((user.getId() + "").equalsIgnoreCase(params[0]))
+		// {
+		// if (!user.getIsDefault())
+		// {
+		// user.setIsDefault(true);
+		// dbUser.updateAppUser(user);
+		// PrefsManager.saveUserEmail(PreferenceManager
+		// .getDefaultSharedPreferences(ManageAccountsActivity.this),
+		// user.getEmail());
+		// AppData.defaultUser = user;
+		// }
+		// }
+		// else if (user.getIsDefault())
+		// {
+		// user.setIsDefault(false);
+		// dbUser.updateAppUser(user);
+		// }
+		// }
+		//
+		// AppData.appUsers = dbUser.getAllAppUsers(1000);
+		//
+		// return null;
+		// }
+		// catch (Exception e)
+		// {
+		// Log.e(TAG, e.toString());
+		// BugSenseHandler.sendException(e);
+		// return e.getLocalizedMessage();
+		// }
+		// }
+		//
+		// @Override
+		// protected void onPostExecute(String error)
+		// {
+		// if (error != null && error.length() > 0)
+		// {
+		// CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
+		// }
+		// if (closeActivity)
+		// {
+		// ManageAccountsActivity.this.finish();
+		// }
+		// else
+		// {
+		// showAllAccounts();
+		// }
+		//
+		// if (dialogToDismiss != null && dialogToDismiss.isShowing())
+		// {
+		// dialogToDismiss.dismiss();
+		// }
+		// }
+		//
+		// }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, userId);
 	}
 
 	private void showAllAccounts()
@@ -533,9 +532,11 @@ public class ManageAccountsActivity extends ParentActivity
 				}
 				else
 				{
-					EvercamPlayApplication.sendEventAnalytics(ManageAccountsActivity.this, R.string.category_error,
-							R.string.action_error_manage_account, R.string.label_error_login);
-					EvercamPlayApplication.sendCaughtException(ManageAccountsActivity.this, getString(R.string.label_error_login));
+					EvercamPlayApplication.sendEventAnalytics(ManageAccountsActivity.this,
+							R.string.category_error, R.string.action_error_manage_account,
+							R.string.label_error_login);
+					EvercamPlayApplication.sendCaughtException(ManageAccountsActivity.this,
+							getString(R.string.label_error_login));
 					CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
 				}
 
@@ -610,7 +611,7 @@ public class ManageAccountsActivity extends ParentActivity
 		@Override
 		protected void onPreExecute()
 		{
-			//Show the progress bar before the task starts
+			// Show the progress bar before the task starts
 			ProgressBar progressBar = (ProgressBar) alertDialog.findViewById(R.id.pb_loadinguser);
 			progressBar.setVisibility(View.VISIBLE);
 		}

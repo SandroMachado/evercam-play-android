@@ -74,22 +74,18 @@ public class EvercamPlayApplication extends Application
 		tracker.send(new HitBuilders.EventBuilder().setCategory(activity.getString(cateory))
 				.setAction(activity.getString(action)).setLabel(activity.getString(label)).build());
 	}
-	
+
 	public static void sendCaughtException(Activity activity, Exception e)
 	{
-	    Tracker tracker = getAppTracker(activity);
-	    tracker.send(new HitBuilders.ExceptionBuilder()
-	        .setDescription(e.toString())
-	        .setFatal(true)
-	        .build());
+		Tracker tracker = getAppTracker(activity);
+		tracker.send(new HitBuilders.ExceptionBuilder().setDescription(e.toString()).setFatal(true)
+				.build());
 	}
-	
+
 	public static void sendCaughtException(Activity activity, String message)
 	{
-	    Tracker tracker = getAppTracker(activity);
-	    tracker.send(new HitBuilders.ExceptionBuilder()
-	        .setDescription(message)
-	        .setFatal(true)
-	        .build());
+		Tracker tracker = getAppTracker(activity);
+		tracker.send(new HitBuilders.ExceptionBuilder().setDescription(message).setFatal(true)
+				.build());
 	}
 }

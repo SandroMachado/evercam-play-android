@@ -22,7 +22,7 @@ public class PatchCameraTask extends AsyncTask<Void, Void, EvercamCamera>
 	private Activity activity;
 	private CustomProgressDialog customProgressDialog;
 	private String errorMessage;
-	
+
 	public PatchCameraTask(CameraDetail cameraDetail, Activity activity)
 	{
 		this.cameraDetail = cameraDetail;
@@ -36,26 +36,25 @@ public class PatchCameraTask extends AsyncTask<Void, Void, EvercamCamera>
 		customProgressDialog = new CustomProgressDialog(activity);
 		customProgressDialog.show(activity.getString(R.string.patching_camera));
 	}
-	
+
 	@Override
 	protected EvercamCamera doInBackground(Void... params)
 	{
 		Log.d(TAG, cameraDetail.toString());
 		return patchCamera(cameraDetail);
 	}
-	
+
 	@Override
 	protected void onPostExecute(EvercamCamera evercamCamera)
 	{
 		customProgressDialog.dismiss();
-		if(evercamCamera != null)
+		if (evercamCamera != null)
 		{
 			CustomToast.showInBottom(activity, R.string.patch_success);
-			
+
 			/**
-			 * Successfully updated camera, update saved camera,
-			 * show camera live view,
-			 * and finish edit camera activity
+			 * Successfully updated camera, update saved camera, show camera
+			 * live view, and finish edit camera activity
 			 */
 			VideoActivity.startingCameraID = evercamCamera.getCameraId();
 			VideoActivity.evercamCamera = evercamCamera;
@@ -67,28 +66,29 @@ public class PatchCameraTask extends AsyncTask<Void, Void, EvercamCamera>
 			CustomToast.showInCenterLong(activity, errorMessage);
 		}
 	}
-	
+
 	private EvercamCamera patchCamera(CameraDetail detail)
 	{
 		try
 		{
 			Camera patchedCamera = Camera.patch(detail);
-			if(patchedCamera != null)
+			if (patchedCamera != null)
 			{
-			EvercamCamera evercamCamera = new EvercamCamera().convertFromEvercam(patchedCamera);
-			DbCamera dbCamera = new DbCamera(activity);
-			dbCamera.deleteCamera(evercamCamera.getCameraId());
-			for(int index = 0; index < AppData.evercamCameraList.size(); index ++ )
-			{
-				if(AppData.evercamCameraList.get(index).getCameraId().equals(patchedCamera.getId()))
+				EvercamCamera evercamCamera = new EvercamCamera().convertFromEvercam(patchedCamera);
+				DbCamera dbCamera = new DbCamera(activity);
+				dbCamera.deleteCamera(evercamCamera.getCameraId());
+				for (int index = 0; index < AppData.evercamCameraList.size(); index++)
 				{
-					AppData.evercamCameraList.remove(index);
+					if (AppData.evercamCameraList.get(index).getCameraId()
+							.equals(patchedCamera.getId()))
+					{
+						AppData.evercamCameraList.remove(index);
+					}
 				}
-			}
-			dbCamera.addCamera(evercamCamera);
-			AppData.evercamCameraList.add(evercamCamera);
+				dbCamera.addCamera(evercamCamera);
+				AppData.evercamCameraList.add(evercamCamera);
 
-			return evercamCamera;
+				return evercamCamera;
 			}
 			else
 			{

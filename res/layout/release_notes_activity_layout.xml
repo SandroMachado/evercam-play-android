@@ -20,8 +20,11 @@
     <Button
         android:id="@+id/btn_release_notes_ok"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40sp"
         android:layout_alignParentBottom="true"
-        android:text="@string/ok" />
+        android:layout_margin="10sp"
+        android:background="@drawable/btn_selector"
+        android:text="@string/ok"
+        android:textColor="#ffffff" />
 
 </RelativeLayout>

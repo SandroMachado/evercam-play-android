@@ -312,7 +312,7 @@ public class EvercamCamera
 	{
 		try
 		{
-			//TODO: Wrap this in the wrapper or API response
+			// TODO: Wrap this in the wrapper or API response
 			if (!internalSnapshotUrl.isEmpty())
 			{
 				return new URL(internalSnapshotUrl).getPath();
@@ -392,11 +392,11 @@ public class EvercamCamera
 				&& internalSnapshotUrl.equals(other.internalSnapshotUrl) && mac.equals(other.mac)
 				&& model.equals(other.model) && name.equals(other.name)
 				&& owner.equals(other.owner) && password.equals(other.password)
-				&& timezone.equals(other.timezone)
-				&& username.equals(other.username) && vendor.equals(other.vendor)
-			    && internalHost.equals(other.internalHost) && externalHost.equals(other.externalHost)
-			    && internalHttp == other.internalHttp && externalHttp == other.externalHttp
-			    && internalRtsp== other.internalRtsp && externalRtsp == other.externalRtsp)
+				&& timezone.equals(other.timezone) && username.equals(other.username)
+				&& vendor.equals(other.vendor) && internalHost.equals(other.internalHost)
+				&& externalHost.equals(other.externalHost) && internalHttp == other.internalHttp
+				&& externalHttp == other.externalHttp && internalRtsp == other.internalRtsp
+				&& externalRtsp == other.externalRtsp)
 		{
 			return true;
 		}

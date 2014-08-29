@@ -30,8 +30,6 @@ public class CameraPrefsActivity extends PreferenceActivity
 
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_preference));
 
-		this.getActionBar().hide();
-
 		getFragmentManager().beginTransaction()
 				.replace(android.R.id.content, new MyPreferenceFragment()).commit();
 		this.setDefaultKeyMode(DEFAULT_KEYS_DISABLE);

@@ -141,6 +141,7 @@ public class AddEditCameraActivity extends Activity
 		switch (item.getItemId())
 		{
 		case android.R.id.home:
+			setResult(Constants.RESULT_FALSE);
 			this.finish();
 			return true;
 		}

@@ -10,14 +10,13 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class DeleteCameraTask extends AsyncTask<Void, Void,Boolean>
+public class DeleteCameraTask extends AsyncTask<Void, Void, Boolean>
 {
 	private final String TAG = "evercamplay-DeleteCameraTask";
 	private String cameraId;
 	private CustomProgressDialog customProgressDialog;
 	private Activity activity;
-	
-	
+
 	public DeleteCameraTask(String cameraId, Activity activity)
 	{
 		this.cameraId = cameraId;
@@ -30,13 +29,13 @@ public class DeleteCameraTask extends AsyncTask<Void, Void,Boolean>
 		customProgressDialog = new CustomProgressDialog(activity);
 		customProgressDialog.show(activity.getString(R.string.deleting_camera));
 	}
-	
+
 	@Override
 	protected Boolean doInBackground(Void... params)
 	{
 		try
 		{
-			if(Camera.delete(cameraId))
+			if (Camera.delete(cameraId))
 			{
 				return true;
 			}
@@ -52,7 +51,7 @@ public class DeleteCameraTask extends AsyncTask<Void, Void,Boolean>
 	protected void onPostExecute(Boolean success)
 	{
 		customProgressDialog.dismiss();
-		if(success)
+		if (success)
 		{
 			CustomToast.showInBottom(activity, R.string.msg_delete_success);
 			activity.setResult(Constants.RESULT_TRUE);

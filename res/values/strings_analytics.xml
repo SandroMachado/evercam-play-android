@@ -47,5 +47,6 @@
     <string name="screen_add_camera">Add Camera</string>
     <string name="screen_edit_camera">Edit Camera</string>
     <string name="screen_scan_camera">Scan For Camera</string>
+    <string name="screen_release_notes">Release Notes</string>
 
 </resources>

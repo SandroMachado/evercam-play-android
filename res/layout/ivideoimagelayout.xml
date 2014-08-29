@@ -1,59 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#000000" >
-
-    <!--
-    <RelativeLayout
-        android:id="@+id/camimage"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        >
-        
-        <s!s-s- android:background="@drawable/logo"  -s-s>
-
-        <TextView
-            android:id="@+id/txtframerate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:text="[F/s:0.00]"
-            android:textColor="#ffffff" />
-
-        <ImageView
-            android:id="@+id/ivmediaplayer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@layout/image_bg"
-            android:layout_centerInParent="true" 
-            android:visibility="gone"
-            />
-        
-        <com.camba.cameras.custom.ProgressView
-            android:id="@+id/ivprogressspinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true" 
-            />
-        
-        
-        <s!s-s-  
-        <ImageButton
-            android:id="@+id/ivmediaplayer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@layout/image_bg"
-            android:src="@android:drawable/ic_media_pause">
-            </ImageButton>
-        -s-s>
-    </RelativeLayout>
-    -->
-
-</RelativeLayout><!--
- android:background="@drawable/ic_launcher" 
-android:layout_centerInParent="true"
--->

@@ -48,7 +48,8 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 		{
 			EvercamPlayApplication.sendEventAnalytics(camerasActivity, R.string.category_error,
 					R.string.action_error_load_camera, R.string.label_error_empty_user);
-			EvercamPlayApplication.sendCaughtException(camerasActivity, camerasActivity.getString(R.string.label_error_empty_user));
+			EvercamPlayApplication.sendCaughtException(camerasActivity,
+					camerasActivity.getString(R.string.label_error_empty_user));
 			CustomedDialog.showUnexpectedErrorDialog(camerasActivity);
 			cancel(true);
 		}
@@ -64,7 +65,8 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 			// Step 1: Load camera list from Evercam
 			Log.d(TAG, "Step 1: Load camera list from Evercam");
 			// FIXME: Time consuming at this line
-			AppData.evercamCameraList = new DbCamera(camerasActivity.getApplicationContext()).getCamerasByOwner(user.getUsername(), 500);
+			AppData.evercamCameraList = new DbCamera(camerasActivity.getApplicationContext())
+					.getCamerasByOwner(user.getUsername(), 500);
 			ArrayList<Camera> cameras = User.getCameras(user.getUsername(), true);
 			ArrayList<EvercamCamera> evercamCameras = new ArrayList<EvercamCamera>();
 			for (io.evercam.Camera camera : cameras)
@@ -93,7 +95,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 				{
 					if (!evercamCameras.contains(camera))
 					{
-						Log.d(TAG, "camera deleted!"  + camera.getCameraId());
+						Log.d(TAG, "camera deleted!" + camera.getCameraId());
 						updateDB = true;
 						break;
 					}

@@ -106,10 +106,10 @@ public class CustomedDialog
 			}
 		}).show();
 	}
-	
+
 	/**
-	 * The alert dialog with no title, but with a cancel button
-	 * Used as add camera option dialog and account management.
+	 * The alert dialog with no title, but with a cancel button Used as add
+	 * camera option dialog and account management.
 	 */
 	public static AlertDialog getAlertDialogNoTitle(Context ctx, View view)
 	{
@@ -146,7 +146,7 @@ public class CustomedDialog
 				}).create();
 		return comfirmLogoutDialog;
 	}
-	
+
 	public static AlertDialog getConfirmCancelScanDialog(Activity activity,
 			DialogInterface.OnClickListener listener)
 	{
@@ -164,7 +164,7 @@ public class CustomedDialog
 	}
 
 	public static AlertDialog getConfirmRemoveDialog(Activity activity,
-			DialogInterface.OnClickListener listener,int message)
+			DialogInterface.OnClickListener listener, int message)
 	{
 		AlertDialog comfirmLogoutDialog = new AlertDialog.Builder(activity)
 
@@ -181,14 +181,17 @@ public class CustomedDialog
 
 	/**
 	 * Return a pop up dialog that shows camera snapshot.
-	 * @param drawable the image drawable returned to show in pop up dialog
+	 * 
+	 * @param drawable
+	 *            the image drawable returned to show in pop up dialog
 	 */
 	public static AlertDialog getSnapshotDialog(Activity activity, Drawable drawable)
 	{
 		AlertDialog snapshotDialog = new AlertDialog.Builder(activity).create();
 		LayoutInflater mInflater = LayoutInflater.from(activity);
 		final View snapshotView = mInflater.inflate(R.layout.test_snapshot_dialog, null);
-		ImageView snapshotImageView = (ImageView) snapshotView.findViewById(R.id.test_snapshot_image);
+		ImageView snapshotImageView = (ImageView) snapshotView
+				.findViewById(R.id.test_snapshot_image);
 		snapshotImageView.setBackgroundDrawable(drawable);
 		snapshotDialog.setView(snapshotView);
 		return snapshotDialog;

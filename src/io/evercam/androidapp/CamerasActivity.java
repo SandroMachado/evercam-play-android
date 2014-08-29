@@ -430,13 +430,14 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			if (Constants.isAppTrackingEnabled) 
-			{BugSenseHandler.sendException(e);
-			
+			if (Constants.isAppTrackingEnabled)
+			{
+				BugSenseHandler.sendException(e);
+
 			}
-		EvercamPlayApplication.sendEventAnalytics(this, R.string.category_error,
-				R.string.action_error_camera_list, R.string.label_error_remove_cameras);
-		EvercamPlayApplication.sendCaughtException(this, e);
+			EvercamPlayApplication.sendEventAnalytics(this, R.string.category_error,
+					R.string.action_error_camera_list, R.string.label_error_remove_cameras);
+			EvercamPlayApplication.sendCaughtException(this, e);
 			CustomedDialog.showUnexpectedErrorDialog(CamerasActivity.this);
 		}
 		return false;
@@ -493,8 +494,8 @@ public class CamerasActivity extends ParentActivity implements
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			if (Constants.isAppTrackingEnabled) 
-			{	
+			if (Constants.isAppTrackingEnabled)
+			{
 				BugSenseHandler.sendException(e);
 			}
 			EvercamPlayApplication.sendEventAnalytics(this, R.string.category_error,

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
     <string name="evercam_id">Evercam ID*</string>
     <string name="friendly_name">Name *</string>
     <string name="vendor">Vendor</string>
@@ -20,7 +20,6 @@
     <string name="save_changes">Save Changes</string>
     <string name="test">Test</string>
     <string name="title_edit_camera">Edit Camera</string>
-    
     <string name="hint_id">roof-cam</string>
     <string name="hint_name">Rooftop Camera</string>
     <string name="hint_username">Username</string>
@@ -32,10 +31,9 @@
     <string name="hint_internal_host">192.168.1.122</string>
     <string name="hint_internal_http">Internal HTTP Port</string>
     <string name="hint_internal_rtsp">Internal RTSP Port</string>
-    
     <string name="vendor_other">Other</string>
     <string name="model_default">Default</string>
-    
+
     <!-- Messages -->
     <string name="id_required">You must specify the unique camera ID.</string>
     <string name="name_required">Camera friendly name required</string>
@@ -49,14 +47,14 @@
     <string name="snapshot_test_failed">Could not retrieve an image from the given host and port.</string>
     <string name="snapshot_test_success">Successfully retrieved image from camera!</string>
     <string name="retrieving_snapshot">Retrieving snapshot&#8230;</string>
-    
+
     <!-- Option Items -->
     <string name="add_ip_camera">Add camera manually</string>
-	<string name="scan_for_cameras">Scan for cameras (beta)</string>
-	
-	<!-- Network Scan -->
-	<string name="msg_scanning">Scanning for cameras.\n\nPlease be patient,\nthis may take up to a minute&#8230;</string>
-	<string name="msg_no_camera_found">No camera found in your local network.</string>
-	<string name="btn_text_add_manually">Add camera manually</string>
-	
+    <string name="scan_for_cameras">Scan for cameras (beta)</string>
+
+    <!-- Network Scan -->
+    <string name="msg_scanning">Scanning for cameras.\n\nPlease be patient,\nthis may take up to a minute&#8230;</string>
+    <string name="msg_no_camera_found">No camera found in your local network.</string>
+    <string name="btn_text_add_manually">Add camera manually</string>
+
 </resources>

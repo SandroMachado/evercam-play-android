@@ -150,7 +150,7 @@ public class CameraLayout extends LinearLayout
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			//CustomedDialog.showUnexpectedErrorDialog(context);
+			// CustomedDialog.showUnexpectedErrorDialog(context);
 			if (Constants.isAppTrackingEnabled)
 			{
 				BugSenseHandler.sendException(e);
@@ -374,8 +374,8 @@ public class CameraLayout extends LinearLayout
 			try
 			{
 				if (end) return;
-				
-				if(CamerasActivity.stopImageLoading)
+
+				if (CamerasActivity.stopImageLoading)
 				{
 					return;
 				}
@@ -463,7 +463,7 @@ public class CameraLayout extends LinearLayout
 		{
 			for (String url : urls)
 			{
-				if(CamerasActivity.stopImageLoading)
+				if (CamerasActivity.stopImageLoading)
 				{
 					this.cancel(true);
 				}

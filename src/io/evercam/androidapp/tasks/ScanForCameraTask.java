@@ -22,11 +22,11 @@ public class ScanForCameraTask extends AsyncTask<Void, Void, ArrayList<Discovere
 		this.scanActivity = scanActivity;
 		netInfo = new NetInfo(scanActivity);
 	}
-	
+
 	@Override
 	protected void onPreExecute()
 	{
-		
+
 	}
 
 	@Override
@@ -37,7 +37,8 @@ public class ScanForCameraTask extends AsyncTask<Void, Void, ArrayList<Discovere
 		{
 			EvercamDiscover evercamDiscover = new EvercamDiscover();
 			ScanRange scanRange = new ScanRange(netInfo.getLocalIp(), netInfo.getNetmaskIp());
-			cameraList = evercamDiscover.discoverAllCamerasAndroid(scanRange, netInfo.getGatewayIp());
+			cameraList = evercamDiscover.discoverAllCamerasAndroid(scanRange,
+					netInfo.getGatewayIp());
 		}
 		catch (Exception e)
 		{
@@ -50,7 +51,7 @@ public class ScanForCameraTask extends AsyncTask<Void, Void, ArrayList<Discovere
 	protected void onPostExecute(ArrayList<DiscoveredCamera> cameraList)
 	{
 		scanActivity.showProgress(false);
-		
+
 		scanActivity.showScanResults(cameraList);
 	}
 }

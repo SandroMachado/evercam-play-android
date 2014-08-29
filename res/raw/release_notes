@@ -1,27 +1,27 @@
-<h3>Evercam Play - IP Camera Viewer</h3>
-<h3>Version 1.1.2</h3> 
+<h4>Evercam Play - IP Camera Viewer</h4>
+<h6>Version 1.1.2</h6> 
+
+We've been working to get Evercam Play up and running as a standalone app, so we've included the ability to add, edit and delete cameras all from within the app.  
+You can still view all your cameras online but you can do it here too now.
+<br/>
 
 <ul>
-<br /><br />We've been workng to get Evercam Play up and running as a standalone app, so we've included the ability to add, edit and delete cameras all from within the app.  You can still view all your cameras online but you can do it here too now<br />
-
-	<li><b>- Add your IP camera<br /></b></li>
+	<li><b><br/>- Add your IP camera<br /></b></li>
 	<li><b>- Vendor/model details are now pre-populated when adding a camera<br/></b></li>
-	<li><b>- Update or remove your connected IP cameras<br /></b></li>
-	<li><b>- Scan your local network for IP cameras<br /></b></li>
+	<li><b>- Update or remove your connected IP cameras<br/></b></li>
+	<li><b>- Scan your local network for IP cameras<br/></b></li>
 	<li><b>- Supports digest authentication<br/></b></li>
-	<li><b>- Sign in with either your email or Evercam username<br /></b></li>
+	<li><b>- Sign in with either your email or Evercam username<br/></b></li>
 	<li><b>- Now using thumbnails for scanned cameras<br/></b></li>
 </ul>
 <br /><br/>
 
-
-Version 1.1.1
-<br />
-
+<b>Version 1.1.1</b>
+<br/>
 <ul>
 	<li>- User can now view multiple Evercam accounts<br/></li>
 	<li>- Added ability to choose number of cameras per row</li>
 	<li>- Fixed some small bugs</li>
 </ul>
 
-<br /><br />Let us know what you think. Send any suggestions or feedback to play@evercam.io<br />
+<br/><br />Let us know what you think. Send any suggestions or feedback to play@evercam.io<br/>

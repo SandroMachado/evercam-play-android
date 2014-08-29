@@ -29,6 +29,8 @@ public class ReleaseNotesActivity extends ParentActivity
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
 
+		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_release_notes));
+
 		setContentView(R.layout.release_notes_activity_layout);
 
 		TextView textViewNotes = (TextView) findViewById(R.id.txtreleasenotes);

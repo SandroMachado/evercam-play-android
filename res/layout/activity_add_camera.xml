@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
-   <LinearLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
@@ -32,15 +32,15 @@
                 android:inputType="text"
                 android:singleLine="true"
                 android:textSize="17sp" />
-            
+
             <TextView
                 android:id="@+id/add_id_txt_view"
                 android:layout_width="fill_parent"
-                android:layout_marginLeft="12sp"
                 android:layout_height="wrap_content"
-                android:textSize="17sp" 
+                android:layout_marginLeft="12sp"
                 android:textColor="#ffffff"
-                android:visibility="gone"/>
+                android:textSize="17sp"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -150,7 +150,7 @@
                 android:singleLine="true"
                 android:textSize="17sp" />
         </LinearLayout>
-       
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -181,20 +181,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:fontFamily="sans-serif"
             android:layout_marginLeft="10sp"
             android:layout_marginTop="10sp"
+            android:fontFamily="sans-serif"
             android:text="@string/external_title"
             android:textSize="17sp" />
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="0.5dp"
-            android:layout_marginTop="1dp"
-            android:background="#dc4c3f"
             android:layout_marginLeft="10sp"
-            android:layout_marginRight="10sp" />
-        
+            android:layout_marginRight="10sp"
+            android:layout_marginTop="1dp"
+            android:background="#dc4c3f" />
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -270,26 +270,26 @@
                 android:textSize="17sp" />
         </LinearLayout>
 
-                <TextView
+        <TextView
             android:id="@+id/internal_title_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:fontFamily="sans-serif"
             android:layout_marginLeft="10sp"
             android:layout_marginTop="10sp"
+            android:fontFamily="sans-serif"
             android:text="@string/internal_title"
             android:textSize="17sp" />
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="0.5dp"
-            android:layout_marginTop="1dp"
-            android:background="#dc4c3f"
             android:layout_marginLeft="10sp"
-            android:layout_marginRight="10sp" />
-        
-                <LinearLayout
+            android:layout_marginRight="10sp"
+            android:layout_marginTop="1dp"
+            android:background="#dc4c3f" />
+
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
@@ -363,7 +363,6 @@
                 android:singleLine="true"
                 android:textSize="17sp" />
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="fill_parent"

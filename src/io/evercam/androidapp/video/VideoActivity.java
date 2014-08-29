@@ -149,7 +149,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private boolean end = false; // whether to end this activity or not
 
 	private Handler handler = new MyHandler(this);
-	
+
 	private boolean editStarted = false;
 
 	@Override
@@ -196,13 +196,18 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		if(requestCode == Constants.REQUEST_CODE_PATCH_CAMERA)
+		if (requestCode == Constants.REQUEST_CODE_PATCH_CAMERA)
 		{
-			if(resultCode == Constants.RESULT_TRUE)
+			//Restart video playing no matter the patch is success or not.
+			if (resultCode == Constants.RESULT_TRUE)
+			{
+				startPlay();
+			}
+			else
 			{
 				startPlay();
 			}
@@ -338,10 +343,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			{
 				this.paused = true;
 			}
-		//Do not finish if user get into edit camera screen. 
-			if(!editStarted)
+			// Do not finish if user get into edit camera screen.
+			if (!editStarted)
 			{
-			this.finish();
+				this.finish();
 			}
 		}
 
@@ -400,7 +405,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				editStarted = true;
 				Intent editIntent = new Intent(VideoActivity.this, AddEditCameraActivity.class);
 				editIntent.putExtra(Constants.KEY_IS_EDIT, true);
-				startActivityForResult(editIntent,Constants.REQUEST_CODE_PATCH_CAMERA);
+				startActivityForResult(editIntent, Constants.REQUEST_CODE_PATCH_CAMERA);
 
 				return true;
 
@@ -437,7 +442,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			return true;
 		}
 	}
-	
+
 	private void startPlay()
 	{
 		loadImageFromCache(startingCameraID);
@@ -537,8 +542,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 	private void addUrlIfValid(String url, EvercamCamera cam)
 	{
-		try
-		{
 			if (url == null
 					|| url.trim().length() < 10
 					|| !(url.startsWith("http://") || url.startsWith("https://")
@@ -566,10 +569,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				}
 			}
 			mrlIndex = 0;
-		}
-		catch (Exception e)
-		{
-		}
 	}
 
 	// Loads image from cache. First image gets loaded correctly and hence we
@@ -795,7 +794,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			}
 			else
 			{
-				media = "http://127.0.0.1:554/NoVideo-CambaTv";
+				media = "http://127.0.0.1:554/";
 			}
 
 			// Create a new media player

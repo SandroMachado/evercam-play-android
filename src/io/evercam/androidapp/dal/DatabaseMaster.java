@@ -8,7 +8,8 @@ public class DatabaseMaster extends SQLiteOpenHelper
 {
 	// Version 3: Added camera field :has credential
 	// Version 4: New constraint camera id + owner
-	// Version 5: Added camera fields for internal && external host & port.Remove camera id-user constraint 
+	// Version 5: Added camera fields for internal && external host &
+	// port.Remove camera id-user constraint
 	private static final String TAG = "evercamplay-DatabaseMaster";
 	private static final int DATABASE_VERSION = 5;
 	private static final String DATABASE_NAME = "evercamdata";

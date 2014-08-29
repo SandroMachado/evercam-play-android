@@ -27,7 +27,7 @@ public class Manufacturer
 				this.jsonObject = manufactureObject.getJSONObject("data");
 			}
 		}
-		
+
 		catch (UnirestException e)
 		{
 			Log.e(TAG, e.toString());

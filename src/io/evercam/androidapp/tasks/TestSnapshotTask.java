@@ -23,7 +23,7 @@ public class TestSnapshotTask extends AsyncTask<Void, Void, Drawable>
 	private String password;
 	private Activity activity;
 	private CustomProgressDialog customProgressDialog;
-	
+
 	public TestSnapshotTask(String url, String username, String password, Activity activity)
 	{
 		this.url = url;
@@ -31,22 +31,21 @@ public class TestSnapshotTask extends AsyncTask<Void, Void, Drawable>
 		this.password = password;
 		this.activity = activity;
 	}
-	
+
 	@Override
 	protected void onPreExecute()
 	{
 		customProgressDialog = new CustomProgressDialog(activity);
 		customProgressDialog.show(activity.getString(R.string.retrieving_snapshot));
 	}
-	
+
 	@Override
 	protected Drawable doInBackground(Void... params)
 	{
 		ArrayList<Cookie> cookies = new ArrayList<Cookie>();
 		try
 		{
-			return Commons.getDrawablefromUrlAuthenticated(url,
-					username, password,cookies, 3000);
+			return Commons.getDrawablefromUrlAuthenticated(url, username, password, cookies, 3000);
 		}
 		catch (Exception e)
 		{
@@ -59,8 +58,8 @@ public class TestSnapshotTask extends AsyncTask<Void, Void, Drawable>
 	protected void onPostExecute(Drawable drawable)
 	{
 		customProgressDialog.dismiss();
-		
-		if(drawable!=null)
+
+		if (drawable != null)
 		{
 			CustomToast.showInBottom(activity, R.string.snapshot_test_success);
 			CustomedDialog.getSnapshotDialog(activity, drawable).show();

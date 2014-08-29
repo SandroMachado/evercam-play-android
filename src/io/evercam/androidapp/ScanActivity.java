@@ -57,7 +57,7 @@ public class ScanActivity extends Activity
 	private final String ADAPTER_KEY_LOGO = "camera_logo";
 	private final String ADAPTER_KEY_IP = "camera_id";
 	private final String ADAPTER_KEY_MODEL = "camera_model";
-	
+
 	private ScanForCameraTask scanTask;
 
 	@Override
@@ -70,9 +70,9 @@ public class ScanActivity extends Activity
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
-		
+
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_scan_camera));
-		
+
 		scanProgressView = findViewById(R.id.scan_status_layout);
 		scanResultListView = findViewById(R.id.scan_result_layout);
 		scanResultNoCameraView = findViewById(R.id.scan_result_no_camera_layout);
@@ -114,19 +114,20 @@ public class ScanActivity extends Activity
 				}
 			}
 		});
-		
+
 		cancelButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v)
 			{
-				CustomedDialog.getConfirmCancelScanDialog(ScanActivity.this, new DialogInterface.OnClickListener(){
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						stopDiscovery();
-						finish();
-					}
-				}).show();
+				CustomedDialog.getConfirmCancelScanDialog(ScanActivity.this,
+						new DialogInterface.OnClickListener(){
+							@Override
+							public void onClick(DialogInterface dialog, int which)
+							{
+								stopDiscovery();
+								finish();
+							}
+						}).show();
 			}
 		});
 
@@ -141,7 +142,7 @@ public class ScanActivity extends Activity
 
 		startDiscovery();
 	}
-	
+
 	@Override
 	public void onStart()
 	{
@@ -164,7 +165,8 @@ public class ScanActivity extends Activity
 		}
 	}
 
-	// Finish this activity and transfer the result from AddEditCameraActivity to
+	// Finish this activity and transfer the result from AddEditCameraActivity
+	// to
 	// CamerasActivity.
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -197,10 +199,10 @@ public class ScanActivity extends Activity
 		scanTask = new ScanForCameraTask(ScanActivity.this);
 		scanTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
-	
+
 	private void stopDiscovery()
 	{
-		if(scanTask != null && !scanTask.isCancelled())
+		if (scanTask != null && !scanTask.isCancelled())
 		{
 			scanTask.cancel(true);
 		}

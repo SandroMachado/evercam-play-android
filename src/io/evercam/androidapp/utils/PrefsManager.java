@@ -57,18 +57,16 @@ public class PrefsManager
 
 	public static boolean isRleaseNotesShown(Context context, int versionCode)
 	{
-		SharedPreferences sharedPrefs = PreferenceManager
-				.getDefaultSharedPreferences(context);
-		
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+
 		return sharedPrefs.getBoolean(KEY_RELEASE_NOTES_SHOWN + versionCode, false);
 	}
 
 	public static void setReleaseNotesShown(Context context, int versionCode)
 	{
-		SharedPreferences sharedPrefs = PreferenceManager
-				.getDefaultSharedPreferences(context);
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = sharedPrefs.edit();
-		editor.putBoolean(KEY_RELEASE_NOTES_SHOWN+ versionCode, true);
+		editor.putBoolean(KEY_RELEASE_NOTES_SHOWN + versionCode, true);
 		editor.commit();
 	}
 }

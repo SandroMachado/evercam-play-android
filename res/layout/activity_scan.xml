@@ -27,20 +27,19 @@
             android:gravity="center"
             android:text="@string/msg_scanning"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-        
+
         <Button
-                android:id="@+id/button_cancel_scan"
-                android:layout_width="wrap_content"
-                android:paddingLeft="20sp"
-                android:paddingRight="20sp"
-                android:layout_height="35dp"
-                android:layout_marginTop="10sp"
-                android:background="@+drawable/signup_btn_selector"
-                android:textColor="@+drawable/signup_btn_txt_selector"
-                android:text="@string/cancel"
-                android:gravity="center"
-                android:textSize="17sp" />
-        
+            android:id="@+id/button_cancel_scan"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginTop="10sp"
+            android:background="@+drawable/signup_btn_selector"
+            android:gravity="center"
+            android:paddingLeft="20sp"
+            android:paddingRight="20sp"
+            android:text="@string/cancel"
+            android:textColor="@+drawable/signup_btn_txt_selector"
+            android:textSize="17sp" />
     </LinearLayout>
 
     <!-- Scan Result -->
@@ -60,6 +59,7 @@
     </RelativeLayout>
 
     <!-- No Camera Found -->
+
     <LinearLayout
         android:id="@+id/scan_result_no_camera_layout"
         android:layout_width="wrap_content"
@@ -78,18 +78,18 @@
             android:gravity="center"
             android:text="@string/msg_no_camera_found"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-        
+
         <Button
-                android:id="@+id/button_add_camera_manually"
-                android:layout_width="wrap_content"
-                android:paddingLeft="10sp"
-                android:paddingRight="10sp"
-                android:layout_height="35dp"
-                android:background="@drawable/btn_selector"
-                android:text="@string/btn_text_add_manually"
-                android:gravity="center"
-                android:textColor="#ffffff"
-                android:textSize="17sp" />
+            android:id="@+id/button_add_camera_manually"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:background="@drawable/btn_selector"
+            android:gravity="center"
+            android:paddingLeft="10sp"
+            android:paddingRight="10sp"
+            android:text="@string/btn_text_add_manually"
+            android:textColor="#ffffff"
+            android:textSize="17sp" />
     </LinearLayout>
 
 </merge>

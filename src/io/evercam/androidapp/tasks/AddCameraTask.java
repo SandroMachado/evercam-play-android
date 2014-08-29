@@ -42,23 +42,22 @@ public class AddCameraTask extends AsyncTask<Void, Void, EvercamCamera>
 	protected void onPostExecute(EvercamCamera evercamCamera)
 	{
 		customProgressDialog.dismiss();
-		if(evercamCamera != null)
+		if (evercamCamera != null)
 		{
 			CustomToast.showInBottom(activity, R.string.create_success);
-			
+
 			/**
 			 * Successfully added a camera, so refresh camera list.
 			 */
 			Intent returnIntent = new Intent();
-			activity.setResult(Constants.RESULT_TRUE,returnIntent);
-//			activity.finish();
-			
+			activity.setResult(Constants.RESULT_TRUE, returnIntent);
+			// activity.finish();
+
 			/**
-			 * Successfully added camera, show camera live view
-			 * and finish add camera activity
+			 * Successfully added camera, show camera live view and finish add
+			 * camera activity
 			 */
-			VideoActivity.startPlayingVideoForCamera(activity,
-					evercamCamera.getCameraId());
+			VideoActivity.startPlayingVideoForCamera(activity, evercamCamera.getCameraId());
 			activity.finish();
 		}
 		else
@@ -82,7 +81,7 @@ public class AddCameraTask extends AsyncTask<Void, Void, EvercamCamera>
 			DbCamera dbCamera = new DbCamera(activity);
 			dbCamera.addCamera(evercamCamera);
 			AppData.evercamCameraList.add(evercamCamera);
-			
+
 			return evercamCamera;
 		}
 		catch (EvercamException e)

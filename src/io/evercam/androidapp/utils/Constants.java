@@ -15,7 +15,7 @@ public final class Constants
 
 	// Preference keys
 	public static final String KEY_CAMERA_PER_ROW = "lstgridcamerasperrow";
-	
+
 	/**
 	 * Values of start activity for result
 	 */
@@ -24,8 +24,8 @@ public final class Constants
 	public static final int REQUEST_CODE_PATCH_CAMERA = 3;
 	public static final int RESULT_TRUE = 1;
 	public static final int RESULT_FALSE = 0;
-	
-	//Values for intent bundle
+
+	// Values for intent bundle
 	public static final String KEY_IS_EDIT = "isEdit";
-	
+
 }
