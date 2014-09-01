@@ -4,32 +4,32 @@
     <string name="title_activity_sign_up">Sign Up</string>
 
     <!-- Login Strings -->
-    <string name="hint_email">Email / Username</string>
+    <string name="hint_email">Email/Username</string>
     <string name="hint_password">Password</string>
     <string name="action_sign_in_with_evercam"><b>Sign in</b> with Evercam</string>
     <string name="action_sign_in_short">Sign in&#8230;</string>
     <string name="login_progress_signing_in">Signing in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_email">Please enter a valid email address</string>
     <string name="error_invalid_username">Invalid username</string>
     <string name="error_invalid_password">Invalid password</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_incorrect_password">The password you entered is incorrect</string>
     <string name="error_username_required">Username required</string>
     <string name="error_password_required">Password required</string>
     <string name="error_firstname_required">First name required</string>
     <string name="error_lastname_required">Last name required</string>
     <string name="error_email_required">Email address required</string>
-    <string name="error_confirmpassword_required">Please repeat password</string>
+    <string name="error_confirmpassword_required">Please enter the same password again</string>
     <string name="create_account">Create Account</string>
-    <string name="username_too_short">Username is too short</string>
+    <string name="username_too_short">The username you specified is too short</string>
     <string name="prefix_invalid">Invalid</string>
     <string name="prefix_no_user">No user</string>
 
     <!-- Sign Up Strings -->
     <string name="login_progress_signing_up">Signing up</string>
-    <string name="firstname:">First Name:</string>
-    <string name="firstName">First Name</string>
-    <string name="lastname:">Last Name:</string>
-    <string name="lastName">Last Name</string>
+    <string name="firstname:">First name:</string>
+    <string name="firstName">First name</string>
+    <string name="lastname:">Last name:</string>
+    <string name="lastName">Last name</string>
     <string name="username:">Username:</string>
     <string name="username">Username</string>
     <string name="email:">Email:</string>
@@ -41,9 +41,9 @@
     <string name="spinnerFistItem">Please select</string>
 
     <!-- Sign Up Message -->
-    <string name="countryNotSelected">Please select a country!</string>
-    <string name="invalidEmail">Invalid Email address!</string>
-    <string name="passwordNotMatch">Two different password!</string>
-    <string name="confirmSignUp">Congratulations, now you are logged in with your Evercam account.</string>
+    <string name="countryNotSelected">Please select a country</string>
+    <string name="invalidEmail">Invalid Email address</string>
+    <string name="passwordNotMatch">Please re-enter the same password again</string>
+    <string name="confirmSignUp">Congratulations, you are now logged in with your Evercam account</string>
 
 </resources>
