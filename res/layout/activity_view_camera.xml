@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:layout_marginTop="25sp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/view_id_txt"
+                android:layout_width="95sp"
+                android:layout_height="20sp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/view_evercam_id"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/view_id_value"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12sp"
+                android:fontFamily="sans-serif"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:layout_marginTop="10sp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/view_name_txt"
+                android:layout_width="95sp"
+                android:layout_height="20sp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/view_friendly_name"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/view_name_value"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12sp"
+                android:textSize="18sp" />
+        </LinearLayout>
+        
+                <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:layout_marginTop="10sp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/view_owner_txt"
+                android:layout_width="95sp"
+                android:layout_height="20sp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/view_owner"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/view_owner_value"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12sp"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:layout_marginTop="10sp" >
+
+            <TextView
+                android:id="@+id/view_vendor_txt"
+                android:layout_width="95sp"
+                android:layout_height="20sp"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/view_vendor"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/view_vendor_value"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12sp"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:layout_marginTop="10sp" >
+
+            <TextView
+                android:id="@+id/view_model_txt"
+                android:layout_width="95sp"
+                android:layout_height="20sp"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/view_model"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/view_model_value"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12sp"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

@@ -5,6 +5,7 @@ import io.evercam.EvercamException;
 import io.evercam.androidapp.AddEditCameraActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.ParentActivity;
+import io.evercam.androidapp.ViewCameraActivity;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.custom.ProgressView;
 import io.evercam.androidapp.dto.AppData;
@@ -202,7 +203,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	{
 		if (requestCode == Constants.REQUEST_CODE_PATCH_CAMERA)
 		{
-			//Restart video playing no matter the patch is success or not.
+			// Restart video playing no matter the patch is success or not.
 			if (resultCode == Constants.RESULT_TRUE)
 			{
 				startPlay();
@@ -211,6 +212,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			{
 				startPlay();
 			}
+		}
+		else //If back from view camera
+		{
+			startPlay();
 		}
 	}
 
@@ -359,19 +364,29 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		try
-		{
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.video_menu, menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.video_menu, menu);
 
-			return true;
-		}
-		catch (Exception ex)
+		return true;
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
+		MenuItem editItem = menu.findItem(R.id.video_menu_edit_camera);
+		MenuItem viewItem = menu.findItem(R.id.video_menu_view_camera);
+
+		if (evercamCamera != null)
 		{
-			Log.e(TAG, ex.toString());
-			if (Constants.isAppTrackingEnabled)
+			if (evercamCamera.canEdit())
 			{
-				BugSenseHandler.sendException(ex);
+				editItem.setVisible(true);
+				viewItem.setVisible(false);
+			}
+			else
+			{
+				editItem.setVisible(false);
+				viewItem.setVisible(true);
 			}
 		}
 		return true;
@@ -399,10 +414,18 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						}, R.string.msg_confirm_remove_camera).show();
 
 				return true;
+			
+			case R.id.video_menu_view_camera:
+				
+				editStarted = true;
+				Intent viewIntent = new Intent(VideoActivity.this, ViewCameraActivity.class);
+				startActivityForResult(viewIntent, Constants.REQUEST_CODE_VIEW_CAMERA);
+				return true;
 
 			case R.id.video_menu_edit_camera:
 
 				editStarted = true;
+
 				Intent editIntent = new Intent(VideoActivity.this, AddEditCameraActivity.class);
 				editIntent.putExtra(Constants.KEY_IS_EDIT, true);
 				startActivityForResult(editIntent, Constants.REQUEST_CODE_PATCH_CAMERA);
@@ -542,33 +565,33 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 	private void addUrlIfValid(String url, EvercamCamera cam)
 	{
-			if (url == null
-					|| url.trim().length() < 10
-					|| !(url.startsWith("http://") || url.startsWith("https://")
-							|| url.startsWith("rtsp://") || url.startsWith("tcp://"))) return;
+		if (url == null
+				|| url.trim().length() < 10
+				|| !(url.startsWith("http://") || url.startsWith("https://")
+						|| url.startsWith("rtsp://") || url.startsWith("tcp://"))) return;
 
-			String liveURLString = evercamCamera.getExternalRtspUrl();
-			String localURLString = evercamCamera.getInternalRtspUrl();
+		String liveURLString = evercamCamera.getExternalRtspUrl();
+		String localURLString = evercamCamera.getInternalRtspUrl();
 
-			if (!localURLString.isEmpty() && !localnetworkSettings.equalsIgnoreCase("2"))
+		if (!localURLString.isEmpty() && !localnetworkSettings.equalsIgnoreCase("2"))
+		{
+			MediaURL localMRL = new MediaURL(localURLString, true);
+
+			if (!mediaUrls.contains(localMRL))
 			{
-				MediaURL localMRL = new MediaURL(localURLString, true);
-
-				if (!mediaUrls.contains(localMRL))
-				{
-					mediaUrls.add(localMRL);
-				}
+				mediaUrls.add(localMRL);
 			}
+		}
 
-			if (!localnetworkSettings.equalsIgnoreCase("1"))
+		if (!localnetworkSettings.equalsIgnoreCase("1"))
+		{
+			MediaURL liveMRL = new MediaURL(liveURLString, false);
+			if (!mediaUrls.contains(liveMRL))
 			{
-				MediaURL liveMRL = new MediaURL(liveURLString, false);
-				if (!mediaUrls.contains(liveMRL))
-				{
-					mediaUrls.add(liveMRL);
-				}
+				mediaUrls.add(liveMRL);
 			}
-			mrlIndex = 0;
+		}
+		mrlIndex = 0;
 	}
 
 	// Loads image from cache. First image gets loaded correctly and hence we

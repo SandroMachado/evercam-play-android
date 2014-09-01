@@ -113,6 +113,11 @@
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
+            android:name=".ViewCameraActivity"
+            android:label="@string/title_activity_view_camera"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
             android:name=".ScanActivity"
             android:label="@string/title_activity_scan"
             android:logo="@drawable/icon_192x192" >

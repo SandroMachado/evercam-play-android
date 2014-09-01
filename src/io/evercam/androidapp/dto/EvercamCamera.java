@@ -23,8 +23,9 @@ public class EvercamCamera
 
 	private String cameraId = "";
 	private String name = "";
-	private String owner = ""; // The user's user name, not the owner of
-								// camera(if is a shared camera);
+	private String owner = ""; // The user's user name
+	private String realOwner = "";//The owner of camera
+	private boolean canEdit = false;
 	private String username = "";
 	private String password = "";
 	private String timezone = "";
@@ -62,6 +63,8 @@ public class EvercamCamera
 			{
 				owner = AppData.defaultUser.getUsername();
 			}
+			realOwner = camera.getOwner();
+			canEdit = camera.getRights().canEdit();
 			if (camera.hasCredentials())
 			{
 				hasCredentials = true;
@@ -162,6 +165,21 @@ public class EvercamCamera
 	{
 		return owner;
 	}
+	
+	public String getRealOwner()
+	{
+		return realOwner;
+	}
+	
+	public boolean canEdit()
+	{
+		return canEdit;
+	}
+	
+	public int getCanEditInt()
+	{
+		return canEdit() ? 1 : 0;
+	}
 
 	public boolean hasCredentials()
 	{
@@ -221,6 +239,16 @@ public class EvercamCamera
 	public void setOwner(String owner)
 	{
 		this.owner = owner;
+	}
+	
+	public void setRealOwner(String realOwner)
+	{
+		this.realOwner = realOwner;
+	}
+	
+	public void setCanEdit(boolean canEdit)
+	{
+		this.canEdit = canEdit;
 	}
 
 	public String getMac()
@@ -396,7 +424,8 @@ public class EvercamCamera
 				&& vendor.equals(other.vendor) && internalHost.equals(other.internalHost)
 				&& externalHost.equals(other.externalHost) && internalHttp == other.internalHttp
 				&& externalHttp == other.externalHttp && internalRtsp == other.internalRtsp
-				&& externalRtsp == other.externalRtsp)
+				&& externalRtsp == other.externalRtsp 
+				&& realOwner == other.realOwner && canEdit == other.canEdit)
 		{
 			return true;
 		}
@@ -406,14 +435,16 @@ public class EvercamCamera
 	@Override
 	public String toString()
 	{
-		return "EvercamCamera [camera=" + camera + ", cameraId=" + cameraId + ", name=" + name
-				+ ", owner=" + owner + ", username=" + username + ", password=" + password
-				+ ", timezone=" + timezone + ", vendor=" + vendor + ", model=" + model + ", mac="
-				+ mac + ", externalSnapshotUrl=" + externalSnapshotUrl + ", internalSnapshotUrl="
-				+ internalSnapshotUrl + ", externalRtspUrl=" + externalRtspUrl
-				+ ", internalRtspUrl=" + internalRtspUrl + ", internalHost=" + internalHost
-				+ ", externalHost=" + externalHost + ", internalHttp=" + internalHttp
-				+ ", internalRtsp=" + internalRtsp + ", externalHttp=" + externalHttp
-				+ ", externalRtsp=" + externalRtsp + "]";
+		return "EvercamCamera [loadingStatus=" + loadingStatus + ", camera=" + camera + ", id="
+				+ id + ", cameraId=" + cameraId + ", name=" + name + ", owner=" + owner
+				+ ", realOwner=" + realOwner + ", canEdit=" + canEdit + ", username=" + username
+				+ ", password=" + password + ", timezone=" + timezone + ", vendor=" + vendor
+				+ ", model=" + model + ", mac=" + mac + ", externalSnapshotUrl="
+				+ externalSnapshotUrl + ", internalSnapshotUrl=" + internalSnapshotUrl
+				+ ", externalRtspUrl=" + externalRtspUrl + ", internalRtspUrl=" + internalRtspUrl
+				+ ", status=" + status + ", hasCredentials=" + hasCredentials + ", internalHost="
+				+ internalHost + ", externalHost=" + externalHost + ", internalHttp="
+				+ internalHttp + ", internalRtsp=" + internalRtsp + ", externalHttp="
+				+ externalHttp + ", externalRtsp=" + externalRtsp + "]";
 	}
 }

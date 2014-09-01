@@ -18,6 +18,8 @@ public class DbCamera extends DatabaseMaster
 	private final String KEY_CAMERA_ID = "cameraId";
 	private final String KEY_CAMERA_NAME = "name";
 	private final String KEY_OWNER = "owner";
+	private final String KEY_REAL_OWNER = "realOwner";
+	private final String KEY_CAN_EDIT = "canEdit";
 	private final String KEY_USERNAME = "username";
 	private final String KEY_PASSWORD = "password";
 	private final String KEY_TIMEZONE = "timezone";
@@ -58,7 +60,8 @@ public class DbCamera extends DatabaseMaster
 				+ "," + KEY_INTERNAL_HOST + " TEXT NULL" + "," + KEY_EXTERNAL_HOST + " TEXT NULL"
 				+ "," + KEY_INTERNAL_HTTP + " INTEGER NULL" + "," + KEY_EXTERNAL_HTTP
 				+ " INTEGER NULL" + "," + KEY_INTERNAL_RTSP + " INTEGER NULL" + ","
-				+ KEY_EXTERNAL_RTSP + " INTEGER NULL"
+				+ KEY_EXTERNAL_RTSP + " INTEGER NULL" + ","
+				+ KEY_REAL_OWNER + " TEXT NULL" + "," + KEY_CAN_EDIT + " TEXT NULL"
 				// + ","+ "CONSTRAINT uniqueCamAndUser UNIQUE (" + KEY_CAMERA_ID
 				// + ", " + KEY_OWNER + ")"
 				+ ")";
@@ -97,7 +100,7 @@ public class DbCamera extends DatabaseMaster
 				KEY_MODEL, KEY_MAC, KEY_EXTERNAL_JPG_URL, KEY_INTERNAL_JPG_URL,
 				KEY_EXTERNAL_RTSP_URL, KEY_INTERNAL_RTSP_URL, KEY_STATUS, KEY_HAS_CREDENTIAL,
 				KEY_INTERNAL_HOST, KEY_EXTERNAL_HOST, KEY_INTERNAL_HTTP, KEY_EXTERNAL_HTTP,
-				KEY_INTERNAL_RTSP, KEY_EXTERNAL_RTSP }, KEY_ID + "=?",
+				KEY_INTERNAL_RTSP, KEY_EXTERNAL_RTSP, KEY_REAL_OWNER, KEY_CAN_EDIT }, KEY_ID + "=?",
 				new String[] { String.valueOf(id) }, null, null, null, null);
 		if (cursor != null)
 		{
@@ -197,6 +200,8 @@ public class DbCamera extends DatabaseMaster
 		values.put(KEY_EXTERNAL_HTTP, evercamCamera.getExternalHttp());
 		values.put(KEY_INTERNAL_RTSP, evercamCamera.getInternalRtsp());
 		values.put(KEY_EXTERNAL_RTSP, evercamCamera.getExternalRtsp());
+		values.put(KEY_REAL_OWNER, evercamCamera.getRealOwner());
+		values.put(KEY_CAN_EDIT, evercamCamera.getCanEditInt());
 
 		return values;
 	}
@@ -251,6 +256,8 @@ public class DbCamera extends DatabaseMaster
 		evercamCamera.setExternalHttp(cursor.getInt(19));
 		evercamCamera.setInternalRtsp(cursor.getInt(20));
 		evercamCamera.setExternalRtsp(cursor.getInt(21));
+		evercamCamera.setRealOwner(cursor.getString(22));
+		evercamCamera.setCanEdit(cursor.getInt(23) == 1);
 
 		return evercamCamera;
 	}
