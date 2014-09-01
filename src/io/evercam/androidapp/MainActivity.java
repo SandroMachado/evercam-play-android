@@ -119,8 +119,7 @@ public class MainActivity extends Activity
 	{
 		try
 		{
-			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-			String defaultEmail = PrefsManager.getUserEmail(sharedPrefs);
+			String defaultEmail = PrefsManager.getUserEmail(this);
 			if (defaultEmail != null)
 			{
 				DbAppUser dbUser = new DbAppUser(this);

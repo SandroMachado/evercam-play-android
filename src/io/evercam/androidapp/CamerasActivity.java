@@ -26,6 +26,7 @@ import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppData;
+import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.dto.ImageLoadingStatus;
 import io.evercam.androidapp.slidemenu.*;
@@ -156,12 +157,7 @@ public class CamerasActivity extends ParentActivity implements
 
 			if (refresh != null) refresh.setActionView(R.layout.actionbar_indeterminate_progress);
 
-			LoadCameraListTask loadTask = new LoadCameraListTask(AppData.defaultUser,
-					CamerasActivity.this);
-			loadTask.reload = true; // be default do not refresh until there
-									// is
-			// any change in cameras in database
-			loadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			startCameraLoadingTaskWithUserCheck();
 
 			return true;
 
@@ -352,6 +348,35 @@ public class CamerasActivity extends ParentActivity implements
 			reloadProgressDialog.show(getString(R.string.loading_cameras));
 		}
 
+		startCameraLoadingTaskWithUserCheck();
+	}
+	
+	private void startCameraLoadingTaskWithUserCheck()
+	{
+		if(AppData.defaultUser == null)
+		{
+			String defaultEmail = PrefsManager.getUserEmail(this);
+			if (defaultEmail != null)
+			{
+				try
+				{
+				DbAppUser dbUser = new DbAppUser(this);
+				AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
+				AppData.defaultUser = defaultUser;
+				}
+				catch (Exception e)
+				{
+					Log.e(TAG, e.toString());
+					EvercamPlayApplication.sendCaughtException(this, e.toString());
+				}
+			}
+			else // User is not saved locally, send as a bug.
+			{
+				EvercamPlayApplication.sendCaughtException(this,
+				TAG + ":" + getString(R.string.exception_user_not_saved));
+			}
+		}
+		
 		LoadCameraListTask loadTask = new LoadCameraListTask(AppData.defaultUser,
 				CamerasActivity.this);
 		loadTask.reload = true; // be default do not refresh until there

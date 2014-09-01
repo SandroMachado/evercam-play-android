@@ -48,5 +48,8 @@
     <string name="screen_edit_camera">Edit Camera</string>
     <string name="screen_scan_camera">Scan For Camera</string>
     <string name="screen_release_notes">Release Notes</string>
+    
+    <!-- Exception Descriptions -->
+    <string name="exception_user_not_saved">User saved locally is null.</string>
 
 </resources>

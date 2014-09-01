@@ -370,82 +370,14 @@ public class ManageAccountsActivity extends ParentActivity
 			EvercamPlayApplication.sendCaughtException(this, e);
 			CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
 		}
-
-		// new AsyncTask<String, String, String>(){
-		//
-		// @Override
-		// protected String doInBackground(String... params)
-		// {
-		// try
-		// {
-		// DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
-		//
-		// List<AppUser> appUsers = dbUser.getAllAppUsers(1000);
-		// for (int count = 0; count < appUsers.size(); count++)
-		// {
-		// AppUser user = appUsers.get(count);
-		// if ((user.getId() + "").equalsIgnoreCase(params[0]))
-		// {
-		// if (!user.getIsDefault())
-		// {
-		// user.setIsDefault(true);
-		// dbUser.updateAppUser(user);
-		// PrefsManager.saveUserEmail(PreferenceManager
-		// .getDefaultSharedPreferences(ManageAccountsActivity.this),
-		// user.getEmail());
-		// AppData.defaultUser = user;
-		// }
-		// }
-		// else if (user.getIsDefault())
-		// {
-		// user.setIsDefault(false);
-		// dbUser.updateAppUser(user);
-		// }
-		// }
-		//
-		// AppData.appUsers = dbUser.getAllAppUsers(1000);
-		//
-		// return null;
-		// }
-		// catch (Exception e)
-		// {
-		// Log.e(TAG, e.toString());
-		// BugSenseHandler.sendException(e);
-		// return e.getLocalizedMessage();
-		// }
-		// }
-		//
-		// @Override
-		// protected void onPostExecute(String error)
-		// {
-		// if (error != null && error.length() > 0)
-		// {
-		// CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
-		// }
-		// if (closeActivity)
-		// {
-		// ManageAccountsActivity.this.finish();
-		// }
-		// else
-		// {
-		// showAllAccounts();
-		// }
-		//
-		// if (dialogToDismiss != null && dialogToDismiss.isShowing())
-		// {
-		// dialogToDismiss.dismiss();
-		// }
-		// }
-		//
-		// }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, userId);
 	}
 
 	private void showAllAccounts()
 	{
 		try
 		{
-			DbAppUser dbuser = new DbAppUser(ManageAccountsActivity.this);
-			AppData.appUsers = dbuser.getAllAppUsers(100);
+			DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
+			AppData.appUsers = dbUser.getAllAppUsers(100);
 
 			ListAdapter listAdapter = new CustomAdapter(ManageAccountsActivity.this,
 					R.layout.manageaccountsactivity_listitem,
@@ -544,34 +476,39 @@ public class ManageAccountsActivity extends ParentActivity
 			}
 			else
 			{
+				// If user already added, remove and re-add it.
 				new AsyncTask<String, String, String>(){
 					@Override
 					protected String doInBackground(String... params)
 					{
 						try
 						{
-							DbAppUser dbuser = new DbAppUser(ManageAccountsActivity.this);
-							AppUser oldUser = dbuser.getAppUserByEmail(newUser.getEmail());
-							int defaultUsersCount = dbuser.getDefaultUsersCount();
+							DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
+							AppUser oldUser = dbUser.getAppUserByEmail(newUser.getEmail());
+							int defaultUsersCount = dbUser.getDefaultUsersCount();
 							if (oldUser != null)
 							{
-								dbuser.deleteAppUserByEmail(newUser.getEmail());
-								if (oldUser.getIsDefault() || defaultUsersCount == 0) isDefault = true;
+								dbUser.deleteAppUserByEmail(newUser.getEmail());
+								if (oldUser.getIsDefault() || defaultUsersCount == 0)
+								{
+									isDefault = true;
+								}
 							}
 
-							// adding new user
 							if (isDefault)
 							{
-								dbuser.updateAllIsDefaultFalse();
+								dbUser.updateAllIsDefaultFalse();
 								newUser.setIsDefault(true);
+								AppData.defaultUser = newUser;
+								PrefsManager.saveUserEmail(ManageAccountsActivity.this, newUser.getEmail());
 							}
-							dbuser.addAppUser(newUser);
+							dbUser.addAppUser(newUser);
 						}
-						catch (Exception e12)
+						catch (Exception e)
 						{
 							if (Constants.isAppTrackingEnabled)
 							{
-								BugSenseHandler.sendException(e12);
+								BugSenseHandler.sendException(e);
 							}
 						}
 
