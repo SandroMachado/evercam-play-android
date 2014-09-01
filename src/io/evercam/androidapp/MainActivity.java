@@ -16,10 +16,8 @@ import io.evercam.androidapp.R;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 /*

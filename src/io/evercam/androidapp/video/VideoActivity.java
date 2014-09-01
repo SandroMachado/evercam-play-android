@@ -201,6 +201,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
+		// Here actually no matter what result is returned, all restart video
+		// play, but keep the verbose code for future extension.
 		if (requestCode == Constants.REQUEST_CODE_PATCH_CAMERA)
 		{
 			// Restart video playing no matter the patch is success or not.
@@ -213,7 +215,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				startPlay();
 			}
 		}
-		else //If back from view camera
+		else
+		// If back from view camera
 		{
 			startPlay();
 		}
@@ -414,9 +417,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						}, R.string.msg_confirm_remove_camera).show();
 
 				return true;
-			
+
 			case R.id.video_menu_view_camera:
-				
+
 				editStarted = true;
 				Intent viewIntent = new Intent(VideoActivity.this, ViewCameraActivity.class);
 				startActivityForResult(viewIntent, Constants.REQUEST_CODE_VIEW_CAMERA);
