@@ -2,20 +2,20 @@
 <resources>
 
     <string name="evercam_id">Evercam ID*</string>
-    <string name="friendly_name">Name *</string>
+    <string name="friendly_name">Name*</string>
     <string name="vendor">Vendor</string>
     <string name="model">Model</string>
     <string name="select_model">Select Model</string>
     <string name="select_vendor">Select Make</string>
     <string name="credentials">Credentials</string>
-    <string name="external_host">Host / IP</string>
-    <string name="internal_host">Host / IP</string>
+    <string name="external_host">IP address</string>
+    <string name="internal_host">IP address</string>
     <string name="colon">:</string>
     <string name="external_title">External</string>
     <string name="internal_title">Internal</string>
     <string name="jpg_url">JPEG URL</string>
-    <string name="http_port">HTTP Port</string>
-    <string name="rtsp_port">RTSP Port</string>
+    <string name="http_port">HTTP</string>
+    <string name="rtsp_port">RTSP</string>
     <string name="finish_and_add">Finish &amp; Add</string>
     <string name="save_changes">Save Changes</string>
     <string name="test">Test</string>
@@ -35,17 +35,17 @@
     <string name="model_default">Default</string>
 
     <!-- Messages -->
-    <string name="id_required">You must specify the unique camera ID.</string>
-    <string name="name_required">Camera friendly name required</string>
+    <string name="id_required">Please specify a unique ID for your camera</string>
+    <string name="name_required">Please specify a friendly name for your camera</string>
     <string name="creating_camera">Creating camera&#8230;</string>
     <string name="patching_camera">Updating camera details&#8230;</string>
-    <string name="create_success">Camera created!</string>
+    <string name="create_success">Camera created successfully!</string>
     <string name="patch_success">Settings updated successfully!</string>
     <string name="unknown_error">Unknown error, please contact support.</string>
-    <string name="host_required">You must specify either internal or external host address.</string>
-    <string name="external_http_required">HTTP port required.</string>
-    <string name="snapshot_test_failed">Could not retrieve an image from the given host and port.</string>
-    <string name="snapshot_test_success">Successfully retrieved image from camera!</string>
+    <string name="host_required">Please specify either an internal or external IP address.</string>
+    <string name="external_http_required">Please specify a HTTP port</string>
+    <string name="snapshot_test_failed">We couldn't get an image from the camera at the given host and port</string>
+    <string name="snapshot_test_success">Successfully retrieved an image from your camera!</string>
     <string name="retrieving_snapshot">Retrieving snapshot&#8230;</string>
 
     <!-- Option Items -->
@@ -53,8 +53,8 @@
     <string name="scan_for_cameras">Scan for cameras (beta)</string>
 
     <!-- Network Scan -->
-    <string name="msg_scanning">Scanning for cameras.\n\nPlease be patient,\nthis may take up to a minute&#8230;</string>
-    <string name="msg_no_camera_found">No camera found in your local network.</string>
+    <string name="msg_scanning">Hang on a sec while we search\n\nfor cameras on your network,\nScanning for cameras&#8230;</string>
+    <string name="msg_no_camera_found">No cameras were found in your local network</string>
     <string name="btn_text_add_manually">Add camera manually</string>
 
 </resources>
