@@ -1,6 +1,7 @@
 package io.evercam.androidapp.custom;
 
 import io.evercam.Camera;
+import io.evercam.EvercamException;
 import io.evercam.androidapp.dto.*;
 import io.evercam.androidapp.tasks.DownloadLatestTask;
 import io.evercam.androidapp.tasks.SaveImageTask;
@@ -21,6 +22,7 @@ import io.evercam.androidapp.R;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -121,6 +123,9 @@ public class CameraLayout extends LinearLayout
 			cameraRelativeLayout.addView(imageMessage);
 
 			cameraRelativeLayout.setClickable(true);
+			
+			//Show thumbnail returned from Evercam
+			showThumbnail();
 			cameraRelativeLayout.setOnClickListener(new View.OnClickListener(){
 				@Override
 				public void onClick(View v)
@@ -230,42 +235,43 @@ public class CameraLayout extends LinearLayout
 	// loading thread to further load from camera
 	public void loadImage()
 	{
+		isImageLoadedFromCache = loadImageFromCache();
+
+		if (!end)
+		{
+			handler.postDelayed(LoadImageRunnable, 0);
+		}
+	}
+
+	private Drawable getThumbnailFromCamera(EvercamCamera evercamCamera)
+	{
 		try
 		{
-			isImageLoadedFromCache = loadImageFromCache();
+			if (evercamCamera.camera != null && evercamCamera.camera.isOnline())
+			{
+				byte[] snapshotByte = evercamCamera.camera.getThumbnailData();
 
-			if (!end)
-			{
-				handler.postDelayed(LoadImageRunnable, 0);
+				Bitmap bitmap = BitmapFactory.decodeByteArray(snapshotByte, 0, snapshotByte.length);
+
+				Drawable drawable = new BitmapDrawable(context.getResources(), bitmap);
+
+				return drawable;
 			}
 		}
-		catch (Exception e)
+		catch (EvercamException e)
 		{
-			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			if (Constants.isAppTrackingEnabled)
-			{
-				BugSenseHandler.sendException(e);
-			}
+			Log.e(TAG, e.toString());
 		}
+		return null;
 	}
 
 	// Stop the image loading process. May be need to end current activity
 	public boolean stopAllActivity()
 	{
-		try
-		{
-			end = true;
-			if (liveImageTask != null && liveImageTask.getStatus() != AsyncTask.Status.FINISHED) liveImageTask
-					.cancel(true);
-		}
-		catch (Exception e)
-		{
-			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			if (Constants.isAppTrackingEnabled)
-			{
-				BugSenseHandler.sendException(e);
-			}
-		}
+		end = true;
+		if (liveImageTask != null && liveImageTask.getStatus() != AsyncTask.Status.FINISHED) liveImageTask
+				.cancel(true);
+
 		return true;
 	}
 
@@ -296,6 +302,14 @@ public class CameraLayout extends LinearLayout
 		}
 
 		handler.removeCallbacks(LoadImageRunnable);
+	}
+	
+	private void showThumbnail()
+	{
+		loadingAnimation.setVisibility(View.GONE);
+		cameraRelativeLayout.removeView(loadingAnimation);
+		cameraRelativeLayout.setBackgroundDrawable(getThumbnailFromCamera(evercamCamera));
+
 	}
 
 	// Image loaded from Evercam and now set the controls appearance and
@@ -415,7 +429,7 @@ public class CameraLayout extends LinearLayout
 				else if (evercamCamera.loadingStatus == ImageLoadingStatus.camba_not_received)
 				{
 					setlayoutForNoImageReceived();
-				}
+				}   
 			}
 			catch (OutOfMemoryError e)
 			{
@@ -482,7 +496,7 @@ public class CameraLayout extends LinearLayout
 					}
 					else
 					{
-						Camera camera = Camera.getById(evercamCamera.getCameraId());
+						Camera camera = Camera.getById(evercamCamera.getCameraId(), false);
 						if (camera != null)
 						{
 							InputStream stream = camera.getSnapshotFromEvercam();

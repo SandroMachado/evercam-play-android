@@ -67,11 +67,26 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 			// FIXME: Time consuming at this line
 			AppData.evercamCameraList = new DbCamera(camerasActivity.getApplicationContext())
 					.getCamerasByOwner(user.getUsername(), 500);
-			ArrayList<Camera> cameras = User.getCameras(user.getUsername(), true);
+			ArrayList<Camera> cameras = User.getCameras(user.getUsername(), true, true);
 			ArrayList<EvercamCamera> evercamCameras = new ArrayList<EvercamCamera>();
 			for (io.evercam.Camera camera : cameras)
 			{
-				evercamCameras.add(new EvercamCamera().convertFromEvercam(camera));
+				EvercamCamera evercamCamera = new EvercamCamera().convertFromEvercam(camera);
+
+				// //Fill Evercam camera object to local camera object
+				if (AppData.evercamCameraList.size() > 0)
+				{
+					matchLoop: for (EvercamCamera cameraInList : AppData.evercamCameraList)
+					{
+						if (camera.getId().equals(evercamCamera.getCameraId()))
+						{
+							cameraInList.camera = camera;
+							// Only jump out this loop.
+							break matchLoop;
+						}
+					}
+				}
+				evercamCameras.add(evercamCamera);
 			}
 
 			// Step 2: Check if any new cameras different from local saved

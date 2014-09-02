@@ -1521,7 +1521,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			{
 				try
 				{
-					Camera camera = Camera.getById(evercamCamera.getCameraId());
+					Camera camera = Camera.getById(evercamCamera.getCameraId(), false);
 					InputStream stream = camera.getSnapshotFromEvercam();
 					response = Drawable.createFromStream(stream, "src");
 					if (response != null) successiveFailureCount = 0;
