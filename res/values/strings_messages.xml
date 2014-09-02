@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="msg_network_not_connected">Network not connected</string>
-    <string name="msg_try_network_again">Please connect to internet and try again.</string>
-    <string name="msg_try_again">Please close and try again.</string>
-    <string name="msg_switch_to_jpg">Switching to jpeg view.</string>
+    <string name="msg_network_not_connected">No internet connection</string>
+    <string name="msg_try_network_again">Check your settings and try again</string>
+    <string name="msg_try_again">Please close the app and try again</string>
+    <string name="msg_switch_to_jpg">Switching to jpeg view</string>
     <string name="msg_camera_offline">Camera offline!</string>
-    <string name="msg_unable_to_connect">Unable to Connect.</string>
+    <string name="msg_unable_to_connect">Unable to Connect</string>
     <string name="loading_cameras">Loading cameras&#8230;</string>
     <string name="deleting_camera">Deleting camera&#8230;</string>
-    <string name="msg_delete_success">Camera deleted!</string>
-    <string name="msg_delete_failed">Failed to delete camera, please try again.</string>
-    <string name="msg_exception">Unexpected error. Please close and retry.</string>
+    <string name="msg_delete_success">Camera deleted successfully!</string>
+    <string name="msg_delete_failed">Failed to delete camera, please try again</string>
+    <string name="msg_exception">There's been an unexpected error. Please close the app and retry</string>
     <string name="msg_error_occurred">Error Occurred</string>
     <string name="msg_unable_to_play">Unable to play</string>
-    <string name="msg_please_check_camera">Please check camera and try again.</string>
+    <string name="msg_please_check_camera">Please check your camera and try again</string>
     <string name="msg_confirm_sign_out">Are you sure you want to sign out?</string>
     <string name="msg_confirm_remove">Are you sure you want to remove this user?</string>
     <string name="msg_confirm_remove_camera">Are you sure you want to remove this camera?</string>
-    <string name="msg_confirm_cancel_scan">Scanning is in process, are you sure you want to cancel?</string>
+    <string name="msg_confirm_cancel_scan">We're still still scanning your network, are you sure you want to cancel?</string>
 
 </resources>
