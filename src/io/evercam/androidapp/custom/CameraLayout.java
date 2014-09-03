@@ -1,11 +1,9 @@
 package io.evercam.androidapp.custom;
 
-import io.evercam.Camera;
 import io.evercam.EvercamException;
 import io.evercam.androidapp.dto.*;
 import io.evercam.androidapp.tasks.DownloadLatestTask;
 import io.evercam.androidapp.tasks.SaveImageRunnable;
-import io.evercam.androidapp.tasks.SaveImageTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamFile;
@@ -39,10 +37,8 @@ public class CameraLayout extends LinearLayout
 
 	public RelativeLayout cameraRelativeLayout;
 	public Context context;
-	private Activity activity;
 	public EvercamCamera evercamCamera;
 	private DownloadLiveImageTask liveImageTask;
-	private DownloadLiveImageTask liveImageTaskLocal;
 	private DownloadLatestTask latestTask;
 
 	private boolean end = false; // tells whether application has ended or not.
@@ -61,7 +57,6 @@ public class CameraLayout extends LinearLayout
 	{
 		super(activity.getApplicationContext());
 		this.context = activity.getApplicationContext();
-		this.activity = activity;
 
 		try
 		{
@@ -308,7 +303,7 @@ public class CameraLayout extends LinearLayout
 	private void showThumbnail()
 	{
 		Drawable thumbnail = getThumbnailFromCamera(evercamCamera);
-		if(thumbnail != null)
+		if (thumbnail != null)
 		{
 			loadingAnimation.setVisibility(View.GONE);
 			cameraRelativeLayout.removeView(loadingAnimation);
@@ -400,19 +395,8 @@ public class CameraLayout extends LinearLayout
 
 				if (evercamCamera.loadingStatus == ImageLoadingStatus.not_started)
 				{
-//					if (!evercamCamera.getExternalHost().isEmpty())
-//					{
-						
-						liveImageTask = new DownloadLiveImageTask();
-						liveImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//					}
-//					else
-//					{
-//						String internalJpgUrl = evercamCamera.getInternalSnapshotUrl();
-//						liveImageTaskLocal = new DownloadLiveImageTask();
-//						liveImageTaskLocal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-//								new String[] { internalJpgUrl });
-//					}
+					liveImageTask = new DownloadLiveImageTask();
+					liveImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 				}
 				else if (evercamCamera.loadingStatus == ImageLoadingStatus.live_received)
 				{
@@ -474,82 +458,81 @@ public class CameraLayout extends LinearLayout
 
 	private class DownloadLiveImageTask extends AsyncTask<Void, Drawable, Drawable>
 	{
+
 		public boolean isTaskended = false;
 
 		// Save image to external cache folder and return file path.
 		@Override
 		protected Drawable doInBackground(Void... params)
 		{
-//			for (String url : urls)
-//			{
-				if (CamerasActivity.stopImageLoading)
+			if (CamerasActivity.stopImageLoading)
+			{
+				this.cancel(true);
+			}
+			try
+			{
+				ArrayList<Cookie> cookies = new ArrayList<Cookie>();
+				Drawable drawable = null;
+				String externalJpgUrl = evercamCamera.getExternalSnapshotUrl();
+				String internalJpgUrl = null;
+				if (evercamCamera.hasCredentials())
 				{
-					this.cancel(true);
-				}
-				try
-				{
-					ArrayList<Cookie> cookies = new ArrayList<Cookie>();
-					Drawable drawable = null;
-					String externalJpgUrl = evercamCamera.getExternalSnapshotUrl();
-					String internalJpgUrl = null;
-					if (evercamCamera.hasCredentials())
+					if (!evercamCamera.getExternalHost().isEmpty())
 					{
-						if (!evercamCamera.getExternalHost().isEmpty())
+
+						drawable = Commons.getDrawablefromUrlAuthenticated(externalJpgUrl,
+								evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
+								3000);
+						
+						if (drawable == null)
 						{
-							
-							drawable = Commons.getDrawablefromUrlAuthenticated(externalJpgUrl,
-									evercamCamera.getUsername(), evercamCamera.getPassword(),
-									cookies, 3000);
-						}
-						else
-						{
-							drawable = Commons.getDrawablefromUrlAuthenticated(internalJpgUrl,
-									evercamCamera.getUsername(), evercamCamera.getPassword(),
-									cookies, 3000);
+							if (!evercamCamera.getInternalHost().isEmpty())
+							{
+								internalJpgUrl = evercamCamera.getInternalSnapshotUrl();
+								drawable = Commons.getDrawablefromUrlAuthenticated(internalJpgUrl,
+										evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
+										3000);
+							}
 						}
 					}
 					else
 					{
-						if (evercamCamera.camera != null)
-						{
-							InputStream stream = evercamCamera.camera.getSnapshotFromEvercam();
-							drawable = Drawable.createFromStream(stream, "src");
-						}
+						drawable = Commons.getDrawablefromUrlAuthenticated(internalJpgUrl,
+								evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
+								3000);
 					}
-					if (cookies.size() > 0)
+				}
+				else
+				{
+					if (evercamCamera.camera != null)
 					{
-						evercamCamera.cookies = cookies;
+						InputStream stream = evercamCamera.camera.getSnapshotFromEvercam();
+						drawable = Drawable.createFromStream(stream, "src");
 					}
+					else
+					{
+						Log.e(TAG, "EvercamCamera.camera is null");
+					}
+				}
+				if (cookies.size() > 0)
+				{
+					evercamCamera.cookies = cookies;
+				}
 
-					if(drawable != null)
-					{
-						return drawable;
-					}
-					else if(internalJpgUrl == null)
-					{
-						if (!evercamCamera.getInternalHost().isEmpty())
-						{
-							internalJpgUrl = evercamCamera.getInternalSnapshotUrl();
-							drawable = Commons.getDrawablefromUrlAuthenticated(internalJpgUrl,
-									evercamCamera.getUsername(), evercamCamera.getPassword(),
-									cookies, 3000);
-						}
-					}
-					return drawable;
-				}
-				catch (OutOfMemoryError e)
-				{
-					Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-					return null;
-				}
-				catch (Exception e)
-				{
-					Log.e(TAG, "Error request snapshot: " + e.getMessage());
-				}
-		//	}
+				return drawable;
+			}
+			catch (OutOfMemoryError e)
+			{
+				Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+				return null;
+			}
+			catch (Exception e)
+			{
+				Log.e(TAG, "Error request snapshot: " + e.getMessage());
+			}
 			return null;
 		}
-		
+
 		@Override
 		protected void onPostExecute(Drawable drawable)
 		{
@@ -575,13 +558,11 @@ public class CameraLayout extends LinearLayout
 				isTaskended = true;
 
 				if (liveImageTask.isTaskended
-				// && liveImageTaskLocal.isTaskended
 						&& CameraLayout.this.evercamCamera.loadingStatus != ImageLoadingStatus.live_received)
 				{
 					CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_not_received;
 				}
-				if (liveImageTask.isTaskended)// &&
-												// liveImageTaskLocal.isTaskended)
+				if (liveImageTask.isTaskended)
 				{
 					handler.postDelayed(LoadImageRunnable, 0);
 				}

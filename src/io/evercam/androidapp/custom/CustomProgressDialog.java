@@ -1,5 +1,6 @@
 package io.evercam.androidapp.custom;
 
+import io.evercam.androidapp.EvercamPlayApplication;
 import android.app.Activity;
 import android.app.ProgressDialog;
 
@@ -9,10 +10,12 @@ import android.app.ProgressDialog;
 public class CustomProgressDialog
 {
 	private ProgressDialog progressDialog;
+	private Activity activity;
 
 	public CustomProgressDialog(Activity activity)
 	{
 		progressDialog = new ProgressDialog(activity);
+		this.activity = activity;
 	}
 
 	public void show(String message)
@@ -24,9 +27,18 @@ public class CustomProgressDialog
 
 	public void dismiss()
 	{
-		if (progressDialog != null && progressDialog.isShowing())
+		try
 		{
-			progressDialog.dismiss();
+			if (progressDialog != null && progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
+		}
+		catch (IllegalArgumentException e)
+		{
+			//Could happen on screen orientation changes
+			//Catch this and send a exception report, as not important.
+			EvercamPlayApplication.sendCaughtExceptionNotImportant(activity, e);
 		}
 	}
 }

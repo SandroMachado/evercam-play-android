@@ -425,7 +425,7 @@ public class EvercamCamera
 				&& externalHost.equals(other.externalHost) && internalHttp == other.internalHttp
 				&& externalHttp == other.externalHttp && internalRtsp == other.internalRtsp
 				&& externalRtsp == other.externalRtsp 
-				&& realOwner == other.realOwner && canEdit == other.canEdit)
+				&& realOwner.equals(other.realOwner) && canEdit == other.canEdit)
 		{
 			return true;
 		}
@@ -435,7 +435,7 @@ public class EvercamCamera
 	@Override
 	public String toString()
 	{
-		return "EvercamCamera [loadingStatus=" + loadingStatus + ", camera=" + camera + ", id="
+		return "EvercamCamera [loadingStatus=" + loadingStatus + ", id="
 				+ id + ", cameraId=" + cameraId + ", name=" + name + ", owner=" + owner
 				+ ", realOwner=" + realOwner + ", canEdit=" + canEdit + ", username=" + username
 				+ ", password=" + password + ", timezone=" + timezone + ", vendor=" + vendor

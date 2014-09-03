@@ -67,6 +67,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 			// FIXME: Time consuming at this line
 			AppData.evercamCameraList = new DbCamera(camerasActivity.getApplicationContext())
 					.getCamerasByOwner(user.getUsername(), 500);
+
 			ArrayList<Camera> cameras = User.getCameras(user.getUsername(), true, true);
 			ArrayList<EvercamCamera> evercamCameras = new ArrayList<EvercamCamera>();
 			for (io.evercam.Camera camera : cameras)
@@ -78,7 +79,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 				{
 					matchLoop: for (EvercamCamera cameraInList : AppData.evercamCameraList)
 					{
-						if (camera.getId().equals(evercamCamera.getCameraId()))
+						if (camera.getId().equals(cameraInList.getCameraId()))
 						{
 							cameraInList.camera = camera;
 							// Only jump out this loop.
@@ -86,6 +87,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 						}
 					}
 				}
+
 				evercamCameras.add(evercamCamera);
 			}
 

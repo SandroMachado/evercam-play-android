@@ -1,5 +1,7 @@
 package io.evercam.androidapp;
 
+import java.util.concurrent.RejectedExecutionException;
+
 import android.os.Bundle;
 
 import android.app.Activity;
@@ -310,8 +312,15 @@ public class CamerasActivity extends ParentActivity implements
 		}
 		else
 		{
-			new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.RESTART)
-					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			try
+			{
+				new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.RESTART)
+						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			}
+			catch (RejectedExecutionException e)
+			{
+				EvercamPlayApplication.sendCaughtExceptionNotImportant(activity, e);
+			}
 		}
 	}
 
@@ -350,19 +359,19 @@ public class CamerasActivity extends ParentActivity implements
 
 		startCameraLoadingTaskWithUserCheck();
 	}
-	
+
 	private void startCameraLoadingTaskWithUserCheck()
 	{
-		if(AppData.defaultUser == null)
+		if (AppData.defaultUser == null)
 		{
 			String defaultEmail = PrefsManager.getUserEmail(this);
 			if (defaultEmail != null)
 			{
 				try
 				{
-				DbAppUser dbUser = new DbAppUser(this);
-				AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
-				AppData.defaultUser = defaultUser;
+					DbAppUser dbUser = new DbAppUser(this);
+					AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
+					AppData.defaultUser = defaultUser;
 				}
 				catch (Exception e)
 				{
@@ -370,13 +379,14 @@ public class CamerasActivity extends ParentActivity implements
 					EvercamPlayApplication.sendCaughtException(this, e.toString());
 				}
 			}
-			else // User is not saved locally, send as a bug.
+			else
+			// User is not saved locally, send as a bug.
 			{
-				EvercamPlayApplication.sendCaughtException(this,
-				TAG + ":" + getString(R.string.exception_user_not_saved));
+				EvercamPlayApplication.sendCaughtException(this, TAG + ":"
+						+ getString(R.string.exception_user_not_saved));
 			}
 		}
-		
+
 		LoadCameraListTask loadTask = new LoadCameraListTask(AppData.defaultUser,
 				CamerasActivity.this);
 		loadTask.reload = true; // be default do not refresh until there
@@ -491,6 +501,7 @@ public class CamerasActivity extends ParentActivity implements
 				int indexPlus = index + 1;
 
 				if (reloadImages) evercamCamera.loadingStatus = ImageLoadingStatus.not_started;
+
 				CameraLayout cameraLayout = new CameraLayout(this, evercamCamera);
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -715,23 +726,15 @@ public class CamerasActivity extends ParentActivity implements
 				}
 				else if (type == InternetCheckType.RESTART)
 				{
-					try
-					{
-						int camsOldValue = camerasPerRow;
-						SharedPreferences sharedPrefs = PreferenceManager
-								.getDefaultSharedPreferences(CamerasActivity.this);
-						camerasPerRow = PrefsManager.getCameraPerRow(sharedPrefs, 2);
+					int camsOldValue = camerasPerRow;
+					SharedPreferences sharedPrefs = PreferenceManager
+							.getDefaultSharedPreferences(CamerasActivity.this);
+					camerasPerRow = PrefsManager.getCameraPerRow(sharedPrefs, 2);
 
-						if (camsOldValue != camerasPerRow)
-						{
-							removeAllCameraViews();
-							addAllCameraViews(false);
-						}
-
-					}
-					catch (Exception e)
+					if (camsOldValue != camerasPerRow)
 					{
-						if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+						removeAllCameraViews();
+						addAllCameraViews(false);
 					}
 				}
 			}

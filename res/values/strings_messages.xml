@@ -11,13 +11,13 @@
     <string name="deleting_camera">Deleting camera&#8230;</string>
     <string name="msg_delete_success">Camera deleted successfully!</string>
     <string name="msg_delete_failed">Failed to delete camera, please try again</string>
-    <string name="msg_exception">There's been an unexpected error. Please close the app and retry</string>
+    <string name="msg_exception">There\'s been an unexpected error. Please close the app and retry</string>
     <string name="msg_error_occurred">Error Occurred</string>
     <string name="msg_unable_to_play">Unable to play</string>
     <string name="msg_please_check_camera">Please check your camera and try again</string>
     <string name="msg_confirm_sign_out">Are you sure you want to sign out?</string>
     <string name="msg_confirm_remove">Are you sure you want to remove this user?</string>
     <string name="msg_confirm_remove_camera">Are you sure you want to remove this camera?</string>
-    <string name="msg_confirm_cancel_scan">We're still still scanning your network, are you sure you want to cancel?</string>
+    <string name="msg_confirm_cancel_scan">We\'re still scanning your network, are you sure you want to cancel?</string>
 
 </resources>
