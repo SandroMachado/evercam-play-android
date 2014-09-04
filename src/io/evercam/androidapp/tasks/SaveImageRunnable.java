@@ -17,14 +17,14 @@ public class SaveImageRunnable implements Runnable
 	private Context context;
 	private Bitmap bitmap;
 	private String cameraId;
-	
+
 	public SaveImageRunnable(Context context, Bitmap bitmap, String cameraId)
 	{
 		this.context = context;
 		this.bitmap = bitmap;
 		this.cameraId = cameraId;
 	}
-	
+
 	@Override
 	public void run()
 	{
@@ -53,7 +53,6 @@ public class SaveImageRunnable implements Runnable
 			Log.e(TAG, "Error saving cache file: " + Log.getStackTraceString(e));
 		}
 	}
-	
 
 	private void createFile(File file, Bitmap bitmap) throws IOException
 	{

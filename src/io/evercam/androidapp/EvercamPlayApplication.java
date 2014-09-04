@@ -88,11 +88,11 @@ public class EvercamPlayApplication extends Application
 		tracker.send(new HitBuilders.ExceptionBuilder().setDescription(message).setFatal(true)
 				.build());
 	}
-	
+
 	public static void sendCaughtExceptionNotImportant(Activity activity, Exception e)
 	{
 		Tracker tracker = getAppTracker(activity);
-		tracker.send(new HitBuilders.ExceptionBuilder().setDescription(e.toString()).setFatal(false)
-				.build());
+		tracker.send(new HitBuilders.ExceptionBuilder().setDescription(e.toString())
+				.setFatal(false).build());
 	}
 }

@@ -4,19 +4,6 @@
     android:layout_height="fill_parent"
     android:layout_gravity="center_vertical" >
 
-    <ScrollView
-        android:id="@+id/svreleasenotes"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:scrollbarFadeDuration="0"
-        android:scrollbars="vertical" >
-
-        <TextView
-            android:id="@+id/txtreleasenotes"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
-    </ScrollView>
-
     <Button
         android:id="@+id/btn_release_notes_ok"
         android:layout_width="fill_parent"
@@ -26,5 +13,19 @@
         android:background="@drawable/btn_selector"
         android:text="@string/ok"
         android:textColor="#ffffff" />
+
+    <ScrollView
+        android:id="@+id/svreleasenotes"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/btn_release_notes_ok"
+        android:scrollbarFadeDuration="0"
+        android:scrollbars="vertical" >
+
+        <TextView
+            android:id="@+id/txtreleasenotes"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
 
 </RelativeLayout>

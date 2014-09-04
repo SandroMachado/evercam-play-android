@@ -56,8 +56,7 @@ public class DownloadLatestTask extends AsyncTask<Void, Void, Bitmap>
 	{
 		if (bitmap != null)
 		{
-			new Thread(new SaveImageRunnable(context, bitmap, cameraId))
-			.start();
+			new Thread(new SaveImageRunnable(context, bitmap, cameraId)).start();
 
 			Drawable drawable = new BitmapDrawable(context.getResources(), bitmap);
 			if (drawable != null && drawable.getIntrinsicWidth() > 0

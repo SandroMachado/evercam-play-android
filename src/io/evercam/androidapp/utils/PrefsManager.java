@@ -37,7 +37,7 @@ public class PrefsManager
 		editor.putString(KEY_USER_EMAIL, email);
 		editor.commit();
 	}
-	
+
 	public static void saveUserEmail(Context context, String email)
 	{
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -45,7 +45,7 @@ public class PrefsManager
 		editor.putString(KEY_USER_EMAIL, email);
 		editor.commit();
 	}
-	
+
 	public static String getUserEmail(Context context)
 	{
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);

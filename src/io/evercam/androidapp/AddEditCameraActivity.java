@@ -765,16 +765,16 @@ public class AddEditCameraActivity extends Activity
 			{
 				final View optionsView = getLayoutInflater().inflate(
 						R.layout.test_snapshot_options_list, null);
-				final AlertDialog dialog = new AlertDialog.Builder(this)
-				.setView(optionsView).setCancelable(true)
-				.setNegativeButton(R.string.cancel, null)
-				.create();
+				final AlertDialog dialog = new AlertDialog.Builder(this).setView(optionsView)
+						.setCancelable(true).setNegativeButton(R.string.cancel, null).create();
 				dialog.show();
 
 				Button internalButton = (Button) optionsView.findViewById(R.id.btn_test_internal);
 				Button externalButton = (Button) optionsView.findViewById(R.id.btn_test_external);
-				internalButton.setText(internalButton.getText() + " (" + internalHostEdit.getText().toString() + ")");
-				externalButton.setText(externalButton.getText() + " (" + externalHostEdit.getText().toString()+")");
+				internalButton.setText(internalButton.getText() + " ("
+						+ internalHostEdit.getText().toString() + ")");
+				externalButton.setText(externalButton.getText() + " ("
+						+ externalHostEdit.getText().toString() + ")");
 
 				internalButton.setOnClickListener(new OnClickListener(){
 					@Override
@@ -784,7 +784,8 @@ public class AddEditCameraActivity extends Activity
 						String internalFullUrl = getInternalUrl(jpgUrl);
 						if (internalFullUrl != null)
 						{
-							new TestSnapshotTask(internalFullUrl, username, password, AddEditCameraActivity.this)
+							new TestSnapshotTask(internalFullUrl, username, password,
+									AddEditCameraActivity.this)
 									.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 						}
 					}

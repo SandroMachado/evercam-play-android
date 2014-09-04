@@ -36,8 +36,8 @@ public class CustomProgressDialog
 		}
 		catch (IllegalArgumentException e)
 		{
-			//Could happen on screen orientation changes
-			//Catch this and send a exception report, as not important.
+			// Could happen on screen orientation changes
+			// Catch this and send a exception report, as not important.
 			EvercamPlayApplication.sendCaughtExceptionNotImportant(activity, e);
 		}
 	}

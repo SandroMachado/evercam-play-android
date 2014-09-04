@@ -1,18 +1,27 @@
 <h4>Evercam Play - IP Camera Viewer</h4>
-<h6>Version 1.1.2</h6> 
+<h6>Version 1.1.3 Alpha 04/09</h6> 
 
 We've been working to get Evercam Play up and running as a standalone app, so we've included the ability to add, edit and delete cameras all from within the app.  
 You can still view all your cameras online but you can do it here too now.
 <br/>
-
 <ul>
-	<li><b><br/>- Add your IP camera<br /></b></li>
-	<li><b>- Vendor/model details are now pre-populated when adding a camera<br/></b></li>
-	<li><b>- Update or remove your connected IP cameras<br/></b></li>
-	<li><b>- Scan your local network for IP cameras<br/></b></li>
+	<li><b><br/>- Load camera list faster<br /></b></li>
+	<li><b>- View shared camera details<br/></b></li>
+	<li><b>- Support local & external snapshot test when add camera<br/></b></li>
 	<li><b>- Supports digest authentication<br/></b></li>
-	<li><b>- Sign in with either your email or Evercam username<br/></b></li>
-	<li><b>- Now using thumbnails for scanned cameras<br/></b></li>
+	<li><b>- Bug fixes<br/></b></li>
+</ul>
+<br/>
+<br/>
+<b>Version 1.1.2</b>
+<ul>
+	<li><br/>- Add your IP camera<br /></li>
+	<li>- Vendor/model details are now pre-populated when adding a camera<br/></li>
+	<li>- Update or remove your connected IP cameras<br/></li>
+	<li>- Scan your local network for IP cameras<br/></li>
+	<li>- Supports digest authentication<br/></li>
+	<li>- Sign in with either your email or Evercam username<br/></li>
+	<li>- Now using thumbnails for scanned cameras<br/></li>
 </ul>
 <br /><br/>
 

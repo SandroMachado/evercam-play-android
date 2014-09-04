@@ -363,7 +363,7 @@ public class ScanActivity extends Activity
 			deviceAdapter.notifyDataSetChanged();
 		}
 	}
-	
+
 	class ScanCheckInternetTask extends CheckInternetTask
 	{
 		public ScanCheckInternetTask(Context context)

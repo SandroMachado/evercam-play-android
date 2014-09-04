@@ -56,15 +56,16 @@ public class CustomAdapter extends ArrayAdapter<AppUser>
 		{
 			LayoutInflater layoutInflater = (LayoutInflater) activity
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = ((appUser != fakeUser) ? layoutInflater.inflate(itemLayoutId, null) : layoutInflater.inflate(
-					newItemLayoutid, null));
+			view = ((appUser != fakeUser) ? layoutInflater.inflate(itemLayoutId, null)
+					: layoutInflater.inflate(newItemLayoutid, null));
 		}
 
 		if (appUser != null && appUser != fakeUser)
 		{
 			((TextView) view.findViewById(emailViewId)).setText(appUser.getEmail());
 			TextView usernameTextView = (TextView) view.findViewById(R.id.account_item_username);
-			usernameTextView.setText(appUser.getUsername() + (appUser.getIsDefault() ? " - Default" : "")	);
+			usernameTextView.setText(appUser.getUsername()
+					+ (appUser.getIsDefault() ? " - Default" : ""));
 		}
 
 		return view;
