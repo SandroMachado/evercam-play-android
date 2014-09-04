@@ -521,8 +521,6 @@ public class CamerasActivity extends ParentActivity implements
 
 			if (this.getActionBar() != null) this.getActionBar().setHomeButtonEnabled(true);
 
-			// startgCMRegisterActions();
-
 			if (refresh != null) refresh.setActionView(null);
 
 			return true;

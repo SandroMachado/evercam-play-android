@@ -110,7 +110,6 @@ public class AddEditCameraActivity extends Activity
 		fillDiscoveredCameraDetails(discoveredCamera);
 
 		fillEditCameraDetails(cameraEdit);
-
 	}
 
 	@Override
