@@ -22,13 +22,7 @@ public class ScanForCameraTask extends AsyncTask<Void, Void, ArrayList<Discovere
 		this.scanActivity = scanActivity;
 		netInfo = new NetInfo(scanActivity);
 	}
-
-	@Override
-	protected void onPreExecute()
-	{
-
-	}
-
+	
 	@Override
 	protected ArrayList<DiscoveredCamera> doInBackground(Void... params)
 	{
@@ -44,6 +38,7 @@ public class ScanForCameraTask extends AsyncTask<Void, Void, ArrayList<Discovere
 		{
 			Log.e(TAG, e.toString());
 		}
+		
 		return cameraList;
 	}
 

@@ -15,17 +15,21 @@ import io.evercam.androidapp.cambase.CambaseAPI;
 import io.evercam.androidapp.cambase.CambaseModel;
 import io.evercam.androidapp.cambase.Manufacturer;
 import io.evercam.androidapp.custom.CustomedDialog;
+import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.tasks.ScanForCameraTask;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamApiHelper;
+import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.network.discovery.DiscoveredCamera;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
@@ -140,7 +144,7 @@ public class ScanActivity extends Activity
 			}
 		});
 
-		startDiscovery();
+		new ScanCheckInternetTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
 	@Override
@@ -225,7 +229,7 @@ public class ScanActivity extends Activity
 
 	public void showScanResults(ArrayList<DiscoveredCamera> discoveredCameras)
 	{
-		if (discoveredCameras != null)
+		if (discoveredCameras != null && discoveredCameras.size() > 0)
 		{
 			showCameraListView(true);
 			showNoCameraView(false);
@@ -360,6 +364,27 @@ public class ScanActivity extends Activity
 		{
 			drawableArray.put(position, drawable);
 			deviceAdapter.notifyDataSetChanged();
+		}
+	}
+	
+	class ScanCheckInternetTask extends CheckInternetTask
+	{
+		public ScanCheckInternetTask(Context context)
+		{
+			super(context);
+		}
+
+		@Override
+		protected void onPostExecute(Boolean hasNetwork)
+		{
+			if (hasNetwork)
+			{
+				startDiscovery();
+			}
+			else
+			{
+				CustomedDialog.showInternetNotConnectDialog(ScanActivity.this);
+			}
 		}
 	}
 }
