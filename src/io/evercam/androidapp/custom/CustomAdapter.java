@@ -1,5 +1,6 @@
 package io.evercam.androidapp.custom;
 
+import io.evercam.androidapp.R;
 import io.evercam.androidapp.dto.AppUser;
 
 import java.util.ArrayList;
@@ -14,58 +15,59 @@ import android.widget.TextView;
 
 public class CustomAdapter extends ArrayAdapter<AppUser>
 {
-	private ArrayList<AppUser> entries;
+	private ArrayList<AppUser> appUsers;
 	private Activity activity;
-	private int itemlayoutid = 0;
-	private int textviewid = 0;
+	private int itemLayoutId = 0;
+	private int emailViewId = 0;
 	private int newItemLayoutid = 0;
 
 	AppUser fakeUser = null;
 
-	public CustomAdapter(Activity a, int LayoutID, int newItemLayoutResource,
-			int itemTextViewIdToDislayNameOfUser, ArrayList<AppUser> entries)
+	public CustomAdapter(Activity activity, int itemLayoutId, int newItemLayoutResource,
+			int itemTextViewIdToDislayNameOfUser, ArrayList<AppUser> appUsers)
 	{
-		super(a, LayoutID, itemTextViewIdToDislayNameOfUser, entries);
+		super(activity, itemLayoutId, itemTextViewIdToDislayNameOfUser, appUsers);
 
-		this.entries = entries;
+		this.appUsers = appUsers;
 
-		if (this.entries != null && this.entries.size() > 0
-				&& this.entries.get(this.entries.size() - 1).getId() == -1)
+		if (this.appUsers != null && this.appUsers.size() > 0
+				&& this.appUsers.get(this.appUsers.size() - 1).getId() == -1)
 		{
-			fakeUser = this.entries.get(this.entries.size() - 1);
+			fakeUser = this.appUsers.get(this.appUsers.size() - 1);
 		}
 		else
 		{
 			this.fakeUser = new AppUser(-1, "", "", "", "", "", "", false);
-			this.entries.add(fakeUser); // add at the end
+			this.appUsers.add(fakeUser); // add at the end
 		}
-		this.activity = a;
-		itemlayoutid = LayoutID;
-		textviewid = itemTextViewIdToDislayNameOfUser;
+		this.activity = activity;
+		this.itemLayoutId = itemLayoutId;
+		emailViewId = itemTextViewIdToDislayNameOfUser;
 		newItemLayoutid = newItemLayoutResource;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		View v = convertView;
-		final AppUser custom = entries.get(position);
+		View view = convertView;
+		final AppUser appUser = appUsers.get(position);
 
-		if (v == null)
+		if (view == null)
 		{
-			LayoutInflater vi = (LayoutInflater) activity
+			LayoutInflater layoutInflater = (LayoutInflater) activity
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = ((custom != fakeUser) ? vi.inflate(itemlayoutid, null) : vi.inflate(
+			view = ((appUser != fakeUser) ? layoutInflater.inflate(itemLayoutId, null) : layoutInflater.inflate(
 					newItemLayoutid, null));
 		}
 
-		if (custom != null && custom != fakeUser)
+		if (appUser != null && appUser != fakeUser)
 		{
-			((TextView) v.findViewById(textviewid)).setText(custom.getEmail()
-					+ (custom.getIsDefault() ? " - Default" : ""));
+			((TextView) view.findViewById(emailViewId)).setText(appUser.getEmail());
+			TextView usernameTextView = (TextView) view.findViewById(R.id.account_item_username);
+			usernameTextView.setText(appUser.getUsername() + (appUser.getIsDefault() ? " - Default" : "")	);
 		}
 
-		return v;
+		return view;
 	}
 
 }

@@ -72,9 +72,9 @@ public class ManageAccountsActivity extends ParentActivity
 		if (AppData.appUsers != null && AppData.appUsers.size() != 0)
 		{
 			ListAdapter listAdapter = new CustomAdapter(ManageAccountsActivity.this,
-					R.layout.manageaccountsactivity_listitem,
-					R.layout.manageaccountsactivity_listitem_add_new_user_account,
-					R.id.manageactivity_listitemtextvie, (ArrayList<AppUser>) AppData.appUsers);
+					R.layout.manage_account_list_item,
+					R.layout.manage_account_list_item_new_user,
+					R.id.account_item_email, (ArrayList<AppUser>) AppData.appUsers);
 			listview.setAdapter(listAdapter);
 		}
 		else
@@ -378,9 +378,9 @@ public class ManageAccountsActivity extends ParentActivity
 			AppData.appUsers = dbUser.getAllAppUsers(100);
 
 			ListAdapter listAdapter = new CustomAdapter(ManageAccountsActivity.this,
-					R.layout.manageaccountsactivity_listitem,
-					R.layout.manageaccountsactivity_listitem_add_new_user_account,
-					R.id.manageactivity_listitemtextvie, (ArrayList<AppUser>) AppData.appUsers);
+					R.layout.manage_account_list_item,
+					R.layout.manage_account_list_item_new_user,
+					R.id.account_item_email, (ArrayList<AppUser>) AppData.appUsers);
 			ListView listview = (ListView) findViewById(R.id.email_list);
 			listview.setAdapter(null);
 			listview.setAdapter(listAdapter);
