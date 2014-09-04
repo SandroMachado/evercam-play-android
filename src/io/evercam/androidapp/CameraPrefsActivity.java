@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import io.evercam.androidapp.utils.Constants;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;

@@ -43,7 +43,8 @@
     <string name="patch_success">Settings updated successfully!</string>
     <string name="unknown_error">Unknown error, please contact support.</string>
     <string name="host_required">Please specify either an internal or external IP address.</string>
-    <string name="external_http_required">Please specify a HTTP port</string>
+    <string name="external_http_required">Please specify external HTTP port</string>
+    <string name="internal_http_required">Please specify internal HTTP port</string>
     <string name="snapshot_test_port_closed">The given port on given IP address is not reachable.</string>
     <string name="snapshot_test_failed">The given port is opened, but we couldn\'t get an image from the camera. Please make sure camera credentials and snapshot URL are correct.</string>
     <string name="snapshot_test_success">Successfully retrieved an image from your camera!</string>
@@ -52,6 +53,11 @@
     <!-- Option Items -->
     <string name="add_ip_camera">Add camera manually</string>
     <string name="scan_for_cameras">Scan for cameras (beta)</string>
+    
+    <!-- Test snapshot options -->
+    <string name="test_internal_text">Internal</string>
+    <string name="test_external_text">External</string>
+    <string name="test_snapshot_title">Please choose IP address</string>
 
     <!-- Network Scan -->
     <string name="msg_scanning">Hang on a sec while we search\nfor cameras on your network,\nScanning for cameras&#8230;</string>

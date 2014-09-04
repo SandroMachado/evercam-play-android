@@ -13,6 +13,7 @@ import io.evercam.Model;
 import io.evercam.PatchCameraBuilder;
 import io.evercam.Vendor;
 import io.evercam.androidapp.custom.CustomToast;
+import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.tasks.AddCameraTask;
 import io.evercam.androidapp.tasks.PatchCameraTask;
@@ -26,6 +27,8 @@ import io.evercam.network.discovery.DiscoveredCamera;
 import com.bugsense.trace.BugSenseHandler;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -715,32 +718,128 @@ public class AddEditCameraActivity extends Activity
 
 	private void launchTestSnapshot()
 	{
-		String username = usernameEdit.getText().toString();
-		String password = passwordEdit.getText().toString();
-
+		String internalHost = internalHostEdit.getText().toString();
 		String externalHost = externalHostEdit.getText().toString();
-		if (externalHost.isEmpty())
+
+		if (internalHost.isEmpty() && externalHost.isEmpty())
 		{
 			CustomToast.showInCenter(this, getString(R.string.host_required));
-			return;
+		}
+		else
+		{
+			final String username = usernameEdit.getText().toString();
+			final String password = passwordEdit.getText().toString();
+			String jpgUrlString = jpgUrlEdit.getText().toString();
+			final String jpgUrl;
+			if (!jpgUrlString.startsWith("/"))
+			{
+				jpgUrl = "/" + jpgUrlString;
+			}
+			else
+			{
+				jpgUrl = jpgUrlString;
+			}
+
+			// Internal is empty, test external only
+			if (internalHost.isEmpty())
+			{
+				String externalFullUrl = getExternalUrl(jpgUrl);
+				if (externalFullUrl != null)
+				{
+					new TestSnapshotTask(externalFullUrl, username, password, this)
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				}
+			}
+			// External is empty, test internal only.
+			else if (externalHost.isEmpty())
+			{
+				String internalFullUrl = getInternalUrl(jpgUrl);
+				if (internalFullUrl != null)
+				{
+					new TestSnapshotTask(internalFullUrl, username, password, this)
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				}
+			}
+			// Both not empty, give options to choose
+			else
+			{
+				final View optionsView = getLayoutInflater().inflate(
+						R.layout.test_snapshot_options_list, null);
+				final AlertDialog dialog = new AlertDialog.Builder(this)
+				.setView(optionsView).setCancelable(true)
+				.setNegativeButton(R.string.cancel, null)
+				.create();
+				dialog.show();
+
+				Button internalButton = (Button) optionsView.findViewById(R.id.btn_test_internal);
+				Button externalButton = (Button) optionsView.findViewById(R.id.btn_test_external);
+				internalButton.setText(internalButton.getText() + " (" + internalHostEdit.getText().toString() + ")");
+				externalButton.setText(externalButton.getText() + " (" + externalHostEdit.getText().toString()+")");
+
+				internalButton.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v)
+					{
+						dialog.dismiss();
+						String internalFullUrl = getInternalUrl(jpgUrl);
+						if (internalFullUrl != null)
+						{
+							new TestSnapshotTask(internalFullUrl, username, password, AddEditCameraActivity.this)
+									.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						}
+					}
+				});
+
+				externalButton.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v)
+					{
+						dialog.dismiss();
+						String externalFullUrl = getExternalUrl(jpgUrl);
+						if (externalFullUrl != null)
+						{
+							new TestSnapshotTask(externalFullUrl, username, password,
+									AddEditCameraActivity.this)
+									.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						}
+					}
+				});
+			}
+		}
+	}
+
+	/**
+	 * Check internal HTTP port is filled or not and return internal URL with
+	 * snapshot ending.
+	 */
+	private String getInternalUrl(String jpgEnding)
+	{
+		String internalHost = internalHostEdit.getText().toString();
+		String internalHttp = internalHttpEdit.getText().toString();
+		if (internalHttp.isEmpty())
+		{
+			CustomToast.showInCenter(this, getString(R.string.internal_http_required));
+			return null;
 		}
 
+		return getString(R.string.prefix_http) + internalHost + ":" + internalHttp + jpgEnding;
+	}
+
+	/**
+	 * Check external HTTP port is filled or not and return external URL with
+	 * snapshot ending.
+	 */
+	private String getExternalUrl(String jpgEnding)
+	{
+		String externalHost = externalHostEdit.getText().toString();
 		String externalHttp = externalHttpEdit.getText().toString();
 		if (externalHttp.isEmpty())
 		{
 			CustomToast.showInCenter(this, getString(R.string.external_http_required));
-			return;
+			return null;
 		}
 
-		String jpgUrl = jpgUrlEdit.getText().toString();
-		if (!jpgUrl.startsWith("/"))
-		{
-			jpgUrl = "/" + jpgUrl;
-		}
-
-		String url = getString(R.string.prefix_http) + externalHost + ":" + externalHttp + jpgUrl;
-		new TestSnapshotTask(url, username, password, this)
-				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		return getString(R.string.prefix_http) + externalHost + ":" + externalHttp + jpgEnding;
 	}
 
 	class RequestVendorListTask extends AsyncTask<Void, Void, ArrayList<Vendor>>
