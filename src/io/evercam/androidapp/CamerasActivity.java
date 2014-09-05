@@ -56,7 +56,6 @@ public class CamerasActivity extends ParentActivity implements
 	private SlideMenu slideMenu;
 	private int totalCamerasInGrid = 0;
 	private int slideoutMenuAnimationTime = 255;
-	public boolean isUsersAccountsActivityStarted = false;
 	private static int camerasPerRow = 2;
 	public boolean reloadCameraList = false;
 
@@ -118,29 +117,17 @@ public class CamerasActivity extends ParentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		try
-		{
-			// draw the options defined in the following file
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.camsmenulayout, menu);
+		// draw the options defined in the following file
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.camsmenulayout, menu);
 
-			refresh = menu.findItem(R.id.menurefresh);
+		refresh = menu.findItem(R.id.menurefresh);
 
-			if (refresh != null
-					&& (AppData.evercamCameraList == null || AppData.evercamCameraList.size() == 0))
-			{
-				refresh.setActionView(null);
-				refresh.setActionView(R.layout.actionbar_indeterminate_progress);
-			}
-			return true;
-		}
-		catch (Exception ex)
+		if (refresh != null
+				&& (AppData.evercamCameraList == null || AppData.evercamCameraList.size() == 0))
 		{
-			Log.e(TAG, ex.toString());
-			if (Constants.isAppTrackingEnabled)
-			{
-				BugSenseHandler.sendException(ex);
-			}
+			refresh.setActionView(null);
+			refresh.setActionView(R.layout.actionbar_indeterminate_progress);
 		}
 		return true;
 	}
@@ -181,8 +168,7 @@ public class CamerasActivity extends ParentActivity implements
 			EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
 					R.string.action_manage_account, R.string.label_account);
 
-			startActivity(new Intent(CamerasActivity.this, ManageAccountsActivity.class));
-			isUsersAccountsActivityStarted = true;
+			startActivityForResult(new Intent(CamerasActivity.this, ManageAccountsActivity.class), Constants.REQUEST_CODE_MANAGE_ACCOUNT);
 			stopImageLoading = true;
 
 			return true;
@@ -298,7 +284,7 @@ public class CamerasActivity extends ParentActivity implements
 	{
 		super.onRestart();
 
-		if (isUsersAccountsActivityStarted || reloadCameraList)
+		if (reloadCameraList)
 		{
 			// If returned from account management, the
 			// default user could possibly changed,
@@ -307,7 +293,6 @@ public class CamerasActivity extends ParentActivity implements
 			// addUsersToDropdownActionBar();
 			removeAllCameraViews();
 			startLoadingCameras();
-			isUsersAccountsActivityStarted = false;
 			reloadCameraList = false;
 		}
 		else
@@ -345,6 +330,17 @@ public class CamerasActivity extends ParentActivity implements
 				reloadCameraList = false;
 			}
 		}
+		else if(requestCode == Constants.REQUEST_CODE_MANAGE_ACCOUNT)
+		{
+			if(resultCode == Constants.RESULT_ACCOUNT_CHANGED)
+			{
+				reloadCameraList = true;
+			}
+			else
+			{
+				reloadCameraList = false;
+			}
+		}
 	}
 
 	private void startLoadingCameras()
@@ -352,7 +348,7 @@ public class CamerasActivity extends ParentActivity implements
 		stopImageLoading = false;
 
 		reloadProgressDialog = new CustomProgressDialog(this);
-		if (isUsersAccountsActivityStarted || reloadCameraList)
+		if (reloadCameraList)
 		{
 			reloadProgressDialog.show(getString(R.string.loading_cameras));
 		}

@@ -23,8 +23,10 @@ public final class Constants
 	public static final int REQUEST_CODE_DELETE_CAMERA = 2;
 	public static final int REQUEST_CODE_PATCH_CAMERA = 3;
 	public static final int REQUEST_CODE_VIEW_CAMERA = 4;
+	public static final int REQUEST_CODE_MANAGE_ACCOUNT = 5;
 	public static final int RESULT_TRUE = 1;
 	public static final int RESULT_FALSE = 0;
+	public static final int RESULT_ACCOUNT_CHANGED = 1;
 
 	// Values for intent bundle
 	public static final String KEY_IS_EDIT = "isEdit";

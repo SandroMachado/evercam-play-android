@@ -5,6 +5,7 @@ import io.evercam.ApiKeyPair;
 import io.evercam.EvercamException;
 import io.evercam.User;
 import io.evercam.androidapp.custom.CustomAdapter;
+import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.*;
@@ -42,9 +43,11 @@ import android.widget.ProgressBar;
 
 public class ManageAccountsActivity extends ParentActivity
 {
-	static String TAG = "evercamplay-ManageAccountsActivity";
+	private static String TAG = "evercamplay-ManageAccountsActivity";
 
 	private AlertDialog alertDialog = null;
+	private String oldDefaultUser = null;
+	private CustomProgressDialog progressDialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -58,6 +61,8 @@ public class ManageAccountsActivity extends ParentActivity
 
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_manage_account));
 
+		oldDefaultUser = AppData.defaultUser.getUsername();
+
 		if (this.getActionBar() != null)
 		{
 			this.getActionBar().setHomeButtonEnabled(true);
@@ -66,6 +71,8 @@ public class ManageAccountsActivity extends ParentActivity
 		}
 
 		setContentView(R.layout.manage_account_activity);
+		
+		progressDialog = new CustomProgressDialog(ManageAccountsActivity.this);
 
 		// create and start the task to show all user accounts
 		ListView listview = (ListView) findViewById(R.id.email_list);
@@ -119,6 +126,7 @@ public class ManageAccountsActivity extends ParentActivity
 						@Override
 						public void onClick(View v)
 						{
+							progressDialog.show(ManageAccountsActivity.this.getString(R.string.switching_account));
 							setDefaultUser(user.getId() + "", true, dialog);
 							ed_dialog_layout.setEnabled(false);
 							ed_dialog_layout.setClickable(false);
@@ -213,28 +221,34 @@ public class ManageAccountsActivity extends ParentActivity
 		}
 	}
 
+	@Override
+	public void onBackPressed()
+	{
+		if (!AppData.defaultUser.getUsername().equals(oldDefaultUser))
+		{
+			setResult(Constants.RESULT_ACCOUNT_CHANGED);
+		}
+		this.finish();
+	}
+
 	// Tells that what item has been selected from options. We need to call the
 	// relevant code for that item.
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		try
+		// Handle item selection
+		switch (item.getItemId())
 		{
-			// Handle item selection
-			switch (item.getItemId())
+		case android.R.id.home:
+
+			if (!AppData.defaultUser.getUsername().equals(oldDefaultUser))
 			{
-			case android.R.id.home:
-				this.finish();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+				setResult(Constants.RESULT_ACCOUNT_CHANGED);
 			}
-		}
-		catch (Exception e)
-		{
-			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
+			this.finish();
 			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -345,6 +359,10 @@ public class ManageAccountsActivity extends ParentActivity
 
 			if (closeActivity)
 			{
+				if (!AppData.defaultUser.getUsername().equals(oldDefaultUser))
+				{
+					setResult(Constants.RESULT_ACCOUNT_CHANGED);
+				}
 				ManageAccountsActivity.this.finish();
 			}
 			else

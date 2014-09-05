@@ -6,5 +6,6 @@
     <string name="remove_account">Remove Account</string>
     <string name="add_new_account">Add New Account</string>
     <string name="add_account">Add Account</string>
+    <string name="switching_account">Switching account&#8230;</string>
 
 </resources>
