@@ -71,7 +71,7 @@ public class ManageAccountsActivity extends ParentActivity
 		}
 
 		setContentView(R.layout.manage_account_activity);
-		
+
 		progressDialog = new CustomProgressDialog(ManageAccountsActivity.this);
 
 		// create and start the task to show all user accounts
@@ -126,7 +126,8 @@ public class ManageAccountsActivity extends ParentActivity
 						@Override
 						public void onClick(View v)
 						{
-							progressDialog.show(ManageAccountsActivity.this.getString(R.string.switching_account));
+							progressDialog.show(ManageAccountsActivity.this
+									.getString(R.string.switching_account));
 							setDefaultUser(user.getId() + "", true, dialog);
 							ed_dialog_layout.setEnabled(false);
 							ed_dialog_layout.setClickable(false);
@@ -431,8 +432,7 @@ public class ManageAccountsActivity extends ParentActivity
 			this.password = password;
 			this.isDefault = isDefault;
 			this.alertDialog = alertDialog;
-			progressBar = (ProgressBar) alertDialog
-					.findViewById(R.id.pb_loadinguser);
+			progressBar = (ProgressBar) alertDialog.findViewById(R.id.pb_loadinguser);
 		}
 
 		@Override

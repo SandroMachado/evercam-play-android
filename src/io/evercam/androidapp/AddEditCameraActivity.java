@@ -13,7 +13,6 @@ import io.evercam.Model;
 import io.evercam.PatchCameraBuilder;
 import io.evercam.Vendor;
 import io.evercam.androidapp.custom.CustomToast;
-import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.tasks.AddCameraTask;
 import io.evercam.androidapp.tasks.PatchCameraTask;
@@ -28,7 +27,6 @@ import com.bugsense.trace.BugSenseHandler;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;

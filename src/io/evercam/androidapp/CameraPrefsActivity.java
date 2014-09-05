@@ -6,7 +6,6 @@ import io.evercam.androidapp.custom.ThemedListPreference;
 import io.evercam.androidapp.utils.Constants;
 
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import com.bugsense.trace.BugSenseHandler;
@@ -87,8 +86,8 @@ public class CameraPrefsActivity extends PreferenceActivity
 			}
 			CharSequence[] charNumberValues = cameraNumberArrayList
 					.toArray(new CharSequence[cameraNumberArrayList.size()]);
-			ThemedListPreference interfaceList = (ThemedListPreference) getPreferenceManager().findPreference(
-					Constants.KEY_CAMERA_PER_ROW);
+			ThemedListPreference interfaceList = (ThemedListPreference) getPreferenceManager()
+					.findPreference(Constants.KEY_CAMERA_PER_ROW);
 			interfaceList.setEntries(charNumberValues);
 			interfaceList.setEntryValues(charNumberValues);
 		}

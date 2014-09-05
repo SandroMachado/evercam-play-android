@@ -168,7 +168,8 @@ public class CamerasActivity extends ParentActivity implements
 			EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
 					R.string.action_manage_account, R.string.label_account);
 
-			startActivityForResult(new Intent(CamerasActivity.this, ManageAccountsActivity.class), Constants.REQUEST_CODE_MANAGE_ACCOUNT);
+			startActivityForResult(new Intent(CamerasActivity.this, ManageAccountsActivity.class),
+					Constants.REQUEST_CODE_MANAGE_ACCOUNT);
 			stopImageLoading = true;
 
 			return true;
@@ -330,9 +331,9 @@ public class CamerasActivity extends ParentActivity implements
 				reloadCameraList = false;
 			}
 		}
-		else if(requestCode == Constants.REQUEST_CODE_MANAGE_ACCOUNT)
+		else if (requestCode == Constants.REQUEST_CODE_MANAGE_ACCOUNT)
 		{
-			if(resultCode == Constants.RESULT_ACCOUNT_CHANGED)
+			if (resultCode == Constants.RESULT_ACCOUNT_CHANGED)
 			{
 				reloadCameraList = true;
 			}

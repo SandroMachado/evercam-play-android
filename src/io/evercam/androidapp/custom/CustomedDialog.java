@@ -1,6 +1,5 @@
 package io.evercam.androidapp.custom;
 
-import io.evercam.androidapp.ManageAccountsActivity;
 import io.evercam.androidapp.R;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,12 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -114,8 +110,7 @@ public class CustomedDialog
 								dialog.dismiss();
 								activity.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
 							}
-						})
-						.setNegativeButton(R.string.notNow, negativeistener);
+						}).setNegativeButton(R.string.notNow, negativeistener);
 		AlertDialog alertDialog = dialogBuilder.create();
 		return alertDialog;
 	}
