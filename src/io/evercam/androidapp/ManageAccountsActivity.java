@@ -255,7 +255,7 @@ public class ManageAccountsActivity extends ParentActivity
 	private void showAddUserDialogue(String username, String password, boolean isdefault)
 	{
 		final View dialog_layout = getLayoutInflater().inflate(
-				R.layout.manageaccountsactivity_adduser_dialogue, null);
+				R.layout.manage_account_adduser_dialogue, null);
 
 		alertDialog = new AlertDialog.Builder(this).setView(dialog_layout).setCancelable(false)
 				.setNegativeButton(R.string.cancel, null)
@@ -295,6 +295,7 @@ public class ManageAccountsActivity extends ParentActivity
 		boolean isDefault = false;
 		EditText usernameEdit = (EditText) view.findViewById(R.id.username_edit);
 		EditText passwordEdit = (EditText) view.findViewById(R.id.user_password);
+		ProgressBar progressBar = (ProgressBar) alertDialog.findViewById(R.id.pb_loadinguser);
 
 		String username = usernameEdit.getText().toString();
 		String password = passwordEdit.getText().toString();
@@ -302,22 +303,26 @@ public class ManageAccountsActivity extends ParentActivity
 		if (TextUtils.isEmpty(username))
 		{
 			CustomToast.showInCenter(this, R.string.error_username_required);
+			progressBar.setVisibility(View.GONE);
 			return;
 		}
 		else if (username.contains(" "))
 		{
 			CustomToast.showInCenter(this, R.string.error_invalid_username);
+			progressBar.setVisibility(View.GONE);
 			return;
 		}
 
 		if (TextUtils.isEmpty(password))
 		{
 			CustomToast.showInCenter(this, R.string.error_password_required);
+			progressBar.setVisibility(View.GONE);
 			return;
 		}
 		else if (password.contains(" "))
 		{
 			CustomToast.showInCenter(this, R.string.error_invalid_password);
+			progressBar.setVisibility(View.GONE);
 			return;
 		}
 
@@ -417,6 +422,7 @@ public class ManageAccountsActivity extends ParentActivity
 		AlertDialog alertDialog = null;
 		AppUser newUser;
 		String errorMessage = null;
+		ProgressBar progressBar;
 
 		public AddAccountTask(String username, String password, boolean isDefault,
 				AlertDialog alertDialog)
@@ -425,6 +431,8 @@ public class ManageAccountsActivity extends ParentActivity
 			this.password = password;
 			this.isDefault = isDefault;
 			this.alertDialog = alertDialog;
+			progressBar = (ProgressBar) alertDialog
+					.findViewById(R.id.pb_loadinguser);
 		}
 
 		@Override
@@ -465,12 +473,9 @@ public class ManageAccountsActivity extends ParentActivity
 		@Override
 		protected void onPostExecute(Boolean success)
 		{
+			progressBar.setVisibility(View.GONE);
 			if (!success)
 			{
-				ProgressBar progressBar = (ProgressBar) alertDialog
-						.findViewById(R.id.pb_loadinguser);
-				progressBar.setVisibility(View.GONE);
-
 				if (errorMessage != null)
 				{
 					CustomToast.showInCenter(getApplicationContext(), errorMessage);

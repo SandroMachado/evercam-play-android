@@ -1,5 +1,6 @@
 package io.evercam.androidapp.custom;
 
+import io.evercam.androidapp.ManageAccountsActivity;
 import io.evercam.androidapp.R;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -7,10 +8,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class CustomedDialog
 {
@@ -67,29 +72,52 @@ public class CustomedDialog
 	/**
 	 * The dialog that prompt to connect Internet, with listener.
 	 */
-	public static AlertDialog getNoInternetDialog(final Context context,
+	public static AlertDialog getNoInternetDialog(final Activity activity,
 			DialogInterface.OnClickListener negativeistener)
 	{
-		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context,
-				io.evercam.androidapp.R.style.ThemeDialog);
-		dialogBuilder.setInverseBackgroundForced(false);
+		// AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity,
+		// io.evercam.androidapp.R.style.ThemeDialog);
+		// dialogBuilder.setInverseBackgroundForced(false);
+		//
+		// dialogBuilder.setTitle(R.string.msg_network_not_connected);
+		// dialogBuilder.setMessage(R.string.msg_try_network_again);
+		// dialogBuilder.setPositiveButton(R.string.settings_capital,
+		// new DialogInterface.OnClickListener(){
+		// @Override
+		// public void onClick(DialogInterface dialog, int which)
+		// {
+		// dialog.dismiss();
+		// activity.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+		// }
+		// });
+		// dialogBuilder.setNegativeButton(R.string.notNow, negativeistener);
+		// AlertDialog dialogNoInternet = dialogBuilder.create();
+		// dialogNoInternet.setCanceledOnTouchOutside(false);
+		// dialogNoInternet.closeOptionsMenu();
+		// return dialogNoInternet;
 
-		dialogBuilder.setTitle(R.string.msg_network_not_connected);
-		dialogBuilder.setMessage(R.string.msg_try_network_again);
-		dialogBuilder.setPositiveButton(R.string.settings_capital,
-				new DialogInterface.OnClickListener(){
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						dialog.dismiss();
-						context.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-					}
-				});
-		dialogBuilder.setNegativeButton(R.string.notNow, negativeistener);
-		AlertDialog dialogNoInternet = dialogBuilder.create();
-		dialogNoInternet.setCanceledOnTouchOutside(false);
-		dialogNoInternet.closeOptionsMenu();
-		return dialogNoInternet;
+		final View dialogLayout = activity.getLayoutInflater().inflate(
+				R.layout.single_message_dialogue, null);
+		TextView titleTextView = ((TextView) dialogLayout.findViewById(R.id.text_title));
+		TextView messageTextView = ((TextView) dialogLayout.findViewById(R.id.text_message));
+		titleTextView.setText(R.string.msg_network_not_connected);
+		messageTextView.setText(R.string.msg_try_network_again);
+
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
+				.setView(dialogLayout)
+				.setCancelable(false)
+				.setPositiveButton(R.string.settings_capital,
+						new DialogInterface.OnClickListener(){
+							@Override
+							public void onClick(DialogInterface dialog, int which)
+							{
+								dialog.dismiss();
+								activity.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+							}
+						})
+						.setNegativeButton(R.string.notNow, negativeistener);
+		AlertDialog alertDialog = dialogBuilder.create();
+		return alertDialog;
 	}
 
 	/**
