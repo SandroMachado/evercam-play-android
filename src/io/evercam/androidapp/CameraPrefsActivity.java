@@ -56,11 +56,11 @@ public class CameraPrefsActivity extends PreferenceActivity
 		}
 	}
 
-	public class MyPreferenceFragment extends PreferenceFragment
+	public static class MyPreferenceFragment extends PreferenceFragment
 	{
 		public MyPreferenceFragment()
 		{
-			super();
+			//super();
 		}
 
 		@Override
@@ -68,10 +68,9 @@ public class CameraPrefsActivity extends PreferenceActivity
 		{
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.main_preference);
-
 			setCameraNumbersForScreen(screenWidth);
 		}
-
+		
 		private void setCameraNumbersForScreen(int screenWidth)
 		{
 			int maxCamerasPerRow = 3;

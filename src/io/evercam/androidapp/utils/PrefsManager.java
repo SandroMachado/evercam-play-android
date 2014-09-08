@@ -64,9 +64,18 @@ public class PrefsManager
 		editor.commit();
 	}
 
-	public static int getCameraPerRow(SharedPreferences sharedPrefs, int oldNumber)
+	public static int getCameraPerRow(Context context, int oldNumber)
 	{
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		return Integer.parseInt(sharedPrefs.getString(KEY_CAMERA_PER_ROW, "" + oldNumber));
+	}
+	
+	public static void setCameraPerRow(Context context, int cameraPerRow)
+	{
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences.Editor editor = sharedPrefs.edit();
+		editor.putString(KEY_CAMERA_PER_ROW, "" + 2);
+		editor.commit();
 	}
 
 	public static boolean isRleaseNotesShown(Context context, int versionCode)

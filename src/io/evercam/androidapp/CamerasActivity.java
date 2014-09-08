@@ -1,5 +1,6 @@
 package io.evercam.androidapp;
 
+import java.util.ArrayList;
 import java.util.concurrent.RejectedExecutionException;
 
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import io.evercam.androidapp.custom.AboutDialog;
 import io.evercam.androidapp.custom.CameraLayout;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomedDialog;
+import io.evercam.androidapp.custom.ThemedListPreference;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
@@ -70,7 +72,7 @@ public class CamerasActivity extends ParentActivity implements
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
+	
 		if (Constants.isAppTrackingEnabled)
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
@@ -284,7 +286,6 @@ public class CamerasActivity extends ParentActivity implements
 	public void onRestart()
 	{
 		super.onRestart();
-
 		try
 		{
 			new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.RESTART)
@@ -396,6 +397,7 @@ public class CamerasActivity extends ParentActivity implements
 		try
 		{
 			int screen_width = readScreenWidth(this);
+			camerasPerRow = recalculateCameraPerRow();
 
 			io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
 					.findViewById(R.id.camsLV);
@@ -466,8 +468,8 @@ public class CamerasActivity extends ParentActivity implements
 	{
 		try
 		{
-			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-			camerasPerRow = PrefsManager.getCameraPerRow(sharedPrefs, camerasPerRow);
+			//Recalculate camera per row
+			camerasPerRow = recalculateCameraPerRow();
 
 			io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
 					.findViewById(R.id.camsLV);
@@ -563,29 +565,22 @@ public class CamerasActivity extends ParentActivity implements
 	@Override
 	public void onConfigurationChanged(Configuration newConfig)
 	{
-		try
-		{
 			super.onConfigurationChanged(newConfig);
-
 			resizeCameras();
-
-		}
-		catch (Exception e)
-		{
-			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-		}
 	}
 
 	@Override
 	public void onStart()
 	{
 		super.onStart();
-
+		
 		if (Constants.isAppTrackingEnabled)
 		{
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
 		}
 	}
+	
+	
 
 	@Override
 	public void onStop()
@@ -714,10 +709,10 @@ public class CamerasActivity extends ParentActivity implements
 					else
 					{
 						int camsOldValue = camerasPerRow;
-						SharedPreferences sharedPrefs = PreferenceManager
-								.getDefaultSharedPreferences(CamerasActivity.this);
-						camerasPerRow = PrefsManager.getCameraPerRow(sharedPrefs, 2);
-
+//						SharedPreferences sharedPrefs = PreferenceManager
+//								.getDefaultSharedPreferences(CamerasActivity.this);1
+//						camerasPerRow = PrefsManager.getCameraPerRow(sharedPrefs, 2);
+						camerasPerRow = recalculateCameraPerRow();
 						if (camsOldValue != camerasPerRow)
 						{
 							removeAllCameraViews();
@@ -739,5 +734,23 @@ public class CamerasActivity extends ParentActivity implements
 		Point size = new Point();
 		display.getSize(size);
 		return size.x;
+	}
+	
+	private int recalculateCameraPerRow()
+	{
+		int screenWidth = readScreenWidth(this);
+		int maxCamerasPerRow = 3;
+		if (screenWidth != 0)
+		{
+			maxCamerasPerRow = screenWidth / 350;
+		}
+		
+		int oldCamerasPerRow = PrefsManager.getCameraPerRow(this, maxCamerasPerRow);
+		if(maxCamerasPerRow < oldCamerasPerRow)
+		{
+			PrefsManager.setCameraPerRow(this, maxCamerasPerRow);
+			return maxCamerasPerRow;
+		}
+		return oldCamerasPerRow;
 	}
 }
