@@ -285,28 +285,14 @@ public class CamerasActivity extends ParentActivity implements
 	{
 		super.onRestart();
 
-		if (reloadCameraList)
+		try
 		{
-			// If returned from account management, the
-			// default user could possibly changed,
-			// so remove all cameras and reload.
-
-			// addUsersToDropdownActionBar();
-			removeAllCameraViews();
-			startLoadingCameras();
-			reloadCameraList = false;
+			new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.RESTART)
+					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		}
-		else
+		catch (RejectedExecutionException e)
 		{
-			try
-			{
-				new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.RESTART)
-						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			}
-			catch (RejectedExecutionException e)
-			{
-				EvercamPlayApplication.sendCaughtExceptionNotImportant(activity, e);
-			}
+			EvercamPlayApplication.sendCaughtExceptionNotImportant(activity, e);
 		}
 	}
 
@@ -683,7 +669,8 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			Log.e(TAG, "Error: sign out" + e.toString());
 		}
-		startActivity(new Intent(this, MainActivity.class));
+		finish();
+		startActivity(new Intent(this, SlideActivity.class));
 	}
 
 	private void showSignOutDialog()
@@ -697,7 +684,6 @@ public class CamerasActivity extends ParentActivity implements
 				logOutUser();
 			}
 		}).show();
-
 	}
 
 	class CamerasCheckInternetTask extends CheckInternetTask
@@ -721,15 +707,29 @@ public class CamerasActivity extends ParentActivity implements
 				}
 				else if (type == InternetCheckType.RESTART)
 				{
-					int camsOldValue = camerasPerRow;
-					SharedPreferences sharedPrefs = PreferenceManager
-							.getDefaultSharedPreferences(CamerasActivity.this);
-					camerasPerRow = PrefsManager.getCameraPerRow(sharedPrefs, 2);
-
-					if (camsOldValue != camerasPerRow)
+					if (reloadCameraList)
 					{
+						// If returned from account management, the
+						// default user could possibly changed,
+						// so remove all cameras and reload.
+
+						// addUsersToDropdownActionBar();
 						removeAllCameraViews();
-						addAllCameraViews(false);
+						startLoadingCameras();
+						reloadCameraList = false;
+					}
+					else
+					{
+						int camsOldValue = camerasPerRow;
+						SharedPreferences sharedPrefs = PreferenceManager
+								.getDefaultSharedPreferences(CamerasActivity.this);
+						camerasPerRow = PrefsManager.getCameraPerRow(sharedPrefs, 2);
+
+						if (camsOldValue != camerasPerRow)
+						{
+							removeAllCameraViews();
+							addAllCameraViews(false);
+						}
 					}
 				}
 			}

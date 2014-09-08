@@ -152,10 +152,12 @@ public class MainActivity extends Activity
 			{
 				if (isUserLogged())
 				{
+					finish();
 					startCamerasActivity();
 				}
 				else
 				{
+					finish();
 					Intent slideIntent = new Intent(MainActivity.this, SlideActivity.class);
 					startActivity(slideIntent);
 				}
@@ -164,7 +166,6 @@ public class MainActivity extends Activity
 			{
 				CustomedDialog.showInternetNotConnectDialog(MainActivity.this);
 			}
-
 		}
 	}
 }

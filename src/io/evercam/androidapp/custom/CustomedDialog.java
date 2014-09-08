@@ -71,27 +71,6 @@ public class CustomedDialog
 	public static AlertDialog getNoInternetDialog(final Activity activity,
 			DialogInterface.OnClickListener negativeistener)
 	{
-		// AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity,
-		// io.evercam.androidapp.R.style.ThemeDialog);
-		// dialogBuilder.setInverseBackgroundForced(false);
-		//
-		// dialogBuilder.setTitle(R.string.msg_network_not_connected);
-		// dialogBuilder.setMessage(R.string.msg_try_network_again);
-		// dialogBuilder.setPositiveButton(R.string.settings_capital,
-		// new DialogInterface.OnClickListener(){
-		// @Override
-		// public void onClick(DialogInterface dialog, int which)
-		// {
-		// dialog.dismiss();
-		// activity.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-		// }
-		// });
-		// dialogBuilder.setNegativeButton(R.string.notNow, negativeistener);
-		// AlertDialog dialogNoInternet = dialogBuilder.create();
-		// dialogNoInternet.setCanceledOnTouchOutside(false);
-		// dialogNoInternet.closeOptionsMenu();
-		// return dialogNoInternet;
-
 		final View dialogLayout = activity.getLayoutInflater().inflate(
 				R.layout.single_message_dialogue, null);
 		TextView titleTextView = ((TextView) dialogLayout.findViewById(R.id.text_title));
