@@ -527,15 +527,8 @@ public class CamerasActivity extends ParentActivity implements
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		try
-		{
-			stopGcmRegisterActions();
-			removeAllCameraViews();
-		}
-		catch (Exception e)
-		{
-			Log.e(TAG, e.toString(), e);
-		}
+		stopGcmRegisterActions();
+		removeAllCameraViews();
 	}
 
 	boolean mHandleMessageReceiverRegistered = false;

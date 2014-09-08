@@ -2,7 +2,12 @@
 
     <style name="AppTheme" parent="@android:style/Theme.Holo"> <!-- Theme.DeviceDefault -->
         <item name="android:actionBarStyle">@style/ActionBar</item>
+        <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
         <!-- <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item> -->
+    </style>
+    
+    <style name="OverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_action_overflow</item>
     </style>
 
     <style name="ThemeActivityDialog" parent="@android:style/Theme.Holo.Dialog.NoActionBar"> <!--  -->
