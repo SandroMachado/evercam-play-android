@@ -293,7 +293,6 @@ public class ManageAccountsActivity extends ParentActivity
 
 	private void launchLogin(View view)
 	{
-		boolean isDefault = false;
 		EditText usernameEdit = (EditText) view.findViewById(R.id.username_edit);
 		EditText passwordEdit = (EditText) view.findViewById(R.id.user_password);
 		ProgressBar progressBar = (ProgressBar) alertDialog.findViewById(R.id.pb_loadinguser);
@@ -327,7 +326,7 @@ public class ManageAccountsActivity extends ParentActivity
 			return;
 		}
 
-		AddAccountTask task = new AddAccountTask(username, password, isDefault, alertDialog);
+		AddAccountTask task = new AddAccountTask(username, password, alertDialog);
 		task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
@@ -419,18 +418,15 @@ public class ManageAccountsActivity extends ParentActivity
 	{
 		String username;
 		String password;
-		boolean isDefault = false;
 		AlertDialog alertDialog = null;
 		AppUser newUser;
 		String errorMessage = null;
 		ProgressBar progressBar;
 
-		public AddAccountTask(String username, String password, boolean isDefault,
-				AlertDialog alertDialog)
+		public AddAccountTask(String username, String password, AlertDialog alertDialog)
 		{
 			this.username = username;
 			this.password = password;
-			this.isDefault = isDefault;
 			this.alertDialog = alertDialog;
 			progressBar = (ProgressBar) alertDialog.findViewById(R.id.pb_loadinguser);
 		}
@@ -438,36 +434,63 @@ public class ManageAccountsActivity extends ParentActivity
 		@Override
 		protected Boolean doInBackground(String... values)
 		{
-			setEvercamDeveloperKeypair();
 			try
 			{
-				ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(username, password);
-				String userApiKey = userKeyPair.getApiKey();
-				String userApiId = userKeyPair.getApiId();
-				API.setUserKeyPair(userApiKey, userApiId);
-				User evercamUser = new User(username);
-				newUser = new AppUser();
-				newUser.setUsername(username);
-				newUser.setPassword(password);
-				newUser.setCountry(evercamUser.getCountry());
-				newUser.setEmail(evercamUser.getEmail());
-				newUser.setApiKey(userApiKey);
-				newUser.setApiId(userApiId);
-				return true;
-			}
-			catch (EvercamException e)
-			{
-				if (e.getMessage().contains(getString(R.string.prefix_invalid))
-						|| e.getMessage().contains(getString(R.string.prefix_no_user)))
+				DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
+				AppUser userFromEmail = dbUser.getAppUserByEmail(username);
+				AppUser userFromUsername = dbUser.getAppUserByUsername(username);
+				if (userFromEmail != null || userFromUsername != null)
 				{
-					errorMessage = e.getMessage();
+					errorMessage = username + " " + getString(R.string.msg_account_already_added);
+					return false;
+
 				}
 				else
 				{
-					// Do nothing, show alert dialog in onPostExecute
+					setEvercamDeveloperKeypair();
+					try
+					{
+						ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(username,
+								password);
+						String userApiKey = userKeyPair.getApiKey();
+						String userApiId = userKeyPair.getApiId();
+						API.setUserKeyPair(userApiKey, userApiId);
+						User evercamUser = new User(username);
+						newUser = new AppUser();
+						newUser.setUsername(username);
+						newUser.setPassword(password);
+						newUser.setCountry(evercamUser.getCountry());
+						newUser.setEmail(evercamUser.getEmail());
+						newUser.setApiKey(userApiKey);
+						newUser.setApiId(userApiId);
+
+						// Save new user
+						dbUser.addAppUser(newUser);
+
+						return true;
+					}
+					catch (EvercamException e)
+					{
+						if (e.getMessage().contains(getString(R.string.prefix_invalid))
+								|| e.getMessage().contains(getString(R.string.prefix_no_user)))
+						{
+							errorMessage = e.getMessage();
+						}
+						else
+						{
+							// Do nothing, show alert dialog in onPostExecute
+						}
+					}
 				}
-				return false;
 			}
+			catch (Exception e)
+			{
+				if (Constants.isAppTrackingEnabled)
+				{
+					BugSenseHandler.sendException(e);
+				}
+			}
+			return false;
 		}
 
 		@Override
@@ -494,54 +517,8 @@ public class ManageAccountsActivity extends ParentActivity
 			}
 			else
 			{
-				// If user already added, remove and re-add it.
-				new AsyncTask<String, String, String>(){
-					@Override
-					protected String doInBackground(String... params)
-					{
-						try
-						{
-							DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
-							AppUser oldUser = dbUser.getAppUserByEmail(newUser.getEmail());
-							int defaultUsersCount = dbUser.getDefaultUsersCount();
-							if (oldUser != null)
-							{
-								dbUser.deleteAppUserByEmail(newUser.getEmail());
-								if (oldUser.getIsDefault() || defaultUsersCount == 0)
-								{
-									isDefault = true;
-								}
-							}
-
-							if (isDefault)
-							{
-								dbUser.updateAllIsDefaultFalse();
-								newUser.setIsDefault(true);
-								AppData.defaultUser = newUser;
-								PrefsManager.saveUserEmail(ManageAccountsActivity.this,
-										newUser.getEmail());
-							}
-							dbUser.addAppUser(newUser);
-						}
-						catch (Exception e)
-						{
-							if (Constants.isAppTrackingEnabled)
-							{
-								BugSenseHandler.sendException(e);
-							}
-						}
-
-						return null;
-					}
-
-					@Override
-					protected void onPostExecute(String result)
-					{
-						showAllAccounts();
-
-						alertDialog.dismiss();
-					}
-				}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				showAllAccounts();
+				alertDialog.dismiss();
 			}
 		}
 	}
