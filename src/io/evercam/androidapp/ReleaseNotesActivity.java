@@ -45,13 +45,7 @@ public class ReleaseNotesActivity extends ParentActivity
 				onNotesRead();
 			}
 		});
-		//
-		// PackageInfo pInfo =
-		// getPackageManager().getPackageInfo(getPackageName(), 0);
-		// String version = pInfo.versionName;
-		// String data =
-		// Commons.readRawTextFile(R.raw.release_notes,this).replace("@@version",
-		// version);
+
 		String data = Commons.readRawTextFile(R.raw.release_notes, this);
 		textViewNotes.setText(Html.fromHtml(data));
 		Linkify.addLinks(textViewNotes, Linkify.EMAIL_ADDRESSES);

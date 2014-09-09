@@ -1644,13 +1644,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		}
 	}
 
-	private String[] getCameraNameArray(ArrayList<EvercamCamera> activeCameras)
+	private String[] getCameraNameArray()
 	{
 		ArrayList<String> cameraNames = new ArrayList<String>();
 
 		for (int count = 0; count < AppData.evercamCameraList.size(); count++)
 		{
-			activeCameras.add(AppData.evercamCameraList.get(count));
 			cameraNames.add(AppData.evercamCameraList.get(count).getName());
 			if (AppData.evercamCameraList.get(count).getCameraId() == startingCameraID)
 			{
@@ -1666,8 +1665,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 	private void loadCamerasToActionBar()
 	{
-		final ArrayList<EvercamCamera> activeCameras = new ArrayList<EvercamCamera>();
-		String[] cameraNames = getCameraNameArray(activeCameras);
+		String[] cameraNames = getCameraNameArray();
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(VideoActivity.this,
 				android.R.layout.simple_spinner_dropdown_item, cameraNames);
 		VideoActivity.this.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -1675,7 +1673,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			@Override
 			public boolean onNavigationItemSelected(int itemPosition, long itemId)
 			{
-				
 				if (imageThread != null && imageThread.getStatus() != AsyncTask.Status.RUNNING)
 				{
 					imageThread.cancel(true);
@@ -1684,7 +1681,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				mrlPlaying = null;
 				showImagesVideo = false;
 				
-				if (activeCameras.get(itemPosition).getStatus()
+				evercamCamera = AppData.evercamCameraList.get(itemPosition);
+				
+				if (AppData.evercamCameraList.get(itemPosition).getStatus()
 						.equalsIgnoreCase(CameraStatus.OFFLINE))
 				{
 					//If camera is offline, show offline msg and stop video playing.
@@ -1698,7 +1697,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				else
 				{
 					offlineTextView.setVisibility(View.GONE);
-					setCameraForPlaying(VideoActivity.this, activeCameras.get(itemPosition));
+					setCameraForPlaying(VideoActivity.this, AppData.evercamCameraList.get(itemPosition));
 					createPlayer(getCurrentMRL());
 				}
 				return false;

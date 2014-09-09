@@ -16,7 +16,7 @@
     <string name="msg_unable_to_play">Unable to play</string>
     <string name="msg_please_check_camera">Please check your camera and try again</string>
     <string name="msg_confirm_sign_out">Are you sure you want to sign out?</string>
-    <string name="msg_confirm_remove">Are you sure you want to remove this user?</string>
+    <string name="msg_confirm_remove">Are you sure you want to remove this user?\n\nRemoving a user will remove the user from Evercam Play but the Evercam account will still exist.</string>
     <string name="msg_confirm_remove_camera">Are you sure you want to remove this camera?</string>
     <string name="msg_confirm_cancel_scan">We\'re still scanning your network, are you sure you want to cancel?</string>
     <string name="msg_offline">Camera is offline.</string>

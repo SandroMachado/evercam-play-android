@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_gravity="center_vertical" >
-
-    <Button
-        android:id="@+id/btn_release_notes_ok"
-        android:layout_width="fill_parent"
-        android:layout_height="40sp"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="10sp"
-        android:background="@drawable/btn_selector"
-        android:text="@string/ok"
-        android:textColor="#ffffff" />
-
+    android:orientation="vertical">
+    
     <ScrollView
         android:id="@+id/svreleasenotes"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/btn_release_notes_ok"
+        android:layout_weight="0.5"
         android:scrollbarFadeDuration="0"
         android:scrollbars="vertical" >
 
@@ -27,5 +17,14 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
     </ScrollView>
+    <Button
+        android:id="@+id/btn_release_notes_ok"
+        android:layout_width="fill_parent"
+        android:layout_weight="0.05"
+        android:layout_height="40sp"
+        android:layout_margin="10sp"
+        android:background="@drawable/btn_selector"
+        android:text="@string/ok"
+        android:textColor="#ffffff" />
 
-</RelativeLayout>
+</LinearLayout>
