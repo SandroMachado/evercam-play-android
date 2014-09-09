@@ -2,7 +2,7 @@ package io.evercam.androidapp.utils;
 
 public final class Constants
 {
-	public static final boolean isAppTrackingEnabled = true;
+	public static final boolean isAppTrackingEnabled = false;
 
 	public static final String bugsense_ApiKey = "560565cb";
 
@@ -12,9 +12,6 @@ public final class Constants
 	public static final int httptimeout = 1000 * 30 * 1; // 0 for default
 
 	public static final String GCMNotificationIDString = "GCMNotificationID";
-
-	// Preference keys
-	public static final String KEY_CAMERA_PER_ROW = "lstgridcamerasperrow";
 
 	/**
 	 * Values of start activity for result

@@ -18,6 +18,7 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
@@ -79,8 +80,6 @@ public class CamerasActivity extends ParentActivity implements
 		}
 
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_camera_list));
-
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		if (this.getActionBar() != null)
 		{
@@ -278,7 +277,6 @@ public class CamerasActivity extends ParentActivity implements
 		// }
 		// }, slideoutMenuAnimationTime);
 		// break;
-
 		}
 	}
 

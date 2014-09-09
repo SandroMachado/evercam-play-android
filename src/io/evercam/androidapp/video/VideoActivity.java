@@ -14,6 +14,8 @@ import io.evercam.androidapp.tasks.DeleteCameraTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamFile;
+import io.evercam.androidapp.utils.PrefsManager;
+
 import java.io.File;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -50,6 +52,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -153,6 +156,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 	private boolean editStarted = false;
 
+	private Handler timerHandler = new Handler();
+	private Thread timerThread;
+	private Runnable timerRunnable;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -168,6 +175,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_video));
 
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+			launchSleepTimer();
 
 			setDisplayOriention();
 
@@ -187,14 +196,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		catch (OutOfMemoryError e)
 		{
 			Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-		}
-		catch (Exception ex)
-		{
-			Log.e(TAG, ex.toString(), ex);
-			if (Constants.isAppTrackingEnabled)
-			{
-				BugSenseHandler.sendException(ex);
-			}
 		}
 	}
 
@@ -298,14 +299,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
 		}
-		catch (Exception e)
-		{
-			Log.e(TAG, e.toString());
-			if (Constants.isAppTrackingEnabled)
-			{
-				BugSenseHandler.sendException(e);
-			}
-		}
 	}
 
 	@Override
@@ -361,6 +354,65 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		if (Constants.isAppTrackingEnabled)
 		{
 			BugSenseHandler.closeSession(this);
+		}
+	}
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event)
+	{
+		// TODO: Reset the timer to keep screen awake
+		launchSleepTimer();
+		return super.dispatchTouchEvent(event);
+	}
+
+	private void launchSleepTimer()
+	{
+		try
+		{
+		if (timerThread != null)
+		{
+			timerThread = null;
+			timerHandler.removeCallbacks(timerRunnable);
+		}
+
+		final int sleepTime = getSleepTime();
+		if (sleepTime != 0)
+		{
+			timerRunnable = new Runnable(){
+				public void run()
+				{
+					VideoActivity.this.getWindow().clearFlags(
+							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+				}
+			};
+			timerThread = new Thread(){
+				@Override
+				public void run()
+				{
+					timerHandler.postDelayed(timerRunnable, sleepTime);
+				}
+			};
+			timerThread.start();
+		}
+		}
+		catch (Exception e)
+		{
+			EvercamPlayApplication.sendCaughtException(this, e.toString());
+		}
+	}
+
+	private int getSleepTime()
+	{
+		final String VALUE_NEVER = "0";
+
+		String valueString = PrefsManager.getSleepTimeValue(this);
+		if (!valueString.equals(VALUE_NEVER))
+		{
+			return Integer.valueOf(valueString) * 60 * 1000;
+		}
+		else
+		{
+			return 0;
 		}
 	}
 

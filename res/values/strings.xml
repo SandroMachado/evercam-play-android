@@ -42,7 +42,12 @@
     <string name="prefix_http">http://</string>
 
     <!-- Preferences -->
-    <string name="prefs_camera_per_row">Cameras Per Row</string>
+    <string name="title_camera_per_row">Cameras Per Row</string>
+    <string name="summary_camera_per_row">Select number of cameras to show in a row</string>
+    <string name="title_awake_time">Sleep</string>
+    <string name="summary_awake_time">Default</string>
+    <string name="summary_awake_time_prefix">After</string>
+    <string name="summary_awake_time_suffix">of inactivity</string>
 
     <!-- Menu -->
     <string name="menu_settings">Settings</string>

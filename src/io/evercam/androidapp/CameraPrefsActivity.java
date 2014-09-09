@@ -4,10 +4,14 @@ import java.util.ArrayList;
 
 import io.evercam.androidapp.custom.ThemedListPreference;
 import io.evercam.androidapp.utils.Constants;
+import io.evercam.androidapp.utils.PrefsManager;
 
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.Preference.OnPreferenceChangeListener;
+
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
 
@@ -60,7 +64,7 @@ public class CameraPrefsActivity extends PreferenceActivity
 	{
 		public MyPreferenceFragment()
 		{
-			//super();
+			// super();
 		}
 
 		@Override
@@ -69,8 +73,9 @@ public class CameraPrefsActivity extends PreferenceActivity
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.main_preference);
 			setCameraNumbersForScreen(screenWidth);
+			setUpSleepTime();
 		}
-		
+
 		private void setCameraNumbersForScreen(int screenWidth)
 		{
 			int maxCamerasPerRow = 3;
@@ -86,9 +91,29 @@ public class CameraPrefsActivity extends PreferenceActivity
 			CharSequence[] charNumberValues = cameraNumberArrayList
 					.toArray(new CharSequence[cameraNumberArrayList.size()]);
 			ThemedListPreference interfaceList = (ThemedListPreference) getPreferenceManager()
-					.findPreference(Constants.KEY_CAMERA_PER_ROW);
+					.findPreference(PrefsManager.KEY_CAMERA_PER_ROW);
 			interfaceList.setEntries(charNumberValues);
 			interfaceList.setEntryValues(charNumberValues);
+		}
+
+		private void setUpSleepTime()
+		{
+			final ThemedListPreference sleepListPrefs = (ThemedListPreference) getPreferenceManager()
+					.findPreference(PrefsManager.KEY_AWAKE_TIME);
+			sleepListPrefs.setSummary(getString(R.string.summary_awake_time_prefix) + " "
+					+ sleepListPrefs.getEntry() + " "
+					+ getString(R.string.summary_awake_time_suffix));
+			sleepListPrefs.setOnPreferenceChangeListener(new OnPreferenceChangeListener(){
+				@Override
+				public boolean onPreferenceChange(Preference preference, Object newValue)
+				{
+					int index = sleepListPrefs.findIndexOfValue(newValue.toString());
+					String entry = sleepListPrefs.getEntries()[index].toString();
+					sleepListPrefs.setSummary(getString(R.string.summary_awake_time_prefix) + " "
+							+ entry + " " + getString(R.string.summary_awake_time_suffix));
+					return true;
+				}
+			});
 		}
 	}
 }
