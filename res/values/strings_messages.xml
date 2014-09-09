@@ -19,5 +19,6 @@
     <string name="msg_confirm_remove">Are you sure you want to remove this user?</string>
     <string name="msg_confirm_remove_camera">Are you sure you want to remove this camera?</string>
     <string name="msg_confirm_cancel_scan">We\'re still scanning your network, are you sure you want to cancel?</string>
+    <string name="msg_offline">Camera is offline.</string>
 
 </resources>

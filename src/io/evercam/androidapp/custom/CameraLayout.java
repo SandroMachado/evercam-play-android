@@ -126,19 +126,8 @@ public class CameraLayout extends LinearLayout
 				@Override
 				public void onClick(View v)
 				{
-					if (evercamCamera.getStatus().equalsIgnoreCase(CameraStatus.OFFLINE))
-					{
-						Toast toast = Toast.makeText(CameraLayout.this.context,
-								R.string.msg_camera_offline, Toast.LENGTH_SHORT);
-						toast.setGravity(Gravity.CENTER, 0, 0);
-						toast.show();
-					}
-					else
-					{
-
 						VideoActivity.startPlayingVideoForCamera(activity,
 								evercamCamera.getCameraId());
-					}
 				}
 			});
 
@@ -151,7 +140,6 @@ public class CameraLayout extends LinearLayout
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-			// CustomedDialog.showUnexpectedErrorDialog(context);
 			if (Constants.isAppTrackingEnabled)
 			{
 				BugSenseHandler.sendException(e);

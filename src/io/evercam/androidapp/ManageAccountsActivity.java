@@ -61,6 +61,7 @@ public class ManageAccountsActivity extends ParentActivity
 
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_manage_account));
 
+		//TODO: Make sure default user is not null.
 		oldDefaultUser = AppData.defaultUser.getUsername();
 
 		if (this.getActionBar() != null)
