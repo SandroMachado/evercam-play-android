@@ -439,6 +439,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				viewItem.setVisible(true);
 			}
 		}
+		else
+		{
+			Log.e(TAG, "EvercamCamera is null");
+		}
 		return true;
 	}
 

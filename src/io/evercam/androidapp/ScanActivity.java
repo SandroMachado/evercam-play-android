@@ -353,6 +353,11 @@ public class ScanActivity extends Activity
 			{
 				Log.e(TAG, e.toString());
 			}
+			catch (IllegalArgumentException e)
+			{
+				Log.e(TAG, e.toString());
+				EvercamPlayApplication.sendCaughtException(ScanActivity.this, e.toString() + modelId);
+			}
 			return drawable;
 		}
 

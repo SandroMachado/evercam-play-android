@@ -37,6 +37,7 @@ import io.evercam.androidapp.dto.ImageLoadingStatus;
 import io.evercam.androidapp.slidemenu.*;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.tasks.LoadCameraListTask;
+import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
 
@@ -344,6 +345,8 @@ public class CamerasActivity extends ParentActivity implements
 
 	private void startCameraLoadingTaskWithUserCheck()
 	{
+		if(Commons.isOnline(this))
+		{
 		if (AppData.defaultUser == null)
 		{
 			String defaultEmail = PrefsManager.getUserEmail(this);
@@ -375,6 +378,11 @@ public class CamerasActivity extends ParentActivity implements
 								// is
 		// any change in cameras in database
 		loadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		}
+		else
+		{
+			CustomedDialog.showInternetNotConnectDialog(CamerasActivity.this);
+		}
 	}
 
 	// Stop All Camera Views
@@ -707,9 +715,7 @@ public class CamerasActivity extends ParentActivity implements
 					else
 					{
 						int camsOldValue = camerasPerRow;
-//						SharedPreferences sharedPrefs = PreferenceManager
-//								.getDefaultSharedPreferences(CamerasActivity.this);1
-//						camerasPerRow = PrefsManager.getCameraPerRow(sharedPrefs, 2);
+
 						camerasPerRow = recalculateCameraPerRow();
 						if (camsOldValue != camerasPerRow)
 						{

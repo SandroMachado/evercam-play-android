@@ -88,7 +88,7 @@ public class TestSnapshotTask extends AsyncTask<Void, Void, Drawable>
 		{
 			if (errorMessage == null)
 			{
-				CustomToast.showInCenter(activity, R.string.snapshot_test_failed);
+				CustomToast.showInCenterLong(activity, R.string.snapshot_test_failed);
 			}
 			else
 			{
