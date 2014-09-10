@@ -68,7 +68,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 			AppData.evercamCameraList = new DbCamera(camerasActivity.getApplicationContext())
 					.getCamerasByOwner(user.getUsername(), 500);
 
-			ArrayList<Camera> cameras = User.getCameras(user.getUsername(), true, true);
+			ArrayList<Camera> cameras = User.getCameras(user.getUsername(), true, false);
 			ArrayList<EvercamCamera> evercamCameras = new ArrayList<EvercamCamera>();
 			for (io.evercam.Camera camera : cameras)
 			{
@@ -163,6 +163,8 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 		{
 			if (!camerasActivity.isFinishing())
 			{
+				EvercamPlayApplication.sendCaughtException(camerasActivity,
+						camerasActivity.getString(R.string.exception_failed_load_cameras));
 				CustomedDialog.getAlertDialog(camerasActivity,
 						camerasActivity.getString(R.string.msg_error_occurred),
 						camerasActivity.getString(R.string.msg_exception),

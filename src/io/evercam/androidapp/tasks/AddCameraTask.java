@@ -76,7 +76,8 @@ public class AddCameraTask extends AsyncTask<Void, Void, EvercamCamera>
 	{
 		try
 		{
-			Camera camera = Camera.create(detail);
+			Camera.create(detail);
+			Camera camera = Camera.getById(detail.getId(), false);
 			EvercamCamera evercamCamera = new EvercamCamera().convertFromEvercam(camera);
 			DbCamera dbCamera = new DbCamera(activity);
 			dbCamera.addCamera(evercamCamera);

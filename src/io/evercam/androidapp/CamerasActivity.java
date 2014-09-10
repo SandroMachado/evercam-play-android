@@ -1,6 +1,5 @@
 package io.evercam.androidapp;
 
-import java.util.ArrayList;
 import java.util.concurrent.RejectedExecutionException;
 
 import android.os.Bundle;
@@ -18,9 +17,7 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
@@ -28,7 +25,6 @@ import io.evercam.androidapp.custom.AboutDialog;
 import io.evercam.androidapp.custom.CameraLayout;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomedDialog;
-import io.evercam.androidapp.custom.ThemedListPreference;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
@@ -74,7 +70,7 @@ public class CamerasActivity extends ParentActivity implements
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-	
+
 		if (Constants.isAppTrackingEnabled)
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
@@ -345,39 +341,39 @@ public class CamerasActivity extends ParentActivity implements
 
 	private void startCameraLoadingTaskWithUserCheck()
 	{
-		if(Commons.isOnline(this))
+		if (Commons.isOnline(this))
 		{
-		if (AppData.defaultUser == null)
-		{
-			String defaultEmail = PrefsManager.getUserEmail(this);
-			if (defaultEmail != null)
+			if (AppData.defaultUser == null)
 			{
-				try
+				String defaultEmail = PrefsManager.getUserEmail(this);
+				if (defaultEmail != null)
 				{
-					DbAppUser dbUser = new DbAppUser(this);
-					AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
-					AppData.defaultUser = defaultUser;
+					try
+					{
+						DbAppUser dbUser = new DbAppUser(this);
+						AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
+						AppData.defaultUser = defaultUser;
+					}
+					catch (Exception e)
+					{
+						Log.e(TAG, e.toString());
+						EvercamPlayApplication.sendCaughtException(this, e.toString());
+					}
 				}
-				catch (Exception e)
+				else
+				// User is not saved locally, send as a bug.
 				{
-					Log.e(TAG, e.toString());
-					EvercamPlayApplication.sendCaughtException(this, e.toString());
+					EvercamPlayApplication.sendCaughtException(this, TAG + ":"
+							+ getString(R.string.exception_user_not_saved));
 				}
 			}
-			else
-			// User is not saved locally, send as a bug.
-			{
-				EvercamPlayApplication.sendCaughtException(this, TAG + ":"
-						+ getString(R.string.exception_user_not_saved));
-			}
-		}
 
-		LoadCameraListTask loadTask = new LoadCameraListTask(AppData.defaultUser,
-				CamerasActivity.this);
-		loadTask.reload = true; // be default do not refresh until there
-								// is
-		// any change in cameras in database
-		loadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			LoadCameraListTask loadTask = new LoadCameraListTask(AppData.defaultUser,
+					CamerasActivity.this);
+			loadTask.reload = true; // be default do not refresh until there
+									// is
+			// any change in cameras in database
+			loadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		}
 		else
 		{
@@ -474,7 +470,7 @@ public class CamerasActivity extends ParentActivity implements
 	{
 		try
 		{
-			//Recalculate camera per row
+			// Recalculate camera per row
 			camerasPerRow = recalculateCameraPerRow();
 
 			io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
@@ -571,22 +567,20 @@ public class CamerasActivity extends ParentActivity implements
 	@Override
 	public void onConfigurationChanged(Configuration newConfig)
 	{
-			super.onConfigurationChanged(newConfig);
-			resizeCameras();
+		super.onConfigurationChanged(newConfig);
+		resizeCameras();
 	}
 
 	@Override
 	public void onStart()
 	{
 		super.onStart();
-		
+
 		if (Constants.isAppTrackingEnabled)
 		{
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
 		}
 	}
-	
-	
 
 	@Override
 	public void onStop()
@@ -714,14 +708,19 @@ public class CamerasActivity extends ParentActivity implements
 					}
 					else
 					{
+						//Re-calculate camera per row because screen size 
+						//could changed because of screen rotation.
 						int camsOldValue = camerasPerRow;
-
 						camerasPerRow = recalculateCameraPerRow();
 						if (camsOldValue != camerasPerRow)
 						{
 							removeAllCameraViews();
 							addAllCameraViews(false);
 						}
+						
+						//Refresh camera names in case it's changed from camera live view
+						removeAllCameraViews();
+						addAllCameraViews(false);
 					}
 				}
 			}
@@ -739,7 +738,7 @@ public class CamerasActivity extends ParentActivity implements
 		display.getSize(size);
 		return size.x;
 	}
-	
+
 	private int recalculateCameraPerRow()
 	{
 		int screenWidth = readScreenWidth(this);
@@ -748,9 +747,9 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			maxCamerasPerRow = screenWidth / 350;
 		}
-		
+
 		int oldCamerasPerRow = PrefsManager.getCameraPerRow(this, maxCamerasPerRow);
-		if(maxCamerasPerRow < oldCamerasPerRow)
+		if (maxCamerasPerRow < oldCamerasPerRow)
 		{
 			PrefsManager.setCameraPerRow(this, maxCamerasPerRow);
 			return maxCamerasPerRow;
