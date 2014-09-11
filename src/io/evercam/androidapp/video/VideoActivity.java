@@ -675,11 +675,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					Log.e(TAG, "No image saved with camera: " + cameraId);
 				}
 			}
-			
-			if(!evercamCamera.getStatus().equals(CameraStatus.OFFLINE))
-			{
-				startDownloading = true;
-			}
 		}
 		catch (OutOfMemoryError e)
 		{
@@ -1409,7 +1404,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 				case EventHandler.MediaPlayerEncounteredError:
 
-					Log.v(TAG, "EventHandler.MediaPlayerEncounteredError" + evercamCamera.toString());
 					if (evercamCamera != null)
 					{
 						player.loadImageFromCache(evercamCamera.getCameraId());
@@ -1698,6 +1692,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				showImagesVideo = false;
 				
 				evercamCamera = AppData.evercamCameraList.get(itemPosition);
+				
+				if(!evercamCamera.getStatus().equals(CameraStatus.OFFLINE))
+				{
+					startDownloading = true;
+				}
 				
 				if (AppData.evercamCameraList.get(itemPosition).getStatus()
 						.equalsIgnoreCase(CameraStatus.OFFLINE))

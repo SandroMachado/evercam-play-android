@@ -100,6 +100,42 @@ public class CustomedDialog
 	}
 
 	/**
+	 * The single message dialog that contains title, a message, two buttons(Yes
+	 * & No) and two listeners.
+	 */
+	private static AlertDialog getStandartStyledDialog(final Activity activity, int title,
+			int message, DialogInterface.OnClickListener positiveListener,
+			DialogInterface.OnClickListener negativeListener)
+	{
+		final View dialogLayout = activity.getLayoutInflater().inflate(
+				R.layout.single_message_dialogue, null);
+		TextView titleTextView = ((TextView) dialogLayout.findViewById(R.id.text_title));
+		TextView messageTextView = ((TextView) dialogLayout.findViewById(R.id.text_message));
+		titleTextView.setText(title);
+		messageTextView.setText(message);
+
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity).setView(dialogLayout)
+				.setCancelable(false).setPositiveButton(R.string.yes, positiveListener)
+				.setNegativeButton(R.string.no, negativeListener);
+		AlertDialog alertDialog = dialogBuilder.create();
+		return alertDialog;
+	}
+	
+	/**
+	 * Return the styled dialog with title and message to ask for confirmation
+	 * to create camera. 
+	 */
+	public static AlertDialog getConfirmCreateDialog(Activity activity,
+			DialogInterface.OnClickListener positiveListener,
+			DialogInterface.OnClickListener negativeListener)
+	{
+		AlertDialog comfirmCreateDialog = getStandartStyledDialog(activity, 
+				R.string.dialog_title_warning, R.string.msg_confirm_create, 
+				positiveListener, negativeListener);
+		return comfirmCreateDialog;
+	}
+
+	/**
 	 * The helper method to show Internet alert dialog and finish the activity.
 	 */
 	public static void showInternetNotConnectDialog(final Activity activity)
@@ -201,11 +237,11 @@ public class CustomedDialog
 				.findViewById(R.id.test_snapshot_image);
 		snapshotImageView.setBackgroundDrawable(drawable);
 		snapshotDialog.setView(snapshotView);
-		
+
 		Window window = snapshotDialog.getWindow();
 		WindowManager.LayoutParams layoutParams = window.getAttributes();
 
-		layoutParams.y = -CamerasActivity.readScreenHeight(activity)/9;
+		layoutParams.y = -CamerasActivity.readScreenHeight(activity) / 9;
 		window.setAttributes(layoutParams);
 		return snapshotDialog;
 	}

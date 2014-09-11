@@ -50,6 +50,7 @@
     <string name="snapshot_test_failed">The port and URL are open but we can\'t seem to connect.  Check that the username and password are correct and the snapshot ending</string>
     <string name="snapshot_test_success">Successfully retrieved an image from your camera!</string>
     <string name="retrieving_snapshot">Retrieving snapshot&#8230;</string>
+    <string name="msg_confirm_create">We can\'t connect to your camera, are you sure you want to add it?</string>
 
     <!-- Option Items -->
     <string name="add_ip_camera">Add camera manually</string>
