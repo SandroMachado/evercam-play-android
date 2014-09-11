@@ -21,6 +21,8 @@ import io.evercam.androidapp.video.VideoActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -147,6 +149,9 @@ public class AddCameraTask extends AsyncTask<Void, Void, EvercamCamera>
 				Drawable drawable = Commons.getDrawablefromUrlAuthenticated(internalFullUrl, username, password, cookies, 3000);
 				if(drawable != null)
 				{
+					//Save this image.
+					Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+					new Thread(new SaveImageRunnable(activity, bitmap, cameraDetail.getId())).start();
 					return true;
 				}
 			}

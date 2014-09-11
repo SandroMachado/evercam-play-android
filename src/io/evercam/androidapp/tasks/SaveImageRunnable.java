@@ -13,10 +13,10 @@ import android.util.Log;
 
 public class SaveImageRunnable implements Runnable
 {
-	private final String TAG = "evercamplay-SaveImageRunnable";
+	private static final String TAG = "evercamplay-SaveImageRunnable";
 	private Context context;
 	private Bitmap bitmap;
-	private String cameraId;
+	private static String cameraId;
 
 	public SaveImageRunnable(Context context, Bitmap bitmap, String cameraId)
 	{
@@ -27,6 +27,11 @@ public class SaveImageRunnable implements Runnable
 
 	@Override
 	public void run()
+	{
+		saveImage(context, bitmap,cameraId);
+	}
+	
+	public static void saveImage(Context context , Bitmap bitmap, String cameraId)
 	{
 		try
 		{
@@ -54,7 +59,7 @@ public class SaveImageRunnable implements Runnable
 		}
 	}
 
-	private void createFile(File file, Bitmap bitmap) throws IOException
+	private static void createFile(File file, Bitmap bitmap) throws IOException
 	{
 		if (bitmap != null)
 		{
@@ -69,7 +74,7 @@ public class SaveImageRunnable implements Runnable
 		}
 	}
 
-	private void checkFile(File file)
+	private static void checkFile(File file)
 	{
 		if (file.exists())
 		{

@@ -665,7 +665,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				Drawable result = Drawable.createFromPath(cacheFile.getPath());
 				if (result != null)
 				{
-					startDownloading = true;
 					imageView.setImageDrawable(result);
 
 					Log.d(TAG, "Loaded first image from Cache: " + media_width + ":" + media_height);
@@ -675,6 +674,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				{
 					Log.e(TAG, "No image saved with camera: " + cameraId);
 				}
+			}
+			
+			if(!evercamCamera.getStatus().equals(CameraStatus.OFFLINE))
+			{
+				startDownloading = true;
 			}
 		}
 		catch (OutOfMemoryError e)
@@ -1264,8 +1268,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		@Override
 		protected String doInBackground(String... params)
 		{
+			Log.v(TAG, "before while");
 			while (!end && !isCancelled() && showImagesVideo)
 			{
+				Log.v(TAG, "in while");
 				try
 				{
 					// wait for starting
@@ -1283,13 +1289,14 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							BugSenseHandler.sendException(e);
 						}
 					}
-
+					Log.v(TAG, "here");
 					if (!paused) // if application is paused, do not send the
 									// requests. Rather wait for the play
 									// command
 					{
 						imageLiveCameraURL = evercamCamera.getExternalSnapshotUrl();
 						imageLiveLocalURL = evercamCamera.getInternalSnapshotUrl();
+						Log.v(TAG, imageLiveCameraURL);
 
 						if (AbandonedJpgUrl.contains(imageLiveCameraURL))
 						{
@@ -1402,7 +1409,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 				case EventHandler.MediaPlayerEncounteredError:
 
-					Log.v(TAG, "EventHandler.MediaPlayerEncounteredError");
+					Log.v(TAG, "EventHandler.MediaPlayerEncounteredError" + evercamCamera.toString());
 					if (evercamCamera != null)
 					{
 						player.loadImageFromCache(evercamCamera.getCameraId());
@@ -1410,10 +1417,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 					if (player.mrlPlaying == null && player.isNextMRLValid())
 					{
+						Log.v(TAG, "1");
 						player.restartPlay(player.getNextMRL());
 					}
-					else if (player.mrlPlaying != null)
+					else if (player.mrlPlaying != null && !player.mrlPlaying.isEmpty())
 					{
+						Log.v(TAG, "2");
 						player.restartPlay(player.mrlPlaying);
 					}
 					else
