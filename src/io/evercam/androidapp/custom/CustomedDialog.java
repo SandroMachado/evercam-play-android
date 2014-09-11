@@ -1,5 +1,6 @@
 package io.evercam.androidapp.custom;
 
+import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.R;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,8 +9,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.provider.Settings;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -196,6 +201,12 @@ public class CustomedDialog
 				.findViewById(R.id.test_snapshot_image);
 		snapshotImageView.setBackgroundDrawable(drawable);
 		snapshotDialog.setView(snapshotView);
+		
+		Window window = snapshotDialog.getWindow();
+		WindowManager.LayoutParams layoutParams = window.getAttributes();
+
+		layoutParams.y = -CamerasActivity.readScreenHeight(activity)/9;
+		window.setAttributes(layoutParams);
 		return snapshotDialog;
 	}
 }

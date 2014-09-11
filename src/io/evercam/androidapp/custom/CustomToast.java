@@ -40,4 +40,11 @@ public class CustomToast
 		toast.setGravity(Gravity.CENTER, 0, 0);
 		toast.show();
 	}
+	
+	public static void showSnapshotTestResult(Context context, int message)
+	{
+		Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
+		toast.setGravity(Gravity.CENTER, 0, 200);
+		toast.show();
+	}
 }

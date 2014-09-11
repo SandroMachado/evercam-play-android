@@ -104,7 +104,6 @@ public class AddCameraTask extends AsyncTask<Void, Void, EvercamCamera>
 
 		final String jpgUrl = AddEditCameraActivity.buildJpgUrlWithSlash(jpgUrlString);
 
-		// TODO improve this. Now it only check external URL.
 		if (externalHost != null && !externalHost.isEmpty())
 		{
 			String portString = String.valueOf(cameraDetail.getExternalHttpPort());
@@ -137,7 +136,6 @@ public class AddCameraTask extends AsyncTask<Void, Void, EvercamCamera>
 
 		final String jpgUrl = AddEditCameraActivity.buildJpgUrlWithSlash(jpgUrlString);
 
-		// TODO improve this. Now it only check external URL.
 		if (internalHost!= null && !internalHost.isEmpty())
 		{
 			String portString = String.valueOf(cameraDetail.getInternalHttpPort());
