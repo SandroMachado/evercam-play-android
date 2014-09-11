@@ -70,7 +70,7 @@ public class PrefsManager
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		return Integer.parseInt(sharedPrefs.getString(KEY_CAMERA_PER_ROW, "" + oldNumber));
 	}
-	
+
 	public static void setCameraPerRow(Context context, int cameraPerRow)
 	{
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -78,7 +78,7 @@ public class PrefsManager
 		editor.putString(KEY_CAMERA_PER_ROW, "" + 2);
 		editor.commit();
 	}
-	
+
 	public static String getSleepTimeValue(Context context)
 	{
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);

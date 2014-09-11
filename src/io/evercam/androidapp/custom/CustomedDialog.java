@@ -9,8 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.provider.Settings;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -120,18 +118,18 @@ public class CustomedDialog
 		AlertDialog alertDialog = dialogBuilder.create();
 		return alertDialog;
 	}
-	
+
 	/**
 	 * Return the styled dialog with title and message to ask for confirmation
-	 * to create camera. 
+	 * to create camera.
 	 */
 	public static AlertDialog getConfirmCreateDialog(Activity activity,
 			DialogInterface.OnClickListener positiveListener,
 			DialogInterface.OnClickListener negativeListener)
 	{
-		AlertDialog comfirmCreateDialog = getStandartStyledDialog(activity, 
-				R.string.dialog_title_warning, R.string.msg_confirm_create, 
-				positiveListener, negativeListener);
+		AlertDialog comfirmCreateDialog = getStandartStyledDialog(activity,
+				R.string.dialog_title_warning, R.string.msg_confirm_create, positiveListener,
+				negativeListener);
 		return comfirmCreateDialog;
 	}
 

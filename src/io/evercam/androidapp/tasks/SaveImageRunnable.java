@@ -22,16 +22,16 @@ public class SaveImageRunnable implements Runnable
 	{
 		this.context = context;
 		this.bitmap = bitmap;
-		this.cameraId = cameraId;
+		SaveImageRunnable.cameraId = cameraId;
 	}
 
 	@Override
 	public void run()
 	{
-		saveImage(context, bitmap,cameraId);
+		saveImage(context, bitmap, cameraId);
 	}
-	
-	public static void saveImage(Context context , Bitmap bitmap, String cameraId)
+
+	public static void saveImage(Context context, Bitmap bitmap, String cameraId)
 	{
 		try
 		{

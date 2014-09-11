@@ -100,7 +100,7 @@ public class CameraPrefsActivity extends PreferenceActivity
 		{
 			final ThemedListPreference sleepListPrefs = (ThemedListPreference) getPreferenceManager()
 					.findPreference(PrefsManager.KEY_AWAKE_TIME);
-			sleepListPrefs.setSummary(getSummary(sleepListPrefs.getEntry() +""));
+			sleepListPrefs.setSummary(getSummary(sleepListPrefs.getEntry() + ""));
 			sleepListPrefs.setOnPreferenceChangeListener(new OnPreferenceChangeListener(){
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object newValue)
@@ -112,17 +112,17 @@ public class CameraPrefsActivity extends PreferenceActivity
 				}
 			});
 		}
-		
+
 		private String getSummary(String entry)
 		{
-			if(entry.equals(getString(R.string.prefs_never)))
+			if (entry.equals(getString(R.string.prefs_never)))
 			{
 				return entry;
 			}
 			else
 			{
-			return getString(R.string.summary_awake_time_prefix) + " "
-					+ entry + " " + getString(R.string.summary_awake_time_suffix);
+				return getString(R.string.summary_awake_time_prefix) + " " + entry + " "
+						+ getString(R.string.summary_awake_time_suffix);
 			}
 		}
 	}

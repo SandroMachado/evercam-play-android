@@ -1644,9 +1644,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			catch (Exception e)
 			{
 				if (enableLogs) Log.e(TAG, e.toString());
-				if (Constants.isAppTrackingEnabled) 
-					{BugSenseHandler.sendException(e);
-					}
+				if (Constants.isAppTrackingEnabled)
+				{
+					BugSenseHandler.sendException(e);
+				}
 			}
 
 			startDownloading = true;
@@ -1690,29 +1691,31 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				imageThread = null;
 				mrlPlaying = null;
 				showImagesVideo = false;
-				
+
 				evercamCamera = AppData.evercamCameraList.get(itemPosition);
-				
-				if(!evercamCamera.getStatus().equals(CameraStatus.OFFLINE))
+
+				if (!evercamCamera.getStatus().equals(CameraStatus.OFFLINE))
 				{
 					startDownloading = true;
 				}
-				
+
 				if (AppData.evercamCameraList.get(itemPosition).getStatus()
 						.equalsIgnoreCase(CameraStatus.OFFLINE))
 				{
-					//If camera is offline, show offline msg and stop video playing.
+					// If camera is offline, show offline msg and stop video
+					// playing.
 					offlineTextView.setVisibility(View.VISIBLE);
 					progressView.setVisibility(View.GONE);
-					
-					//Hide video elements if switch to an offline camera.
+
+					// Hide video elements if switch to an offline camera.
 					surfaceView.setVisibility(View.GONE);
 					imageView.setVisibility(View.GONE);
 				}
 				else
 				{
 					offlineTextView.setVisibility(View.GONE);
-					setCameraForPlaying(VideoActivity.this, AppData.evercamCameraList.get(itemPosition));
+					setCameraForPlaying(VideoActivity.this,
+							AppData.evercamCameraList.get(itemPosition));
 					createPlayer(getCurrentMRL());
 				}
 				return false;

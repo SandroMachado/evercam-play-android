@@ -759,7 +759,7 @@ public class CamerasActivity extends ParentActivity implements
 		display.getSize(size);
 		return size.x;
 	}
-	
+
 	public static int readScreenHeight(Activity activity)
 	{
 		Display display = activity.getWindowManager().getDefaultDisplay();

@@ -356,7 +356,8 @@ public class ScanActivity extends Activity
 			catch (IllegalArgumentException e)
 			{
 				Log.e(TAG, e.toString());
-				EvercamPlayApplication.sendCaughtException(ScanActivity.this, e.toString() + modelId);
+				EvercamPlayApplication.sendCaughtException(ScanActivity.this, e.toString()
+						+ modelId);
 			}
 			return drawable;
 		}

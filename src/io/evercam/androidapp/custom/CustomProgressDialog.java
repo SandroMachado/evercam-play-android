@@ -24,7 +24,7 @@ public class CustomProgressDialog
 		progressDialog.setCanceledOnTouchOutside(false); // can not be canceled
 		progressDialog.show();
 	}
-	
+
 	public void setMessage(String message)
 	{
 		progressDialog.setMessage(message);

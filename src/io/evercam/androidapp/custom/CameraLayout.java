@@ -37,7 +37,7 @@ public class CameraLayout extends LinearLayout
 
 	public RelativeLayout cameraRelativeLayout;
 	private TextView titleText;
-	
+
 	public Context context;
 	public EvercamCamera evercamCamera;
 	private DownloadLiveImageTask liveImageTask;
@@ -128,8 +128,7 @@ public class CameraLayout extends LinearLayout
 				@Override
 				public void onClick(View v)
 				{
-						VideoActivity.startPlayingVideoForCamera(activity,
-								evercamCamera.getCameraId());
+					VideoActivity.startPlayingVideoForCamera(activity, evercamCamera.getCameraId());
 				}
 			});
 
@@ -231,15 +230,15 @@ public class CameraLayout extends LinearLayout
 
 	public void updateTitleIfdifferent()
 	{
-		for(EvercamCamera camera : AppData.evercamCameraList)
+		for (EvercamCamera camera : AppData.evercamCameraList)
 		{
-			if(evercamCamera.getCameraId().equals(camera.getCameraId()))
+			if (evercamCamera.getCameraId().equals(camera.getCameraId()))
 			{
 				titleText.setText(camera.getName());
 			}
 		}
 	}
-	
+
 	private Drawable getThumbnailFromCamera(EvercamCamera evercamCamera)
 	{
 		try

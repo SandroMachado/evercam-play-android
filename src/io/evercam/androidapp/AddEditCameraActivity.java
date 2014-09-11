@@ -447,9 +447,9 @@ public class AddEditCameraActivity extends Activity
 				}
 			}
 		}
-		
+
 		String jpgUrl = buildJpgUrlWithSlash(jpgUrlEdit.getText().toString());
-		if(!jpgUrl.isEmpty())
+		if (!jpgUrl.isEmpty())
 		{
 			cameraBuilder.setJpgUrl(jpgUrl);
 		}
@@ -540,9 +540,9 @@ public class AddEditCameraActivity extends Activity
 				patchCameraBuilder.setExternalRtspPort(externalRtspInt);
 			}
 		}
-		
+
 		String jpgUrl = buildJpgUrlWithSlash(jpgUrlEdit.getText().toString());
-		if(jpgUrl.equals(cameraEdit.getJpgPath()))
+		if (jpgUrl.equals(cameraEdit.getJpgPath()))
 		{
 			patchCameraBuilder.setJpgUrl(jpgUrl);
 		}
@@ -725,20 +725,20 @@ public class AddEditCameraActivity extends Activity
 			return modelName;
 		}
 	}
-	
+
 	public static String buildJpgUrlWithSlash(String originalJpgUrl)
 	{
 		String jpgUrl = "";
-		if(originalJpgUrl!= null && !originalJpgUrl.equals(""))
+		if (originalJpgUrl != null && !originalJpgUrl.equals(""))
 		{
-		if (!originalJpgUrl.startsWith("/"))
-		{
-			jpgUrl = "/" + originalJpgUrl;
-		}
-		else
-		{
-			jpgUrl = originalJpgUrl;
-		}
+			if (!originalJpgUrl.startsWith("/"))
+			{
+				jpgUrl = "/" + originalJpgUrl;
+			}
+			else
+			{
+				jpgUrl = originalJpgUrl;
+			}
 		}
 		return jpgUrl;
 	}
