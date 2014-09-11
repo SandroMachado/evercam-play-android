@@ -1658,11 +1658,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		for (int count = 0; count < AppData.evercamCameraList.size(); count++)
 		{
 			cameraNames.add(AppData.evercamCameraList.get(count).getName());
-			Log.w(TAG,count + AppData.evercamCameraList.get(count).getCameraId() + " " + startingCameraID);
 			if (AppData.evercamCameraList.get(count).getCameraId().equals(startingCameraID))
 			{
 				defaultCameraIndex = cameraNames.size() - 1;
-				Log.w(TAG, "Default index is set to " + defaultCameraIndex);
 			}
 		}
 
@@ -1682,7 +1680,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			@Override
 			public boolean onNavigationItemSelected(int itemPosition, long itemId)
 			{
-				Log.w(TAG, "Selected camera: position:" + itemPosition + " cameraName: " + AppData.evercamCameraList.get(itemPosition).getCameraId() );
 				if (imageThread != null && imageThread.getStatus() != AsyncTask.Status.RUNNING)
 				{
 					imageThread.cancel(true);
@@ -1715,7 +1712,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		};
 
 		getActionBar().setListNavigationCallbacks(adapter, navigationListener);
-		Log.w(TAG, "See if it chenged" + defaultCameraIndex);
 		getActionBar().setSelectedNavigationItem(defaultCameraIndex);
 	}
 	//

@@ -8,7 +8,7 @@
     <io.evercam.androidapp.slidemenu.SlideMenu
         android:id="@+id/slideMenu"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" />
     -->
 
     <ScrollView
@@ -18,7 +18,7 @@
 
         <io.evercam.androidapp.custom.FlowLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/camsLV"
+            android:id="@+id/cameras_flow_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 

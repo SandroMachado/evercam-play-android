@@ -36,6 +36,8 @@ public class CameraLayout extends LinearLayout
 	private static final String TAG = "evercamplay-CameraLayout";
 
 	public RelativeLayout cameraRelativeLayout;
+	private TextView titleText;
+	
 	public Context context;
 	public EvercamCamera evercamCamera;
 	private DownloadLiveImageTask liveImageTask;
@@ -76,7 +78,7 @@ public class CameraLayout extends LinearLayout
 			titleLayout.setGravity(Gravity.CENTER_HORIZONTAL);
 
 			// text view to show the camera name on the top grey band of camera
-			TextView titleText = new TextView(context);
+			titleText = new TextView(context);
 			titleText.setText(evercamCamera.getName());
 			titleText.setLayoutParams(new LinearLayout.LayoutParams(
 					android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -227,6 +229,17 @@ public class CameraLayout extends LinearLayout
 		}
 	}
 
+	public void updateTitleIfdifferent()
+	{
+		for(EvercamCamera camera : AppData.evercamCameraList)
+		{
+			if(evercamCamera.getCameraId().equals(camera.getCameraId()))
+			{
+				titleText.setText(camera.getName());
+			}
+		}
+	}
+	
 	private Drawable getThumbnailFromCamera(EvercamCamera evercamCamera)
 	{
 		try

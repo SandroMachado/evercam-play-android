@@ -385,7 +385,7 @@ public class CamerasActivity extends ParentActivity implements
 	public void stopAllCameraViews()
 	{
 		io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
-				.findViewById(R.id.camsLV);
+				.findViewById(R.id.cameras_flow_layout);
 		for (int count = 0; count < camsLineView.getChildCount(); count++)
 		{
 			LinearLayout linearLayout = (LinearLayout) camsLineView.getChildAt(count);
@@ -402,7 +402,7 @@ public class CamerasActivity extends ParentActivity implements
 			camerasPerRow = recalculateCameraPerRow();
 
 			io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
-					.findViewById(R.id.camsLV);
+					.findViewById(R.id.cameras_flow_layout);
 			for (int i = 0; i < camsLineView.getChildCount(); i++)
 			{
 				LinearLayout pview = (LinearLayout) camsLineView.getChildAt(i);
@@ -433,6 +433,27 @@ public class CamerasActivity extends ParentActivity implements
 		return false;
 	}
 
+	private void updateCameraNames()
+	{
+		try
+		{
+			io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
+					.findViewById(R.id.cameras_flow_layout);
+			for (int i = 0; i < camsLineView.getChildCount(); i++)
+			{
+				LinearLayout pview = (LinearLayout) camsLineView.getChildAt(i);
+				CameraLayout cameraLayout = (CameraLayout) pview.getChildAt(0);
+
+				cameraLayout.updateTitleIfdifferent();
+			}
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, e.toString());
+			EvercamPlayApplication.sendCaughtException(this, e);
+		}
+	}
+
 	// Remove all the cameras so that all activities being performed can be
 	// stopped
 	public boolean removeAllCameraViews()
@@ -442,7 +463,7 @@ public class CamerasActivity extends ParentActivity implements
 			stopAllCameraViews();
 
 			io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
-					.findViewById(R.id.camsLV);
+					.findViewById(R.id.cameras_flow_layout);
 			camsLineView.removeAllViews();
 
 			totalCamerasInGrid = 0;
@@ -474,7 +495,7 @@ public class CamerasActivity extends ParentActivity implements
 			camerasPerRow = recalculateCameraPerRow();
 
 			io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
-					.findViewById(R.id.camsLV);
+					.findViewById(R.id.cameras_flow_layout);
 
 			int screen_width = readScreenWidth(this);
 
@@ -708,8 +729,8 @@ public class CamerasActivity extends ParentActivity implements
 					}
 					else
 					{
-						//Re-calculate camera per row because screen size 
-						//could changed because of screen rotation.
+						// Re-calculate camera per row because screen size
+						// could changed because of screen rotation.
 						int camsOldValue = camerasPerRow;
 						camerasPerRow = recalculateCameraPerRow();
 						if (camsOldValue != camerasPerRow)
@@ -717,10 +738,10 @@ public class CamerasActivity extends ParentActivity implements
 							removeAllCameraViews();
 							addAllCameraViews(false);
 						}
-						
-						//Refresh camera names in case it's changed from camera live view
-						removeAllCameraViews();
-						addAllCameraViews(false);
+
+						// Refresh camera names in case it's changed from camera
+						// live view
+						updateCameraNames();
 					}
 				}
 			}
