@@ -447,6 +447,12 @@ public class AddEditCameraActivity extends Activity
 				}
 			}
 		}
+		
+		String jpgUrl = buildJpgUrlWithSlash(jpgUrlEdit.getText().toString());
+		if(!jpgUrl.isEmpty())
+		{
+			cameraBuilder.setJpgUrl(jpgUrl);
+		}
 
 		return cameraBuilder;
 	}
@@ -533,6 +539,12 @@ public class AddEditCameraActivity extends Activity
 				int externalRtspInt = Integer.valueOf(externalRtsp);
 				patchCameraBuilder.setExternalRtspPort(externalRtspInt);
 			}
+		}
+		
+		String jpgUrl = buildJpgUrlWithSlash(jpgUrlEdit.getText().toString());
+		if(jpgUrl.equals(cameraEdit.getJpgPath()))
+		{
+			patchCameraBuilder.setJpgUrl(jpgUrl);
 		}
 
 		return patchCameraBuilder;
@@ -713,6 +725,23 @@ public class AddEditCameraActivity extends Activity
 			return modelName;
 		}
 	}
+	
+	public static String buildJpgUrlWithSlash(String originalJpgUrl)
+	{
+		String jpgUrl = "";
+		if(originalJpgUrl!= null && !originalJpgUrl.equals(""))
+		{
+		if (!originalJpgUrl.startsWith("/"))
+		{
+			jpgUrl = "/" + originalJpgUrl;
+		}
+		else
+		{
+			jpgUrl = originalJpgUrl;
+		}
+		}
+		return jpgUrl;
+	}
 
 	private void launchTestSnapshot()
 	{
@@ -728,15 +757,7 @@ public class AddEditCameraActivity extends Activity
 			final String username = usernameEdit.getText().toString();
 			final String password = passwordEdit.getText().toString();
 			String jpgUrlString = jpgUrlEdit.getText().toString();
-			final String jpgUrl;
-			if (!jpgUrlString.startsWith("/"))
-			{
-				jpgUrl = "/" + jpgUrlString;
-			}
-			else
-			{
-				jpgUrl = jpgUrlString;
-			}
+			final String jpgUrl = buildJpgUrlWithSlash(jpgUrlString);
 
 			// Internal is empty, test external only
 			if (internalHost.isEmpty())

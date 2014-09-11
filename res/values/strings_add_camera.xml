@@ -13,7 +13,7 @@
     <string name="colon">:</string>
     <string name="external_title">External</string>
     <string name="internal_title">Internal</string>
-    <string name="jpg_url">JPEG URL</string>
+    <string name="jpg_url">Snapshot URL</string>
     <string name="http_port">HTTP</string>
     <string name="rtsp_port">RTSP</string>
     <string name="finish_and_add">Finish &amp; Add</string>
@@ -38,6 +38,7 @@
     <string name="id_required">Please specify a unique ID for your camera</string>
     <string name="name_required">Please specify a friendly name for your camera</string>
     <string name="creating_camera">Creating camera&#8230;</string>
+    <string name="testing_snapshot">Testing snapshot&#8230;</string>
     <string name="patching_camera">Updating camera details&#8230;</string>
     <string name="create_success">Camera created successfully!</string>
     <string name="patch_success">Settings updated successfully!</string>
