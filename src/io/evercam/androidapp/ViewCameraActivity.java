@@ -100,8 +100,22 @@ public class ViewCameraActivity extends Activity
 			cameraIdTextView.setText(camera.getCameraId());
 			cameraNameTextView.setText(camera.getName());
 			cameraOwnerTextView.setText(camera.getRealOwner());
-			cameraVendorTextView.setText(camera.getVendor());
-			cameraModelTextView.setText(camera.getModel());
+			if (camera.getVendor().isEmpty())
+			{
+				cameraVendorTextView.setText(R.string.view_not_set);
+			}
+			else
+			{
+				cameraVendorTextView.setText(camera.getVendor());
+			}
+			if (camera.getModel().isEmpty())
+			{
+				cameraModelTextView.setText(R.string.view_not_set);
+			}
+			else
+			{
+				cameraModelTextView.setText(camera.getModel());
+			}
 		}
 	}
 }

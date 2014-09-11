@@ -70,5 +70,6 @@
     <string name="view_friendly_name">Name:</string>
     <string name="view_vendor">Vendor:</string>
     <string name="view_model">Model:</string>
+    <string name="view_not_set">Not set</string>
 
 </resources>
