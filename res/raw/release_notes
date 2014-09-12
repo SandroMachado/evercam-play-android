@@ -1,7 +1,14 @@
 <h4>Evercam Play - IP Camera Viewer</h4>
-<h6>Version 1.1.4 Alpha 11/09</h6> 
+<h6>Version 1.1.4 </h6> 
 <ul>
-	<li>- The camera list now loads faster<br /></li>
+	<li>- When you add a camera, we now check whether we can connect to the camera before adding it<br/></li>
+	<li>- Bug fixes related to edit and remove camera.<br/></li>
+</ul>
+<br/>
+<br/>
+<b>Version 1.1.3</b>
+<ul>
+	<li><br/>- The camera list now loads faster<br /></li>
 	<li>- You can now see the details of cameras shared with you<br/></li>
 	<li>- When adding cameras, you can now test local & external snapshots<br/></li>
 	<li>- We've added a setting for screen sleep time<br/></li>

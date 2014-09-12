@@ -83,7 +83,7 @@ public class CameraPrefsActivity extends PreferenceActivity
 			{
 				maxCamerasPerRow = screenWidth / 350;
 			}
-			if(maxCamerasPerRow == 0)
+			if (maxCamerasPerRow == 0)
 			{
 				maxCamerasPerRow = 1;
 			}

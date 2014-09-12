@@ -75,13 +75,12 @@ public class PatchCameraTask extends AsyncTask<Void, Void, EvercamCamera>
 			if (patchedCamera != null)
 			{
 				Camera camera = Camera.getById(detail.getId(), false);
-				EvercamCamera evercamCamera = new EvercamCamera().convertFromEvercam( camera);
+				EvercamCamera evercamCamera = new EvercamCamera().convertFromEvercam(camera);
 				DbCamera dbCamera = new DbCamera(activity);
 				dbCamera.deleteCamera(evercamCamera.getCameraId());
 				for (int index = 0; index < AppData.evercamCameraList.size(); index++)
 				{
-					if (AppData.evercamCameraList.get(index).getCameraId()
-							.equals(camera.getId()))
+					if (AppData.evercamCameraList.get(index).getCameraId().equals(camera.getId()))
 					{
 						AppData.evercamCameraList.remove(index);
 					}
