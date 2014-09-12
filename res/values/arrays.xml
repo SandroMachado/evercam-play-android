@@ -12,16 +12,16 @@
         <item>2</item>
     </string-array>
     <string-array name="prefs_sleep_entries">
+        <item>30 seconds</item>
         <item>1 minute</item>
         <item>5 minutes</item>
-        <item>30 minutes</item>
         <item>Never</item>
     </string-array>
     
     <string-array name="prefs_sleep_entry_values">
-        <item>1</item>
-        <item>5</item>
         <item>30</item>
+        <item>60</item>
+        <item>300</item>
         <item>0</item>
     </string-array>
 

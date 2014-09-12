@@ -772,16 +772,21 @@ public class CamerasActivity extends ParentActivity implements
 	{
 		int screenWidth = readScreenWidth(this);
 		int maxCamerasPerRow = 3;
+		int minCamerasPerRow = 1;
 		if (screenWidth != 0)
 		{
 			maxCamerasPerRow = screenWidth / 350;
 		}
 
-		int oldCamerasPerRow = PrefsManager.getCameraPerRow(this, maxCamerasPerRow);
-		if (maxCamerasPerRow < oldCamerasPerRow)
+		int oldCamerasPerRow = PrefsManager.getCameraPerRow(this, 2);
+		if (maxCamerasPerRow < oldCamerasPerRow && maxCamerasPerRow!=0)
 		{
 			PrefsManager.setCameraPerRow(this, maxCamerasPerRow);
 			return maxCamerasPerRow;
+		}
+		else if(maxCamerasPerRow == 0)
+		{
+			return minCamerasPerRow;
 		}
 		return oldCamerasPerRow;
 	}

@@ -83,6 +83,10 @@ public class CameraPrefsActivity extends PreferenceActivity
 			{
 				maxCamerasPerRow = screenWidth / 350;
 			}
+			if(maxCamerasPerRow == 0)
+			{
+				maxCamerasPerRow = 1;
+			}
 			ArrayList<String> cameraNumberArrayList = new ArrayList<String>();
 			for (int index = 1; index <= maxCamerasPerRow; index++)
 			{

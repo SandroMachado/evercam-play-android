@@ -404,7 +404,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		String valueString = PrefsManager.getSleepTimeValue(this);
 		if (!valueString.equals(VALUE_NEVER))
 		{
-			return Integer.valueOf(valueString) * 60 * 1000;
+			return Integer.valueOf(valueString) * 1000;
 		}
 		else
 		{
@@ -527,18 +527,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 		checkNetworkStatus();
 
-		// addCamerasToDropdownActionBar();
 		loadCamerasToActionBar();
 
 		readSetPreferences();
 	}
-
-	// public void addCamerasToDropdownActionBar()
-	// {
-	// Log.d(TAG, "Prepare to add");
-	// new
-	// LoadActiveCamerasTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-	// }
 
 	public static boolean startPlayingVideoForCamera(Activity activity, String cameraId)
 	{
@@ -586,9 +578,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			imageView.setVisibility(View.VISIBLE);
 			showProgressView();
 
-			if (evercamCamera != null)
+			loadImageFromCache(evercamCamera.getCameraId());
+
+			if (!evercamCamera.getStatus().equals(CameraStatus.OFFLINE))
 			{
-				loadImageFromCache(evercamCamera.getCameraId());
+				startDownloading = true;
 			}
 
 			showProgressView();
@@ -1263,28 +1257,16 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		@Override
 		protected String doInBackground(String... params)
 		{
-			Log.v(TAG, "before while");
 			while (!end && !isCancelled() && showImagesVideo)
 			{
-				Log.v(TAG, "in while");
 				try
 				{
 					// wait for starting
-					try
+					while (!startDownloading)
 					{
-						while (!startDownloading)
-						{
-							Thread.sleep(500);
-						}
+						Thread.sleep(500);
 					}
-					catch (Exception e)
-					{
-						if (Constants.isAppTrackingEnabled)
-						{
-							BugSenseHandler.sendException(e);
-						}
-					}
-					Log.v(TAG, "here");
+
 					if (!paused) // if application is paused, do not send the
 									// requests. Rather wait for the play
 									// command
@@ -1411,12 +1393,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 					if (player.mrlPlaying == null && player.isNextMRLValid())
 					{
-						Log.v(TAG, "1");
 						player.restartPlay(player.getNextMRL());
 					}
 					else if (player.mrlPlaying != null && !player.mrlPlaying.isEmpty())
 					{
-						Log.v(TAG, "2");
 						player.restartPlay(player.mrlPlaying);
 					}
 					else
@@ -1694,11 +1674,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 				evercamCamera = AppData.evercamCameraList.get(itemPosition);
 
-				if (!evercamCamera.getStatus().equals(CameraStatus.OFFLINE))
-				{
-					startDownloading = true;
-				}
-
 				if (AppData.evercamCameraList.get(itemPosition).getStatus()
 						.equalsIgnoreCase(CameraStatus.OFFLINE))
 				{
@@ -1725,75 +1700,4 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		getActionBar().setListNavigationCallbacks(adapter, navigationListener);
 		getActionBar().setSelectedNavigationItem(defaultCameraIndex);
 	}
-	//
-	// private class LoadActiveCamerasTask extends AsyncTask<String, String,
-	// String[]>
-	// {
-	// final ArrayList<EvercamCamera> activeCameras = new
-	// ArrayList<EvercamCamera>();
-	// int defaultCameraIndex = 0;
-	//
-	// public LoadActiveCamerasTask()
-	// {
-	// Log.d(TAG, "Constructor called");
-	// }
-	//
-	// @Override
-	// protected String[] doInBackground(String... params)
-	// {
-	// Log.d(TAG, "LoadActiveCamerasTask started");
-	// ArrayList<String> cameraNames = new ArrayList<String>();
-	//
-	// for (int count = 0; count < AppData.evercamCameraList.size(); count++)
-	// {
-	// activeCameras.add(AppData.evercamCameraList.get(count));
-	// cameraNames.add(AppData.evercamCameraList.get(count).getName());
-	// if (AppData.evercamCameraList.get(count).getCameraId() ==
-	// startingCameraID)
-	// {
-	// defaultCameraIndex = cameraNames.size() - 1;
-	// }
-	// }
-	//
-	// String[] cameraArray = new String[cameraNames.size()];
-	// cameraNames.toArray(cameraArray);
-	//
-	// return cameraArray;
-	// }
-	//
-	// @Override
-	// protected void onPostExecute(final String[] cameraNames)
-	// {
-	// Log.d(TAG, "LoadActiveCamerasTask finished");
-	// ArrayAdapter<String> adapter = new
-	// ArrayAdapter<String>(VideoActivity.this,
-	// android.R.layout.simple_spinner_dropdown_item, cameraNames);
-	// VideoActivity.this.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-	// OnNavigationListener navigationListener = new OnNavigationListener(){
-	// @Override
-	// public boolean onNavigationItemSelected(int itemPosition, long itemId)
-	// {
-	// showImagesVideo = false;
-	// if (imageThread != null
-	// && imageThread.getStatus() != AsyncTask.Status.RUNNING)
-	// {
-	// imageThread.cancel(true);
-	// }
-	// imageThread = null;
-	//
-	// mrlPlaying = null;
-	// setCameraForPlaying(VideoActivity.this, activeCameras.get(itemPosition));
-	//
-	// createPlayer(getCurrentMRL());
-	//
-	// return false;
-	// }
-	// };
-	//
-	// getActionBar().setListNavigationCallbacks(adapter, navigationListener);
-	// getActionBar().setSelectedNavigationItem(defaultCameraIndex);
-	// Log.d(TAG, "LoadActiveCamerasTask listed");
-	//
-	// }
-	// }
 }
