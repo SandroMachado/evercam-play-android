@@ -73,7 +73,7 @@ public class EvercamCamera
 			}
 			timezone = camera.getTimezone();
 			vendor = camera.getVendorName();
-			model = camera.getModel();
+			model = camera.getModelName();
 			mac = camera.getMacAddress();
 			externalSnapshotUrl = camera.getExternalJpgUrl();
 			internalSnapshotUrl = camera.getInternalJpgUrl();

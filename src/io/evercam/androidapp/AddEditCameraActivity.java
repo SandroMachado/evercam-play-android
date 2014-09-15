@@ -189,7 +189,7 @@ public class AddEditCameraActivity extends Activity
 			{
 				if (position == 0)
 				{
-					buildModelSpinner(new ArrayList<String>(), null);
+					buildModelSpinner(new ArrayList<Model>(), null);
 				}
 				else
 				{
@@ -229,9 +229,9 @@ public class AddEditCameraActivity extends Activity
 					else
 					{
 						String vendorId = getVendorIdFromSpinner();
-						String modelId = getModelIdFromSpinner();
+						String modelName = getModelNameFromSpinner();
 
-						new RequestDefaultsTask(vendorId, modelId)
+						new RequestDefaultsTask(vendorId, modelName)
 								.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 					}
 				}
@@ -487,8 +487,8 @@ public class AddEditCameraActivity extends Activity
 		String vendorId = getVendorIdFromSpinner();
 		patchCameraBuilder.setVendor(vendorId);
 
-		String modelId = getModelIdFromSpinner();
-		patchCameraBuilder.setModel(modelId);
+		String modelName = getModelNameFromSpinner();
+		patchCameraBuilder.setModel(modelName);
 
 		String username = usernameEdit.getText().toString();
 		String password = passwordEdit.getText().toString();
@@ -608,38 +608,37 @@ public class AddEditCameraActivity extends Activity
 		}
 	}
 
-	private void buildModelSpinner(ArrayList<String> modelList, String selectedModel)
+	private void buildModelSpinner(ArrayList<Model> modelList, String selectedModel)
 	{
 		if (modelMap == null)
 		{
 			modelMap = new TreeMap<String, String>();
 		}
+		modelMap.clear();
 
 		if (modelList == null)
 		{
-			modelMap.clear();
 			modelSpinner.setEnabled(false);
 		}
 		else
 		{
 			if (modelList.size() == 0)
 			{
-				modelMap.clear();
 				modelSpinner.setEnabled(false);
 			}
 			else
 			{
 				modelSpinner.setEnabled(true);
-
-				for (String modelId : modelList)
+		
+				for (Model model : modelList)
 				{
-					if (modelId.equals("*"))
+					try
 					{
-						modelMap.put(getString(R.string.model_default), modelId);
+						modelMap.put(model.getName(), model.getId());
 					}
-					else
+					catch (EvercamException e)
 					{
-						modelMap.put(modelId, modelId);
+						Log.e(TAG, e.toString());
 					}
 				}
 			}
@@ -682,8 +681,11 @@ public class AddEditCameraActivity extends Activity
 			// that has been filled.
 			Defaults defaults = model.getDefaults();
 			Auth basicAuth = defaults.getAuth(Auth.TYPE_BASIC);
-			usernameEdit.setText(basicAuth.getUsername());
-			passwordEdit.setText(basicAuth.getPassword());
+			if(basicAuth != null)
+			{
+				usernameEdit.setText(basicAuth.getUsername());
+				passwordEdit.setText(basicAuth.getPassword());
+			}
 			jpgUrlEdit.setText(defaults.getJpgURL());
 		}
 		catch (EvercamException e)
@@ -714,6 +716,19 @@ public class AddEditCameraActivity extends Activity
 	}
 
 	private String getModelIdFromSpinner()
+	{
+		String modelName = modelSpinner.getSelectedItem().toString();
+		if (modelName.equals(getString(R.string.select_model)))
+		{
+			return "";
+		}
+		else
+		{
+			return modelMap.get(modelName).toLowerCase(Locale.UK);
+		}
+	}
+	
+	private String getModelNameFromSpinner()
 	{
 		String modelName = modelSpinner.getSelectedItem().toString();
 		if (modelName.equals(getString(R.string.select_model)))
@@ -901,7 +916,7 @@ public class AddEditCameraActivity extends Activity
 		}
 	}
 
-	class RequestModelListTask extends AsyncTask<Void, Void, ArrayList<String>>
+	class RequestModelListTask extends AsyncTask<Void, Void, ArrayList<Model>>
 	{
 		private String vendorId;
 
@@ -911,13 +926,11 @@ public class AddEditCameraActivity extends Activity
 		}
 
 		@Override
-		protected ArrayList<String> doInBackground(Void... params)
+		protected ArrayList<Model> doInBackground(Void... params)
 		{
 			try
 			{
-
-				Vendor vendor = Vendor.getById(vendorId);
-				return vendor.getModelNames();
+				return Model.getAllByVendorId(vendorId);
 			}
 			catch (EvercamException e)
 			{
@@ -927,7 +940,7 @@ public class AddEditCameraActivity extends Activity
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<String> modelList)
+		protected void onPostExecute(ArrayList<Model> modelList)
 		{
 			if (modelList != null)
 			{
@@ -946,12 +959,12 @@ public class AddEditCameraActivity extends Activity
 	class RequestDefaultsTask extends AsyncTask<Void, Void, Model>
 	{
 		private String vendorId;
-		private String modelId;
+		private String modelName;
 
-		public RequestDefaultsTask(String vendorId, String modelId)
+		public RequestDefaultsTask(String vendorId, String modelName)
 		{
 			this.vendorId = vendorId;
-			this.modelId = modelId;
+			this.modelName = modelName;
 		}
 
 		@Override
@@ -965,7 +978,11 @@ public class AddEditCameraActivity extends Activity
 		{
 			try
 			{
-				return Model.getModel(vendorId, modelId);
+				ArrayList<Model> modelList = Model.getAll(null, modelName, vendorId);
+				if(modelList.size() > 0)
+				{
+					return modelList.get(0);
+				}
 			}
 			catch (EvercamException e)
 			{
