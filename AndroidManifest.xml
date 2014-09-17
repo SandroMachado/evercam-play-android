@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.evercam.androidapp"
-    android:versionCode="31"
-    android:versionName="1.1.4 (Debug)" >
+    android:versionCode="32"
+    android:versionName="1.1.5" >
 
     <!-- versionCode26 - 1.1.2 - Scan/Add/Edit/Remove camera -->
     <!-- versionCode27 - 1.1.3 Alpha 01/09 - View camera details, bug fix about empty user issue -->
@@ -11,6 +11,7 @@
     <!-- versionCode29 - 1.1.3 - Bug fixes screen turn off time -->
     <!-- versionCode30 - 1.1.4 Alpha 11/09 - Update camera name if changed, Improvements on things after create camera.-->
     <!-- versionCode31 - 1.1.4  - Bug fixes-->
+    <!-- versionCode32 - 1.1.5  - Vendor Model changes-->
 
     <uses-sdk
         android:minSdkVersion="14"

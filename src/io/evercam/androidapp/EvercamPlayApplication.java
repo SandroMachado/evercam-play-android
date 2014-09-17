@@ -28,14 +28,14 @@ public class EvercamPlayApplication extends Application
 	{
 		super();
 	}
-
-	 @Override
-	 public void onCreate()
-	 {
-	 super.onCreate();
-	 //Redirect URL, just for temporary testing
-	 API.URL = "http://proxy.evr.cm:9292/v1/";
-	 }
+//
+//	@Override
+//	public void onCreate()
+//	{
+//		super.onCreate();
+//		// Redirect URL, just for temporary testing
+//		API.URL = "http://proxy.evr.cm:9292/v1/";
+//	}
 
 	synchronized Tracker getTracker(TrackerName trackerId)
 	{
