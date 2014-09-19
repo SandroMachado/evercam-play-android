@@ -38,6 +38,7 @@
 #include "aout.h"
 #include "vout.h"
 #include "utils.h"
+#include "native_crash_handler.h"
 
 #define VOUT_ANDROID_SURFACE 0
 #define VOUT_OPENGLES2       1
@@ -48,6 +49,12 @@
 
 #define LOG_TAG "VLC/JNI/main"
 #include "log.h"
+
+#ifdef HAVE_IOMX_DR
+#define NO_IOMX_DR "--no-omxil-dr"
+#else
+#define NO_IOMX_DR ""
+#endif
 
 libvlc_media_t *new_media(jlong instance, JNIEnv *env, jobject thiz, jstring fileLocation, bool noOmx, bool noVideo)
 {
@@ -132,13 +139,18 @@ static void vlc_event_callback(const libvlc_event_t *ev, void *data)
     jobject bundle = (*env)->NewObject(env, clsBundle, clsCtor);
 
     jmethodID putInt = (*env)->GetMethodID(env, clsBundle, "putInt", "(Ljava/lang/String;I)V" );
+    jmethodID putLong = (*env)->GetMethodID(env, clsBundle, "putLong", "(Ljava/lang/String;J)V" );
     jmethodID putFloat = (*env)->GetMethodID(env, clsBundle, "putFloat", "(Ljava/lang/String;F)V" );
     jmethodID putString = (*env)->GetMethodID(env, clsBundle, "putString", "(Ljava/lang/String;Ljava/lang/String;)V" );
 
     if (ev->type == libvlc_MediaPlayerPositionChanged) {
-            jstring sData = (*env)->NewStringUTF(env, "data");
-            (*env)->CallVoidMethod(env, bundle, putFloat, sData, ev->u.media_player_position_changed.new_position);
-            (*env)->DeleteLocalRef(env, sData);
+        jstring sData = (*env)->NewStringUTF(env, "data");
+        (*env)->CallVoidMethod(env, bundle, putFloat, sData, ev->u.media_player_position_changed.new_position);
+        (*env)->DeleteLocalRef(env, sData);
+    } else if (ev->type == libvlc_MediaPlayerTimeChanged) {
+        jstring sData = (*env)->NewStringUTF(env, "data");
+        (*env)->CallVoidMethod(env, bundle, putLong, sData, ev->u.media_player_time_changed.new_time);
+        (*env)->DeleteLocalRef(env, sData);
     } else if(ev->type == libvlc_MediaPlayerVout) {
         /* For determining the vout/ES track change */
         jstring sData = (*env)->NewStringUTF(env, "data");
@@ -259,19 +271,30 @@ void Java_org_videolan_libvlc_LibVLC_nativeInit(JNIEnv *env, jobject thiz)
     if (hardwareAcceleration == HW_ACCELERATION_FULL)
         use_opengles2 = false;
 
+    methodId = (*env)->GetMethodID(env, cls, "getCachePath", "()Ljava/lang/String;");
+    jstring cachePath = (*env)->CallObjectMethod(env, thiz, methodId);
+    if (cachePath) {
+        const char *cache_path = (*env)->GetStringUTFChars(env, cachePath, 0);
+        setenv("DVDCSS_CACHE", cache_path, 1);
+        (*env)->ReleaseStringUTFChars(env, cachePath, cache_path);
+    }
+
     /* Don't add any invalid options, otherwise it causes LibVLC to crash */
     const char *argv[] = {
         /* CPU intensive plugin, setting for slow devices */
         enable_time_stretch ? "--audio-time-stretch" : "--no-audio-time-stretch",
 
         /* avcodec speed settings for slow devices */
-        "--avcodec-fast", // non-spec-compliant speedup tricks
+        //"--avcodec-fast", // non-spec-compliant speedup tricks
         "--avcodec-skiploopfilter", deblockstr,
         "--avcodec-skip-frame", enable_frame_skip ? "2" : "0",
         "--avcodec-skip-idct", enable_frame_skip ? "2" : "0",
 
         /* Remove me when UTF-8 is enforced by law */
         "--subsdec-encoding", subsencodingstr,
+
+        /* Enable statistics */
+        "--stats",
 
         /* XXX: why can't the default be fine ? #7792 */
         (networkCaching > 0) ? networkCachingstr : "",
@@ -284,6 +307,7 @@ void Java_org_videolan_libvlc_LibVLC_nativeInit(JNIEnv *env, jobject thiz)
         "--androidsurface-chroma", chromastr != NULL && chromastr[0] != 0 ? chromastr : "RV32",
         /* XXX: we can't recover from direct rendering failure */
         (hardwareAcceleration == HW_ACCELERATION_FULL) ? "" : "--no-mediacodec-dr",
+        (hardwareAcceleration == HW_ACCELERATION_FULL) ? "" : NO_IOMX_DR,
     };
     libvlc_instance_t *instance = libvlc_new(sizeof(argv) / sizeof(*argv), argv);
 
@@ -301,10 +325,14 @@ void Java_org_videolan_libvlc_LibVLC_nativeInit(JNIEnv *env, jobject thiz)
     LOGI("LibVLC initialized: %p", instance);
 
     libvlc_log_set(instance, debug_log, &verbosity);
+
+    init_native_crash_handler(env, thiz);
 }
 
 void Java_org_videolan_libvlc_LibVLC_nativeDestroy(JNIEnv *env, jobject thiz)
 {
+    destroy_native_crash_handler(env);
+
     releaseMediaPlayer(env, thiz);
     jlong libVlcInstance = getLong(env, thiz, "mLibVlcInstance");
     if (!libVlcInstance)
@@ -365,6 +393,7 @@ void Java_org_videolan_libvlc_LibVLC_playMRL(JNIEnv *env, jobject thiz, jlong in
         libvlc_MediaPlayerStopped,
         libvlc_MediaPlayerVout,
         libvlc_MediaPlayerPositionChanged,
+        libvlc_MediaPlayerTimeChanged,
         libvlc_MediaPlayerEncounteredError
     };
     for(int i = 0; i < (sizeof(mp_events) / sizeof(*mp_events)); i++)
@@ -459,6 +488,14 @@ void Java_org_videolan_libvlc_LibVLC_stop(JNIEnv *env, jobject thiz)
         libvlc_media_player_stop(mp);
 }
 
+jint Java_org_videolan_libvlc_LibVLC_getPlayerState(JNIEnv *env, jobject thiz)
+{
+    libvlc_media_player_t *mp = getMediaPlayer(env, thiz);
+    if (mp)
+        return (jint) libvlc_media_player_get_state(mp);
+    return -1;
+}
+
 jint Java_org_videolan_libvlc_LibVLC_getVolume(JNIEnv *env, jobject thiz)
 {
     libvlc_media_player_t *mp = getMediaPlayer(env, thiz);
@@ -527,4 +564,35 @@ jstring Java_org_videolan_libvlc_LibVLC_compiler(JNIEnv* env, jobject thiz)
 jstring Java_org_videolan_libvlc_LibVLC_changeset(JNIEnv* env, jobject thiz)
 {
     return (*env)->NewStringUTF(env, libvlc_get_changeset());
+}
+
+jint Java_org_videolan_libvlc_LibVLC_getTitle(JNIEnv *env, jobject thiz)
+{
+    libvlc_media_player_t *mp = getMediaPlayer(env, thiz);
+    if (mp)
+        return libvlc_media_player_get_title(mp);
+    return -1;
+}
+
+void Java_org_videolan_libvlc_LibVLC_setTitle(JNIEnv *env, jobject thiz, jint title)
+{
+    libvlc_media_player_t *mp = getMediaPlayer(env, thiz);
+    if (mp)
+        libvlc_media_player_set_title(mp, title);
+}
+
+jint Java_org_videolan_libvlc_LibVLC_getChapterCountForTitle(JNIEnv *env, jobject thiz, jint title)
+{
+    libvlc_media_player_t *mp = getMediaPlayer(env, thiz);
+    if (mp)
+        return libvlc_media_player_get_chapter_count_for_title(mp, title);
+    return -1;
+}
+
+jint Java_org_videolan_libvlc_LibVLC_getTitleCount(JNIEnv *env, jobject thiz)
+{
+    libvlc_media_player_t *mp = getMediaPlayer(env, thiz);
+    if (mp)
+        return libvlc_media_player_get_title_count(mp);
+    return -1;
 }
