@@ -80,7 +80,7 @@ public class EvercamPlayApplication extends Application
 	public static void sendCaughtException(Activity activity, Exception e)
 	{
 		Tracker tracker = getAppTracker(activity);
-		tracker.send(new HitBuilders.ExceptionBuilder().setDescription(e.toString()).setFatal(true)
+		tracker.send(new HitBuilders.ExceptionBuilder().setDescription(e.getStackTrace()[0].toString()).setFatal(true)
 				.build());
 	}
 
@@ -94,7 +94,7 @@ public class EvercamPlayApplication extends Application
 	public static void sendCaughtExceptionNotImportant(Activity activity, Exception e)
 	{
 		Tracker tracker = getAppTracker(activity);
-		tracker.send(new HitBuilders.ExceptionBuilder().setDescription(e.toString())
+		tracker.send(new HitBuilders.ExceptionBuilder().setDescription(e.getStackTrace()[0].toString())
 				.setFatal(false).build());
 	}
 }

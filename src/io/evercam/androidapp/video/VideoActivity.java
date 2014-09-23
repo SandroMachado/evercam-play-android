@@ -393,7 +393,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			// Catch this exception and send by Google Analytics
 			// This should not influence user using the app
-			EvercamPlayApplication.sendCaughtException(this, e.toString());
+			EvercamPlayApplication.sendCaughtException(this, e);
 		}
 	}
 
@@ -895,11 +895,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					Toast.LENGTH_LONG).show();
 			EvercamPlayApplication.sendCaughtException(this, e);
 		}
-		catch (Error e)
-		{
-			Log.e(TAG, e.getMessage());
-			EvercamPlayApplication.sendCaughtException(this, e.toString());
-		}
 	}
 
 	private void releasePlayer()
@@ -919,7 +914,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		}
 		catch (Exception e)
 		{
-			EvercamPlayApplication.sendCaughtException(this, e.toString());
+			EvercamPlayApplication.sendCaughtException(this, e);
 			Log.e(TAG, e.getMessage());
 		}
 	}
@@ -942,7 +937,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		}
 		catch (Exception e)
 		{
-			EvercamPlayApplication.sendCaughtException(this, e.toString());
+			EvercamPlayApplication.sendCaughtException(this, e);
 			if (!isPlayingJpg)
 			{
 				Toast.makeText(this, "Error reconnecting! " + media + " ::::: " + e.getMessage(),
@@ -990,7 +985,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		catch (Exception e)
 		{
 			Log.e(TAG, e.getMessage(), e);
-			EvercamPlayApplication.sendCaughtException(this, e.toString());
+			EvercamPlayApplication.sendCaughtException(this, e);
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
 		}
 	}
@@ -1032,7 +1027,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		}
 		catch (Exception e)
 		{
-			EvercamPlayApplication.sendCaughtException(this, e.toString());
+			EvercamPlayApplication.sendCaughtException(this, e);
 			if (Constants.isAppTrackingEnabled)
 			{
 				BugSenseHandler.sendException(e);
@@ -1324,7 +1319,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				}
 				catch (Exception e)
 				{
-					EvercamPlayApplication.sendCaughtException(VideoActivity.this, e.toString());
+					EvercamPlayApplication.sendCaughtException(VideoActivity.this, e);
 					Log.e(TAG, e.toString() + "-::::-" + Log.getStackTraceString(e));
 				}
 			}
