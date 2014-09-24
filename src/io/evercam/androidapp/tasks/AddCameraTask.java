@@ -245,8 +245,8 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
 	{
 		try
 		{
-			Camera.create(detail);
-			Camera camera = Camera.getById(detail.getId(), false);
+			Camera camera = Camera.create(detail);
+		//	Camera camera = Camera.getById(detail.getId(), false);
 			EvercamCamera evercamCamera = new EvercamCamera().convertFromEvercam(camera);
 			if (isReachableExternally || isReachableInternally)
 			{
