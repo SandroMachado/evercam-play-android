@@ -222,12 +222,11 @@ public class MediaList {
             options.add(":network-caching=1500");
             options.add(":codec=mediacodec,iomx,all");
         	
-        	
     		options.add(":rtsp-tcp"); // 1 //RTSP over TCP only //Liuting
-//			options.add(":no-ffmpeg-hw");
-//			options.add(":ipv4-timeout=2500"); // 1
-//			options.add(":no-video-title-show");
-			options.add(":sout-keep"); // 1
+//			options.add(":no-ffmpeg-hw");//Sajjad
+//			options.add(":ipv4-timeout=2500"); // 1//Sajjad
+//			options.add(":no-video-title-show");//Sajjad
+			options.add(":sout-keep"); // 1//Liuting
         }
         if (noVideo)
             options.add(":no-video");
