@@ -6,8 +6,6 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import io.evercam.API;
-
 import java.util.HashMap;
 
 public class EvercamPlayApplication extends Application
@@ -28,14 +26,15 @@ public class EvercamPlayApplication extends Application
 	{
 		super();
 	}
-//
-//	@Override
-//	public void onCreate()
-//	{
-//		super.onCreate();
-//		// Redirect URL, just for temporary testing
-//		API.URL = "http://proxy.evr.cm:9292/v1/";
-//	}
+
+	//
+	// @Override
+	// public void onCreate()
+	// {
+	// super.onCreate();
+	// // Redirect URL, just for temporary testing
+	// API.URL = "http://proxy.evr.cm:9292/v1/";
+	// }
 
 	synchronized Tracker getTracker(TrackerName trackerId)
 	{
@@ -80,8 +79,8 @@ public class EvercamPlayApplication extends Application
 	public static void sendCaughtException(Activity activity, Exception e)
 	{
 		Tracker tracker = getAppTracker(activity);
-		tracker.send(new HitBuilders.ExceptionBuilder().setDescription(e.getStackTrace()[0].toString()).setFatal(true)
-				.build());
+		tracker.send(new HitBuilders.ExceptionBuilder()
+				.setDescription(e.getStackTrace()[0].toString()).setFatal(true).build());
 	}
 
 	public static void sendCaughtException(Activity activity, String message)
@@ -94,7 +93,7 @@ public class EvercamPlayApplication extends Application
 	public static void sendCaughtExceptionNotImportant(Activity activity, Exception e)
 	{
 		Tracker tracker = getAppTracker(activity);
-		tracker.send(new HitBuilders.ExceptionBuilder().setDescription(e.getStackTrace()[0].toString())
-				.setFatal(false).build());
+		tracker.send(new HitBuilders.ExceptionBuilder()
+				.setDescription(e.getStackTrace()[0].toString()).setFatal(false).build());
 	}
 }

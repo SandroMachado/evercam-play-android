@@ -876,7 +876,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			// Create a new media player
 			libvlc = LibVLC.getInstance();
 			libvlc.setSubtitlesEncoding("");
-	//		libvlc.setHardwareAcceleration(LibVLC.HW_ACCELERATION_DISABLED);//Liuting
+			// libvlc.setHardwareAcceleration(LibVLC.HW_ACCELERATION_DISABLED);//Liuting
 			libvlc.setAout(LibVLC.AOUT_OPENSLES);
 			libvlc.setTimeStretching(false);
 			libvlc.setChroma("RV32");
@@ -907,8 +907,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			libvlc.stop();
 			libvlc.detachSurface();
 			libvlc.closeAout();
-//			libvlc.destroy(); //Disabled by Liuting
-//			libvlc = null;//Disabled by Liuting
+			// libvlc.destroy(); //Disabled by Liuting
+			// libvlc = null;//Disabled by Liuting
 
 			mVideoWidth = 0;
 			mVideoHeight = 0;

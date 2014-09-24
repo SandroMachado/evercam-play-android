@@ -629,7 +629,7 @@ public class AddEditCameraActivity extends Activity
 			else
 			{
 				modelSpinner.setEnabled(true);
-		
+
 				for (Model model : modelList)
 				{
 					try
@@ -681,7 +681,7 @@ public class AddEditCameraActivity extends Activity
 			// that has been filled.
 			Defaults defaults = model.getDefaults();
 			Auth basicAuth = defaults.getAuth(Auth.TYPE_BASIC);
-			if(basicAuth != null)
+			if (basicAuth != null)
 			{
 				usernameEdit.setText(basicAuth.getUsername());
 				passwordEdit.setText(basicAuth.getPassword());
@@ -727,7 +727,7 @@ public class AddEditCameraActivity extends Activity
 			return modelMap.get(modelName).toLowerCase(Locale.UK);
 		}
 	}
-	
+
 	private String getModelNameFromSpinner()
 	{
 		String modelName = modelSpinner.getSelectedItem().toString();
@@ -979,7 +979,7 @@ public class AddEditCameraActivity extends Activity
 			try
 			{
 				ArrayList<Model> modelList = Model.getAll(null, modelName, vendorId);
-				if(modelList.size() > 0)
+				if (modelList.size() > 0)
 				{
 					return modelList.get(0);
 				}
