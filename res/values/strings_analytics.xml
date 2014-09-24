@@ -39,7 +39,7 @@
     <!-- Screen Names -->
     <string name="screen_login">Login</string>
     <string name="screen_sign_up">Sign Up</string>
-    <string name="screen_camera_list">Cameras List</string>
+    <string name="screen_camera_list">Camera Grid View</string>
     <string name="screen_preference">Cameras Preferences</string>
     <string name="screen_manage_account">Manage Accounts</string>
     <string name="screen_welcome_slides">Welcome Page</string>

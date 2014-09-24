@@ -479,10 +479,12 @@ public class CameraLayout extends LinearLayout
 				{
 					if (!evercamCamera.getExternalHost().isEmpty())
 					{
-
-						drawable = Commons.getDrawablefromUrlAuthenticated(externalJpgUrl,
-								evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
-								3000);
+						if(evercamCamera.getStatus().equals(CameraStatus.ACTIVE))
+						{
+							drawable = Commons.getDrawablefromUrlAuthenticated(externalJpgUrl,
+									evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
+									3000);
+						}
 
 						if (drawable == null)
 						{
@@ -506,8 +508,11 @@ public class CameraLayout extends LinearLayout
 				{
 					if (evercamCamera.camera != null)
 					{
-						InputStream stream = evercamCamera.camera.getSnapshotFromEvercam();
-						drawable = Drawable.createFromStream(stream, "src");
+						if(evercamCamera.camera.isOnline())
+						{
+							InputStream stream = evercamCamera.camera.getSnapshotFromEvercam();
+							drawable = Drawable.createFromStream(stream, "src");
+						}
 					}
 					else
 					{
