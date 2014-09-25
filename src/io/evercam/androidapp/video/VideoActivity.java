@@ -14,6 +14,7 @@ import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.tasks.DeleteCameraTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
+import io.evercam.androidapp.utils.EnumConstants.DeleteType;
 import io.evercam.androidapp.utils.EvercamFile;
 import io.evercam.androidapp.utils.PrefsManager;
 
@@ -463,7 +464,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							public void onClick(DialogInterface warningDialog, int which)
 							{
 								new DeleteCameraTask(evercamCamera.getCameraId(),
-										VideoActivity.this)
+										VideoActivity.this, DeleteType.DELETE_OWNED)
 										.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 							}
 						}, R.string.msg_confirm_remove_camera).show();

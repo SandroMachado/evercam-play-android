@@ -6,6 +6,7 @@ import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.utils.Constants;
+import io.evercam.androidapp.utils.EnumConstants.DeleteType;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -17,7 +18,7 @@ public class DeleteCameraTask extends AsyncTask<Void, Void, Boolean>
 	private CustomProgressDialog customProgressDialog;
 	private Activity activity;
 
-	public DeleteCameraTask(String cameraId, Activity activity)
+	public DeleteCameraTask(String cameraId, Activity activity, DeleteType type)
 	{
 		this.cameraId = cameraId;
 		this.activity = activity;
