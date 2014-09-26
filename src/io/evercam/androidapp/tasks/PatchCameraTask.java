@@ -100,7 +100,7 @@ public class PatchCameraTask extends AsyncTask<Void, Void, EvercamCamera>
 		catch (EvercamException e)
 		{
 			errorMessage = e.getMessage();
-			Log.e(TAG, "add camera to evercam: " + e.getMessage());
+			Log.e(TAG, "patch camera: " + e.getMessage());
 			return null;
 		}
 	}

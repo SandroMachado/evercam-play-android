@@ -487,7 +487,7 @@ public class AddEditCameraActivity extends Activity
 		String vendorId = getVendorIdFromSpinner();
 		patchCameraBuilder.setVendor(vendorId);
 
-		String modelName = getModelNameFromSpinner();
+		String modelName = getModelIdFromSpinner();
 		patchCameraBuilder.setModel(modelName);
 
 		String username = usernameEdit.getText().toString();
