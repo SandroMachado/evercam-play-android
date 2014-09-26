@@ -26,6 +26,7 @@ public class EvercamCamera
 	private String owner = ""; // The user's user name
 	private String realOwner = "";// The owner of camera
 	private boolean canEdit = false;
+	private boolean canDelete = false;
 	private String username = "";
 	private String password = "";
 	private String timezone = "";
@@ -65,6 +66,7 @@ public class EvercamCamera
 			}
 			realOwner = camera.getOwner();
 			canEdit = camera.getRights().canEdit();
+			canDelete = camera.getRights().canDelete();
 			if (camera.hasCredentials())
 			{
 				hasCredentials = true;
@@ -175,10 +177,20 @@ public class EvercamCamera
 	{
 		return canEdit;
 	}
+	
+	public boolean canDelete()
+	{
+		return canDelete;
+	}
 
 	public int getCanEditInt()
 	{
 		return canEdit() ? 1 : 0;
+	}
+	
+	public int getCanDeleteInt()
+	{
+		return canDelete() ? 1 : 0;
 	}
 
 	public boolean hasCredentials()
@@ -249,6 +261,11 @@ public class EvercamCamera
 	public void setCanEdit(boolean canEdit)
 	{
 		this.canEdit = canEdit;
+	}
+	
+	public void setCanDelete(boolean canDelete)
+	{
+		this.canDelete = canDelete;
 	}
 
 	public String getMac()
@@ -425,7 +442,7 @@ public class EvercamCamera
 				&& externalHost.equals(other.externalHost) && internalHttp == other.internalHttp
 				&& externalHttp == other.externalHttp && internalRtsp == other.internalRtsp
 				&& externalRtsp == other.externalRtsp && realOwner.equals(other.realOwner)
-				&& canEdit == other.canEdit)
+				&& canEdit == other.canEdit && canDelete == other.canDelete)
 		{
 			return true;
 		}
@@ -437,7 +454,7 @@ public class EvercamCamera
 	{
 		return "EvercamCamera [loadingStatus=" + loadingStatus + ", id=" + id + ", cameraId="
 				+ cameraId + ", name=" + name + ", owner=" + owner + ", realOwner=" + realOwner
-				+ ", canEdit=" + canEdit + ", username=" + username + ", password=" + password
+				+ ", canEdit=" + canEdit+ ", canDelete=" + canDelete + ", username=" + username + ", password=" + password
 				+ ", timezone=" + timezone + ", vendor=" + vendor + ", model=" + model + ", mac="
 				+ mac + ", externalSnapshotUrl=" + externalSnapshotUrl + ", internalSnapshotUrl="
 				+ internalSnapshotUrl + ", externalRtspUrl=" + externalRtspUrl

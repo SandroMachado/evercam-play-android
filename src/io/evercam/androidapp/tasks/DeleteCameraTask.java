@@ -1,10 +1,12 @@
 package io.evercam.androidapp.tasks;
 
 import io.evercam.Camera;
+import io.evercam.CameraShare;
 import io.evercam.EvercamException;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
+import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EnumConstants.DeleteType;
 import android.app.Activity;
@@ -17,11 +19,13 @@ public class DeleteCameraTask extends AsyncTask<Void, Void, Boolean>
 	private String cameraId;
 	private CustomProgressDialog customProgressDialog;
 	private Activity activity;
+	private DeleteType deleteType;
 
 	public DeleteCameraTask(String cameraId, Activity activity, DeleteType type)
 	{
 		this.cameraId = cameraId;
 		this.activity = activity;
+		this.deleteType = type;
 	}
 
 	@Override
@@ -36,9 +40,19 @@ public class DeleteCameraTask extends AsyncTask<Void, Void, Boolean>
 	{
 		try
 		{
+			if(deleteType == DeleteType.DELETE_OWNED)
+			{
 			if (Camera.delete(cameraId))
 			{
 				return true;
+			}
+			}
+			else
+			{
+				if(CameraShare.delete(cameraId, AppData.defaultUser.getUsername()))
+				{
+					return true;
+				}
 			}
 		}
 		catch (EvercamException e)
