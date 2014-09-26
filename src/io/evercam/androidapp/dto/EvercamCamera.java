@@ -177,7 +177,7 @@ public class EvercamCamera
 	{
 		return canEdit;
 	}
-	
+
 	public boolean canDelete()
 	{
 		return canDelete;
@@ -187,7 +187,7 @@ public class EvercamCamera
 	{
 		return canEdit() ? 1 : 0;
 	}
-	
+
 	public int getCanDeleteInt()
 	{
 		return canDelete() ? 1 : 0;
@@ -262,7 +262,7 @@ public class EvercamCamera
 	{
 		this.canEdit = canEdit;
 	}
-	
+
 	public void setCanDelete(boolean canDelete)
 	{
 		this.canDelete = canDelete;
@@ -454,14 +454,14 @@ public class EvercamCamera
 	{
 		return "EvercamCamera [loadingStatus=" + loadingStatus + ", id=" + id + ", cameraId="
 				+ cameraId + ", name=" + name + ", owner=" + owner + ", realOwner=" + realOwner
-				+ ", canEdit=" + canEdit+ ", canDelete=" + canDelete + ", username=" + username + ", password=" + password
-				+ ", timezone=" + timezone + ", vendor=" + vendor + ", model=" + model + ", mac="
-				+ mac + ", externalSnapshotUrl=" + externalSnapshotUrl + ", internalSnapshotUrl="
-				+ internalSnapshotUrl + ", externalRtspUrl=" + externalRtspUrl
-				+ ", internalRtspUrl=" + internalRtspUrl + ", status=" + status
-				+ ", hasCredentials=" + hasCredentials + ", internalHost=" + internalHost
-				+ ", externalHost=" + externalHost + ", internalHttp=" + internalHttp
-				+ ", internalRtsp=" + internalRtsp + ", externalHttp=" + externalHttp
-				+ ", externalRtsp=" + externalRtsp + "]";
+				+ ", canEdit=" + canEdit + ", canDelete=" + canDelete + ", username=" + username
+				+ ", password=" + password + ", timezone=" + timezone + ", vendor=" + vendor
+				+ ", model=" + model + ", mac=" + mac + ", externalSnapshotUrl="
+				+ externalSnapshotUrl + ", internalSnapshotUrl=" + internalSnapshotUrl
+				+ ", externalRtspUrl=" + externalRtspUrl + ", internalRtspUrl=" + internalRtspUrl
+				+ ", status=" + status + ", hasCredentials=" + hasCredentials + ", internalHost="
+				+ internalHost + ", externalHost=" + externalHost + ", internalHttp="
+				+ internalHttp + ", internalRtsp=" + internalRtsp + ", externalHttp="
+				+ externalHttp + ", externalRtsp=" + externalRtsp + "]";
 	}
 }

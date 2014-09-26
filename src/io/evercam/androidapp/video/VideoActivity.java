@@ -463,7 +463,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							@Override
 							public void onClick(DialogInterface warningDialog, int which)
 							{
-								if(evercamCamera.canDelete())
+								if (evercamCamera.canDelete())
 								{
 									new DeleteCameraTask(evercamCamera.getCameraId(),
 											VideoActivity.this, DeleteType.DELETE_OWNED)

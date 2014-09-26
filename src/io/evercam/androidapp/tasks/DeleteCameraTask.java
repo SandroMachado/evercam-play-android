@@ -40,16 +40,16 @@ public class DeleteCameraTask extends AsyncTask<Void, Void, Boolean>
 	{
 		try
 		{
-			if(deleteType == DeleteType.DELETE_OWNED)
+			if (deleteType == DeleteType.DELETE_OWNED)
 			{
-			if (Camera.delete(cameraId))
-			{
-				return true;
-			}
+				if (Camera.delete(cameraId))
+				{
+					return true;
+				}
 			}
 			else
 			{
-				if(CameraShare.delete(cameraId, AppData.defaultUser.getUsername()))
+				if (CameraShare.delete(cameraId, AppData.defaultUser.getUsername()))
 				{
 					return true;
 				}
