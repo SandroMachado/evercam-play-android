@@ -4,6 +4,7 @@ import io.evercam.Camera;
 import io.evercam.EvercamException;
 import io.evercam.androidapp.AddEditCameraActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
+import io.evercam.androidapp.LocalStorageActivity;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.ViewCameraActivity;
 import io.evercam.androidapp.custom.CustomedDialog;
@@ -427,6 +428,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	{
 		MenuItem editItem = menu.findItem(R.id.video_menu_edit_camera);
 		MenuItem viewItem = menu.findItem(R.id.video_menu_view_camera);
+		MenuItem localStorageItem = menu.findItem(R.id.video_menu_local_storage);
 
 		if (evercamCamera != null)
 		{
@@ -439,6 +441,15 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			{
 				editItem.setVisible(false);
 				viewItem.setVisible(true);
+			}
+			
+			if(evercamCamera.isHikvision() && evercamCamera.hasCredentials())
+			{
+				localStorageItem.setVisible(true);
+			}
+			else
+			{
+				localStorageItem.setVisible(false);
 			}
 		}
 		else
@@ -496,7 +507,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				startActivityForResult(editIntent, Constants.REQUEST_CODE_PATCH_CAMERA);
 
 				return true;
-
+			
+			case R.id.video_menu_local_storage:
+				
+				startActivity(new Intent(VideoActivity.this, LocalStorageActivity.class));
+				
 				// case R.id.menusettings_video:
 				// optionsActivityStarted = true;
 				// paused = true;

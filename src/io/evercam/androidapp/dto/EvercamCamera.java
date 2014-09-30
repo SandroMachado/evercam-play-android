@@ -6,6 +6,7 @@ import io.evercam.EvercamException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.apache.http.cookie.Cookie;
 
@@ -422,6 +423,15 @@ public class EvercamCamera
 	public void setExternalRtsp(int externalRtsp)
 	{
 		this.externalRtsp = externalRtsp;
+	}
+	
+	public boolean isHikvision()
+	{
+		if(getVendor().toLowerCase(Locale.UK).contains("hikvision"))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	@Override
