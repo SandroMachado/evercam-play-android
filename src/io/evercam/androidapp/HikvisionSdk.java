@@ -1,7 +1,5 @@
 package io.evercam.androidapp;
 
-import java.util.Calendar;
-
 import io.evercam.androidapp.dto.EvercamCamera;
 import org.MediaPlayer.PlayM4.Player;
 
@@ -124,7 +122,7 @@ public class HikvisionSdk implements Callback
 		return loginId;
 	}
 
-	public void startPlayback(NET_DVR_TIME struBegin)
+	public void startPlayback(NET_DVR_TIME beginTime)
 	{
 		try
 		{
@@ -136,65 +134,79 @@ public class HikvisionSdk implements Callback
 
 			if (playBackId < 0)
 			{
-				PlaybackCallBack playbackCallBack = getPlaybackCallback();
-				if (playbackCallBack == null)
-				{
-					Log.e(TAG, "fPlaybackCallBack object is failed!");
-					return;
-				}
-				
-				NET_DVR_TIME endTime = getCurrentAsEndTime();
-
-				playBackId = HCNetSDK.getInstance().NET_DVR_PlayBackByTime(loginId, 1, struBegin,
-						endTime);
-				if (playBackId >= 0)
-				{
-					if (!HCNetSDK.getInstance().NET_DVR_SetPlayDataCallBack(playBackId,
-							playbackCallBack))
-					{
-						Log.e(TAG, "Set playback callback failed!");
-						return;
-					}
-					NET_DVR_PLAYBACK_INFO struPlaybackInfo = null;
-					if (!HCNetSDK.getInstance().NET_DVR_PlayBackControl_V40(playBackId,
-							HCNetSDK.NET_DVR_PLAYSTART, null, 0, struPlaybackInfo))
-					{
-						Log.e(TAG, "net sdk playback start failed!");
-						return;
-					}
-				}
-				else
-				{
-					Log.i(TAG, "NET_DVR_PlayBackByTime failed, error code: "
-							+ HCNetSDK.getInstance().NET_DVR_GetLastError());
-				}
+				play(beginTime);
 			}
 			else
 			{
-				 if(!HCNetSDK.getInstance().NET_DVR_StopPlayBack(playBackId))
-				 {
-				 Log.e(TAG, "net sdk stop playback failed");
-				 }
-				 // player stop play
-				 if (!hikvisionPlayer.stop(playPort))
-				 {
-				 Log.e(TAG, "player_stop is failed!");
-				 }
-				 if(!hikvisionPlayer.closeStream(playPort))
-				 {
-				 Log.e(TAG, "closeStream is failed!");
-				 }
-				 if(!hikvisionPlayer.freePort(playPort))
-				 {
-				 Log.e(TAG, "freePort is failed!" + playPort);
-				 }
-				 playPort = -1;
-				 playBackId= -1;
+				stopPlay();
+				play(beginTime);
 			}
 		}
 		catch (Exception err)
 		{
 			Log.e(TAG, "error: " + err.toString());
+		}
+	}
+	
+	private void stopPlay()
+	{
+		 if(!HCNetSDK.getInstance().NET_DVR_StopPlayBack(playBackId))
+		 {
+		 Log.e(TAG, "net sdk stop playback failed");
+		 }
+		 // player stop play
+		 if (!hikvisionPlayer.stop(playPort))
+		 {
+		 Log.e(TAG, "player_stop is failed!");
+		 }
+		 if(!hikvisionPlayer.closeStream(playPort))
+		 {
+		 Log.e(TAG, "closeStream is failed!");
+		 }
+		 if(!hikvisionPlayer.freePort(playPort))
+		 {
+		 Log.e(TAG, "freePort is failed!" + playPort);
+		 }
+		 playPort = -1;
+		 playBackId= -1;
+	}
+	
+	private void play(NET_DVR_TIME beginTime)
+	{
+		PlaybackCallBack playbackCallBack = getPlaybackCallback();
+		if (playbackCallBack == null)
+		{
+			Log.e(TAG, "fPlaybackCallBack object is failed!");
+			return;
+		}
+		
+		NET_DVR_TIME endTime = getEndTimeBasedOnBeginTime(beginTime);
+
+		playBackId = HCNetSDK.getInstance().NET_DVR_PlayBackByTime(loginId, 1, beginTime,
+				endTime);
+		Log.d(TAG,beginTime.ToString() + " " +endTime.ToString());
+
+		if (playBackId >= 0)
+		{
+			if (!HCNetSDK.getInstance().NET_DVR_SetPlayDataCallBack(playBackId,
+					playbackCallBack))
+			{
+				Log.e(TAG, "Set playback callback failed!");
+				return;
+			}
+			NET_DVR_PLAYBACK_INFO struPlaybackInfo = null;
+			if (!HCNetSDK.getInstance().NET_DVR_PlayBackControl_V40(playBackId,
+					HCNetSDK.NET_DVR_PLAYSTART, null, 0, struPlaybackInfo))
+			{
+				Log.e(TAG, "net sdk playback start failed!");
+				return;
+			}
+		}
+		else
+		{
+			Log.d(TAG, "PLAYBACK ERROR");
+			Log.i(TAG, "NET_DVR_PlayBackByTime failed, error code: "
+					+ HCNetSDK.getInstance().NET_DVR_GetLastError());
 		}
 	}
 
@@ -332,20 +344,27 @@ public class HikvisionSdk implements Callback
 		return 0;
 	}
 	
-	private NET_DVR_TIME getCurrentAsEndTime()
+	private NET_DVR_TIME getEndTimeBasedOnBeginTime(NET_DVR_TIME beginTime)
 	{
 		NET_DVR_TIME endTime = new NET_DVR_TIME();
-		
-		Calendar calendar = Calendar.getInstance(); 
-		endTime.dwYear = calendar.get(Calendar.YEAR);
-		endTime.dwMonth = calendar.get(Calendar.MONTH);
-		endTime.dwDay = calendar.get(Calendar.DAY_OF_MONTH);
-		endTime.dwHour = calendar.get(Calendar.HOUR_OF_DAY);
-		endTime.dwMinute = calendar.get(Calendar.MINUTE);
+
+		endTime.dwYear = beginTime.dwYear;
+		endTime.dwMonth = beginTime.dwMonth;
+		endTime.dwDay = beginTime.dwDay;
+		endTime.dwHour = beginTime.dwHour + 1;
+		endTime.dwMinute = beginTime.dwMinute;
 		endTime.dwSecond = 0;
-		
 		return endTime;
 	}
+	
+    public void cleanUp()
+    {
+        hikvisionPlayer.freePort(playPort);
+		playPort = -1;
+        
+        // release net SDK resource
+		HCNetSDK.getInstance().NET_DVR_Cleanup();
+    }
 
 	static class CameraInfo
 	{
