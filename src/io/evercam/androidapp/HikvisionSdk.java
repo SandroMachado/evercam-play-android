@@ -1,5 +1,6 @@
 package io.evercam.androidapp;
 
+import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.dto.EvercamCamera;
 import org.MediaPlayer.PlayM4.Player;
 
@@ -20,6 +21,7 @@ public class HikvisionSdk implements Callback
 	private final String TAG = "evercamplay-HikvisionSdk";
 
 	private EvercamCamera evercamCamera;
+	private LocalStorageActivity activity;
 
 	private SurfaceView surfaceView;
 	private Player hikvisionPlayer = null;
@@ -28,10 +30,11 @@ public class HikvisionSdk implements Callback
 	private int playBackId = -1;
 	public int playPort = -1;
 
-	public HikvisionSdk(SurfaceView surfaceView, EvercamCamera evercamCamera)
+	public HikvisionSdk(SurfaceView surfaceView, EvercamCamera evercamCamera, LocalStorageActivity activity)
 	{
 		this.evercamCamera = evercamCamera;
 		this.surfaceView = surfaceView;
+		this.activity = activity;
 		initSdk();
 		surfaceView.getHolder().addCallback(this);
 	}
@@ -185,7 +188,7 @@ public class HikvisionSdk implements Callback
 		playBackId = HCNetSDK.getInstance().NET_DVR_PlayBackByTime(loginId, 1, beginTime,
 				endTime);
 		Log.d(TAG,beginTime.ToString() + " " +endTime.ToString());
-
+		
 		if (playBackId >= 0)
 		{
 			if (!HCNetSDK.getInstance().NET_DVR_SetPlayDataCallBack(playBackId,
@@ -204,6 +207,8 @@ public class HikvisionSdk implements Callback
 		}
 		else
 		{
+			activity.hideProgressView();
+			CustomToast.showInCenter(activity, R.string.msg_playback_failed);
 			Log.d(TAG, "PLAYBACK ERROR");
 			Log.i(TAG, "NET_DVR_PlayBackByTime failed, error code: "
 					+ HCNetSDK.getInstance().NET_DVR_GetLastError());
@@ -241,6 +246,14 @@ public class HikvisionSdk implements Callback
 				return;
 			}
 			Log.i(TAG, "getPort succ with: " + playPort);
+			activity.runOnUiThread(new Runnable(){
+				@Override
+				public void run()
+				{
+					activity.hideProgressView();
+				}
+				
+			});
 			if (iDataSize > 0)
 			{
 				if (!hikvisionPlayer.setStreamOpenMode(playPort, iStreamMode)) // set
@@ -272,7 +285,7 @@ public class HikvisionSdk implements Callback
 		{
 			if (!hikvisionPlayer.inputData(playPort, pDataBuffer, iDataSize))
 			{
-				Log.e(TAG, "inputData failed with: " + hikvisionPlayer.getLastError(playPort));
+			//	Log.e(TAG, "inputData failed with: " + hikvisionPlayer.getLastError(playPort));
 			}
 		}
 	}

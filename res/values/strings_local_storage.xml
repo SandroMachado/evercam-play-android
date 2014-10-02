@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_activity_local_storage">Local Storage Playback</string>
+    <string name="title_activity_local_storage">Playback</string>
     <string name="from">From</string>
     <string name="menu_item_select_time">Select Date Time</string>
+    <string name="msg_playback_failed">Playback failed. Please choose another start time and try again.</string>
+    <string name="msg_connecting_camera">Connecting camera&#8230;</string>
 </resources>

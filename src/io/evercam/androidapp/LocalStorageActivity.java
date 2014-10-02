@@ -4,6 +4,7 @@ import com.bugsense.trace.BugSenseHandler;
 import com.hikvision.netsdk.NET_DVR_TIME;
 
 import io.evercam.androidapp.custom.CustomProgressDialog;
+import io.evercam.androidapp.custom.ProgressView;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.video.VideoActivity;
@@ -15,6 +16,8 @@ import android.view.View;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.SurfaceView;
@@ -28,6 +31,7 @@ public class LocalStorageActivity extends Activity
 
 	private EvercamCamera evercamCamera;
 	private SurfaceView surfaceView;
+	private ProgressView progressView;
 	private HikvisionSdk hikvisionSdk;
 	
 	private CustomProgressDialog customProgressDialog;
@@ -46,36 +50,32 @@ public class LocalStorageActivity extends Activity
 
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_local_storage));
 		
+		evercamCamera = VideoActivity.evercamCamera;
+		
 		if (this.getActionBar() != null)
 		{
 			this.getActionBar().setHomeButtonEnabled(true);
+			this.getActionBar().setTitle(getString(R.string.title_activity_local_storage)
+					+ " - " + evercamCamera.getName());
 		}
 
 		surfaceView = (SurfaceView) findViewById(R.id.surface_hikvision);
+		progressView = (ProgressView) findViewById(R.id.local_storage_spinner);
 		
 		int screenWidth = CamerasActivity.readScreenWidth(this);
 		int screenHeight = CamerasActivity.readScreenHeight(this);
 		if(screenWidth < screenHeight)
 		{
-			android.widget.LinearLayout.LayoutParams params = new android.widget.LinearLayout.LayoutParams(screenWidth, screenWidth/3 * 2);
+			android.widget.RelativeLayout.LayoutParams params = new android.widget.RelativeLayout.LayoutParams(screenWidth, screenWidth/3 * 2);
 			surfaceView.setLayoutParams(params);
 		}
 
-		evercamCamera = VideoActivity.evercamCamera;
-
-		hikvisionSdk = new HikvisionSdk(surfaceView, evercamCamera);
+		hikvisionSdk = new HikvisionSdk(surfaceView, evercamCamera, this);
 		
 		customProgressDialog = new CustomProgressDialog(this);
-		customProgressDialog.show("Connecting camera...");
+		customProgressDialog.show(getString(R.string.msg_connecting_camera));
 		
-		handler.postDelayed(new Runnable(){
-
-			@Override
-			public void run()
-			{
-				loginToDevice();
-			}
-		}, 500);
+		new LoginTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 	
 	@Override
@@ -94,8 +94,8 @@ public class LocalStorageActivity extends Activity
 	{
 		super.onStop();
 		
-		finish();
-		hikvisionSdk.cleanUp();
+//		finish();
+//		hikvisionSdk.cleanUp();
 		
 		if (Constants.isAppTrackingEnabled)
 		{
@@ -145,16 +145,6 @@ public class LocalStorageActivity extends Activity
 		}
 	}
 
-	private void loginToDevice()
-	{
-		boolean loginSuccess = hikvisionSdk.login();
-		customProgressDialog.dismiss();
-		if (loginSuccess)
-		{
-			showDateTimePickerDialog();
-		}
-	}
-
 	private void showDateTimePickerDialog()
 	{
 		final View dialogLayout = getLayoutInflater().inflate(R.layout.date_time_layout, null);
@@ -172,15 +162,10 @@ public class LocalStorageActivity extends Activity
 					@Override
 					public void onClick(DialogInterface dialog, int which)
 					{
+						dialog.dismiss();
 						surfaceView.setVisibility(View.VISIBLE);
-						handler.postDelayed(new Runnable(){
-
-							@Override
-							public void run()
-							{
-								hikvisionSdk.startPlayback(getTimeFromPicker(datePicker, timePicker));
-							}
-						}, 500);
+						showProgressView();
+						hikvisionSdk.startPlayback(getTimeFromPicker(datePicker, timePicker));
 					}
 				}).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
 
@@ -225,5 +210,48 @@ public class LocalStorageActivity extends Activity
 		beginTime.dwSecond = 0;
 		
 		return beginTime;
+	}
+	
+	public void showProgressView()
+	{
+		progressView.setVisibility(View.VISIBLE);
+	}
+	
+	public void hideProgressView()
+	{
+		handler.postDelayed(new Runnable(){
+
+			@Override
+			public void run()
+			{
+				progressView.setVisibility(View.INVISIBLE);
+			}
+			
+		}, 2000);
+	}
+	
+	class LoginTask extends AsyncTask<Void, Void, Boolean>
+	{
+		@Override
+		protected Boolean doInBackground(Void... params)
+		{
+			boolean loginSuccess = hikvisionSdk.login();
+			if (loginSuccess)
+			{
+				return true;
+			}
+			return false;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean success)
+		{
+			customProgressDialog.dismiss();
+			
+			if(success)
+			{
+				showDateTimePickerDialog();
+			}
+		}
 	}
 }
