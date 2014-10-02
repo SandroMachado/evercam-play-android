@@ -37,16 +37,16 @@ public class CheckInternetTask extends AsyncTask<Void, Void, Boolean>
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		if (connectivityManager.getActiveNetworkInfo() != null)
 		{
-//			try
-//			{
-//				InetAddress.getByName(HOSTNAME_GOOGLE);
-//				return true;
-//			}
-//			catch (UnknownHostException e)
-//			{
-//				Log.e(TAG, e.getMessage());
-//			}
-//			return false;
+			// try
+			// {
+			// InetAddress.getByName(HOSTNAME_GOOGLE);
+			// return true;
+			// }
+			// catch (UnknownHostException e)
+			// {
+			// Log.e(TAG, e.getMessage());
+			// }
+			// return false;
 			return true;
 		}
 		else

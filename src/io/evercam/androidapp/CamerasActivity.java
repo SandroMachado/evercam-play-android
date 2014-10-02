@@ -105,12 +105,13 @@ public class CamerasActivity extends ParentActivity implements
 			{
 				addAllCameraViews(false);
 			}
-			
+
 		}, 500);
-		
-		//Start loading camera list after menu created(because need the menu showing as animation)
+
+		// Start loading camera list after menu created(because need the menu
+		// showing as animation)
 		new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.START)
-		.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		// notificationID =
 		// this.getIntent().getIntExtra(Constants.GCMNotificationIDString, 0);
 		// this.getIntent().putExtra(Constants.GCMNotificationIDString, 0);
@@ -370,7 +371,7 @@ public class CamerasActivity extends ParentActivity implements
 			}
 		}
 	}
-	
+
 	private void startCameraLoadingTask()
 	{
 		if (Commons.isOnline(this))

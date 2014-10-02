@@ -32,7 +32,7 @@ public class LocalStorageActivity extends Activity
 	private SurfaceView surfaceView;
 	private ProgressView progressView;
 	private HikvisionSdk hikvisionSdk;
-	
+
 	private CustomProgressDialog customProgressDialog;
 	Handler handler = new Handler();
 
@@ -48,35 +48,37 @@ public class LocalStorageActivity extends Activity
 		}
 
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_local_storage));
-		
+
 		evercamCamera = VideoActivity.evercamCamera;
-		
+
 		if (this.getActionBar() != null)
 		{
 			this.getActionBar().setHomeButtonEnabled(true);
-			this.getActionBar().setTitle(getString(R.string.title_activity_local_storage)
-					+ " - " + evercamCamera.getName());
+			this.getActionBar().setTitle(
+					getString(R.string.title_activity_local_storage) + " - "
+							+ evercamCamera.getName());
 		}
 
 		surfaceView = (SurfaceView) findViewById(R.id.surface_hikvision);
 		progressView = (ProgressView) findViewById(R.id.local_storage_spinner);
-		
+
 		int screenWidth = CamerasActivity.readScreenWidth(this);
 		int screenHeight = CamerasActivity.readScreenHeight(this);
-		if(screenWidth < screenHeight)
+		if (screenWidth < screenHeight)
 		{
-			android.widget.RelativeLayout.LayoutParams params = new android.widget.RelativeLayout.LayoutParams(screenWidth, screenWidth/3 * 2);
+			android.widget.RelativeLayout.LayoutParams params = new android.widget.RelativeLayout.LayoutParams(
+					screenWidth, screenWidth / 3 * 2);
 			surfaceView.setLayoutParams(params);
 		}
 
 		hikvisionSdk = new HikvisionSdk(surfaceView, evercamCamera, this);
-		
+
 		customProgressDialog = new CustomProgressDialog(this);
 		customProgressDialog.show(getString(R.string.msg_connecting_camera));
-		
+
 		new LoginTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
-	
+
 	@Override
 	public void onStart()
 	{
@@ -92,10 +94,10 @@ public class LocalStorageActivity extends Activity
 	public void onStop()
 	{
 		super.onStop();
-		
-//		finish();
-//		hikvisionSdk.cleanUp();
-		
+
+		// finish();
+		// hikvisionSdk.cleanUp();
+
 		if (Constants.isAppTrackingEnabled)
 		{
 			BugSenseHandler.closeSession(this);
@@ -177,7 +179,7 @@ public class LocalStorageActivity extends Activity
 
 		dialogBuilder.create().show();
 	}
-	
+
 	private NET_DVR_TIME getTimeFromPicker(DatePicker datePicker, TimePicker timePicker)
 	{
 		int month = datePicker.getMonth() + 1;
@@ -207,15 +209,15 @@ public class LocalStorageActivity extends Activity
 		beginTime.dwHour = hour;
 		beginTime.dwMinute = min;
 		beginTime.dwSecond = 0;
-		
+
 		return beginTime;
 	}
-	
+
 	public void showProgressView()
 	{
 		progressView.setVisibility(View.VISIBLE);
 	}
-	
+
 	public void hideProgressView()
 	{
 		handler.postDelayed(new Runnable(){
@@ -225,10 +227,10 @@ public class LocalStorageActivity extends Activity
 			{
 				progressView.setVisibility(View.INVISIBLE);
 			}
-			
+
 		}, 2000);
 	}
-	
+
 	class LoginTask extends AsyncTask<Void, Void, Boolean>
 	{
 		@Override
@@ -246,8 +248,8 @@ public class LocalStorageActivity extends Activity
 		protected void onPostExecute(Boolean success)
 		{
 			customProgressDialog.dismiss();
-			
-			if(success)
+
+			if (success)
 			{
 				showDateTimePickerDialog();
 			}

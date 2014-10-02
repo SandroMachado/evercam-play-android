@@ -30,7 +30,8 @@ public class HikvisionSdk implements Callback
 	private int playBackId = -1;
 	public int playPort = -1;
 
-	public HikvisionSdk(SurfaceView surfaceView, EvercamCamera evercamCamera, LocalStorageActivity activity)
+	public HikvisionSdk(SurfaceView surfaceView, EvercamCamera evercamCamera,
+			LocalStorageActivity activity)
 	{
 		this.evercamCamera = evercamCamera;
 		this.surfaceView = surfaceView;
@@ -150,30 +151,30 @@ public class HikvisionSdk implements Callback
 			Log.e(TAG, "error: " + err.toString());
 		}
 	}
-	
+
 	private void stopPlay()
 	{
-		 if(!HCNetSDK.getInstance().NET_DVR_StopPlayBack(playBackId))
-		 {
-		 Log.e(TAG, "net sdk stop playback failed");
-		 }
-		 // player stop play
-		 if (!hikvisionPlayer.stop(playPort))
-		 {
-		 Log.e(TAG, "player_stop is failed!");
-		 }
-		 if(!hikvisionPlayer.closeStream(playPort))
-		 {
-		 Log.e(TAG, "closeStream is failed!");
-		 }
-		 if(!hikvisionPlayer.freePort(playPort))
-		 {
-		 Log.e(TAG, "freePort is failed!" + playPort);
-		 }
-		 playPort = -1;
-		 playBackId= -1;
+		if (!HCNetSDK.getInstance().NET_DVR_StopPlayBack(playBackId))
+		{
+			Log.e(TAG, "net sdk stop playback failed");
+		}
+		// player stop play
+		if (!hikvisionPlayer.stop(playPort))
+		{
+			Log.e(TAG, "player_stop is failed!");
+		}
+		if (!hikvisionPlayer.closeStream(playPort))
+		{
+			Log.e(TAG, "closeStream is failed!");
+		}
+		if (!hikvisionPlayer.freePort(playPort))
+		{
+			Log.e(TAG, "freePort is failed!" + playPort);
+		}
+		playPort = -1;
+		playBackId = -1;
 	}
-	
+
 	private void play(NET_DVR_TIME beginTime)
 	{
 		PlaybackCallBack playbackCallBack = getPlaybackCallback();
@@ -182,17 +183,15 @@ public class HikvisionSdk implements Callback
 			Log.e(TAG, "fPlaybackCallBack object is failed!");
 			return;
 		}
-		
+
 		NET_DVR_TIME endTime = getEndTimeBasedOnBeginTime(beginTime);
 
-		playBackId = HCNetSDK.getInstance().NET_DVR_PlayBackByTime(loginId, 1, beginTime,
-				endTime);
-		Log.d(TAG,beginTime.ToString() + " " +endTime.ToString());
-		
+		playBackId = HCNetSDK.getInstance().NET_DVR_PlayBackByTime(loginId, 1, beginTime, endTime);
+		Log.d(TAG, beginTime.ToString() + " " + endTime.ToString());
+
 		if (playBackId >= 0)
 		{
-			if (!HCNetSDK.getInstance().NET_DVR_SetPlayDataCallBack(playBackId,
-					playbackCallBack))
+			if (!HCNetSDK.getInstance().NET_DVR_SetPlayDataCallBack(playBackId, playbackCallBack))
 			{
 				Log.e(TAG, "Set playback callback failed!");
 				return;
@@ -252,7 +251,7 @@ public class HikvisionSdk implements Callback
 				{
 					activity.hideProgressView();
 				}
-				
+
 			});
 			if (iDataSize > 0)
 			{
@@ -285,7 +284,8 @@ public class HikvisionSdk implements Callback
 		{
 			if (!hikvisionPlayer.inputData(playPort, pDataBuffer, iDataSize))
 			{
-			//	Log.e(TAG, "inputData failed with: " + hikvisionPlayer.getLastError(playPort));
+				// Log.e(TAG, "inputData failed with: " +
+				// hikvisionPlayer.getLastError(playPort));
 			}
 		}
 	}
@@ -356,7 +356,7 @@ public class HikvisionSdk implements Callback
 		}
 		return 0;
 	}
-	
+
 	private NET_DVR_TIME getEndTimeBasedOnBeginTime(NET_DVR_TIME beginTime)
 	{
 		NET_DVR_TIME endTime = new NET_DVR_TIME();
@@ -369,15 +369,15 @@ public class HikvisionSdk implements Callback
 		endTime.dwSecond = 0;
 		return endTime;
 	}
-	
-    public void cleanUp()
-    {
-        hikvisionPlayer.freePort(playPort);
+
+	public void cleanUp()
+	{
+		hikvisionPlayer.freePort(playPort);
 		playPort = -1;
-        
-        // release net SDK resource
+
+		// release net SDK resource
 		HCNetSDK.getInstance().NET_DVR_Cleanup();
-    }
+	}
 
 	static class CameraInfo
 	{

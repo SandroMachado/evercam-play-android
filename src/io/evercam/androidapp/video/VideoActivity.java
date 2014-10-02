@@ -442,8 +442,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				editItem.setVisible(false);
 				viewItem.setVisible(true);
 			}
-			
-			if(evercamCamera.isHikvision() && evercamCamera.hasCredentials())
+
+			if (evercamCamera.isHikvision() && evercamCamera.hasCredentials())
 			{
 				localStorageItem.setVisible(true);
 			}
@@ -507,11 +507,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				startActivityForResult(editIntent, Constants.REQUEST_CODE_PATCH_CAMERA);
 
 				return true;
-			
+
 			case R.id.video_menu_local_storage:
-				
+
 				startActivity(new Intent(VideoActivity.this, LocalStorageActivity.class));
-				
+
 				// case R.id.menusettings_video:
 				// optionsActivityStarted = true;
 				// paused = true;

@@ -150,7 +150,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
 		}
 		return false;
 	}
-	
+
 	@Override
 	protected void onProgressUpdate(Boolean... canLoad)
 	{

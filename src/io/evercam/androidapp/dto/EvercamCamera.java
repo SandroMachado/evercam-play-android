@@ -424,10 +424,10 @@ public class EvercamCamera
 	{
 		this.externalRtsp = externalRtsp;
 	}
-	
+
 	public boolean isHikvision()
 	{
-		if(getVendor().toLowerCase(Locale.UK).contains("hikvision"))
+		if (getVendor().toLowerCase(Locale.UK).contains("hikvision"))
 		{
 			return true;
 		}

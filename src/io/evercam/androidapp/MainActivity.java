@@ -124,8 +124,8 @@ public class MainActivity extends Activity
 				DbAppUser dbUser = new DbAppUser(this);
 				AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
 				AppData.defaultUser = defaultUser;
-				AppData.evercamCameraList  = new DbCamera(this)
-				.getCamerasByOwner(defaultUser.getUsername(), 500);
+				AppData.evercamCameraList = new DbCamera(this).getCamerasByOwner(
+						defaultUser.getUsername(), 500);
 			}
 		}
 		catch (Exception e)
