@@ -3,6 +3,7 @@ package io.evercam.androidapp;
 import java.util.concurrent.RejectedExecutionException;
 
 import android.os.Bundle;
+import android.os.Handler;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -70,28 +71,23 @@ public class CamerasActivity extends ParentActivity implements
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
 		if (Constants.isAppTrackingEnabled)
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
 
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_camera_list));
-
 		if (this.getActionBar() != null)
 		{
 			this.getActionBar().setHomeButtonEnabled(true);
 			this.getActionBar().setDisplayShowTitleEnabled(false);
 			this.getActionBar().setIcon(R.drawable.evercam_play_192x192);
 		}
-
 		setContentView(R.layout.camslayoutwithslide);
 
 		// Disable add user to drop down list to hide user Email
 		// Start loading camera list directly.
 		// addUsersToDropdownActionBar();
-		new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.START)
-				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 		// Disable slide menu until the functionality is required.
 		// slideMenu = (SlideMenu) findViewById(R.id.slideMenu);
@@ -101,7 +97,20 @@ public class CamerasActivity extends ParentActivity implements
 		// int notificationID = 0;
 
 		activity = this;
-		//
+		checkUser();
+		new Handler().postDelayed(new Runnable(){
+
+			@Override
+			public void run()
+			{
+				addAllCameraViews(false);
+			}
+			
+		}, 500);
+		
+		//Start loading camera list after menu created(because need the menu showing as animation)
+		new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.START)
+		.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		// notificationID =
 		// this.getIntent().getIntExtra(Constants.GCMNotificationIDString, 0);
 		// this.getIntent().putExtra(Constants.GCMNotificationIDString, 0);
@@ -120,13 +129,8 @@ public class CamerasActivity extends ParentActivity implements
 		inflater.inflate(R.menu.camsmenulayout, menu);
 
 		refresh = menu.findItem(R.id.menurefresh);
+		refresh.setActionView(R.layout.actionbar_indeterminate_progress);
 
-		if (refresh != null
-				&& (AppData.evercamCameraList == null || AppData.evercamCameraList.size() == 0))
-		{
-			refresh.setActionView(null);
-			refresh.setActionView(R.layout.actionbar_indeterminate_progress);
-		}
 		return true;
 	}
 
@@ -144,7 +148,7 @@ public class CamerasActivity extends ParentActivity implements
 
 			if (refresh != null) refresh.setActionView(R.layout.actionbar_indeterminate_progress);
 
-			startCameraLoadingTaskWithUserCheck();
+			startCameraLoadingTask();
 
 			return true;
 
@@ -336,38 +340,41 @@ public class CamerasActivity extends ParentActivity implements
 			reloadProgressDialog.show(getString(R.string.loading_cameras));
 		}
 
-		startCameraLoadingTaskWithUserCheck();
+		startCameraLoadingTask();
 	}
 
-	private void startCameraLoadingTaskWithUserCheck()
+	private void checkUser()
+	{
+		if (AppData.defaultUser == null)
+		{
+			String defaultEmail = PrefsManager.getUserEmail(this);
+			if (defaultEmail != null)
+			{
+				try
+				{
+					DbAppUser dbUser = new DbAppUser(this);
+					AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
+					AppData.defaultUser = defaultUser;
+				}
+				catch (Exception e)
+				{
+					Log.e(TAG, e.toString());
+					EvercamPlayApplication.sendCaughtException(this, e.toString());
+				}
+			}
+			else
+			// User is not saved locally, send as a bug.
+			{
+				EvercamPlayApplication.sendCaughtException(this, TAG + ":"
+						+ getString(R.string.exception_user_not_saved));
+			}
+		}
+	}
+	
+	private void startCameraLoadingTask()
 	{
 		if (Commons.isOnline(this))
 		{
-			if (AppData.defaultUser == null)
-			{
-				String defaultEmail = PrefsManager.getUserEmail(this);
-				if (defaultEmail != null)
-				{
-					try
-					{
-						DbAppUser dbUser = new DbAppUser(this);
-						AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
-						AppData.defaultUser = defaultUser;
-					}
-					catch (Exception e)
-					{
-						Log.e(TAG, e.toString());
-						EvercamPlayApplication.sendCaughtException(this, e.toString());
-					}
-				}
-				else
-				// User is not saved locally, send as a bug.
-				{
-					EvercamPlayApplication.sendCaughtException(this, TAG + ":"
-							+ getString(R.string.exception_user_not_saved));
-				}
-			}
-
 			LoadCameraListTask loadTask = new LoadCameraListTask(AppData.defaultUser,
 					CamerasActivity.this);
 			loadTask.reload = true; // be default do not refresh until there

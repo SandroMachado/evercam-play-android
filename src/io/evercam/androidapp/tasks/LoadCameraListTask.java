@@ -24,7 +24,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
+public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
 {
 	private AppUser user;
 	private CamerasActivity camerasActivity;
@@ -123,10 +123,11 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 			Log.d(TAG, "Step 4: If any different camera, replace all local camera data.");
 			if (updateDB)
 			{
-				Log.d(TAG, "Updating db");
 				reload = true;
 
 				AppData.evercamCameraList = evercamCameras;
+				this.publishProgress(true);
+				Log.d(TAG, "Updating db");
 				DbCamera dbCamera = new DbCamera(camerasActivity);
 				dbCamera.deleteCameraByOwner(user.getUsername());
 
@@ -135,6 +136,10 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 				{
 					dbCamera.addCamera(iterator.next());
 				}
+			}
+			else
+			{
+				this.publishProgress(true);
 			}
 
 			return true;
@@ -145,13 +150,13 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 		}
 		return false;
 	}
-
+	
 	@Override
-	protected void onPostExecute(Boolean success)
+	protected void onProgressUpdate(Boolean... canLoad)
 	{
 		Log.d(TAG, "Done");
 
-		if (success)
+		if (canLoad[0])
 		{
 			if (reload)
 			{
@@ -194,5 +199,11 @@ public class LoadCameraListTask extends AsyncTask<Void, Void, Boolean>
 		{
 			camerasActivity.reloadProgressDialog.dismiss();
 		}
+	}
+
+	@Override
+	protected void onPostExecute(Boolean success)
+	{
+
 	}
 }

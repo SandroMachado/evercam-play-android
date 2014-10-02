@@ -99,6 +99,7 @@
             android:name=".CamerasActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
+            android:label=""
             android:logo="@drawable/icon_192x192" >
         </activity>
         <activity

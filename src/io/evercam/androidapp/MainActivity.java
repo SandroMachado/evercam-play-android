@@ -2,6 +2,7 @@ package io.evercam.androidapp;
 
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbAppUser;
+import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
@@ -123,6 +124,8 @@ public class MainActivity extends Activity
 				DbAppUser dbUser = new DbAppUser(this);
 				AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
 				AppData.defaultUser = defaultUser;
+				AppData.evercamCameraList  = new DbCamera(this)
+				.getCamerasByOwner(defaultUser.getUsername(), 500);
 			}
 		}
 		catch (Exception e)
