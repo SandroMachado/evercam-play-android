@@ -54,9 +54,12 @@ public class LocalStorageActivity extends Activity
 		if (this.getActionBar() != null)
 		{
 			this.getActionBar().setHomeButtonEnabled(true);
+			if(evercamCamera != null)
+			{
 			this.getActionBar().setTitle(
 					getString(R.string.title_activity_local_storage) + " - "
 							+ evercamCamera.getName());
+			}
 		}
 
 		surfaceView = (SurfaceView) findViewById(R.id.surface_hikvision);

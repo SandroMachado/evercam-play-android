@@ -1,13 +1,13 @@
 <h4>Evercam Play - IP Camera Viewer</h4>
-<h5>1.1.7 Alpha 02/10</h5> 
+<h5>1.1.7</h5> 
 <ul>
-	<li>- Hikvision local storage<br/></li>
+	<li>- First version of Hikvision local storage, you can view previously recorded footage within the app<br/></li>
 	<li>- Camera list loading is faster now<br/></li>
 </ul>
 <br/>
 <b>Version 1.1.6</b>
 <ul>
-	<li>- Now you can remove cameras that are shared with you from your account<br/></li>
+	<li><br/>- Now you can remove cameras that are shared with you from your account<br/></li>
 	<li>- Small bug fixes<br/></li>
 </ul>
 <br/>
