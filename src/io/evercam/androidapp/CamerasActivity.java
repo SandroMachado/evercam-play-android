@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -495,30 +496,36 @@ public class CamerasActivity extends ParentActivity implements
 	}
 
 	// Add all the cameras as per the rules
-	public boolean addAllCameraViews(boolean reloadImages)
+	public boolean addAllCameraViews(final boolean reloadImages)
 	{
 		try
 		{
 			// Recalculate camera per row
 			camerasPerRow = recalculateCameraPerRow();
 
+			ScrollView scrollView = (ScrollView)this.findViewById(R.id.cameras_scroll_view);
 			io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
 					.findViewById(R.id.cameras_flow_layout);
+			
+			final Rect bounds = new Rect(); 							
+			scrollView.getDrawingRect(bounds);
+			Log.d(TAG, bounds.top + " " + bounds.bottom + " " + bounds.left + " " +bounds.right);
 
 			int screen_width = readScreenWidth(this);
 
 			int index = 0;
 			totalCamerasInGrid = 0;
-
+			
 			for (EvercamCamera evercamCamera : AppData.evercamCameraList)
 			{
-				LinearLayout cameraListLayout = new LinearLayout(this);
+				final LinearLayout cameraListLayout = new LinearLayout(this);
 
 				int indexPlus = index + 1;
 
 				if (reloadImages) evercamCamera.loadingStatus = ImageLoadingStatus.not_started;
 
-				CameraLayout cameraLayout = new CameraLayout(this, evercamCamera);
+				final CameraLayout cameraLayout = new CameraLayout(this, evercamCamera, scrollView);
+
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 						android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -529,9 +536,37 @@ public class CamerasActivity extends ParentActivity implements
 				cameraLayout.setLayoutParams(params);
 
 				cameraListLayout.addView(cameraLayout);
+				
 				camsLineView.addView(cameraListLayout,
 						new io.evercam.androidapp.custom.FlowLayout.LayoutParams(0, 0));
 				index++;
+				
+				/**
+				 * If need to reload the images, read camera layout position 
+				 * and check the rectangle is within scope of the screen or not
+				 */
+				if(reloadImages)
+				{
+				new Handler().postDelayed(new Runnable(){
+
+					@Override
+					public void run()
+					{
+						Rect cameraBounds = new Rect();
+						cameraListLayout.getHitRect(cameraBounds);
+						Log.d(TAG, cameraBounds.top + " " + cameraBounds.bottom + " " + cameraBounds.left + " " +cameraBounds.right);
+						if(Rect.intersects(cameraBounds, bounds))
+						{
+						    Log.d(TAG, "IS visible ");
+						    cameraLayout.loadImage();
+						}
+						else
+						{
+							Log.d(TAG, "IS not visible ");
+					}
+					}	
+				}, 500);}
+
 				totalCamerasInGrid++;
 			}
 
