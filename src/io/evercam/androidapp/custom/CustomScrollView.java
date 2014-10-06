@@ -1,22 +1,60 @@
 package io.evercam.androidapp.custom;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.widget.ScrollView;
 
 public class CustomScrollView extends ScrollView
 {
-	
 
-	public CustomScrollView(Context context)
+	private Runnable scrollerTask;
+	private int initialPosition;
+
+	private int newCheck = 100;
+	private static final String TAG = "evercamplay-CustomScrollView";
+
+	public interface OnScrollStoppedListener
 	{
-		super(context);
-		// TODO Auto-generated constructor stub
+		void onScrollStopped();
 	}
 
-	@Override
-	protected void onScrollChanged(int l, int t, int oldl, int oldt)
+	private OnScrollStoppedListener onScrollStoppedListener;
+
+	public CustomScrollView(Context context, AttributeSet attrs)
 	{
-		// TODO Auto-generated method stub
-		super.onScrollChanged(l, t, oldl, oldt);
+		super(context, attrs);
+
+		scrollerTask = new Runnable(){
+
+			public void run()
+			{
+
+				int newPosition = getScrollY();
+				if (initialPosition - newPosition == 0)
+				{// has stopped
+
+					if (onScrollStoppedListener != null)
+					{
+						onScrollStoppedListener.onScrollStopped();
+					}
+				}
+				else
+				{
+					initialPosition = getScrollY();
+					CustomScrollView.this.postDelayed(scrollerTask, newCheck);
+				}
+			}
+		};
+	}
+
+	public void setOnScrollStoppedListener(CustomScrollView.OnScrollStoppedListener listener)
+	{
+		onScrollStoppedListener = listener;
+	}
+
+	public void startScrollerTask()
+	{
+		initialPosition = getScrollY();
+		CustomScrollView.this.postDelayed(scrollerTask, newCheck);
 	}
 }

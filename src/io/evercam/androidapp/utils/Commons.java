@@ -315,25 +315,6 @@ public class Commons
 				rv = Drawable.createFromStream(input, "src");
 			}
 		}
-		// if (enableLogs) Log.i(TAG,
-		// "getDrawablefromUrlAuthenticated1. Can read is " +
-		// input.available());
-		//
-		// // Checking the response, if image was returned or the html. if html
-		// // reatunred, that will be to redirect to login page
-		// if (entity.getContentType().getValue().contains("image")
-		// && !entity.getContentType().getValue().contains("html")) // if
-		//
-		// {
-		// rv = Drawable.createFromStream(input, "src");
-		// if (enableLogs) Log.i(TAG, "Returning drawabale : " + rv);
-		// return rv;
-		// }
-		// else
-		// // image was not returned. Rather login html page was returned.
-		// {
-		//
-		// }
 
 		return rv;
 

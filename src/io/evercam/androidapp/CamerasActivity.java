@@ -23,11 +23,14 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.*;
 
 import io.evercam.androidapp.custom.AboutDialog;
 import io.evercam.androidapp.custom.CameraLayout;
 import io.evercam.androidapp.custom.CustomProgressDialog;
+import io.evercam.androidapp.custom.CustomScrollView;
+import io.evercam.androidapp.custom.CustomScrollView.OnScrollStoppedListener;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppData;
@@ -108,7 +111,6 @@ public class CamerasActivity extends ParentActivity implements
 			{
 				addAllCameraViews(false);
 			}
-
 		}, 500);
 
 		// Start loading camera list after menu created(because need the menu
@@ -504,23 +506,20 @@ public class CamerasActivity extends ParentActivity implements
 		{
 			// Recalculate camera per row
 			camerasPerRow = recalculateCameraPerRow();
-			final ArrayList<CameraLayout> cameraLayoutArrayList;
 
-			ScrollView scrollView = (ScrollView)this.findViewById(R.id.cameras_scroll_view);
-			
+			final CustomScrollView scrollView = (CustomScrollView) this
+					.findViewById(R.id.cameras_scroll_view);
+
 			io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
 					.findViewById(R.id.cameras_flow_layout);
-			
-			final Rect bounds = new Rect(); 							
-			scrollView.getDrawingRect(bounds);
-			Log.d(TAG, bounds.top + " " + bounds.bottom + " " + bounds.left + " " +bounds.right);
+
+			final Rect bounds = readLiveBoundsOfScrollView();
 
 			int screen_width = readScreenWidth(this);
 
 			int index = 0;
 			totalCamerasInGrid = 0;
-			
-			ArrayList<CameraLayout> cameraLayoutList = new ArrayList<CameraLayout>();
+
 			for (EvercamCamera evercamCamera : AppData.evercamCameraList)
 			{
 				final LinearLayout cameraListLayout = new LinearLayout(this);
@@ -530,7 +529,7 @@ public class CamerasActivity extends ParentActivity implements
 				if (reloadImages) evercamCamera.loadingStatus = ImageLoadingStatus.not_started;
 
 				final CameraLayout cameraLayout = new CameraLayout(this, evercamCamera);
-				
+
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 						android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -541,36 +540,35 @@ public class CamerasActivity extends ParentActivity implements
 				cameraLayout.setLayoutParams(params);
 
 				cameraListLayout.addView(cameraLayout);
-				
+
 				camsLineView.addView(cameraListLayout,
 						new io.evercam.androidapp.custom.FlowLayout.LayoutParams(0, 0));
-				index++;
 				
-				/**
-				 * If need to reload the images, read camera layout position 
-				 * and check the rectangle is within scope of the screen or not
-				 */
-				if(reloadImages)
-				{
-				new Handler().postDelayed(new Runnable(){
+				index++;
 
-					@Override
-					public void run()
-					{
-						Rect cameraBounds = new Rect();
-						cameraListLayout.getHitRect(cameraBounds);
-					//	Log.d(TAG, cameraBounds.top + " " + cameraBounds.bottom + " " + cameraBounds.left + " " +cameraBounds.right);
-						if(Rect.intersects(cameraBounds, bounds))
+				/**
+				 * If need to reload the images, read camera layout position and
+				 * check the rectangle is within scope of the screen or not
+				 */
+				if (reloadImages)
+				{
+					new Handler().postDelayed(new Runnable(){
+						@Override
+						public void run()
 						{
-						//    Log.d(TAG, "IS visible ");
-						    cameraLayout.loadImage();
+							Rect cameraBounds = new Rect();
+							cameraListLayout.getHitRect(cameraBounds);
+							// Log.d(TAG, cameraBounds.top + " " +
+							// cameraBounds.bottom + " " + cameraBounds.left +
+							// " " +cameraBounds.right);
+							if (Rect.intersects(cameraBounds, bounds))
+							{
+								// Log.d(TAG, "IS visible ");
+								cameraLayout.loadImage();
+							}
 						}
-						else
-						{
-						//	Log.d(TAG, "IS not visible ");
-						}
-					}	
-				}, 300);}
+					}, 300);
+				}
 
 				totalCamerasInGrid++;
 			}
@@ -579,59 +577,11 @@ public class CamerasActivity extends ParentActivity implements
 
 			if (refresh != null) refresh.setActionView(null);
 
-			cameraLayoutArrayList = cameraLayoutList;
-			scrollView.setOnTouchListener(new View.OnTouchListener() {
-
-			    @Override
-			    public boolean onTouch(View v, MotionEvent event) {
-			        switch (event.getAction()) {
-			        case MotionEvent.ACTION_SCROLL:
-			        case MotionEvent.ACTION_MOVE:
-
-			            break;
-			        case MotionEvent.ACTION_DOWN:
-
-			            break;
-			        case MotionEvent.ACTION_CANCEL:
-			        case MotionEvent.ACTION_UP:
-			        	Log.d(TAG, "Scroll view up");
-			        	final Rect bounds1 = new Rect();
-			        	ScrollView scrollView = (ScrollView)CamerasActivity.this.findViewById(R.id.cameras_scroll_view);
-			        	scrollView.getDrawingRect(bounds1);
-			        	Log.d(TAG, bounds1.top + " " + bounds1.bottom + " " + bounds1.left + " " +bounds1.right);
-			        	io.evercam.androidapp.custom.FlowLayout camsLineView1 = (io.evercam.androidapp.custom.FlowLayout) CamerasActivity.this
-								.findViewById(R.id.cameras_flow_layout);
-			        	Log.d(TAG, "Line view count: " + camsLineView1.getChildCount());
-			        	final LinearLayout cameraListLayout = (LinearLayout)camsLineView1.getChildAt(37);
-			        	final CameraLayout cameraLayout = (CameraLayout)cameraListLayout.getChildAt(0);
-			        	
-			        	if(reloadImages)
-						{
-						new Handler().postDelayed(new Runnable(){
-
-							@Override
-							public void run()
-							{
-								Rect cameraBounds = new Rect();
-								cameraListLayout.getHitRect(cameraBounds);
-								Log.d(TAG, cameraBounds.top + " " + cameraBounds.bottom + " " + cameraBounds.left + " " +cameraBounds.right);
-								if(Rect.intersects(cameraBounds, bounds1))
-								{
-								    Log.d(TAG, "IS visible ");
-								    cameraLayout.loadImage();
-								}
-								else
-								{
-									Log.d(TAG, "IS not visible ");
-								}
-							}	
-						}, 300);}
-			     
-			            break;
-			        }
-			        return false;
-			    }
-			});
+			// Only set up scroll listener if snapshots need to get reload
+			if (reloadImages)
+			{
+				setScrollStopListenerFor(scrollView);
+			}
 			return true;
 		}
 		catch (Exception e)
@@ -649,11 +599,6 @@ public class CamerasActivity extends ParentActivity implements
 		return false;
 	}
 	
-	private void onScrollUp()
-	{
-		
-	}
-
 	@Override
 	protected void onDestroy()
 	{
@@ -663,6 +608,73 @@ public class CamerasActivity extends ParentActivity implements
 	}
 
 	boolean mHandleMessageReceiverRegistered = false;
+
+	/**
+	 * If screen get scrolled, for the moment of scroll stopping, load camera
+	 * snapshots within screen.
+	 */
+	private void onScreenScrolled()
+	{	
+		final Rect scrollViewBounds = readLiveBoundsOfScrollView();
+		final io.evercam.androidapp.custom.FlowLayout camsLineView1 = (io.evercam.androidapp.custom.FlowLayout) CamerasActivity.this
+				.findViewById(R.id.cameras_flow_layout);
+		final int totalLayouts = camsLineView1.getChildCount();
+		new Thread(new Runnable(){
+			@Override
+			public void run()
+			{
+				for (int index = 0; index < totalLayouts; index++)
+				{
+					final LinearLayout cameraListLayout = (LinearLayout) camsLineView1.getChildAt(index);
+					final CameraLayout cameraLayout = (CameraLayout) cameraListLayout.getChildAt(0);
+
+					if (cameraLayout.evercamCamera.loadingStatus == ImageLoadingStatus.not_started)
+
+					{
+						Rect cameraBounds = new Rect();
+						cameraListLayout.getHitRect(cameraBounds);
+						if (Rect.intersects(cameraBounds, scrollViewBounds))
+						{
+							CamerasActivity.this.runOnUiThread(new Runnable(){
+								@Override
+								public void run()
+								{
+									cameraLayout.loadImage();							
+								}
+							});
+						}
+					}
+				}
+			}
+		}).start();
+	}
+	
+	private void setScrollStopListenerFor(final CustomScrollView scrollView)
+	{
+		scrollView.setOnTouchListener(new OnTouchListener(){
+
+			public boolean onTouch(View v, MotionEvent event)
+			{
+
+				if (event.getAction() == MotionEvent.ACTION_UP)
+				{
+
+					scrollView.startScrollerTask();
+				}
+
+				return false;
+			}
+		});
+		scrollView.setOnScrollStoppedListener(new OnScrollStoppedListener(){
+
+			public void onScrollStopped()
+			{
+
+				Log.d(TAG, "Scroll stopped");
+				onScreenScrolled();
+			}
+		});
+	}
 
 	private final void stopGcmRegisterActions()
 	{
@@ -895,5 +907,22 @@ public class CamerasActivity extends ParentActivity implements
 			return minCamerasPerRow;
 		}
 		return oldCamerasPerRow;
+	}
+
+	/**
+	 * Return bounds with bottom value + 300 in order to load more cameras
+	 */
+	private Rect readLiveBoundsOfScrollView()
+	{
+		Rect scrollViewBounds = new Rect();
+		CustomScrollView scrollView = (CustomScrollView) CamerasActivity.this
+				.findViewById(R.id.cameras_scroll_view);
+		scrollView.getDrawingRect(scrollViewBounds);
+		Log.d(TAG, scrollViewBounds.top + " " + scrollViewBounds.bottom + " "
+				+ scrollViewBounds.left + " " + scrollViewBounds.right);
+		Rect rectWithExtension = new Rect(scrollViewBounds.left,scrollViewBounds.top,  scrollViewBounds.right, scrollViewBounds.bottom + 300);
+				Log.d(TAG, "Extended: " + rectWithExtension.top + " " + rectWithExtension.bottom + " "
+						+ rectWithExtension.left + " " + rectWithExtension.right);
+		return rectWithExtension;
 	}
 }
