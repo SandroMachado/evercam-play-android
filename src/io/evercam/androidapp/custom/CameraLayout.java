@@ -23,7 +23,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -55,12 +54,10 @@ public class CameraLayout extends LinearLayout
 	// Handler for the handling the next request. It will call the image loading
 	// thread so that it can proceed with next step.
 	public final Handler handler = new Handler();
-	private ScrollView scrollView;
 
-	public CameraLayout(final Activity activity, EvercamCamera camera, ScrollView scrollView)
+	public CameraLayout(final Activity activity, EvercamCamera camera)
 	{
 		super(activity.getApplicationContext());
-		this.scrollView = scrollView;
 		this.context = activity.getApplicationContext();
 
 		try
@@ -134,8 +131,6 @@ public class CameraLayout extends LinearLayout
 					VideoActivity.startPlayingVideoForCamera(activity, evercamCamera.getCameraId());
 				}
 			});
-
-		//	loadImage();
 		}
 		catch (OutOfMemoryError e)
 		{
