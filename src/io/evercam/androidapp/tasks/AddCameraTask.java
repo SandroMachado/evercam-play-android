@@ -8,6 +8,7 @@ import io.evercam.Camera;
 import io.evercam.CameraDetail;
 import io.evercam.EvercamException;
 import io.evercam.androidapp.AddEditCameraActivity;
+import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
@@ -38,11 +39,13 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
 	private boolean isReachableExternally = false;
 	private boolean isReachableInternally = false;
 	private Boolean readyToCreateCamera = null;
+	private boolean isFromScan;
 
-	public AddCameraTask(CameraDetail cameraDetail, Activity activity)
+	public AddCameraTask(CameraDetail cameraDetail, Activity activity, boolean isFromScan)
 	{
 		this.cameraDetail = cameraDetail;
 		this.activity = activity;
+		this.isFromScan = isFromScan;
 	}
 
 	@Override
@@ -58,6 +61,18 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
 		customProgressDialog.dismiss();
 		if (evercamCamera != null)
 		{
+			if(isFromScan)
+			{
+				EvercamPlayApplication.sendEventAnalytics(activity, R.string.category_add_camera,
+						R.string.action_addcamera_success_scan, R.string.label_addcamera_successful_scan);
+			}
+			else
+			{
+				EvercamPlayApplication.sendEventAnalytics(activity, R.string.category_add_camera,
+						R.string.action_addcamera_success, R.string.label_addcamera_successful);
+			}
+			
+			
 			CustomToast.showInBottom(activity, R.string.create_success);
 
 			/**

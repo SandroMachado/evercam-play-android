@@ -262,83 +262,6 @@ public class SignUpActivity extends Activity
 		countrySpinner.setAdapter(spinnerArrayAdapter);
 	}
 
-	public class CreateUserTask extends AsyncTask<Void, Void, String>
-	{
-		private UserDetail userDetail;
-		private AppUser newUser = null;
-
-		public CreateUserTask(UserDetail userDetail)
-		{
-			this.userDetail = userDetail;
-		}
-
-		@Override
-		protected void onPostExecute(String message)
-		{
-			if (message == null)
-			{
-				DbAppUser dbUser = new DbAppUser(SignUpActivity.this);
-
-				if (dbUser.getAppUserByUsername(newUser.getUsername()) != null)
-				{
-					dbUser.deleteAppUserByUsername(newUser.getUsername());
-				}
-				dbUser.updateAllIsDefaultFalse();
-
-				dbUser.addAppUser(newUser);
-				AppData.defaultUser = newUser;
-				SharedPreferences sharedPrefs = PreferenceManager
-						.getDefaultSharedPreferences(SignUpActivity.this);
-				PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
-				CustomToast.showInCenter(SignUpActivity.this, R.string.confirmSignUp);
-				showProgress(false);
-				startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-			}
-			else
-			{
-				showProgress(false);
-				CustomToast.showInCenter(SignUpActivity.this, message);
-			}
-		}
-
-		@Override
-		protected void onPreExecute()
-		{
-			showProgress(true);
-		}
-
-		@Override
-		protected String doInBackground(Void... args)
-		{
-			try
-			{
-				User.create(userDetail);
-				ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(
-						userDetail.getUsername(), userDetail.getPassword());
-				String userApiKey = userKeyPair.getApiKey();
-				String userApiId = userKeyPair.getApiId();
-				SharedPreferences sharedPrefs = PreferenceManager
-						.getDefaultSharedPreferences(SignUpActivity.this);
-				PrefsManager.saveEvercamUserKeyPair(sharedPrefs, userApiKey, userApiId);
-				API.setUserKeyPair(userApiKey, userApiId);
-				User evercamUser = new User(userDetail.getUsername());
-				newUser = new AppUser();
-				newUser.setUsername(userDetail.getUsername());
-				newUser.setPassword(userDetail.getPassword());
-				newUser.setIsDefault(true);
-				newUser.setCountry(evercamUser.getCountry());
-				newUser.setEmail(evercamUser.getEmail());
-				newUser.setApiKey(userApiKey);
-				newUser.setApiId(userApiId);
-				return null;
-			}
-			catch (EvercamException e)
-			{
-				return e.getMessage();
-			}
-		}
-	}
-
 	private void readFromAccount()
 	{
 		try
@@ -414,14 +337,93 @@ public class SignUpActivity extends Activity
 		}
 	}
 
+	public class CreateUserTask extends AsyncTask<Void, Void, String>
+	{
+		private UserDetail userDetail;
+		private AppUser newUser = null;
+	
+		public CreateUserTask(UserDetail userDetail)
+		{
+			this.userDetail = userDetail;
+		}
+	
+		@Override
+		protected void onPostExecute(String message)
+		{
+			if (message == null)
+			{
+				EvercamPlayApplication.sendEventAnalytics(SignUpActivity.this, 
+						R.string.category_sign_up, R.string.action_signup_success, 
+						R.string.label_signup_successful);
+				DbAppUser dbUser = new DbAppUser(SignUpActivity.this);
+	
+				if (dbUser.getAppUserByUsername(newUser.getUsername()) != null)
+				{
+					dbUser.deleteAppUserByUsername(newUser.getUsername());
+				}
+				dbUser.updateAllIsDefaultFalse();
+	
+				dbUser.addAppUser(newUser);
+				AppData.defaultUser = newUser;
+				SharedPreferences sharedPrefs = PreferenceManager
+						.getDefaultSharedPreferences(SignUpActivity.this);
+				PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
+				CustomToast.showInCenter(SignUpActivity.this, R.string.confirmSignUp);
+				showProgress(false);
+				startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+			}
+			else
+			{
+				showProgress(false);
+				CustomToast.showInCenter(SignUpActivity.this, message);
+			}
+		}
+	
+		@Override
+		protected void onPreExecute()
+		{
+			showProgress(true);
+		}
+	
+		@Override
+		protected String doInBackground(Void... args)
+		{
+			try
+			{
+				User.create(userDetail);
+				ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(
+						userDetail.getUsername(), userDetail.getPassword());
+				String userApiKey = userKeyPair.getApiKey();
+				String userApiId = userKeyPair.getApiId();
+				SharedPreferences sharedPrefs = PreferenceManager
+						.getDefaultSharedPreferences(SignUpActivity.this);
+				PrefsManager.saveEvercamUserKeyPair(sharedPrefs, userApiKey, userApiId);
+				API.setUserKeyPair(userApiKey, userApiId);
+				User evercamUser = new User(userDetail.getUsername());
+				newUser = new AppUser();
+				newUser.setUsername(userDetail.getUsername());
+				newUser.setPassword(userDetail.getPassword());
+				newUser.setIsDefault(true);
+				newUser.setCountry(evercamUser.getCountry());
+				newUser.setEmail(evercamUser.getEmail());
+				newUser.setApiKey(userApiKey);
+				newUser.setApiId(userApiId);
+				return null;
+			}
+			catch (EvercamException e)
+			{
+				return e.getMessage();
+			}
+		}
+	}
+
 	class SignUpCheckInternetTask extends CheckInternetTask
 	{
-
 		public SignUpCheckInternetTask(Context context)
 		{
 			super(context);
 		}
-
+	
 		@Override
 		protected void onPostExecute(Boolean hasNetwork)
 		{
