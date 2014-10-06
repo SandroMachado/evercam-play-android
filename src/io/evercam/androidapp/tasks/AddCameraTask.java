@@ -72,7 +72,6 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
 						R.string.action_addcamera_success, R.string.label_addcamera_successful);
 			}
 			
-			
 			CustomToast.showInBottom(activity, R.string.create_success);
 
 			/**
