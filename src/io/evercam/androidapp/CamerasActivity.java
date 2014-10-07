@@ -56,8 +56,6 @@ public class CamerasActivity extends ParentActivity implements
 	public static CamerasActivity activity = null;
 	public MenuItem refresh;
 
-	public static boolean stopImageLoading = false;
-
 	private static final String TAG = "evercamplay-CamerasActivity";
 
 	private SlideMenu slideMenu;
@@ -178,7 +176,6 @@ public class CamerasActivity extends ParentActivity implements
 
 			startActivityForResult(new Intent(CamerasActivity.this, ManageAccountsActivity.class),
 					Constants.REQUEST_CODE_MANAGE_ACCOUNT);
-			stopImageLoading = true;
 
 			return true;
 
@@ -338,8 +335,6 @@ public class CamerasActivity extends ParentActivity implements
 
 	private void startLoadingCameras()
 	{
-		stopImageLoading = false;
-
 		reloadProgressDialog = new CustomProgressDialog(this);
 		if (reloadCameraList)
 		{
@@ -551,7 +546,7 @@ public class CamerasActivity extends ParentActivity implements
 				 * check the rectangle is within scope of the screen or not
 				 */
 				if (reloadImages)
-				{
+				{				
 					new Handler().postDelayed(new Runnable(){
 						@Override
 						public void run()
@@ -909,20 +904,10 @@ public class CamerasActivity extends ParentActivity implements
 		return oldCamerasPerRow;
 	}
 
-	/**
-	 * Return bounds with bottom value + 300 in order to load more cameras
-	 */
 	private Rect readLiveBoundsOfScrollView()
 	{
-		Rect scrollViewBounds = new Rect();
 		CustomScrollView scrollView = (CustomScrollView) CamerasActivity.this
 				.findViewById(R.id.cameras_scroll_view);
-		scrollView.getDrawingRect(scrollViewBounds);
-		Log.d(TAG, scrollViewBounds.top + " " + scrollViewBounds.bottom + " "
-				+ scrollViewBounds.left + " " + scrollViewBounds.right);
-		Rect rectWithExtension = new Rect(scrollViewBounds.left,scrollViewBounds.top,  scrollViewBounds.right, scrollViewBounds.bottom + 300);
-				Log.d(TAG, "Extended: " + rectWithExtension.top + " " + rectWithExtension.bottom + " "
-						+ rectWithExtension.left + " " + rectWithExtension.right);
-		return rectWithExtension;
+		return scrollView.getLiveBoundsRect();
 	}
 }

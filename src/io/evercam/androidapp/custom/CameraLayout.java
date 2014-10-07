@@ -218,19 +218,17 @@ public class CameraLayout extends LinearLayout
 		return false;
 	}
 	
-	public void loadCacheOnly()
-	{
-		//Load saved image from cache
-		isImageLoadedFromCache = loadImageFromCache();
-	}
+	//Disabled load image from cache in camera grid view for smoother UI
+//	public void loadCacheOnly()
+//	{
+//		//Load saved image from cache
+//		isImageLoadedFromCache = loadImageFromCache();
+//	}
 
 	// This method will call the image
 	// loading thread to further load from camera
 	public void loadImage()
 	{
-		//Load saved image from cache
-		isImageLoadedFromCache = loadImageFromCache();
-		
 		if (!end)
 		{
 			handler.postDelayed(LoadImageRunnable, 0);
@@ -309,7 +307,7 @@ public class CameraLayout extends LinearLayout
 		handler.removeCallbacks(LoadImageRunnable);
 	}
 
-	private void showThumbnail()
+	private boolean showThumbnail()
 	{
 		Drawable thumbnail = getThumbnailFromCamera(evercamCamera);
 		if (thumbnail != null)
@@ -317,7 +315,9 @@ public class CameraLayout extends LinearLayout
 			loadingAnimation.setVisibility(View.GONE);
 			cameraRelativeLayout.removeView(loadingAnimation);
 			cameraRelativeLayout.setBackgroundDrawable(thumbnail);
+			return true;
 		}
+		return false;
 	}
 
 	// Image loaded from Evercam and now set the controls appearance and
@@ -425,11 +425,6 @@ public class CameraLayout extends LinearLayout
 			{
 				if (end) return;
 
-				if (CamerasActivity.stopImageLoading)
-				{
-					return;
-				}
-
 				if (evercamCamera.loadingStatus == ImageLoadingStatus.not_started)
 				{
 					liveImageTask = new DownloadLiveImageTask();
@@ -502,10 +497,6 @@ public class CameraLayout extends LinearLayout
 		@Override
 		protected Drawable doInBackground(Void... params)
 		{
-			if (CamerasActivity.stopImageLoading)
-			{
-				this.cancel(true);
-			}
 			try
 			{
 				ArrayList<Cookie> cookies = new ArrayList<Cookie>();
