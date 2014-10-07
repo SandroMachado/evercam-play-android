@@ -26,6 +26,7 @@ public class CustomScrollView extends ScrollView
 
 		scrollerTask = new Runnable(){
 
+			@Override
 			public void run()
 			{
 				int newPosition = getScrollY();
@@ -56,7 +57,7 @@ public class CustomScrollView extends ScrollView
 		initialPosition = getScrollY();
 		CustomScrollView.this.postDelayed(scrollerTask, 100);
 	}
-	
+
 	/**
 	 * Return bounds with bottom value + 300 in order to load more cameras
 	 */
@@ -66,9 +67,10 @@ public class CustomScrollView extends ScrollView
 		getDrawingRect(scrollViewBounds);
 		Log.d(TAG, scrollViewBounds.top + " " + scrollViewBounds.bottom + " "
 				+ scrollViewBounds.left + " " + scrollViewBounds.right);
-		Rect rectWithExtension = new Rect(scrollViewBounds.left,scrollViewBounds.top,  scrollViewBounds.right, scrollViewBounds.bottom + scrollViewBounds.bottom/4);
-				Log.d(TAG, "Extended: " + rectWithExtension.top + " " + rectWithExtension.bottom + " "
-						+ rectWithExtension.left + " " + rectWithExtension.right);
+		Rect rectWithExtension = new Rect(scrollViewBounds.left, scrollViewBounds.top,
+				scrollViewBounds.right, scrollViewBounds.bottom + scrollViewBounds.bottom / 4);
+		Log.d(TAG, "Extended: " + rectWithExtension.top + " " + rectWithExtension.bottom + " "
+				+ rectWithExtension.left + " " + rectWithExtension.right);
 		return rectWithExtension;
 	}
 }

@@ -61,17 +61,18 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
 		customProgressDialog.dismiss();
 		if (evercamCamera != null)
 		{
-			if(isFromScan)
+			if (isFromScan)
 			{
 				EvercamPlayApplication.sendEventAnalytics(activity, R.string.category_add_camera,
-						R.string.action_addcamera_success_scan, R.string.label_addcamera_successful_scan);
+						R.string.action_addcamera_success_scan,
+						R.string.label_addcamera_successful_scan);
 			}
 			else
 			{
 				EvercamPlayApplication.sendEventAnalytics(activity, R.string.category_add_camera,
 						R.string.action_addcamera_success, R.string.label_addcamera_successful);
 			}
-			
+
 			CustomToast.showInBottom(activity, R.string.create_success);
 
 			/**

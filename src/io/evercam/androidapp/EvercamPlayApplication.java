@@ -80,7 +80,9 @@ public class EvercamPlayApplication extends Application
 	{
 		Tracker tracker = getAppTracker(activity);
 		tracker.send(new HitBuilders.ExceptionBuilder()
-				.setDescription(e.getStackTrace()[0].toString().replace("io.evercam.androidapp", e.toString())).setFatal(true).build());
+				.setDescription(
+						e.getStackTrace()[0].toString().replace("io.evercam.androidapp",
+								e.toString())).setFatal(true).build());
 	}
 
 	public static void sendCaughtException(Activity activity, String message)
@@ -94,6 +96,8 @@ public class EvercamPlayApplication extends Application
 	{
 		Tracker tracker = getAppTracker(activity);
 		tracker.send(new HitBuilders.ExceptionBuilder()
-				.setDescription(e.getStackTrace()[0].toString().replace("io.evercam.androidapp", e.toString())).setFatal(false).build());
+				.setDescription(
+						e.getStackTrace()[0].toString().replace("io.evercam.androidapp",
+								e.toString())).setFatal(false).build());
 	}
 }

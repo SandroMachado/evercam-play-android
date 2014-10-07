@@ -54,11 +54,11 @@ public class LocalStorageActivity extends Activity
 		if (this.getActionBar() != null)
 		{
 			this.getActionBar().setHomeButtonEnabled(true);
-			if(evercamCamera != null)
+			if (evercamCamera != null)
 			{
-			this.getActionBar().setTitle(
-					getString(R.string.title_activity_local_storage) + " - "
-							+ evercamCamera.getName());
+				this.getActionBar().setTitle(
+						getString(R.string.title_activity_local_storage) + " - "
+								+ evercamCamera.getName());
 			}
 		}
 
@@ -180,7 +180,10 @@ public class LocalStorageActivity extends Activity
 					}
 				});
 
-		dialogBuilder.create().show();
+		if (!isFinishing())
+		{
+			dialogBuilder.create().show();
+		}
 	}
 
 	private NET_DVR_TIME getTimeFromPicker(DatePicker datePicker, TimePicker timePicker)

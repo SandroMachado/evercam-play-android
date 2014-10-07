@@ -265,8 +265,8 @@ public class AddEditCameraActivity extends Activity
 					if (cameraBuilder != null)
 					{
 						boolean isFromScan = (discoveredCamera != null ? true : false);
-						new AddCameraTask(cameraBuilder.build(), AddEditCameraActivity.this, isFromScan)
-								.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						new AddCameraTask(cameraBuilder.build(), AddEditCameraActivity.this,
+								isFromScan).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 					}
 					else
 					{

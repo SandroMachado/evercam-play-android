@@ -341,28 +341,28 @@ public class SignUpActivity extends Activity
 	{
 		private UserDetail userDetail;
 		private AppUser newUser = null;
-	
+
 		public CreateUserTask(UserDetail userDetail)
 		{
 			this.userDetail = userDetail;
 		}
-	
+
 		@Override
 		protected void onPostExecute(String message)
 		{
 			if (message == null)
 			{
-				EvercamPlayApplication.sendEventAnalytics(SignUpActivity.this, 
-						R.string.category_sign_up, R.string.action_signup_success, 
+				EvercamPlayApplication.sendEventAnalytics(SignUpActivity.this,
+						R.string.category_sign_up, R.string.action_signup_success,
 						R.string.label_signup_successful);
 				DbAppUser dbUser = new DbAppUser(SignUpActivity.this);
-	
+
 				if (dbUser.getAppUserByUsername(newUser.getUsername()) != null)
 				{
 					dbUser.deleteAppUserByUsername(newUser.getUsername());
 				}
 				dbUser.updateAllIsDefaultFalse();
-	
+
 				dbUser.addAppUser(newUser);
 				AppData.defaultUser = newUser;
 				SharedPreferences sharedPrefs = PreferenceManager
@@ -378,13 +378,13 @@ public class SignUpActivity extends Activity
 				CustomToast.showInCenter(SignUpActivity.this, message);
 			}
 		}
-	
+
 		@Override
 		protected void onPreExecute()
 		{
 			showProgress(true);
 		}
-	
+
 		@Override
 		protected String doInBackground(Void... args)
 		{
@@ -423,7 +423,7 @@ public class SignUpActivity extends Activity
 		{
 			super(context);
 		}
-	
+
 		@Override
 		protected void onPostExecute(Boolean hasNetwork)
 		{

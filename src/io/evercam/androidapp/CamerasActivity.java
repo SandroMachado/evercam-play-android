@@ -1,6 +1,5 @@
 package io.evercam.androidapp;
 
-import java.util.ArrayList;
 import java.util.concurrent.RejectedExecutionException;
 
 import android.os.Bundle;
@@ -538,7 +537,7 @@ public class CamerasActivity extends ParentActivity implements
 
 				camsLineView.addView(cameraListLayout,
 						new io.evercam.androidapp.custom.FlowLayout.LayoutParams(0, 0));
-				
+
 				index++;
 
 				/**
@@ -546,7 +545,7 @@ public class CamerasActivity extends ParentActivity implements
 				 * check the rectangle is within scope of the screen or not
 				 */
 				if (reloadImages)
-				{				
+				{
 					new Handler().postDelayed(new Runnable(){
 						@Override
 						public void run()
@@ -593,7 +592,7 @@ public class CamerasActivity extends ParentActivity implements
 		}
 		return false;
 	}
-	
+
 	@Override
 	protected void onDestroy()
 	{
@@ -609,7 +608,7 @@ public class CamerasActivity extends ParentActivity implements
 	 * snapshots within screen.
 	 */
 	private void onScreenScrolled()
-	{	
+	{
 		final Rect scrollViewBounds = readLiveBoundsOfScrollView();
 		final io.evercam.androidapp.custom.FlowLayout camsLineView1 = (io.evercam.androidapp.custom.FlowLayout) CamerasActivity.this
 				.findViewById(R.id.cameras_flow_layout);
@@ -620,7 +619,8 @@ public class CamerasActivity extends ParentActivity implements
 			{
 				for (int index = 0; index < totalLayouts; index++)
 				{
-					final LinearLayout cameraListLayout = (LinearLayout) camsLineView1.getChildAt(index);
+					final LinearLayout cameraListLayout = (LinearLayout) camsLineView1
+							.getChildAt(index);
 					final CameraLayout cameraLayout = (CameraLayout) cameraListLayout.getChildAt(0);
 
 					if (cameraLayout.evercamCamera.loadingStatus == ImageLoadingStatus.not_started)
@@ -634,7 +634,7 @@ public class CamerasActivity extends ParentActivity implements
 								@Override
 								public void run()
 								{
-									cameraLayout.loadImage();							
+									cameraLayout.loadImage();
 								}
 							});
 						}
@@ -643,11 +643,12 @@ public class CamerasActivity extends ParentActivity implements
 			}
 		}).start();
 	}
-	
+
 	private void setScrollStopListenerFor(final CustomScrollView scrollView)
 	{
 		scrollView.setOnTouchListener(new OnTouchListener(){
 
+			@Override
 			public boolean onTouch(View v, MotionEvent event)
 			{
 
@@ -662,6 +663,7 @@ public class CamerasActivity extends ParentActivity implements
 		});
 		scrollView.setOnScrollStoppedListener(new OnScrollStoppedListener(){
 
+			@Override
 			public void onScrollStopped()
 			{
 

@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import org.apache.http.cookie.Cookie;
 import com.bugsense.trace.BugSenseHandler;
 
-import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.R;
 
 import android.app.Activity;
@@ -122,10 +121,10 @@ public class CameraLayout extends LinearLayout
 			cameraRelativeLayout.addView(imageMessage);
 
 			cameraRelativeLayout.setClickable(true);
-			
+
 			// Show thumbnail returned from Evercam
 			showThumbnail();
-			
+
 			cameraRelativeLayout.setOnClickListener(new View.OnClickListener(){
 				@Override
 				public void onClick(View v)
@@ -217,13 +216,13 @@ public class CameraLayout extends LinearLayout
 		}
 		return false;
 	}
-	
-	//Disabled load image from cache in camera grid view for smoother UI
-//	public void loadCacheOnly()
-//	{
-//		//Load saved image from cache
-//		isImageLoadedFromCache = loadImageFromCache();
-//	}
+
+	// Disabled load image from cache in camera grid view for smoother UI
+	// public void loadCacheOnly()
+	// {
+	// //Load saved image from cache
+	// isImageLoadedFromCache = loadImageFromCache();
+	// }
 
 	// This method will call the image
 	// loading thread to further load from camera
@@ -388,32 +387,33 @@ public class CameraLayout extends LinearLayout
 		// animation must have been stopped when image loaded from cache
 		handler.removeCallbacks(LoadImageRunnable);
 	}
-	
+
 	/**
-	 * FIXME: Not sure did this method(copied) improved image loading performance or not
-	 * Now I am only invoking it when load image from cache
+	 * FIXME: Not sure did this method(copied) improved image loading
+	 * performance or not Now I am only invoking it when load image from cache
 	 */
 	private Drawable resizeDrawable(Drawable drawable)
 	{
-		if (drawable != null) {
-            Bitmap bitmapOrg = ((BitmapDrawable) drawable).getBitmap();
-            int width = bitmapOrg.getWidth();
-            int height = bitmapOrg.getHeight();
-            int newWidth = 500;
-            int newHeight = 300;
-            // calculate the scale
-            float scaleWidth = ((float) newWidth) / width;
-            float scaleHeight = ((float) newHeight) / height;
-            // create a matrix for the manipulation
-            Matrix matrix = new Matrix();
-            // resize the bit map
-            matrix.postScale(scaleWidth, scaleHeight);
-            Bitmap resizedBitmap = Bitmap.createBitmap(bitmapOrg, 0, 0,
-            width, height, matrix, true);
-            // make a Drawable from Bitmap to allow to set the BitMap
-            drawable = new BitmapDrawable(resizedBitmap);
-            return drawable;
-        }
+		if (drawable != null)
+		{
+			Bitmap bitmapOrg = ((BitmapDrawable) drawable).getBitmap();
+			int width = bitmapOrg.getWidth();
+			int height = bitmapOrg.getHeight();
+			int newWidth = 500;
+			int newHeight = 300;
+			// calculate the scale
+			float scaleWidth = ((float) newWidth) / width;
+			float scaleHeight = ((float) newHeight) / height;
+			// create a matrix for the manipulation
+			Matrix matrix = new Matrix();
+			// resize the bit map
+			matrix.postScale(scaleWidth, scaleHeight);
+			Bitmap resizedBitmap = Bitmap
+					.createBitmap(bitmapOrg, 0, 0, width, height, matrix, true);
+			// make a Drawable from Bitmap to allow to set the BitMap
+			drawable = new BitmapDrawable(resizedBitmap);
+			return drawable;
+		}
 		return null;
 	}
 
