@@ -23,6 +23,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -121,9 +122,10 @@ public class CameraLayout extends LinearLayout
 			cameraRelativeLayout.addView(imageMessage);
 
 			cameraRelativeLayout.setClickable(true);
-
+			
 			// Show thumbnail returned from Evercam
 			showThumbnail();
+			
 			cameraRelativeLayout.setOnClickListener(new View.OnClickListener(){
 				@Override
 				public void onClick(View v)
@@ -131,8 +133,6 @@ public class CameraLayout extends LinearLayout
 					VideoActivity.startPlayingVideoForCamera(activity, evercamCamera.getCameraId());
 				}
 			});
-
-			loadImage();
 		}
 		catch (OutOfMemoryError e)
 		{
@@ -168,6 +168,8 @@ public class CameraLayout extends LinearLayout
 				{
 					drawable = Drawable.createFromPath(externalFile.getPath());
 				}
+
+				drawable = resizeDrawable(drawable);
 
 				if (drawable != null)
 				{
@@ -215,13 +217,18 @@ public class CameraLayout extends LinearLayout
 		}
 		return false;
 	}
+	
+	//Disabled load image from cache in camera grid view for smoother UI
+//	public void loadCacheOnly()
+//	{
+//		//Load saved image from cache
+//		isImageLoadedFromCache = loadImageFromCache();
+//	}
 
 	// This method will call the image
 	// loading thread to further load from camera
 	public void loadImage()
 	{
-		isImageLoadedFromCache = loadImageFromCache();
-
 		if (!end)
 		{
 			handler.postDelayed(LoadImageRunnable, 0);
@@ -300,7 +307,7 @@ public class CameraLayout extends LinearLayout
 		handler.removeCallbacks(LoadImageRunnable);
 	}
 
-	private void showThumbnail()
+	private boolean showThumbnail()
 	{
 		Drawable thumbnail = getThumbnailFromCamera(evercamCamera);
 		if (thumbnail != null)
@@ -308,7 +315,9 @@ public class CameraLayout extends LinearLayout
 			loadingAnimation.setVisibility(View.GONE);
 			cameraRelativeLayout.removeView(loadingAnimation);
 			cameraRelativeLayout.setBackgroundDrawable(thumbnail);
+			return true;
 		}
+		return false;
 	}
 
 	// Image loaded from Evercam and now set the controls appearance and
@@ -379,6 +388,34 @@ public class CameraLayout extends LinearLayout
 		// animation must have been stopped when image loaded from cache
 		handler.removeCallbacks(LoadImageRunnable);
 	}
+	
+	/**
+	 * FIXME: Not sure did this method(copied) improved image loading performance or not
+	 * Now I am only invoking it when load image from cache
+	 */
+	private Drawable resizeDrawable(Drawable drawable)
+	{
+		if (drawable != null) {
+            Bitmap bitmapOrg = ((BitmapDrawable) drawable).getBitmap();
+            int width = bitmapOrg.getWidth();
+            int height = bitmapOrg.getHeight();
+            int newWidth = 500;
+            int newHeight = 300;
+            // calculate the scale
+            float scaleWidth = ((float) newWidth) / width;
+            float scaleHeight = ((float) newHeight) / height;
+            // create a matrix for the manipulation
+            Matrix matrix = new Matrix();
+            // resize the bit map
+            matrix.postScale(scaleWidth, scaleHeight);
+            Bitmap resizedBitmap = Bitmap.createBitmap(bitmapOrg, 0, 0,
+            width, height, matrix, true);
+            // make a Drawable from Bitmap to allow to set the BitMap
+            drawable = new BitmapDrawable(resizedBitmap);
+            return drawable;
+        }
+		return null;
+	}
 
 	public Runnable LoadImageRunnable = new Runnable(){
 		@Override
@@ -387,11 +424,6 @@ public class CameraLayout extends LinearLayout
 			try
 			{
 				if (end) return;
-
-				if (CamerasActivity.stopImageLoading)
-				{
-					return;
-				}
 
 				if (evercamCamera.loadingStatus == ImageLoadingStatus.not_started)
 				{
@@ -465,10 +497,6 @@ public class CameraLayout extends LinearLayout
 		@Override
 		protected Drawable doInBackground(Void... params)
 		{
-			if (CamerasActivity.stopImageLoading)
-			{
-				this.cancel(true);
-			}
 			try
 			{
 				ArrayList<Cookie> cookies = new ArrayList<Cookie>();

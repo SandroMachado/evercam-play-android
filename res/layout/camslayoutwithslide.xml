@@ -11,7 +11,8 @@
         android:layout_height="wrap_content" />
     -->
 
-    <ScrollView
+    <io.evercam.androidapp.custom.CustomScrollView
+        android:id="@+id/cameras_scroll_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:scrollbars="vertical" >
@@ -25,6 +26,6 @@
             <!-- Child linear layouts will be created and inserted here dynamically -->
 
         </io.evercam.androidapp.custom.FlowLayout>
-    </ScrollView>
+    </io.evercam.androidapp.custom.CustomScrollView>
 
 </RelativeLayout>

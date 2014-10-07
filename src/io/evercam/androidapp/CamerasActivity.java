@@ -1,5 +1,6 @@
 package io.evercam.androidapp;
 
+import java.util.ArrayList;
 import java.util.concurrent.RejectedExecutionException;
 
 import android.os.Bundle;
@@ -14,17 +15,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.*;
 
 import io.evercam.androidapp.custom.AboutDialog;
 import io.evercam.androidapp.custom.CameraLayout;
 import io.evercam.androidapp.custom.CustomProgressDialog;
+import io.evercam.androidapp.custom.CustomScrollView;
+import io.evercam.androidapp.custom.CustomScrollView.OnScrollStoppedListener;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppData;
@@ -49,8 +55,6 @@ public class CamerasActivity extends ParentActivity implements
 {
 	public static CamerasActivity activity = null;
 	public MenuItem refresh;
-
-	public static boolean stopImageLoading = false;
 
 	private static final String TAG = "evercamplay-CamerasActivity";
 
@@ -105,7 +109,6 @@ public class CamerasActivity extends ParentActivity implements
 			{
 				addAllCameraViews(false);
 			}
-
 		}, 500);
 
 		// Start loading camera list after menu created(because need the menu
@@ -173,7 +176,6 @@ public class CamerasActivity extends ParentActivity implements
 
 			startActivityForResult(new Intent(CamerasActivity.this, ManageAccountsActivity.class),
 					Constants.REQUEST_CODE_MANAGE_ACCOUNT);
-			stopImageLoading = true;
 
 			return true;
 
@@ -333,8 +335,6 @@ public class CamerasActivity extends ParentActivity implements
 
 	private void startLoadingCameras()
 	{
-		stopImageLoading = false;
-
 		reloadProgressDialog = new CustomProgressDialog(this);
 		if (reloadCameraList)
 		{
@@ -495,15 +495,20 @@ public class CamerasActivity extends ParentActivity implements
 	}
 
 	// Add all the cameras as per the rules
-	public boolean addAllCameraViews(boolean reloadImages)
+	public boolean addAllCameraViews(final boolean reloadImages)
 	{
 		try
 		{
 			// Recalculate camera per row
 			camerasPerRow = recalculateCameraPerRow();
 
+			final CustomScrollView scrollView = (CustomScrollView) this
+					.findViewById(R.id.cameras_scroll_view);
+
 			io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) this
 					.findViewById(R.id.cameras_flow_layout);
+
+			final Rect bounds = readLiveBoundsOfScrollView();
 
 			int screen_width = readScreenWidth(this);
 
@@ -512,13 +517,14 @@ public class CamerasActivity extends ParentActivity implements
 
 			for (EvercamCamera evercamCamera : AppData.evercamCameraList)
 			{
-				LinearLayout cameraListLayout = new LinearLayout(this);
+				final LinearLayout cameraListLayout = new LinearLayout(this);
 
 				int indexPlus = index + 1;
 
 				if (reloadImages) evercamCamera.loadingStatus = ImageLoadingStatus.not_started;
 
-				CameraLayout cameraLayout = new CameraLayout(this, evercamCamera);
+				final CameraLayout cameraLayout = new CameraLayout(this, evercamCamera);
+
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 						android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -529,9 +535,36 @@ public class CamerasActivity extends ParentActivity implements
 				cameraLayout.setLayoutParams(params);
 
 				cameraListLayout.addView(cameraLayout);
+
 				camsLineView.addView(cameraListLayout,
 						new io.evercam.androidapp.custom.FlowLayout.LayoutParams(0, 0));
+				
 				index++;
+
+				/**
+				 * If need to reload the images, read camera layout position and
+				 * check the rectangle is within scope of the screen or not
+				 */
+				if (reloadImages)
+				{				
+					new Handler().postDelayed(new Runnable(){
+						@Override
+						public void run()
+						{
+							Rect cameraBounds = new Rect();
+							cameraListLayout.getHitRect(cameraBounds);
+							// Log.d(TAG, cameraBounds.top + " " +
+							// cameraBounds.bottom + " " + cameraBounds.left +
+							// " " +cameraBounds.right);
+							if (Rect.intersects(cameraBounds, bounds))
+							{
+								// Log.d(TAG, "IS visible ");
+								cameraLayout.loadImage();
+							}
+						}
+					}, 300);
+				}
+
 				totalCamerasInGrid++;
 			}
 
@@ -539,6 +572,11 @@ public class CamerasActivity extends ParentActivity implements
 
 			if (refresh != null) refresh.setActionView(null);
 
+			// Only set up scroll listener if snapshots need to get reload
+			if (reloadImages)
+			{
+				setScrollStopListenerFor(scrollView);
+			}
 			return true;
 		}
 		catch (Exception e)
@@ -555,7 +593,7 @@ public class CamerasActivity extends ParentActivity implements
 		}
 		return false;
 	}
-
+	
 	@Override
 	protected void onDestroy()
 	{
@@ -565,6 +603,73 @@ public class CamerasActivity extends ParentActivity implements
 	}
 
 	boolean mHandleMessageReceiverRegistered = false;
+
+	/**
+	 * If screen get scrolled, for the moment of scroll stopping, load camera
+	 * snapshots within screen.
+	 */
+	private void onScreenScrolled()
+	{	
+		final Rect scrollViewBounds = readLiveBoundsOfScrollView();
+		final io.evercam.androidapp.custom.FlowLayout camsLineView1 = (io.evercam.androidapp.custom.FlowLayout) CamerasActivity.this
+				.findViewById(R.id.cameras_flow_layout);
+		final int totalLayouts = camsLineView1.getChildCount();
+		new Thread(new Runnable(){
+			@Override
+			public void run()
+			{
+				for (int index = 0; index < totalLayouts; index++)
+				{
+					final LinearLayout cameraListLayout = (LinearLayout) camsLineView1.getChildAt(index);
+					final CameraLayout cameraLayout = (CameraLayout) cameraListLayout.getChildAt(0);
+
+					if (cameraLayout.evercamCamera.loadingStatus == ImageLoadingStatus.not_started)
+
+					{
+						Rect cameraBounds = new Rect();
+						cameraListLayout.getHitRect(cameraBounds);
+						if (Rect.intersects(cameraBounds, scrollViewBounds))
+						{
+							CamerasActivity.this.runOnUiThread(new Runnable(){
+								@Override
+								public void run()
+								{
+									cameraLayout.loadImage();							
+								}
+							});
+						}
+					}
+				}
+			}
+		}).start();
+	}
+	
+	private void setScrollStopListenerFor(final CustomScrollView scrollView)
+	{
+		scrollView.setOnTouchListener(new OnTouchListener(){
+
+			public boolean onTouch(View v, MotionEvent event)
+			{
+
+				if (event.getAction() == MotionEvent.ACTION_UP)
+				{
+
+					scrollView.startScrollerTask();
+				}
+
+				return false;
+			}
+		});
+		scrollView.setOnScrollStoppedListener(new OnScrollStoppedListener(){
+
+			public void onScrollStopped()
+			{
+
+				Log.d(TAG, "Scroll stopped");
+				onScreenScrolled();
+			}
+		});
+	}
 
 	private final void stopGcmRegisterActions()
 	{
@@ -797,5 +902,12 @@ public class CamerasActivity extends ParentActivity implements
 			return minCamerasPerRow;
 		}
 		return oldCamerasPerRow;
+	}
+
+	private Rect readLiveBoundsOfScrollView()
+	{
+		CustomScrollView scrollView = (CustomScrollView) CamerasActivity.this
+				.findViewById(R.id.cameras_scroll_view);
+		return scrollView.getLiveBoundsRect();
 	}
 }
