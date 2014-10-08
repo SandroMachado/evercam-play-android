@@ -810,63 +810,6 @@ public class CamerasActivity extends ParentActivity implements
 		}).show();
 	}
 
-	class CamerasCheckInternetTask extends CheckInternetTask
-	{
-		InternetCheckType type;
-
-		public CamerasCheckInternetTask(Context context, InternetCheckType type)
-		{
-			super(context);
-			this.type = type;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean hasNetwork)
-		{
-			if (hasNetwork)
-			{
-				if (type == InternetCheckType.START)
-				{
-					startLoadingCameras();
-				}
-				else if (type == InternetCheckType.RESTART)
-				{
-					if (reloadCameraList)
-					{
-						// If returned from account management, the
-						// default user could possibly changed,
-						// so remove all cameras and reload.
-
-						// addUsersToDropdownActionBar();
-						removeAllCameraViews();
-						startLoadingCameras();
-						reloadCameraList = false;
-					}
-					else
-					{
-						// Re-calculate camera per row because screen size
-						// could changed because of screen rotation.
-						int camsOldValue = camerasPerRow;
-						camerasPerRow = recalculateCameraPerRow();
-						if (camsOldValue != camerasPerRow)
-						{
-							removeAllCameraViews();
-							addAllCameraViews(false);
-						}
-
-						// Refresh camera names in case it's changed from camera
-						// live view
-						updateCameraNames();
-					}
-				}
-			}
-			else
-			{
-				CustomedDialog.showInternetNotConnectDialog(CamerasActivity.this);
-			}
-		}
-	}
-
 	public static int readScreenWidth(Activity activity)
 	{
 		Display display = activity.getWindowManager().getDefaultDisplay();
@@ -911,5 +854,62 @@ public class CamerasActivity extends ParentActivity implements
 		CustomScrollView scrollView = (CustomScrollView) CamerasActivity.this
 				.findViewById(R.id.cameras_scroll_view);
 		return scrollView.getLiveBoundsRect();
+	}
+
+	class CamerasCheckInternetTask extends CheckInternetTask
+	{
+		InternetCheckType type;
+	
+		public CamerasCheckInternetTask(Context context, InternetCheckType type)
+		{
+			super(context);
+			this.type = type;
+		}
+	
+		@Override
+		protected void onPostExecute(Boolean hasNetwork)
+		{
+			if (hasNetwork)
+			{
+				if (type == InternetCheckType.START)
+				{
+					startLoadingCameras();
+				}
+				else if (type == InternetCheckType.RESTART)
+				{
+					if (reloadCameraList)
+					{
+						// If returned from account management, the
+						// default user could possibly changed,
+						// so remove all cameras and reload.
+	
+						// addUsersToDropdownActionBar();
+						removeAllCameraViews();
+						startLoadingCameras();
+						reloadCameraList = false;
+					}
+					else
+					{
+						// Re-calculate camera per row because screen size
+						// could changed because of screen rotation.
+						int camsOldValue = camerasPerRow;
+						camerasPerRow = recalculateCameraPerRow();
+						if (camsOldValue != camerasPerRow)
+						{
+							removeAllCameraViews();
+							addAllCameraViews(true);
+						}
+	
+						// Refresh camera names in case it's changed from camera
+						// live view
+						updateCameraNames();
+					}
+				}
+			}
+			else
+			{
+				CustomedDialog.showInternetNotConnectDialog(CamerasActivity.this);
+			}
+		}
 	}
 }

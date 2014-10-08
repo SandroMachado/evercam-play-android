@@ -12,16 +12,11 @@ public class PropertyReader
 {
 	private Context context;
 	private Properties properties;
+	private final String TAG = "evercamplay-PropertyReader";
 	private final String LOCAL_PROPERTY_FILE = "local.properties";
-	public static final String KEY_SSH_USERNAME = "SSHUsername";
-	public static final String KEY_SSH_SERVER = "ServerIP";
-	public static final String KEY_SERVLET_AUTH = "ServletBasicAuth";
-	public static final String KEY_SERVLET_URL = "ServletURL";
 	public final static String KEY_API_KEY = "ApiKey";
 	public final static String KEY_API_ID = "ApiId";
 	public static final String KEY_BUG_SENSE = "BugSenseCode";
-	public static final String KEY_DASHBOARD = "EvercamDashboard";
-	public static final String KEY_SSH_PRIVATE_KEY = "SSHPrivateKey";
 
 	public PropertyReader(Context context)
 	{
@@ -40,10 +35,9 @@ public class PropertyReader
 		}
 		catch (IOException e)
 		{
-			Log.e("evercamcapture", e.toString());
+			Log.e(TAG, e.toString());
 		}
 		return properties;
-
 	}
 
 	public String getPropertyStr(String propertyName)
