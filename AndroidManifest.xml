@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.evercam.androidapp"
     android:versionCode="38"
-    android:versionName="1.1.8 Alpha 08/10" >
+    android:versionName="1.1.8 (Debug)" >
 
     <!-- versionCode36 - 1.1.7  - Hikvision local storage, first page loading faster -->
     <!-- versionCode38 - 1.1.8 Alpha 08/10  - Only load snapshots for cameras within screen -->

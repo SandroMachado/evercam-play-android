@@ -49,7 +49,9 @@ public class CameraLayout extends LinearLayout
 	// processing should be done in any thread.
 	private ProgressView loadingAnimation = null;
 	private TextView imageMessage = null;
+	private ImageView offlineImage = null;
 	private boolean isImageLoadedFromCache = false;
+	private boolean isLatestReceived = false;
 
 	// Handler for the handling the next request. It will call the image loading
 	// thread so that it can proceed with next step.
@@ -119,7 +121,18 @@ public class CameraLayout extends LinearLayout
 			imageMessage.setText(R.string.connecting);
 			imageMessage.setGravity(Gravity.CENTER);
 			cameraRelativeLayout.addView(imageMessage);
-
+			
+			offlineImage = new ImageView(context);
+			RelativeLayout.LayoutParams offlineImageParams = new RelativeLayout.LayoutParams(
+					android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+					android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+			offlineImageParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+			offlineImageParams.addRule(RelativeLayout.CENTER_VERTICAL);
+			offlineImage.setLayoutParams(offlineImageParams);
+			cameraRelativeLayout.addView(offlineImage);
+			offlineImage.setImageResource(R.drawable.cam_unavailable);
+			offlineImage.setVisibility(View.INVISIBLE);
+					
 			cameraRelativeLayout.setClickable(true);
 
 			// Show thumbnail returned from Evercam
@@ -338,6 +351,8 @@ public class CameraLayout extends LinearLayout
 		{
 			imageMessage.setText(evercamCamera.getStatus() + "");
 			greyImageShown();
+
+			offlineImage.setVisibility(View.INVISIBLE);
 		}
 
 		imageMessage.setTextColor(Color.RED);
@@ -355,22 +370,23 @@ public class CameraLayout extends LinearLayout
 			cameraRelativeLayout.removeView(loadingAnimation);
 		}
 
-		if (isImageLoadedFromCache)
-		{
-
-			imageMessage.setVisibility(View.VISIBLE);
-			imageMessage.setTextColor(Color.RED);
-		}
-		else
-		{
-			for (int i = 0; i < cameraRelativeLayout.getChildCount(); i++)
-			{
-				cameraRelativeLayout.getChildAt(i).setVisibility(View.GONE);
-			}
-			cameraRelativeLayout.setBackgroundResource(R.drawable.cam_unavailable);
-			imageMessage.setVisibility(View.VISIBLE);
-			greyImageShown();
-		}
+//		if (isImageLoadedFromCache)
+//		{
+//
+//			imageMessage.setVisibility(View.VISIBLE);
+//			imageMessage.setTextColor(Color.RED);
+//		}
+//		else
+//		{
+//			for (int i = 0; i < cameraRelativeLayout.getChildCount(); i++)
+//			{
+//				cameraRelativeLayout.getChildAt(i).setVisibility(View.GONE);
+//			}
+//			//cameraRelativeLayout.setBackgroundResource(R.drawable.cam_unavailable);
+//			imageMessage.setVisibility(View.VISIBLE);
+//			//greyImageShown();
+//			offlineImage.setVisibility(View.VISIBLE);
+//		}
 
 		if ((evercamCamera.getStatus() + "").contains(CameraStatus.ACTIVE))
 		{
@@ -379,7 +395,9 @@ public class CameraLayout extends LinearLayout
 		else
 		{
 			imageMessage.setText(evercamCamera.getStatus() + "");
+			imageMessage.setTextColor(Color.RED);
 			greyImageShown();
+			offlineImage.setVisibility(View.VISIBLE);
 		}
 
 		imageMessage.setTextColor(Color.RED);
@@ -477,14 +495,10 @@ public class CameraLayout extends LinearLayout
 
 	private void greyImageShown()
 	{
-		try
-		{
 			this.setBackgroundColor(Color.GRAY);
+			if(cameraRelativeLayout.getBackground() != null)
+			{
 			cameraRelativeLayout.getBackground().setAlpha(70);
-		}
-		catch (Exception e)
-		{
-			Log.e(TAG, "Show grey image:" + e.toString());
 		}
 	}
 
