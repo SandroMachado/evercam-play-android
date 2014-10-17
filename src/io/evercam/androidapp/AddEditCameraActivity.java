@@ -935,6 +935,8 @@ public class AddEditCameraActivity extends Activity
 			}
 			catch (EvercamException e)
 			{
+				EvercamPlayApplication.sendCaughtException(AddEditCameraActivity.this, 
+						e.toString() + " " + "with vendor id: " + vendorId);
 				Log.e(TAG, e.toString());
 			}
 			return null;

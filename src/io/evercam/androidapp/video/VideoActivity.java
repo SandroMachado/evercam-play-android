@@ -953,7 +953,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			libvlc.stop();
 
-			if (media.length() > 0)
+			if (media != null && media.length() > 0)
 			{
 				showToast(getString(R.string.reconnecting) + media);
 			}

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import org.apache.http.cookie.Cookie;
 import com.bugsense.trace.BugSenseHandler;
 
+import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.R;
 
 import android.app.Activity;
@@ -484,10 +485,6 @@ public class CameraLayout extends LinearLayout
 				if (!end)
 				{
 					handler.postDelayed(LoadImageRunnable, 5000);
-				}
-				if (Constants.isAppTrackingEnabled)
-				{
-					BugSenseHandler.sendException(e);
 				}
 			}
 		}
