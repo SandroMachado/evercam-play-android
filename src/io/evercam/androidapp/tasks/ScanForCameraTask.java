@@ -1,8 +1,10 @@
 package io.evercam.androidapp.tasks;
 
+import io.evercam.androidapp.EvercamDiscover;
 import io.evercam.androidapp.ScanActivity;
 import io.evercam.androidapp.utils.NetInfo;
-import io.evercam.network.EvercamDiscover;
+//import io.evercam.network.EvercamDiscover;
+
 import io.evercam.network.discovery.DiscoveredCamera;
 import io.evercam.network.discovery.ScanRange;
 
@@ -36,7 +38,8 @@ public class ScanForCameraTask extends AsyncTask<Void, Void, ArrayList<Discovere
 		}
 		catch (Exception e)
 		{
-			Log.e(TAG, e.toString());
+			Log.e(TAG, e.getLocalizedMessage());
+			e.printStackTrace();
 		}
 
 		return cameraList;

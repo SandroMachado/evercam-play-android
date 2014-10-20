@@ -333,17 +333,20 @@ public class HikvisionSdk implements Callback
 
 	private void fillCameraInfo()
 	{
-		CameraInfo.username = evercamCamera.getUsername();
-		CameraInfo.password = evercamCamera.getPassword();
-		if (!evercamCamera.getExternalHost().isEmpty())
+		if(evercamCamera != null)
 		{
-			CameraInfo.ip = evercamCamera.getExternalHost();
-			CameraInfo.sdkPort = calculateSdkPort(evercamCamera.getExternalHttp());
-		}
-		else if (!evercamCamera.getInternalHost().isEmpty())
-		{
-			CameraInfo.ip = evercamCamera.getInternalHost();
-			CameraInfo.sdkPort = calculateSdkPort(evercamCamera.getInternalHttp());
+			CameraInfo.username = evercamCamera.getUsername();
+			CameraInfo.password = evercamCamera.getPassword();
+			if (!evercamCamera.getExternalHost().isEmpty())
+			{
+				CameraInfo.ip = evercamCamera.getExternalHost();
+				CameraInfo.sdkPort = calculateSdkPort(evercamCamera.getExternalHttp());
+			}
+			else if (!evercamCamera.getInternalHost().isEmpty())
+			{
+				CameraInfo.ip = evercamCamera.getInternalHost();
+				CameraInfo.sdkPort = calculateSdkPort(evercamCamera.getInternalHttp());
+			}
 		}
 	}
 

@@ -263,8 +263,8 @@ public class ScanActivity extends Activity
 				deviceArrayList.add(deviceMap);
 				deviceAdapter.notifyDataSetChanged();
 
-				new RetrieveThumbnailTask(vendor, camera.getModel(), index)
-						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//				new RetrieveThumbnailTask(vendor, camera.getModel(), index)
+//						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			}
 		}
 		else
