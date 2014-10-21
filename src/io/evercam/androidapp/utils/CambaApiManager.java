@@ -399,7 +399,7 @@ package io.evercam.androidapp.utils;
 //
 //	// get th cameras xmls exactly from the camba api
 //	public static boolean registerDeviceForUsername(String UserEmail, String Password,
-//			String DeviceRegId, String Operation, String BluetoothName, String Manufacturer,
+//			String DeviceRegId, String Operation, String BluetoothName, String CambaseVendor,
 //			String Model, String SerialNo, String ImeiNo, String Fingureprint, String MacAddress,
 //			String AppVersion) throws Exception
 //	{
@@ -420,7 +420,7 @@ package io.evercam.androidapp.utils;
 //			nvps.add(new BasicNameValuePair("DeviceRegId", DeviceRegId));
 //			nvps.add(new BasicNameValuePair("Operation", Operation));
 //			nvps.add(new BasicNameValuePair("BluetoothName", BluetoothName));
-//			nvps.add(new BasicNameValuePair("Manufacturer", Manufacturer));
+//			nvps.add(new BasicNameValuePair("CambaseVendor", CambaseVendor));
 //			nvps.add(new BasicNameValuePair("Model", Model));
 //			nvps.add(new BasicNameValuePair("SerialNo", SerialNo));
 //			nvps.add(new BasicNameValuePair("ImeiNo", ImeiNo));
@@ -437,7 +437,7 @@ package io.evercam.androidapp.utils;
 //			if (enableLogs) Log.i(TAG, "::Response::[" + str + "]");
 //			Log.e("RegisterTask", "UserEmail[" + UserEmail + "], Password[" + Password
 //					+ "], DeviceRegId[" + DeviceRegId + "], Operation[" + Operation
-//					+ "], Bluetooth[" + BluetoothName + "], Manufacturer[" + Manufacturer
+//					+ "], Bluetooth[" + BluetoothName + "], CambaseVendor[" + CambaseVendor
 //					+ "], Model[" + Model + "], Serial[" + SerialNo + "], Imei[" + ImeiNo
 //					+ "], Fingureprint[" + Fingureprint + "], MacAddress[" + MacAddress
 //					+ "], AppVersion[" + AppVersion + "],  already[" + str.contains("already")

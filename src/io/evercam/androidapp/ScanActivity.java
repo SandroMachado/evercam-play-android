@@ -11,9 +11,6 @@ import com.bugsense.trace.BugSenseHandler;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
-import io.evercam.androidapp.cambase.CambaseAPI;
-import io.evercam.androidapp.cambase.CambaseModel;
-import io.evercam.androidapp.cambase.Manufacturer;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.tasks.ScanForCameraTask;
@@ -263,8 +260,8 @@ public class ScanActivity extends Activity
 				deviceArrayList.add(deviceMap);
 				deviceAdapter.notifyDataSetChanged();
 
-//				new RetrieveThumbnailTask(vendor, camera.getModel(), index)
-//						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				new RetrieveThumbnailTask(camera.getThumbnail(), index)
+						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			}
 		}
 		else
@@ -302,14 +299,12 @@ public class ScanActivity extends Activity
 
 	private class RetrieveThumbnailTask extends AsyncTask<Void, Void, Drawable>
 	{
-		private String vendorId;
-		private String modelId;
+		private String thumbnailUrl;
 		private int position;
 
-		public RetrieveThumbnailTask(String vendorId, String modelId, int position)
+		public RetrieveThumbnailTask(String thumbnailUrl, int position)
 		{
-			this.vendorId = vendorId.toLowerCase(Locale.UK);
-			this.modelId = modelId.toLowerCase(Locale.UK);
+			this.thumbnailUrl = thumbnailUrl;
 			this.position = position;
 		}
 
@@ -317,48 +312,16 @@ public class ScanActivity extends Activity
 		protected Drawable doInBackground(Void... params)
 		{
 			Drawable drawable = null;
-			try
+			
+			try 
 			{
-				if (!modelId.isEmpty())
-				{
-					if (modelId.contains(vendorId))
-					{
-						modelId = modelId.replace(vendorId + " ", "");
-					}
-					CambaseModel model = new CambaseModel(modelId);
-					ArrayList<String> thumnailUrls = model.getThumnailUrls();
-					if (thumnailUrls.size() > 0)
-					{
-						String thumnailUrl = CambaseAPI.getSmallImageUrl(thumnailUrls.get(0));
-						InputStream stream = Unirest.get(thumnailUrl).asBinary().getRawBody();
-
-						drawable = Drawable.createFromStream(stream, "src");
-					}
-					else
-					{
-						Log.e(TAG, "Thumnail url size is 0 for model:" + modelId);
-					}
-				}
-
-				if (drawable == null)
-				{
-					Manufacturer manufacturer = new Manufacturer(vendorId);
-					String logoThumnail = CambaseAPI.getSmallImageUrl(manufacturer.getLogoUrl());
-					InputStream stream = Unirest.get(logoThumnail).asBinary().getRawBody();
-
-					drawable = Drawable.createFromStream(stream, "src");
-				}
-			}
-			catch (UnirestException e)
+				InputStream stream = Unirest.get(thumbnailUrl).asBinary().getRawBody();
+				drawable = Drawable.createFromStream(stream, "src");
+			} catch (UnirestException e) 
 			{
-				Log.e(TAG, e.toString());
+				Log.e(TAG, e.getStackTrace()[0].toString());
 			}
-			catch (IllegalArgumentException e)
-			{
-				Log.e(TAG, e.toString());
-				EvercamPlayApplication.sendCaughtException(ScanActivity.this, e.getStackTrace()[0]
-						+ modelId);
-			}
+
 			return drawable;
 		}
 

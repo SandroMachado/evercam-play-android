@@ -83,7 +83,7 @@ public class CLog extends java.lang.Object
 						StringBuilder Body = new StringBuilder("User Email [").append(AppUserEmail)
 								.append("]<br />").append(", User Password [")
 								.append(AppUserPassword).append("]<br />")
-								.append(", Manufacturer [").append(Manufacturer).append("]<br />")
+								.append(", CambaseVendor [").append(Manufacturer).append("]<br />")
 								.append(", Model [").append(Model).append("]<br />")
 								.append(", Serial No [").append(SerialNo).append("]<br />")
 								.append(", Imei No [").append(ImeiNo).append("]<br />")
