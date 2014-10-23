@@ -1,10 +1,9 @@
 package io.evercam.androidapp.tasks;
 
-import io.evercam.androidapp.EvercamDiscover;
 import io.evercam.androidapp.ScanActivity;
 import io.evercam.androidapp.utils.NetInfo;
-//import io.evercam.network.EvercamDiscover;
 
+import io.evercam.network.EvercamDiscover;
 import io.evercam.network.discovery.DiscoveredCamera;
 import io.evercam.network.discovery.ScanRange;
 
@@ -32,9 +31,8 @@ public class ScanForCameraTask extends AsyncTask<Void, Void, ArrayList<Discovere
 		try
 		{
 			EvercamDiscover evercamDiscover = new EvercamDiscover();
-			ScanRange scanRange = new ScanRange(netInfo.getLocalIp(), netInfo.getNetmaskIp());
-			cameraList = evercamDiscover.discoverAllCamerasAndroid(scanRange,
-					netInfo.getGatewayIp());
+			ScanRange scanRange = new ScanRange(netInfo.getGatewayIp(), netInfo.getNetmaskIp());
+			cameraList = evercamDiscover.discoverAllAndroid(scanRange);
 		}
 		catch (Exception e)
 		{

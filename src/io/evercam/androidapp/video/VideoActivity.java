@@ -1574,6 +1574,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
 					successiveFailureCount++;
 				}
+				catch (OutOfMemoryError e)
+				{
+					Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+					successiveFailureCount++;
+				}
 			}
 			return response;
 		}

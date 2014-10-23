@@ -208,8 +208,7 @@ public class HikvisionSdk implements Callback
 		{
 			activity.hideProgressView();
 			CustomToast.showInCenter(activity, R.string.msg_playback_failed);
-			Log.d(TAG, "PLAYBACK ERROR");
-			Log.i(TAG, "NET_DVR_PlayBackByTime failed, error code: "
+			Log.e(TAG, "NET_DVR_PlayBackByTime failed, error code: "
 					+ HCNetSDK.getInstance().NET_DVR_GetLastError());
 		}
 	}
