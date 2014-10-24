@@ -1,13 +1,13 @@
 <h4>Evercam Play - IP Camera Viewer</h4>
-<h5>1.2.0 Alpha 23/10</h5> 
+<h5>1.2.0</h5> 
 <ul>
-	<li>- Improved scan for cameras<br/></li>
+	<li>- Improved scanning for cameras, it's now faster<br/></li>
+	<li>- Fixed bug with Hikvision local storage<br/></li>
 </ul>
 <br/>
 <b>Version 1.1.8 & 1.1.9</b>
 <ul>
 	<li><br/>- Camera list loading is faster now<br/></li>
-	<li>- Bug fixes<br/></li>
 </ul>
 <br/>
 <b>Version 1.1.7</b>

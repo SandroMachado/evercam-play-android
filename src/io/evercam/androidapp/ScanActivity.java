@@ -16,6 +16,8 @@ import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.tasks.ScanForCameraTask;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EvercamApiHelper;
+import io.evercam.network.cambase.CambaseAPI;
+import io.evercam.network.cambase.CambaseException;
 import io.evercam.network.discovery.DiscoveredCamera;
 import android.app.Activity;
 import android.content.Context;
@@ -260,7 +262,7 @@ public class ScanActivity extends Activity
 				deviceArrayList.add(deviceMap);
 				deviceAdapter.notifyDataSetChanged();
 
-				new RetrieveThumbnailTask(camera.getThumbnail(), index)
+				new RetrieveThumbnailTask(camera.getVendor(), camera.getModel(), index)
 						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			}
 		}
@@ -299,27 +301,42 @@ public class ScanActivity extends Activity
 
 	private class RetrieveThumbnailTask extends AsyncTask<Void, Void, Drawable>
 	{
-		private String thumbnailUrl;
+		private String vendorId;
+		private String modelId;
 		private int position;
 
-		public RetrieveThumbnailTask(String thumbnailUrl, int position)
+		public RetrieveThumbnailTask(String vendorId, String modelId, int position)
 		{
-			this.thumbnailUrl = thumbnailUrl;
+			this.vendorId = vendorId;
+			this.modelId = modelId;
 			this.position = position;
 		}
 
 		@Override
 		protected Drawable doInBackground(Void... params)
 		{
-			Drawable drawable = null;
-			
+			String thumbnailUrl = "";
 			try 
 			{
-				InputStream stream = Unirest.get(thumbnailUrl).asBinary().getRawBody();
-				drawable = Drawable.createFromStream(stream, "src");
-			} catch (UnirestException e) 
+				thumbnailUrl = CambaseAPI.getThumbnailUrlFor(vendorId, modelId);
+			} 
+			catch (CambaseException e) 
 			{
-				Log.e(TAG, e.getStackTrace()[0].toString());
+				Log.e(TAG, e.toString());
+			}
+			
+			Drawable drawable = null;
+			
+			if(!thumbnailUrl.isEmpty())
+			{
+				try 
+				{
+					InputStream stream = Unirest.get(thumbnailUrl).asBinary().getRawBody();
+					drawable = Drawable.createFromStream(stream, "src");
+				} catch (UnirestException e) 
+				{
+					Log.e(TAG, e.getStackTrace()[0].toString());
+				}
 			}
 
 			return drawable;
