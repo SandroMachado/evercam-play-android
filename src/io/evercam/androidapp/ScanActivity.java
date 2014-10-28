@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -194,6 +195,12 @@ public class ScanActivity extends Activity
 		}
 	}
 
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) 
+	{
+		super.onConfigurationChanged(newConfig);
+	}
+
 	private void startDiscovery()
 	{
 		EvercamApiHelper.setEvercamDeveloperKeypair(this);
@@ -346,7 +353,6 @@ public class ScanActivity extends Activity
 		@Override
 		protected void onPostExecute(Drawable drawable)
 		{
-			drawable = null;
 			if(drawable != null)
 			{
 				drawableArray.put(position, drawable);

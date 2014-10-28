@@ -125,6 +125,7 @@
         <activity
             android:name=".ScanActivity"
             android:label="@string/title_activity_scan"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:logo="@drawable/icon_192x192" >
         </activity>
         <activity
