@@ -1,7 +1,13 @@
 <h4>Evercam Play - IP Camera Viewer</h4>
-<h5>1.2.0</h5> 
+<h5>1.2.1</h5> 
 <ul>
-	<li>- Improved scanning for cameras, it's now faster<br/></li>
+	<li>- Fixed screen rotate issue when scanning for cameras<br/></li>
+	<li>- Added no thumbnail image in scanning result<br/></li>
+</ul>
+<br/>
+<b>Version 1.2.0</b>
+<ul>
+	<li><br/>- Improved scanning for cameras, it's now faster<br/></li>
 	<li>- Fixed bug with Hikvision local storage<br/></li>
 </ul>
 <br/>
