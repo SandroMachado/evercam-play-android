@@ -98,8 +98,7 @@
         </activity>
         <activity
             android:name=".CameraPrefsActivity"
-            android:label="@string/title_settings"
-            android:logo="@drawable/icon_192x192" >
+            android:label="@string/title_settings">
         </activity>
 
         <receiver
@@ -126,8 +125,7 @@
         <activity
             android:name=".ScanActivity"
             android:label="@string/title_activity_scan"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:logo="@drawable/icon_192x192" >
+            android:configChanges="orientation|keyboardHidden|screenSize">
         </activity>
         <activity
             android:name=".ReleaseNotesActivity"

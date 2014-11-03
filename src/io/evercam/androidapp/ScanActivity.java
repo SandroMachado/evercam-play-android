@@ -24,12 +24,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -50,6 +50,7 @@ public class ScanActivity extends Activity
 	private View scanResultNoCameraView;
 
 	private ListView cameraListView;
+	private Button cancelButton;
 
 	private ArrayList<HashMap<String, Object>> deviceArrayList;
 	private ScanResultAdapter deviceAdapter;
@@ -66,6 +67,13 @@ public class ScanActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		
+		if (this.getActionBar() != null)
+		{
+			this.getActionBar().setHomeButtonEnabled(true);
+			this.getActionBar().setIcon(R.drawable.ic_navigation_back);
+		}
+		
 		setContentView(R.layout.activity_scan);
 
 		if (Constants.isAppTrackingEnabled)
@@ -78,7 +86,7 @@ public class ScanActivity extends Activity
 		scanProgressView = findViewById(R.id.scan_status_layout);
 		scanResultListView = findViewById(R.id.scan_result_layout);
 		scanResultNoCameraView = findViewById(R.id.scan_result_no_camera_layout);
-		Button cancelButton = (Button) findViewById(R.id.button_cancel_scan);
+		cancelButton = (Button) findViewById(R.id.button_cancel_scan);
 
 		drawableArray = new SparseArray<Drawable>();
 
@@ -121,15 +129,7 @@ public class ScanActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				CustomedDialog.getConfirmCancelScanDialog(ScanActivity.this,
-						new DialogInterface.OnClickListener(){
-							@Override
-							public void onClick(DialogInterface dialog, int which)
-							{
-								stopDiscovery();
-								finish();
-							}
-						}).show();
+				showConfirmCancelScanDialog();
 			}
 		});
 
@@ -164,6 +164,40 @@ public class ScanActivity extends Activity
 		if (Constants.isAppTrackingEnabled)
 		{
 			if (Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
+		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		// Handle item selection
+		switch (item.getItemId())
+		{
+		case android.R.id.home:
+			if(isScanning())
+			{
+				showConfirmCancelScanDialog();
+			}
+			else
+			{
+				finish();
+			}
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	@Override
+	public void onBackPressed() 
+	{
+		if(isScanning())
+		{
+			showConfirmCancelScanDialog();
+		}
+		else
+		{
+			finish();
 		}
 	}
 
@@ -229,6 +263,28 @@ public class ScanActivity extends Activity
 	public void showNoCameraView(boolean show)
 	{
 		scanResultNoCameraView.setVisibility(show ? View.VISIBLE : View.GONE);
+	}
+	
+	public void showConfirmCancelScanDialog()
+	{
+		CustomedDialog.getConfirmCancelScanDialog(ScanActivity.this,
+				new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						stopDiscovery();
+						finish();
+					}
+				}).show();
+	}
+	
+	public boolean isScanning()
+	{
+		if(scanProgressView.getVisibility() == View.VISIBLE)
+		{
+			return true;
+		}
+		return false;
 	}
 
 	public void showScanResults(ArrayList<DiscoveredCamera> discoveredCameras)

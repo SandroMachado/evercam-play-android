@@ -3,6 +3,7 @@ package io.evercam.androidapp;
 import java.util.ArrayList;
 
 import io.evercam.androidapp.custom.ThemedListPreference;
+import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
 
@@ -11,6 +12,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.view.MenuItem;
 
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
@@ -28,6 +30,12 @@ public class CameraPrefsActivity extends PreferenceActivity
 		if (Constants.isAppTrackingEnabled)
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
+		}
+		
+		if (this.getActionBar() != null)
+		{
+			this.getActionBar().setHomeButtonEnabled(true);
+			this.getActionBar().setIcon(R.drawable.ic_navigation_back);
 		}
 
 		screenWidth = CamerasActivity.readScreenWidth(this);
@@ -57,6 +65,21 @@ public class CameraPrefsActivity extends PreferenceActivity
 		if (Constants.isAppTrackingEnabled)
 		{
 			BugSenseHandler.closeSession(this);
+		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		// Handle item selection
+		switch (item.getItemId())
+		{
+		case android.R.id.home:
+
+			this.finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
