@@ -3,6 +3,7 @@ package io.evercam.androidapp.tasks;
 import io.evercam.Camera;
 import io.evercam.CameraShare;
 import io.evercam.EvercamException;
+import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
@@ -49,9 +50,17 @@ public class DeleteCameraTask extends AsyncTask<Void, Void, Boolean>
 			}
 			else
 			{
-				if (CameraShare.delete(cameraId, AppData.defaultUser.getUsername()))
+				if(AppData.defaultUser != null)
 				{
-					return true;
+					if (CameraShare.delete(cameraId, AppData.defaultUser.getUsername()))
+					{
+						return true;
+					}
+				}
+				else
+				{
+					EvercamPlayApplication.sendEventAnalytics(activity, 
+							R.string.category_error, R.string.action_error, R.string.label_error_delete_task);
 				}
 			}
 		}

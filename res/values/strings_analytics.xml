@@ -20,6 +20,7 @@
     <string name="action_error_main">Error Dialog in MainActivity</string>
     <string name="action_error_manage_account">Error Dialog in ManageAccountActivity</string>
     <string name="action_error_video">Error Dialog in VideoActivity</string>
+    <string name="action_error">Unexpected Error</string>
     <string name="action_signup_success">Sign up successful</string>
     <string name="action_addcamera_success">New camera added manually</string>
     <string name="action_addcamera_success_scan">New camera from scanning</string>
@@ -40,6 +41,7 @@
     <string name="label_error_set_default">Show error dialog because of unknown error when set default user.</string>
     <string name="label_error_islogged">Show error dialog because of exception when check is user logged or not.</string>
     <string name="label_error_play_video">Show error dialog because of exception when playing video.</string>
+    <string name="label_error_delete_task">Default user is null when attempt deleting camera</string>
     <string name="label_signup_successful">A new user created successfully</string>
     <string name="label_addcamera_successful">A new camera added successfully</string>
     <string name="label_addcamera_successful_scan">A scanned camera added successfully</string>
