@@ -1,8 +1,9 @@
 <h4>Evercam Play - IP Camera Viewer</h4>
-<h5>1.2.2 Alpha 06/11</h5> 
+<h5>1.2.2</h5> 
 <ul>
 	<li>- Added warning dialog before leaving scanning screen<br/></li>
 	<li>- Some UI changes<br/></li>
+	<li>- Fixed a crash during scanning<br/></li>
 </ul>
 <br/>
 <b>Version 1.2.1</b>
