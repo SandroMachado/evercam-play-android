@@ -901,7 +901,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			// Create a new media player
 			libvlc = LibVLC.getInstance();
 			libvlc.setSubtitlesEncoding("");
-			// libvlc.setHardwareAcceleration(LibVLC.HW_ACCELERATION_DISABLED);//Liuting
+			
+			//Liuting: Disabled hardware acceleration because it causes crash on the Church camera
+		    libvlc.setHardwareAcceleration(LibVLC.HW_ACCELERATION_DISABLED);
 			libvlc.setAout(LibVLC.AOUT_OPENSLES);
 			libvlc.setTimeStretching(false);
 			libvlc.setChroma("RV32");
