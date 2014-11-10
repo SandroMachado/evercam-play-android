@@ -418,15 +418,29 @@ public class AddEditCameraActivity extends Activity
 				String internalHttp = internalHttpEdit.getText().toString();
 				if (!internalHttp.isEmpty())
 				{
-					int internalHttpInt = Integer.valueOf(internalHttp);
-					cameraBuilder.setInternalHttpPort(internalHttpInt);
+					int internalHttpInt = getPortIntByString(internalHttp);
+					if(internalHttpInt != 0)
+					{
+						cameraBuilder.setInternalHttpPort(internalHttpInt);
+					}
+					else
+					{
+						return null;
+					}
 				}
 
 				String internalRtsp = internalRtspEdit.getText().toString();
 				if (!internalRtsp.isEmpty())
 				{
-					int internalRtspInt = Integer.valueOf(internalRtsp);
-					cameraBuilder.setInternalRtspPort(internalRtspInt);
+					int internalRtspInt = getPortIntByString(internalRtsp);
+					if(internalRtspInt != 0)
+					{
+						cameraBuilder.setInternalRtspPort(internalRtspInt);
+					}
+					else
+					{
+						return null;
+					}
 				}
 			}
 			if (!externalHost.isEmpty())
@@ -436,15 +450,29 @@ public class AddEditCameraActivity extends Activity
 				String externalHttp = externalHttpEdit.getText().toString();
 				if (!externalHttp.isEmpty())
 				{
-					int externalHttpInt = Integer.valueOf(externalHttp);
-					cameraBuilder.setExternalHttpPort(externalHttpInt);
+					int externalHttpInt = getPortIntByString(externalHttp);
+					if(externalHttpInt != 0)
+					{
+						cameraBuilder.setExternalHttpPort(externalHttpInt);
+					}
+					else
+					{
+						return null;
+					}
 				}
 
 				String externalRtsp = externalRtspEdit.getText().toString();
 				if (!externalRtsp.isEmpty())
 				{
-					int externalRtspInt = Integer.valueOf(externalRtsp);
-					cameraBuilder.setExternalRtspPort(externalRtspInt);
+					int externalRtspInt = getPortIntByString(externalRtsp);
+					if(externalRtspInt != 0)
+					{
+						cameraBuilder.setExternalRtspPort(externalRtspInt);
+					}
+					else
+					{
+						return null;
+					}
 				}
 			}
 		}
@@ -458,6 +486,40 @@ public class AddEditCameraActivity extends Activity
 		return cameraBuilder;
 	}
 
+	/**
+	 * Convert port string to port int, show error toast if port number is not valid,
+	 * @return int port number, if port is not valid, return 0.
+	 */
+	private int getPortIntByString(String portString)
+	{
+		try
+		{
+			int portInt = Integer.valueOf(portString);
+			if(portInt > 0)
+			{
+				if(portInt <= 65535)
+				{
+					return portInt;
+				}
+				else
+				{
+					CustomToast.showInCenter(this, getString(R.string.msg_port_range_error));
+					return 0;
+				}
+			}
+			else
+			{
+				CustomToast.showInCenter(this, getString(R.string.msg_port_range_error));
+				return 0;
+			}
+		}
+		catch (NumberFormatException e)
+		{
+			CustomToast.showInCenter(this, getString(R.string.msg_port_range_error));
+			return 0;
+		}
+	}
+	
 	/**
 	 * Read and validate user input for edit camera.
 	 */
@@ -514,15 +576,29 @@ public class AddEditCameraActivity extends Activity
 			String internalHttp = internalHttpEdit.getText().toString();
 			if (!internalHttp.isEmpty())
 			{
-				int internalHttpInt = Integer.valueOf(internalHttp);
-				patchCameraBuilder.setInternalHttpPort(internalHttpInt);
+				int internalHttpInt = getPortIntByString(internalHttp);
+				if(internalHttpInt != 0)
+				{
+					patchCameraBuilder.setInternalHttpPort(internalHttpInt);
+				}
+				else
+				{
+					return null;
+				}
 			}
 
 			String internalRtsp = internalRtspEdit.getText().toString();
 			if (!internalRtsp.isEmpty())
 			{
-				int internalRtspInt = Integer.valueOf(internalRtsp);
-				patchCameraBuilder.setInternalRtspPort(internalRtspInt);
+				int internalRtspInt = getPortIntByString(internalRtsp);
+				if(internalRtspInt != 0)
+				{
+					patchCameraBuilder.setInternalRtspPort(internalRtspInt);
+				}
+				else
+				{
+					return null;
+				}
 			}
 
 			patchCameraBuilder.setExternalHost(externalHost);
@@ -530,15 +606,29 @@ public class AddEditCameraActivity extends Activity
 			String externalHttp = externalHttpEdit.getText().toString();
 			if (!externalHttp.isEmpty())
 			{
-				int externalHttpInt = Integer.valueOf(externalHttp);
-				patchCameraBuilder.setExternalHttpPort(externalHttpInt);
+				int externalHttpInt = getPortIntByString(externalHttp);
+				if(externalHttpInt != 0)
+				{
+					patchCameraBuilder.setExternalHttpPort(externalHttpInt);
+				}
+				else
+				{
+					return null;
+				}
 			}
 
 			String externalRtsp = externalRtspEdit.getText().toString();
 			if (!externalRtsp.isEmpty())
 			{
-				int externalRtspInt = Integer.valueOf(externalRtsp);
-				patchCameraBuilder.setExternalRtspPort(externalRtspInt);
+				int externalRtspInt = getPortIntByString(externalRtsp);
+				if(externalRtspInt != 0)
+				{
+					patchCameraBuilder.setExternalRtspPort(externalRtspInt);
+				}
+				else
+				{
+					return null;
+				}
 			}
 		}
 
@@ -857,8 +947,18 @@ public class AddEditCameraActivity extends Activity
 			CustomToast.showInCenter(this, getString(R.string.internal_http_required));
 			return null;
 		}
-
-		return getString(R.string.prefix_http) + internalHost + ":" + internalHttp + jpgEnding;
+		else
+		{
+			int internalHttpInt = getPortIntByString(internalHttp);
+			if(internalHttpInt != 0)
+			{
+				return getString(R.string.prefix_http) + internalHost + ":" + internalHttp + jpgEnding;
+			}
+			else
+			{
+				return null;
+			}
+		}
 	}
 
 	/**
@@ -874,8 +974,18 @@ public class AddEditCameraActivity extends Activity
 			CustomToast.showInCenter(this, getString(R.string.external_http_required));
 			return null;
 		}
-
-		return getString(R.string.prefix_http) + externalHost + ":" + externalHttp + jpgEnding;
+		else
+		{
+			int externalHttpInt = getPortIntByString(externalHttp);
+			if(externalHttpInt != 0)
+			{
+				return getString(R.string.prefix_http) + externalHost + ":" + externalHttp + jpgEnding;
+			}
+			else
+			{
+				return null;
+			}
+		}
 	}
 
 	class RequestVendorListTask extends AsyncTask<Void, Void, ArrayList<Vendor>>

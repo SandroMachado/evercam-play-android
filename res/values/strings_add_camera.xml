@@ -46,6 +46,7 @@
     <string name="host_required">Please specify either an internal or external IP address.</string>
     <string name="external_http_required">Please specify external HTTP port</string>
     <string name="internal_http_required">Please specify internal HTTP port</string>
+    <string name="msg_port_range_error">Port range must between 1 and 65535!</string>
     <string name="snapshot_test_port_closed">The IP address provided is not reachable at the port provided.</string>
     <string name="snapshot_test_failed">The port and URL are open but we can\'t seem to connect.  Check that the username and password are correct and the snapshot ending</string>
     <string name="snapshot_test_success">Successfully retrieved an image from your camera!</string>
