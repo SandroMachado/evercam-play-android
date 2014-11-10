@@ -11,7 +11,7 @@
         android:layout_height="fill_parent"
         android:layout_centerInParent="true"
         android:layout_gravity="center" >
-
+        
         <ImageView
             android:id="@+id/img_camera1"
             android:layout_width="fill_parent"
@@ -49,8 +49,20 @@
             android:visibility="gone"
             android:textSize="17sp"
             android:textColor="#dc4c3f"
-            android:text="@string/msg_offline"
-            />
+            android:text="@string/msg_offline"/>
+        
+         <TextView 
+            android:id="@+id/time_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentBottom="true"
+            android:textColor="#dc4c3f"
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:layout_margin="10sp"
+            android:gravity="center"/>
+         
     </RelativeLayout>
 
 </RelativeLayout>

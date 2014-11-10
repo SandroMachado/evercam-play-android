@@ -89,6 +89,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private SurfaceHolder surfaceHolder;
 	private ProgressView progressView = null;
 	private TextView offlineTextView;
+	private TextView timeCountTextView;
 
 	// media player
 	private LibVLC libvlc;
@@ -164,6 +165,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private Handler timerHandler = new Handler();
 	private Thread timerThread;
 	private Runnable timerRunnable;
+	
+	private TimeCounter timeCounter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -344,6 +347,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			{
 				this.finish();
 			}
+		}
+		
+		
+		if(timeCounter != null)
+		{
+			timeCounter.stop();
+			timeCounter = null;
 		}
 
 		if (Constants.isAppTrackingEnabled)
@@ -1172,6 +1182,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		progressView.setVisibility(View.VISIBLE);
 
 		offlineTextView = (TextView) findViewById(R.id.offline_text_view);
+		timeCountTextView = (TextView) findViewById(R.id.time_text_view);
 
 		mediaPlayerView.setOnClickListener(new OnClickListener(){
 
@@ -1188,6 +1199,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				if (paused) // video is currently paused. Now we need to
 							// resume it.
 				{
+					timeCountTextView.setVisibility(View.VISIBLE);
 					showProgressView();
 
 					mediaPlayerView.setImageBitmap(null);
@@ -1202,6 +1214,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				else
 				// video is currently playing. Now we need to pause video
 				{
+					timeCountTextView.setVisibility(View.GONE);
 					mediaPlayerView.clearAnimation();
 					if (fadeInAnimation != null && fadeInAnimation.hasStarted()
 							&& !fadeInAnimation.hasEnded())
@@ -1273,6 +1286,18 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	{
 		imageThread = new BrowseImages();
 		imageThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	}
+	
+	private void startTimeCounter()
+	{
+		if(timeCounter == null)
+		{
+			timeCounter = new TimeCounter(this);
+		}
+		if(!timeCounter.isStarted())
+		{
+			timeCounter.start();
+		}
 	}
 
 	public class BrowseImages extends AsyncTask<String, String, String>
@@ -1359,7 +1384,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	 * Events
 	 *************/
 
-	private static class MyHandler extends Handler
+	private class MyHandler extends Handler
 	{
 		private WeakReference<VideoActivity> videoActivity;
 
@@ -1398,7 +1423,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					player.surfaceView.setVisibility(View.VISIBLE);
 					player.imageView.setVisibility(View.GONE);
 					player.mrlPlaying = player.getCurrentMRL();
-
+					
+					//View gets played, show time count
+					startTimeCounter();
 					break;
 
 				case EventHandler.MediaPlayerPaused:
@@ -1534,7 +1561,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							response = Commons.getDrawablefromUrlAuthenticated(url,
 									evercamCamera.getUsername(), evercamCamera.getPassword(),
 									evercamCamera.cookies, 3000);
-							if (response != null) successiveFailureCount = 0;
+							if (response != null) 
+							{
+								successiveFailureCount = 0;
+							}
 						}
 						catch (OutOfMemoryError e)
 						{
@@ -1564,7 +1594,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					Camera camera = Camera.getById(evercamCamera.getCameraId(), false);
 					InputStream stream = camera.getSnapshotFromEvercam();
 					response = Drawable.createFromStream(stream, "src");
-					if (response != null) successiveFailureCount = 0;
+					if (response != null) 
+					{
+						successiveFailureCount = 0;
+					}
 				}
 				catch (EvercamException e)
 				{
@@ -1592,8 +1625,14 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			{
 				if (!showImagesVideo) return;
 
-				if (isLocalNetworkRequest) isFirstImageLocalEnded = true;
-				else isFirstImageLiveEnded = true;
+				if (isLocalNetworkRequest) 
+				{
+					isFirstImageLocalEnded = true;
+				}
+				else 
+				{
+					isFirstImageLiveEnded = true;
+				}
 
 				if (result != null && result.getIntrinsicWidth() > 0
 						&& result.getIntrinsicHeight() > 0
@@ -1612,7 +1651,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					if (showImagesVideo) imageView.setImageDrawable(result);
 
 					hideProgressView();
-
+					
+					
+					//Image received, start time counter, need more tests
+					startTimeCounter();
 				}
 				// do not show message on local network failure request.
 				else if (((!isFirstImageLocalEnded && !isFirstImageLiveEnded
@@ -1659,7 +1701,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			}
 
 			startDownloading = true;
-
 		}
 	}
 
