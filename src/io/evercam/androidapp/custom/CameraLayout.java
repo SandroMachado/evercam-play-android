@@ -51,6 +51,8 @@ public class CameraLayout extends LinearLayout
 	private ProgressView loadingAnimation = null;
 	private TextView imageMessage = null;
 	private ImageView offlineImage = null;
+	private GredientTitleLayout gredientLayout;
+	
 	private boolean isImageLoadedFromCache = false;
 	private boolean isLatestReceived = false;
 
@@ -90,7 +92,7 @@ public class CameraLayout extends LinearLayout
 
 			titleLayout.addView(titleText);
 
-			this.addView(titleLayout);
+		//	this.addView(titleLayout);
 
 			cameraRelativeLayout = new RelativeLayout(context);
 			RelativeLayout.LayoutParams ivParams = new RelativeLayout.LayoutParams(
@@ -133,6 +135,10 @@ public class CameraLayout extends LinearLayout
 			cameraRelativeLayout.addView(offlineImage);
 			offlineImage.setImageResource(R.drawable.cam_unavailable);
 			offlineImage.setVisibility(View.INVISIBLE);
+			
+			gredientLayout = new GredientTitleLayout(activity);
+			gredientLayout.setTitle(evercamCamera.getName());
+			cameraRelativeLayout.addView(gredientLayout);
 					
 			cameraRelativeLayout.setClickable(true);
 
@@ -357,6 +363,9 @@ public class CameraLayout extends LinearLayout
 		}
 
 		imageMessage.setTextColor(Color.RED);
+		
+		//Remove shadow because the gray image is showing already
+		gredientLayout.removeGredientShadow();
 
 		handler.removeCallbacks(LoadImageRunnable);
 	}
