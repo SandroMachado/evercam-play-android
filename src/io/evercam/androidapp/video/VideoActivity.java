@@ -255,9 +255,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 				latestStartImageTime = SystemClock.uptimeMillis();
 
-				if (imageThread == null) // ignore if image thread is null
+				if (imageThread == null) 
 				{
-
+					// ignore if image thread is null
 				}
 				else if (imageThread.getStatus() != AsyncTask.Status.RUNNING)
 				{
@@ -348,7 +348,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				this.finish();
 			}
 		}
-		
 		
 		if(timeCounter != null)
 		{
@@ -622,11 +621,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 			showProgressView();
 
-			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-			mrlPlaying = sharedPrefs.getString("pref_mrlplaying" + evercamCamera.getCameraId(),
-					null);
+			//Disabled by Liuting
+//			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+//			mrlPlaying = sharedPrefs.getString("pref_mrlplaying" + evercamCamera.getCameraId(),
+//					null);
 
 			mrlPlaying = evercamCamera.getExternalRtspUrl();
+			
 			mediaUrls = new ArrayList<MediaURL>();
 			mrlIndex = -1;
 
