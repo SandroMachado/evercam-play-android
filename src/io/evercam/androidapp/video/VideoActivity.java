@@ -1208,7 +1208,16 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 					startMediaPlayerAnimation();
 
-					restartPlay(mrlPlaying);
+					//If playing url is not null, resume rtsp stream
+					if(mrlPlaying != null)
+					{
+						restartPlay(mrlPlaying);
+					}
+					//Otherwise restart jpg view
+					else
+					{
+						//Don't need to do anything because image thread is listening
+					}
 					paused = false;
 				}
 				else
