@@ -3,7 +3,6 @@ package io.evercam.androidapp;
 import java.util.ArrayList;
 
 import io.evercam.androidapp.custom.ThemedListPreference;
-import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
 
@@ -34,8 +33,8 @@ public class CameraPrefsActivity extends PreferenceActivity
 		
 		if (this.getActionBar() != null)
 		{
-			this.getActionBar().setHomeButtonEnabled(true);
-			this.getActionBar().setIcon(R.drawable.ic_navigation_back);
+			this.getActionBar().setDisplayHomeAsUpEnabled(true);
+			this.getActionBar().setIcon(R.drawable.icon_50x50);
 		}
 
 		screenWidth = CamerasActivity.readScreenWidth(this);

@@ -66,9 +66,9 @@ public class ManageAccountsActivity extends ParentActivity
 
 		if (this.getActionBar() != null)
 		{
-			this.getActionBar().setHomeButtonEnabled(true);
+			this.getActionBar().setDisplayHomeAsUpEnabled(true);
 			this.getActionBar().setTitle(R.string.accounts);
-			this.getActionBar().setIcon(R.drawable.ic_navigation_back);
+			this.getActionBar().setIcon(R.drawable.icon_50x50);
 		}
 
 		setContentView(R.layout.manage_account_activity);
