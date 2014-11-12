@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.evercam.androidapp"
-    android:versionCode="47"
-    android:versionName="1.2.3 Alpha 11/11 (Debug)" >
+    android:versionCode="48"
+    android:versionName="1.2.3 Alpha 11/12" >
 
     <!-- versionCode36 - 1.1.7  - Hikvision local storage, first page loading faster -->
     <!-- versionCode39 - 1.1.8 - Only load snapshots for cameras within screen, new offline image-->
@@ -10,7 +10,7 @@
     <!-- versionCode42 - 1.2.0 - Faster network scan -->
     <!-- versionCode44 - 1.2.1 - Bug fixes for scanning -->
     <!-- versionCode46 - 1.2.2 - Return buttons, alert before leaving scanning, fix scan crash-->
-    <!-- versionCode47 - 1.2.3 Alpha - port range check, date & time-->
+    <!-- versionCode48 - 1.2.3 Alpha - port range check, date & time, new camera title-->
 
     <uses-sdk
         android:minSdkVersion="14"

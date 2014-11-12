@@ -1,8 +1,9 @@
 <h4>Evercam Play - IP Camera Viewer</h4>
-<h5>1.2.3 Alpha 11/11</h5> 
+<h5>1.2.3 Alpha 11/12</h5> 
 <ul>
 	<li>- Port range check for add/edit camera<br/></li>
-	<li>- Added Date & Time to the camera live view screen<br/></li>
+	<li>- Added date & time to the camera live view screen<br/></li>
+	<li>- UI changes on camera grid view<br/></li>
 </ul>
 <br/>
 <b>Version 1.2.2</b>

@@ -420,7 +420,9 @@ public class CamerasActivity extends ParentActivity implements
 						android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 				params.width = ((i + 1 % camerasPerRow == 0) ? (screen_width - (i % camerasPerRow)
 						* (screen_width / camerasPerRow)) : screen_width / camerasPerRow);
+				params.width = params.width - 1; //1 pixels spacing between cameras 
 				params.height = (int) (params.width / (1.25));
+				params.setMargins(1, 1, 0, 0); //1 pixels spacing between cameras 
 				cameraLayout.setLayoutParams(params);
 			}
 			return true;
@@ -536,9 +538,9 @@ public class CamerasActivity extends ParentActivity implements
 				params.width = ((indexPlus % camerasPerRow == 0) ? (screen_width - (index % camerasPerRow)
 						* (screen_width / camerasPerRow))
 						: screen_width / camerasPerRow);
-				params.width = params.width - 2; //2 pixels spacing between cameras 
+				params.width = params.width - 1; //1 pixels spacing between cameras 
 				params.height = (int) (params.width / (1.25));
-				params.setMargins(1, 1, 1, 1); //2 pixels spacing between cameras 
+				params.setMargins(1, 1, 0, 0); //1 pixels spacing between cameras 
 				cameraLayout.setLayoutParams(params);
 
 				cameraListLayout.addView(cameraLayout);
