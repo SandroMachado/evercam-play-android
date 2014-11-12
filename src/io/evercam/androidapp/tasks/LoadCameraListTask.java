@@ -161,7 +161,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
 			if (reload)
 			{
 				camerasActivity.removeAllCameraViews();
-				camerasActivity.addAllCameraViews(true);
+				camerasActivity.addAllCameraViews(true, true);
 			}
 		}
 		else

@@ -106,7 +106,7 @@ public class CamerasActivity extends ParentActivity implements
 			@Override
 			public void run()
 			{
-				addAllCameraViews(false);
+				addAllCameraViews(false, false);
 			}
 		}, 500);
 
@@ -493,8 +493,14 @@ public class CamerasActivity extends ParentActivity implements
 		return false;
 	}
 
-	// Add all the cameras as per the rules
-	public boolean addAllCameraViews(final boolean reloadImages)
+	/**
+	 * Add all camera views to the main grid page
+	 * @param reloadImages reload camera images or not
+	 * @param showThumbnails show thumbnails that returned by Evercam or not, if true
+	 * and if thumbnail not available, it will request latest snapshot instead. If false,
+	 * it will request neither thumbnail nor latest snapshot.
+	 */
+	public boolean addAllCameraViews(final boolean reloadImages, final boolean showThumbnails)
 	{
 		try
 		{
@@ -522,7 +528,7 @@ public class CamerasActivity extends ParentActivity implements
 
 				if (reloadImages) evercamCamera.loadingStatus = ImageLoadingStatus.not_started;
 
-				final CameraLayout cameraLayout = new CameraLayout(this, evercamCamera);
+				final CameraLayout cameraLayout = new CameraLayout(this, evercamCamera, showThumbnails);
 
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 						android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -552,12 +558,8 @@ public class CamerasActivity extends ParentActivity implements
 						{
 							Rect cameraBounds = new Rect();
 							cameraListLayout.getHitRect(cameraBounds);
-							// Log.d(TAG, cameraBounds.top + " " +
-							// cameraBounds.bottom + " " + cameraBounds.left +
-							// " " +cameraBounds.right);
 							if (Rect.intersects(cameraBounds, bounds))
 							{
-								// Log.d(TAG, "IS visible ");
 								cameraLayout.loadImage();
 							}
 						}
@@ -897,7 +899,7 @@ public class CamerasActivity extends ParentActivity implements
 						if (camsOldValue != camerasPerRow)
 						{
 							removeAllCameraViews();
-							addAllCameraViews(true);
+							addAllCameraViews(true, true);
 						}
 	
 						// Refresh camera names in case it's changed from camera

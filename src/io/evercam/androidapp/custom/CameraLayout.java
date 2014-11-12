@@ -50,15 +50,17 @@ public class CameraLayout extends LinearLayout
 	private GradientTitleLayout gradientLayout;
 
 	private boolean isLatestReceived = false;
+	private boolean showThumbnails = true;
 
 	// Handler for the handling the next request. It will call the image loading
 	// thread so that it can proceed with next step.
 	public final Handler handler = new Handler();
 
-	public CameraLayout(final Activity activity, EvercamCamera camera)
+	public CameraLayout(final Activity activity, EvercamCamera camera, boolean showThumbnails)
 	{
 		super(activity.getApplicationContext());
 		this.context = activity.getApplicationContext();
+		this.showThumbnails = showThumbnails;
 
 		try
 		{
@@ -118,8 +120,10 @@ public class CameraLayout extends LinearLayout
 			cameraRelativeLayout.setClickable(true);
 
 			// Show thumbnail returned from Evercam
-			showThumbnail();
-
+			if(showThumbnails)
+			{
+				showThumbnail();
+			}
 			cameraRelativeLayout.setOnClickListener(new View.OnClickListener(){
 				@Override
 				public void onClick(View v)
@@ -225,6 +229,7 @@ public class CameraLayout extends LinearLayout
 		}
 		else //If thumbnail is null, request latest snapshot
 		{
+			Log.d(TAG, "No thumbnail, request latest snapshot instead: " + evercamCamera.getCameraId());
 			latestTask = new DownloadLatestTask(evercamCamera.getCameraId(),
 					CameraLayout.this);
 			latestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
