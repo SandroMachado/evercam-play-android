@@ -6,16 +6,13 @@ import io.evercam.androidapp.tasks.DownloadLatestTask;
 import io.evercam.androidapp.tasks.SaveImageRunnable;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
-import io.evercam.androidapp.utils.EvercamFile;
 import io.evercam.androidapp.video.VideoActivity;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import org.apache.http.cookie.Cookie;
 import com.bugsense.trace.BugSenseHandler;
 
-import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.R;
 
 import android.app.Activity;
@@ -23,7 +20,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -51,9 +47,8 @@ public class CameraLayout extends LinearLayout
 	private ProgressView loadingAnimation = null;
 	private TextView imageMessage = null;
 	private ImageView offlineImage = null;
-	private GredientTitleLayout gredientLayout;
-	
-	private boolean isImageLoadedFromCache = false;
+	private GradientTitleLayout gradientLayout;
+
 	private boolean isLatestReceived = false;
 
 	// Handler for the handling the next request. It will call the image loading
@@ -73,26 +68,6 @@ public class CameraLayout extends LinearLayout
 			this.setGravity(Gravity.LEFT);
 
 			this.setBackgroundColor(Color.WHITE);
-
-			LinearLayout titleLayout = new LinearLayout(context);
-			titleLayout.setLayoutParams(new LinearLayout.LayoutParams(
-					android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-					android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-			titleLayout.setBackgroundColor(Color.parseColor("#414042"));
-			titleLayout.setOrientation(LinearLayout.HORIZONTAL);
-			titleLayout.setGravity(Gravity.CENTER_HORIZONTAL);
-
-			// text view to show the camera name on the top grey band of camera
-			titleText = new TextView(context);
-			titleText.setText(evercamCamera.getName());
-			titleText.setLayoutParams(new LinearLayout.LayoutParams(
-					android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
-					android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-			titleText.setTextColor(Color.parseColor("#f1f1f1"));
-
-			titleLayout.addView(titleText);
-
-		//	this.addView(titleLayout);
 
 			cameraRelativeLayout = new RelativeLayout(context);
 			RelativeLayout.LayoutParams ivParams = new RelativeLayout.LayoutParams(
@@ -123,7 +98,7 @@ public class CameraLayout extends LinearLayout
 			imageMessage.setLayoutParams(ivMessageParams);
 			imageMessage.setText(R.string.connecting);
 			imageMessage.setGravity(Gravity.CENTER);
-			cameraRelativeLayout.addView(imageMessage);
+		//	cameraRelativeLayout.addView(imageMessage);
 			
 			offlineImage = new ImageView(context);
 			RelativeLayout.LayoutParams offlineImageParams = new RelativeLayout.LayoutParams(
@@ -136,9 +111,9 @@ public class CameraLayout extends LinearLayout
 			offlineImage.setImageResource(R.drawable.cam_unavailable);
 			offlineImage.setVisibility(View.INVISIBLE);
 			
-			gredientLayout = new GredientTitleLayout(activity);
-			gredientLayout.setTitle(evercamCamera.getName());
-			cameraRelativeLayout.addView(gredientLayout);
+			gradientLayout = new GradientTitleLayout(activity);
+			gradientLayout.setTitle(evercamCamera.getName());
+			cameraRelativeLayout.addView(gradientLayout);
 					
 			cameraRelativeLayout.setClickable(true);
 
@@ -166,83 +141,6 @@ public class CameraLayout extends LinearLayout
 			}
 		}
 	}
-
-	// This method will load image from cache and call the image loading thread
-	// for further processing
-	public boolean loadImageFromCache()
-	{
-		try
-		{
-			File cacheFile = EvercamFile.getCacheFile(context, evercamCamera.getCameraId());
-			File externalFile = EvercamFile.getExternalFile(context, evercamCamera.getCameraId());
-
-			if (cacheFile.exists() || (externalFile != null && externalFile.exists()))
-			{
-				Drawable drawable = null;
-				if (cacheFile.exists())
-				{
-					drawable = Drawable.createFromPath(cacheFile.getPath());
-				}
-				else
-				{
-					drawable = Drawable.createFromPath(externalFile.getPath());
-				}
-
-				drawable = resizeDrawable(drawable);
-
-				if (drawable != null)
-				{
-					cameraRelativeLayout.setBackgroundDrawable(drawable);
-
-					isImageLoadedFromCache = true;
-					setlayoutForImageLoadedFromCache();
-					return true;
-				}
-				else
-				{
-					File file = new File(cacheFile.getPath());
-					if (file.exists())
-					{
-						file.delete();
-					}
-				}
-			}
-
-			// if image status was loaded on previously and now image is not in
-			// cache, then we need to restart this
-			// Disabled to see how it works without this.
-			// if (!isImageLoadedFromCache
-			// && (this.evercamCamera.loadingStatus ==
-			// ImageLoadingStatus.live_received ||
-			// this.evercamCamera.loadingStatus ==
-			// ImageLoadingStatus.camba_image_received))
-			// this.evercamCamera.loadingStatus =
-			// ImageLoadingStatus.not_started;
-		}
-		catch (OutOfMemoryError e)
-		{
-			isImageLoadedFromCache = false;
-			Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-			return false;
-		}
-		catch (Exception e)
-		{
-			isImageLoadedFromCache = false;
-			Log.e(TAG, "Load file from path: " + e.toString());
-			if (Constants.isAppTrackingEnabled)
-			{
-				BugSenseHandler.sendException(e);
-			}
-		}
-		return false;
-	}
-
-	// Disabled load image from cache in camera grid view for smoother UI
-	// public void loadCacheOnly()
-	// {
-	// //Load saved image from cache
-	// isImageLoadedFromCache = loadImageFromCache();
-	// }
 
 	// This method will call the image
 	// loading thread to further load from camera
@@ -297,17 +195,6 @@ public class CameraLayout extends LinearLayout
 		return true;
 	}
 
-	// Image loaded form cache and now set the controls appearance and text
-	// accordingly
-	private void setlayoutForImageLoadedFromCache()
-	{
-		if (cameraRelativeLayout.indexOfChild(loadingAnimation) >= 0)
-		{
-			loadingAnimation.setVisibility(View.GONE);
-			cameraRelativeLayout.removeView(loadingAnimation);
-		}
-	}
-
 	// Image loaded form camera and now set the controls appearance and text
 	// accordingly
 	private void setlayoutForLiveImageReceived()
@@ -335,6 +222,12 @@ public class CameraLayout extends LinearLayout
 			cameraRelativeLayout.removeView(loadingAnimation);
 			cameraRelativeLayout.setBackgroundDrawable(thumbnail);
 			return true;
+		}
+		else //If thumbnail is null, request latest snapshot
+		{
+			latestTask = new DownloadLatestTask(evercamCamera.getCameraId(),
+					CameraLayout.this);
+			latestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		}
 		return false;
 	}
@@ -365,7 +258,7 @@ public class CameraLayout extends LinearLayout
 		imageMessage.setTextColor(Color.RED);
 		
 		//Remove shadow because the gray image is showing already
-		gredientLayout.removeGredientShadow();
+		gradientLayout.removeGradientShadow();
 
 		handler.removeCallbacks(LoadImageRunnable);
 	}
@@ -380,24 +273,6 @@ public class CameraLayout extends LinearLayout
 			cameraRelativeLayout.removeView(loadingAnimation);
 		}
 
-//		if (isImageLoadedFromCache)
-//		{
-//
-//			imageMessage.setVisibility(View.VISIBLE);
-//			imageMessage.setTextColor(Color.RED);
-//		}
-//		else
-//		{
-//			for (int i = 0; i < cameraRelativeLayout.getChildCount(); i++)
-//			{
-//				cameraRelativeLayout.getChildAt(i).setVisibility(View.GONE);
-//			}
-//			//cameraRelativeLayout.setBackgroundResource(R.drawable.cam_unavailable);
-//			imageMessage.setVisibility(View.VISIBLE);
-//			//greyImageShown();
-//			offlineImage.setVisibility(View.VISIBLE);
-//		}
-
 		if ((evercamCamera.getStatus() + "").contains(CameraStatus.ACTIVE))
 		{
 			imageMessage.setText(R.string.msg_unable_to_connect);
@@ -407,42 +282,17 @@ public class CameraLayout extends LinearLayout
 			imageMessage.setText(evercamCamera.getStatus() + "");
 			imageMessage.setTextColor(Color.RED);
 			greyImageShown();
-			offlineImage.setVisibility(View.VISIBLE);
+			if(!isLatestReceived)
+			{
+				offlineImage.setVisibility(View.VISIBLE);
+			}
+			gradientLayout.removeGradientShadow();
 		}
 
 		imageMessage.setTextColor(Color.RED);
 
 		// animation must have been stopped when image loaded from cache
 		handler.removeCallbacks(LoadImageRunnable);
-	}
-
-	/**
-	 * FIXME: Not sure did this method(copied) improved image loading
-	 * performance or not Now I am only invoking it when load image from cache
-	 */
-	private Drawable resizeDrawable(Drawable drawable)
-	{
-		if (drawable != null)
-		{
-			Bitmap bitmapOrg = ((BitmapDrawable) drawable).getBitmap();
-			int width = bitmapOrg.getWidth();
-			int height = bitmapOrg.getHeight();
-			int newWidth = 500;
-			int newHeight = 300;
-			// calculate the scale
-			float scaleWidth = ((float) newWidth) / width;
-			float scaleHeight = ((float) newHeight) / height;
-			// create a matrix for the manipulation
-			Matrix matrix = new Matrix();
-			// resize the bit map
-			matrix.postScale(scaleWidth, scaleHeight);
-			Bitmap resizedBitmap = Bitmap
-					.createBitmap(bitmapOrg, 0, 0, width, height, matrix, true);
-			// make a Drawable from Bitmap to allow to set the BitMap
-			drawable = new BitmapDrawable(resizedBitmap);
-			return drawable;
-		}
-		return null;
 	}
 
 	public Runnable LoadImageRunnable = new Runnable(){
@@ -473,6 +323,7 @@ public class CameraLayout extends LinearLayout
 				else if (evercamCamera.loadingStatus == ImageLoadingStatus.camba_image_received)
 				{
 					setlayoutForLatestImageReceived();
+					isLatestReceived = true;
 					return;
 				}
 				else if (evercamCamera.loadingStatus == ImageLoadingStatus.camba_not_received)
@@ -522,7 +373,7 @@ public class CameraLayout extends LinearLayout
 				ArrayList<Cookie> cookies = new ArrayList<Cookie>();
 				Drawable drawable = null;
 				String externalJpgUrl = evercamCamera.getExternalSnapshotUrl();
-				String internalJpgUrl = null;
+				String internalJpgUrl = evercamCamera.getInternalSnapshotUrl();
 				if (evercamCamera.hasCredentials())
 				{
 					if (!evercamCamera.getExternalHost().isEmpty())
@@ -547,9 +398,12 @@ public class CameraLayout extends LinearLayout
 					}
 					else
 					{
-						drawable = Commons.getDrawablefromUrlAuthenticated(internalJpgUrl,
-								evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
-								3000);
+						if(!internalJpgUrl.isEmpty())
+						{
+							drawable = Commons.getDrawablefromUrlAuthenticated(internalJpgUrl,
+									evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
+									3000);
+						}
 					}
 				}
 				else
@@ -581,7 +435,14 @@ public class CameraLayout extends LinearLayout
 			}
 			catch (Exception e)
 			{
-				Log.e(TAG, "Error request snapshot: " + e.getMessage());
+				if(e.getMessage() != null)
+				{
+					Log.e(TAG, "Error request snapshot: " + e.getMessage());
+				}
+				else
+				{
+					Log.e(TAG, "Error request snapshot: " + Log.getStackTraceString(e));
+				}
 			}
 			return null;
 		}

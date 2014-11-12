@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class GredientTitleLayout extends RelativeLayout
+public class GradientTitleLayout extends RelativeLayout
 {
 
-	public GredientTitleLayout(Context context) 
+	public GradientTitleLayout(Context context) 
 	{
 		super(context);
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);   
@@ -23,7 +23,7 @@ public class GredientTitleLayout extends RelativeLayout
 		textView.setText(title);
 	}
 
-	public void removeGredientShadow()
+	public void removeGradientShadow()
 	{
 		RelativeLayout backgroundLayout = (RelativeLayout) findViewById(R.id.gredient_background_layout);
 		backgroundLayout.setBackgroundColor(Color.TRANSPARENT);

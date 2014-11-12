@@ -190,9 +190,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 			if (this.getActionBar() != null)
 			{
-				this.getActionBar().setHomeButtonEnabled(true);
+				this.getActionBar().setDisplayHomeAsUpEnabled(true);
 				this.getActionBar().setTitle("");
-				this.getActionBar().setIcon(R.drawable.ic_navigation_back);
+				this.getActionBar().setIcon(R.drawable.icon_50x50);
 			}
 
 			setContentView(R.layout.video_activity_layout);
