@@ -50,7 +50,6 @@ public class CameraLayout extends LinearLayout
 	private GradientTitleLayout gradientLayout;
 
 	private boolean isLatestReceived = false;
-	private boolean showThumbnails = true;
 
 	// Handler for the handling the next request. It will call the image loading
 	// thread so that it can proceed with next step.
@@ -60,7 +59,6 @@ public class CameraLayout extends LinearLayout
 	{
 		super(activity.getApplicationContext());
 		this.context = activity.getApplicationContext();
-		this.showThumbnails = showThumbnails;
 
 		try
 		{

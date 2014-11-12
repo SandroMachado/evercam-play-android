@@ -536,7 +536,9 @@ public class CamerasActivity extends ParentActivity implements
 				params.width = ((indexPlus % camerasPerRow == 0) ? (screen_width - (index % camerasPerRow)
 						* (screen_width / camerasPerRow))
 						: screen_width / camerasPerRow);
+				params.width = params.width - 2; //2 pixels spacing between cameras 
 				params.height = (int) (params.width / (1.25));
+				params.setMargins(1, 1, 1, 1); //2 pixels spacing between cameras 
 				cameraLayout.setLayoutParams(params);
 
 				cameraListLayout.addView(cameraLayout);
