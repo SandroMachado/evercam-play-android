@@ -4,6 +4,8 @@ import io.evercam.androidapp.R;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -14,7 +16,7 @@ public class GradientTitleLayout extends RelativeLayout
 	{
 		super(context);
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);   
-		inflater.inflate(R.layout.gredient_layout, this);
+		inflater.inflate(R.layout.gradient_layout, this);
 	}
 	
 	public void setTitle(String title)
@@ -22,7 +24,20 @@ public class GradientTitleLayout extends RelativeLayout
 		TextView textView = (TextView) findViewById(R.id.title_text);
 		textView.setText(title);
 	}
-
+	
+	public void showOfflineImage(boolean show)
+	{
+		ImageView imageView = (ImageView) findViewById(R.id.offline_image_view);
+		if(show)
+		{
+			imageView.setVisibility(View.VISIBLE);
+		}
+		else
+		{
+			imageView.setVisibility(View.GONE);
+		}
+	}
+	
 	public void removeGradientShadow()
 	{
 		RelativeLayout backgroundLayout = (RelativeLayout) findViewById(R.id.gredient_background_layout);

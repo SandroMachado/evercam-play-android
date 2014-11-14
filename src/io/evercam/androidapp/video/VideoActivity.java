@@ -1678,11 +1678,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 					hideProgressView();
 					
+					//Image received, start time counter, need more tests
+					startTimeCounter();
+					
 					if(!isJpgSuccessful)
-					{
-						//Image received, start time counter, need more tests
-						startTimeCounter();
-						
+					{					
 						//Successfully played JPG view, send Google Analytics event
 						isJpgSuccessful = true;
 						EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_jpg,

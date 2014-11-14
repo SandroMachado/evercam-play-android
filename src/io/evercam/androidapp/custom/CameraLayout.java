@@ -254,6 +254,7 @@ public class CameraLayout extends LinearLayout
 		{
 			imageMessage.setText(evercamCamera.getStatus() + "");
 			greyImageShown();
+			gradientLayout.showOfflineImage(true);
 
 			offlineImage.setVisibility(View.INVISIBLE);
 		}
@@ -289,6 +290,7 @@ public class CameraLayout extends LinearLayout
 			{
 				offlineImage.setVisibility(View.VISIBLE);
 			}
+			gradientLayout.showOfflineImage(true);
 			gradientLayout.removeGradientShadow();
 		}
 
