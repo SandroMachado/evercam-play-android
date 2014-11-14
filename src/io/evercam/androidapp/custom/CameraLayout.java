@@ -33,7 +33,6 @@ public class CameraLayout extends LinearLayout
 	private static final String TAG = "evercamplay-CameraLayout";
 
 	public RelativeLayout cameraRelativeLayout;
-	private TextView titleText;
 
 	public Context context;
 	public EvercamCamera evercamCamera;
@@ -160,7 +159,7 @@ public class CameraLayout extends LinearLayout
 		{
 			if (evercamCamera.getCameraId().equals(camera.getCameraId()))
 			{
-				titleText.setText(camera.getName());
+				gradientLayout.setTitle(camera.getName());
 			}
 		}
 	}
