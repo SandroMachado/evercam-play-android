@@ -190,6 +190,9 @@ public class CamerasActivity extends ParentActivity implements
 			showSignOutDialog();
 
 			return true;
+			
+		case R.id.menu_feedback:
+			startActivity(new Intent(CamerasActivity.this, FeedbackActivity.class));
 
 			// Temporarily disable slide menu
 			// case android.R.id.home:

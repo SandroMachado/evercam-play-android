@@ -30,10 +30,9 @@
         android:orderInCategory="6"
         android:title="@string/menu_logout"/>
     
-    <!--  
     <item
         android:id="@+id/menu_feedback"
         android:orderInCategory="7"
         android:title="@string/menu_feedback"/>
--->
+
 </menu>

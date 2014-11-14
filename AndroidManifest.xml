@@ -5,12 +5,12 @@
     android:versionName="1.2.3 Alpha 14/11" >
 
     <!-- versionCode36 - 1.1.7  - Hikvision local storage, first page loading faster -->
-    <!-- versionCode39 - 1.1.8 - Only load snapshots for cameras within screen, new offline image-->
-    <!-- versionCode40 - 1.1.9 - Bug fixes-->
+    <!-- versionCode39 - 1.1.8 - Only load snapshots for cameras within screen, new offline image -->
+    <!-- versionCode40 - 1.1.9 - Bug fixes -->
     <!-- versionCode42 - 1.2.0 - Faster network scan -->
     <!-- versionCode44 - 1.2.1 - Bug fixes for scanning -->
-    <!-- versionCode46 - 1.2.2 - Return buttons, alert before leaving scanning, fix scan crash-->
-    <!-- versionCode48 - 1.2.3 Alpha - port range check, date & time, new camera title-->
+    <!-- versionCode46 - 1.2.2 - Return buttons, alert before leaving scanning, fix scan crash -->
+    <!-- versionCode48 - 1.2.3 Alpha - port range check, date & time, new camera title -->
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -94,13 +94,13 @@
         <activity
             android:name=".CamerasActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:launchMode="singleTop"
             android:label=""
+            android:launchMode="singleTop"
             android:logo="@drawable/icon_192x192" >
         </activity>
         <activity
             android:name=".CameraPrefsActivity"
-            android:label="@string/title_settings">
+            android:label="@string/title_settings" >
         </activity>
 
         <receiver
@@ -126,8 +126,8 @@
         </activity>
         <activity
             android:name=".ScanActivity"
-            android:label="@string/title_activity_scan"
-            android:configChanges="orientation|keyboardHidden|screenSize">
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_scan" >
         </activity>
         <activity
             android:name=".ReleaseNotesActivity"
@@ -138,6 +138,10 @@
             android:name=".LocalStorageActivity"
             android:label="@string/title_activity_local_storage"
             android:logo="@drawable/ic_navigation_back" >
+        </activity>
+        <activity
+            android:name=".FeedbackActivity"
+            android:label="@string/title_activity_feedback" >
         </activity>
     </application>
 

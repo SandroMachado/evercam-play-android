@@ -60,6 +60,7 @@
     <string name="menu_feedback">Feedback</string>
     <string name="menu_refresh">Refresh All</string>
     <string name="menu_add_camera">Add Camera</string>
+    <string name="menu_send">Send</string>
     <string name="title_activity_add_camera">Add Camera</string>
     <string name="title_activity_view_camera">Camera Details</string>
     <string name="title_activity_scan">Network Scan</string>
@@ -69,8 +70,10 @@
     <string name="menu_edit_camera">Edit Camera</string>
     <string name="menu_local_storage">Local Storage</string>
     <string name="menu_view_camera">View Details</string>
-    
+
     <!-- Feedback -->
     <string name="feedback_title">E-Play Feedback</string>
+    <string name="title_activity_feedback">Feedback</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
