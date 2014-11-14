@@ -6,6 +6,8 @@
     <string name="category_error">Error Dialog</string>
     <string name="category_sign_up">Sign Up</string>
     <string name="category_add_camera">Add Camera</string>
+    <string name="category_streaming_rtsp">RTSP Streaming</string>
+    <string name="category_streaming_jpg">JPG Streaming</string>
 
     <!-- Event Action -->
     <string name="action_refresh">Refresh</string>
@@ -24,6 +26,10 @@
     <string name="action_signup_success">Sign up successful</string>
     <string name="action_addcamera_success">New camera added manually</string>
     <string name="action_addcamera_success_scan">New camera from scanning</string>
+    <string name="action_streaming_rtsp_success">Successfully played RTSP stream</string>
+    <string name="action_streaming_rtsp_failed">Failed to play RTSP stream</string>
+    <string name="action_streaming_jpg_success">Successfully played JPG stream</string>
+    <string name="action_streaming_jpg_failed">Failed to play JPG stream</string>
 
     <!-- Event Label -->
     <string name="label_list_refresh">Refresh Camera List</string>
@@ -45,6 +51,10 @@
     <string name="label_signup_successful">A new user created successfully</string>
     <string name="label_addcamera_successful">A new camera added successfully</string>
     <string name="label_addcamera_successful_scan">A scanned camera added successfully</string>
+    <string name="label_streaming_rtsp_success">Successfully played RTSP stream</string>
+    <string name="label_streaming_rtsp_failed">Failed to play RTSP stream while the camera is online and has a valid RTSP URL.</string>
+    <string name="label_streaming_jpg_success">Successfully played JPG stream</string>
+    <string name="label_streaming_jpg_failed">Failed to play JPG stream while the camera is online</string>
 
     <!-- Screen Names -->
     <string name="screen_login">Login</string>

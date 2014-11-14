@@ -150,6 +150,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private boolean paused = false;
 	private static boolean isPlayingJpg = false;// If true, stop trying video
 												// URL for reconnecting.
+	private static boolean isJpgSuccessful = false; //Whether or not the JPG view ever
+													//got successfully played
 
 	private Animation fadeInAnimation = null; // animation that shows the
 												// playing icon
@@ -903,30 +905,31 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			if (media != null && media.length() > 0)
 			{
 				showToast(getString(R.string.connecting) + media);
+				// Create a new media player
+				libvlc = LibVLC.getInstance();
+				libvlc.setSubtitlesEncoding("");
+				
+				//Liuting: Disabled hardware acceleration because it causes crash on the Church camera
+			    libvlc.setHardwareAcceleration(LibVLC.HW_ACCELERATION_DISABLED);
+				libvlc.setAout(LibVLC.AOUT_OPENSLES);
+				libvlc.setTimeStretching(false);
+				libvlc.setChroma("RV32");
+				libvlc.setVerboseMode(true);
+				LibVLC.restart(this);
+				EventHandler.getInstance().addHandler(handler);
+				surfaceHolder.setFormat(PixelFormat.RGBX_8888);
+				surfaceHolder.setKeepScreenOn(true);
+				MediaList list = libvlc.getMediaList();
+				list.clear();
+				list.add(new Media(libvlc, LibVLC.PathToURI(media)), false);
+				libvlc.playIndex(0);
 			}
 			else
 			{
-				media = "http://127.0.0.1:554/";
+				//If no RTSP URL exists, start JPG view straight away
+				showImagesVideo = true;
+				createNewImageThread();
 			}
-
-			// Create a new media player
-			libvlc = LibVLC.getInstance();
-			libvlc.setSubtitlesEncoding("");
-			
-			//Liuting: Disabled hardware acceleration because it causes crash on the Church camera
-		    libvlc.setHardwareAcceleration(LibVLC.HW_ACCELERATION_DISABLED);
-			libvlc.setAout(LibVLC.AOUT_OPENSLES);
-			libvlc.setTimeStretching(false);
-			libvlc.setChroma("RV32");
-			libvlc.setVerboseMode(true);
-			LibVLC.restart(this);
-			EventHandler.getInstance().addHandler(handler);
-			surfaceHolder.setFormat(PixelFormat.RGBX_8888);
-			surfaceHolder.setKeepScreenOn(true);
-			MediaList list = libvlc.getMediaList();
-			list.clear();
-			list.add(new Media(libvlc, LibVLC.PathToURI(media)), false);
-			libvlc.playIndex(0);
 		}
 		catch (Exception e)
 		{
@@ -1353,10 +1356,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						if (downloadStartCount - downloadEndCount > 9 && sleepInterval < 2000)
 						{
 							sleepInterval += intervalAdjustment;
+							Log.d(TAG, "Sleep internal adjusted to: " + sleepInterval);
 						}
 						else if (sleepInterval >= sleepIntervalMinTime)
 						{
 							sleepInterval -= intervalAdjustment;
+							Log.d(TAG, "Sleep internal adjusted to: " + sleepInterval);
 						}
 					}
 				}
@@ -1435,7 +1440,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					player.mrlPlaying = player.getCurrentMRL();
 					
 					//View gets played, show time count
+					//And send to Google Analytics
 					startTimeCounter();
+					EvercamPlayApplication.sendEventAnalytics(player, R.string.category_streaming_rtsp,
+							R.string.action_streaming_rtsp_success, R.string.label_streaming_rtsp_success);
+					
 					break;
 
 				case EventHandler.MediaPlayerPaused:
@@ -1461,6 +1470,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					}
 					else
 					{
+						//Failed to play RTSP stream, send an event to Google Analytics
+						Log.d(TAG, "Failed to play video stream");
+						if(!player.isNextMRLValid())
+						{
+							EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_rtsp,
+									R.string.action_streaming_rtsp_failed, R.string.label_streaming_rtsp_failed);
+						}
 						isPlayingJpg = true;
 						player.showToast(videoActivity.get().getString(R.string.msg_switch_to_jpg));
 						player.showImagesVideo = true;
@@ -1662,9 +1678,16 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 					hideProgressView();
 					
-					
-					//Image received, start time counter, need more tests
-					startTimeCounter();
+					if(!isJpgSuccessful)
+					{
+						//Image received, start time counter, need more tests
+						startTimeCounter();
+						
+						//Successfully played JPG view, send Google Analytics event
+						isJpgSuccessful = true;
+						EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_jpg,
+								R.string.action_streaming_jpg_success, R.string.label_streaming_jpg_success);
+					}				
 				}
 				// do not show message on local network failure request.
 				else if (((!isFirstImageLocalEnded && !isFirstImageLiveEnded
@@ -1691,6 +1714,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				{
 					showMediaFailureDialog();
 					imageThread.cancel(true);
+					
+					//Failed to play JPG view, send Google Analytics event
+					EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_jpg,
+							R.string.action_streaming_jpg_failed, R.string.label_streaming_jpg_failed);
 				}
 				else
 				{
