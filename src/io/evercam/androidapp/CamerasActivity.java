@@ -129,7 +129,7 @@ public class CamerasActivity extends ParentActivity implements
 	{
 		// draw the options defined in the following file
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.camsmenulayout, menu);
+		inflater.inflate(R.menu.camera_list_menu, menu);
 
 		refresh = menu.findItem(R.id.menurefresh);
 		refresh.setActionView(R.layout.actionbar_indeterminate_progress);
