@@ -904,7 +904,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			if (media != null && media.length() > 0)
 			{
-				showToast(getString(R.string.connecting) + media);
+				//Stop showing RTSP URL, show log for debugging instead
+		//		showToast(getString(R.string.connecting) + media);
+				Log.d(TAG, getString(R.string.connecting) + media);
+				
 				// Create a new media player
 				libvlc = LibVLC.getInstance();
 				libvlc.setSubtitlesEncoding("");
@@ -933,8 +936,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		}
 		catch (Exception e)
 		{
-			Toast.makeText(this, "Error connecting! " + media + " ::::: " + e.getMessage(),
-					Toast.LENGTH_LONG).show();
+//			Toast.makeText(this, "Error connecting! " + media + " ::::: " + e.getMessage(),
+//					Toast.LENGTH_LONG).show();
+			Log.e(TAG, "Error connecting! " + media + " ::::: " + e.getMessage());
 			EvercamPlayApplication.sendCaughtException(this, e);
 		}
 	}
@@ -971,7 +975,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 			if (media != null && media.length() > 0)
 			{
-				showToast(getString(R.string.reconnecting) + media);
+				//showToast(getString(R.string.reconnecting) + media);
+				Log.d(TAG, getString(R.string.reconnecting) + media);
 			}
 
 			libvlc.getMediaList().clear();
@@ -982,8 +987,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			EvercamPlayApplication.sendCaughtException(this, e);
 			if (!isPlayingJpg)
 			{
-				Toast.makeText(this, "Error reconnecting! " + media + " ::::: " + e.getMessage(),
-						Toast.LENGTH_LONG).show();
+//				Toast.makeText(this, "Error reconnecting! " + media + " ::::: " + e.getMessage(),
+//						Toast.LENGTH_LONG).show();
+				Log.e(TAG, "Error reconnecting! " + media + " ::::: " + e.getMessage());
 			}
 		}
 	}
