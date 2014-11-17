@@ -59,7 +59,6 @@ import io.evercam.androidapp.R.color;
 import io.evercam.androidapp.dal.*;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.CameraNotification;
-import io.evercam.androidapp.utils.CLog;
 
 public class SlideMenu extends LinearLayout
 {
@@ -470,7 +469,6 @@ public class SlideMenu extends LinearLayout
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			CLog.email(this.activity, e.getMessage(), e);
 			// not found
 		}
 
@@ -562,7 +560,6 @@ public class SlideMenu extends LinearLayout
 		catch (Exception e)
 		{
 			Log.e(TAG, e.toString(), e);
-			CLog.email(this.activity, e.getMessage(), e);
 		}
 	}
 
@@ -596,7 +593,6 @@ public class SlideMenu extends LinearLayout
 			{
 				Log.i(TAG, e.toString() + "::" + Log.getStackTraceString(e));
 				message = e.toString();
-				CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 			}
 			return message;
 		}
@@ -612,7 +608,6 @@ public class SlideMenu extends LinearLayout
 			catch (Exception e)
 			{
 				Log.e(TAG, e.toString(), e);
-				CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 			}
 		};
 
@@ -627,7 +622,6 @@ public class SlideMenu extends LinearLayout
 			catch (Exception e)
 			{
 				Log.e(TAG, e.toString(), e);
-				CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 			}
 		}
 
@@ -644,7 +638,6 @@ public class SlideMenu extends LinearLayout
 		}
 		catch (Exception e)
 		{
-			CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 		}
 
 	}
@@ -667,7 +660,6 @@ public class SlideMenu extends LinearLayout
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 				}
 				return null;
 			}
@@ -685,7 +677,6 @@ public class SlideMenu extends LinearLayout
 				}
 				catch (Exception e)
 				{
-					CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 				}
 			}
 
@@ -803,7 +794,6 @@ public class SlideMenu extends LinearLayout
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 		}
 
 	}
@@ -849,7 +839,6 @@ public class SlideMenu extends LinearLayout
 		catch (NullPointerException e)
 		{
 			// in case the menu was not declared via XML but added from code
-			CLog.email(SlideMenu.this.activity, e.getMessage(), e);
 		}
 	}
 

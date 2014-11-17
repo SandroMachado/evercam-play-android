@@ -1,7 +1,5 @@
 package io.evercam.androidapp;
 
-import io.evercam.androidapp.dto.AppData;
-import io.evercam.androidapp.utils.Constants;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -45,4 +43,5 @@ public class FeedbackActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 }
