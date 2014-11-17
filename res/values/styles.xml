@@ -3,6 +3,7 @@
     <style name="AppTheme" parent="@android:style/Theme.Holo"> <!-- Theme.DeviceDefault -->
         <item name="android:actionBarStyle">@style/ActionBar</item>
         <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
+        <item name="android:editTextBackground">@drawable/evercamtheme_edit_text_holo_dark</item>
         <!-- <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item> -->
     </style>
     
