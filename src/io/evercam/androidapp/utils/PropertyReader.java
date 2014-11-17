@@ -17,6 +17,8 @@ public class PropertyReader
 	public final static String KEY_API_KEY = "ApiKey";
 	public final static String KEY_API_ID = "ApiId";
 	public static final String KEY_BUG_SENSE = "BugSenseCode";
+	public static final String KEY_SENDGRID_USERNAME = "SendgridUsername";
+	public static final String KEY_SENDGRID_PASSWORD = "SendgridPassword";
 
 	public PropertyReader(Context context)
 	{
