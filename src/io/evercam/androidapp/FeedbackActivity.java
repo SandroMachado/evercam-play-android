@@ -1,8 +1,10 @@
 package io.evercam.androidapp;
 
 import io.evercam.androidapp.custom.CustomToast;
+import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.email.FeedbackSender;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,7 +53,7 @@ public class FeedbackActivity extends Activity
 			else
 			{
 				feedbackEditText.setText("");
-				CustomToast.showInCenter(this, R.string.msg_feedback_sent);
+				CustomToast.showInCenterLong(this, R.string.msg_feedback_sent);
 				new Thread(new Runnable()
 				{
 					@Override
@@ -68,12 +70,18 @@ public class FeedbackActivity extends Activity
 		}
 		else if(id == android.R.id.home)
 		{
-			this.finish();
+			showConfirmQuitDialog();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
+	@Override
+	public void onBackPressed() 
+	{
+		showConfirmQuitDialog();
+	}
+
 	public void sendFeedback()
 	{
 		String feedbackString = feedbackEditText.getText().toString();
@@ -86,6 +94,26 @@ public class FeedbackActivity extends Activity
 			CustomToast.showInCenter(this, R.string.msg_feedback_sent);
 			FeedbackSender feedbackSender = new FeedbackSender(this);
 			feedbackSender.send(feedbackString);
+		}
+	}
+	
+	private void showConfirmQuitDialog()
+	{
+		String feedbackString = feedbackEditText.getText().toString();
+		if(!feedbackString.isEmpty())
+		{
+			CustomedDialog.getConfirmQuitFeedbackDialog(this,
+					new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					finish();
+				}
+			}).show();
+		}
+		else
+		{
+			finish();
 		}
 	}
 }

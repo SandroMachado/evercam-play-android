@@ -101,9 +101,9 @@ public class CustomedDialog
 	 * The single message dialog that contains title, a message, two buttons(Yes
 	 * & No) and two listeners.
 	 */
-	private static AlertDialog getStandartStyledDialog(final Activity activity, int title,
+	private static AlertDialog getStandardStyledDialog(final Activity activity, int title,
 			int message, DialogInterface.OnClickListener positiveListener,
-			DialogInterface.OnClickListener negativeListener)
+			DialogInterface.OnClickListener negativeListener, int positiveButton, int negativeButton)
 	{
 		final View dialogLayout = activity.getLayoutInflater().inflate(
 				R.layout.single_message_dialogue, null);
@@ -113,8 +113,8 @@ public class CustomedDialog
 		messageTextView.setText(message);
 
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity).setView(dialogLayout)
-				.setCancelable(false).setPositiveButton(R.string.yes, positiveListener)
-				.setNegativeButton(R.string.no, negativeListener);
+				.setCancelable(false).setPositiveButton(positiveButton, positiveListener)
+				.setNegativeButton(negativeButton, negativeListener);
 		AlertDialog alertDialog = dialogBuilder.create();
 		return alertDialog;
 	}
@@ -127,10 +127,24 @@ public class CustomedDialog
 			DialogInterface.OnClickListener positiveListener,
 			DialogInterface.OnClickListener negativeListener)
 	{
-		AlertDialog comfirmCreateDialog = getStandartStyledDialog(activity,
+		AlertDialog comfirmCreateDialog = getStandardStyledDialog(activity,
 				R.string.dialog_title_warning, R.string.msg_confirm_create, positiveListener,
-				negativeListener);
+				negativeListener, R.string.yes, R.string.no);
 		return comfirmCreateDialog;
+	}
+	
+	public static AlertDialog getConfirmQuitFeedbackDialog(Activity activity,
+			DialogInterface.OnClickListener positiveListener)
+	{
+		AlertDialog comfirmFeedbackDialog = getStandardStyledDialog(activity,
+				R.string.dialog_title_warning, R.string.msg_confirm_quit_feedback, positiveListener,
+				new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						
+					}}, R.string.yes, R.string.cancel);
+		return comfirmFeedbackDialog;
 	}
 
 	/**

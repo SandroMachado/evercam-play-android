@@ -20,7 +20,9 @@
     <string name="msg_confirm_remove_camera">Are you sure you want to remove this camera?</string>
     <string name="msg_confirm_cancel_scan">We\'re still scanning your network, are you sure you want to cancel?</string>
     <string name="msg_offline">Camera is offline.</string>
-    <string name="msg_feedback_sent">Thank you for your feedback!</string>
-    <string name="feedback_hint">Write your feedback</string>
+    <string name="msg_feedback_sent">Thanks for the feedback. We take all our feedback seriously, so we\'ll be in contact.</string>
+    <string name="msg_feedback">We\'re always looking to improve Evercam Play, so let us know if you have any suggestions.</string>
+    <string name="feedback_hint">Enter your feedback</string>
+    <string name="msg_confirm_quit_feedback">Are you sure you want to leave this page? Hitting back will lose any feedback you have entered.</string>
 
 </resources>
