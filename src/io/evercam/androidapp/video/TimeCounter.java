@@ -53,7 +53,7 @@ public class TimeCounter
 	        public void run() 
 	        {
 	    		Date now = new Date(System.currentTimeMillis());
-	    		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy\nHH:mm:ss");
+	    		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	    		String timeString = formatter.format(now);
                 timeTextView.setText(timeString);
 	        }

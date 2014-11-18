@@ -10,7 +10,7 @@
         android:layout_height="fill_parent"
         android:layout_centerInParent="true"
         android:layout_gravity="center" >
-        
+
         <ImageView
             android:id="@+id/img_camera1"
             android:layout_width="fill_parent"
@@ -39,29 +39,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
-        
-        <TextView 
+
+        <TextView
             android:id="@+id/offline_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="gone"
+            android:text="@string/msg_offline"
+            android:textColor="#dc4c3f"
             android:textSize="17sp"
-            android:textColor="#dc4c3f"
-            android:text="@string/msg_offline"/>
-        
-         <TextView 
-            android:id="@+id/time_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_alignParentBottom="true"
-            android:textColor="#dc4c3f"
-            android:textSize="18sp"
-            android:visibility="gone"
-            android:layout_margin="10sp"
-            android:gravity="center"/>
-         
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/video_gredient__layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gredient_image" >
+
+            <TextView
+                android:id="@+id/time_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:layout_margin="10sp"
+                android:gravity="center"
+                android:shadowColor="#60000000"
+                android:shadowRadius="2.0"
+                android:textColor="#cccccc"
+                android:textSize="15sp"
+                android:visibility="gone" />
+        </RelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>
