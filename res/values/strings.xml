@@ -75,5 +75,9 @@
     <string name="feedback_title">E-Play Feedback</string>
     <string name="title_activity_feedback">Feedback</string>
     <string name="action_settings">Settings</string>
+    <string name="wifi">WiFi</string>
+    <string name="three_g">3G</string>
+    <string name="unknown">Unknown</string>
+    
 
 </resources>
