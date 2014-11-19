@@ -12,9 +12,12 @@ import io.evercam.androidapp.custom.ProgressView;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.CameraStatus;
 import io.evercam.androidapp.dto.EvercamCamera;
+import io.evercam.androidapp.feedback.FirebaseHelper;
+import io.evercam.androidapp.feedback.StreamFeedbackItem;
 import io.evercam.androidapp.tasks.DeleteCameraTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
+import io.evercam.androidapp.utils.DataCollector;
 import io.evercam.androidapp.utils.EnumConstants.DeleteType;
 import io.evercam.androidapp.utils.EvercamFile;
 import io.evercam.androidapp.utils.PrefsManager;
@@ -169,6 +172,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private Runnable timerRunnable;
 	
 	private TimeCounter timeCounter;
+	
+	private FirebaseHelper firebaseHelper;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -185,6 +190,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_video));
 
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+			
+			firebaseHelper = new FirebaseHelper(this);
 
 			launchSleepTimer();
 
@@ -1447,9 +1454,15 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					
 					//View gets played, show time count
 					//And send to Google Analytics
+					//And send to Firebase
 					startTimeCounter();
 					EvercamPlayApplication.sendEventAnalytics(player, R.string.category_streaming_rtsp,
 							R.string.action_streaming_rtsp_success, R.string.label_streaming_rtsp_success);
+					
+					StreamFeedbackItem successItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), true);
+					successItem.setCameraId(evercamCamera.getCameraId());
+					successItem.setUrl(player.mrlPlaying);
+					firebaseHelper.pushRtspItem(successItem);
 					
 					break;
 
@@ -1482,6 +1495,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						{
 							EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_rtsp,
 									R.string.action_streaming_rtsp_failed, R.string.label_streaming_rtsp_failed);
+							StreamFeedbackItem failedItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), false);
+							failedItem.setCameraId(evercamCamera.getCameraId());
+							failedItem.setUrl(player.getCurrentMRL());
+							firebaseHelper.pushRtspItem(failedItem);
 						}
 						isPlayingJpg = true;
 						player.showToast(videoActivity.get().getString(R.string.msg_switch_to_jpg));
@@ -1572,6 +1589,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	{
 		private long myStartImageTime;
 		private boolean isLocalNetworkRequest = false;
+		private String successUrl = "";//Only used for Firebase report
 
 		@Override
 		protected Drawable doInBackground(String... urls)
@@ -1596,6 +1614,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							if (response != null) 
 							{
 								successiveFailureCount = 0;
+								successUrl = url;
 							}
 						}
 						catch (OutOfMemoryError e)
@@ -1693,6 +1712,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						isJpgSuccessful = true;
 						EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_jpg,
 								R.string.action_streaming_jpg_success, R.string.label_streaming_jpg_success);
+						StreamFeedbackItem successItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), true);
+						successItem.setCameraId(evercamCamera.getCameraId());
+						successItem.setUrl(successUrl);
+						firebaseHelper.pushJpgItem(successItem);
 					}				
 				}
 				// do not show message on local network failure request.
@@ -1724,6 +1747,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					//Failed to play JPG view, send Google Analytics event
 					EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_jpg,
 							R.string.action_streaming_jpg_failed, R.string.label_streaming_jpg_failed);
+					
+					//Send Firebase
+					StreamFeedbackItem failedItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), false);
+					failedItem.setCameraId(evercamCamera.getCameraId());
+					failedItem.setUrl(evercamCamera.getExternalSnapshotUrl());
+					firebaseHelper.pushJpgItem(failedItem);
 				}
 				else
 				{

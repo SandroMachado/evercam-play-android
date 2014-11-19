@@ -2,7 +2,7 @@ package io.evercam.androidapp;
 
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
-import io.evercam.androidapp.email.FeedbackSender;
+import io.evercam.androidapp.feedback.FeedbackSender;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
