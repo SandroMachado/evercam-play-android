@@ -13,6 +13,7 @@ public class StreamFeedbackItem
 	private String url = "";
 	private String camera_id = "";
 	private Boolean is_success;
+	private Float load_time; 
 	
 	//Device details
 	private String network = "";
@@ -37,6 +38,16 @@ public class StreamFeedbackItem
 	public void setCameraId(String cameraId) 
 	{
 		this.camera_id = cameraId;
+	}
+	
+	public void setLoadTime(Float loadTime)
+	{
+		this.load_time = loadTime;
+	}
+	
+	public Float getLoad_time()
+	{
+		return load_time;
 	}
 
 	public String getUser() 

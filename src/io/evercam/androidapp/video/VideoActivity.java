@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
@@ -151,9 +152,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private static String imageLiveLocalURL = "";
 
 	private boolean paused = false;
-	private static boolean isPlayingJpg = false;// If true, stop trying video
+	private boolean isPlayingJpg = false;// If true, stop trying video
 												// URL for reconnecting.
-	private static boolean isJpgSuccessful = false; //Whether or not the JPG view ever
+	private boolean isJpgSuccessful = false; //Whether or not the JPG view ever
 													//got successfully played
 
 	private Animation fadeInAnimation = null; // animation that shows the
@@ -174,6 +175,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private TimeCounter timeCounter;
 	
 	private FirebaseHelper firebaseHelper;
+	private Date startTime;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -906,6 +908,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 	private void createPlayer(String media)
 	{
+		startTime = new Date();
 		releasePlayer();
 		try
 		{
@@ -1298,7 +1301,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	{
 		imageViewLayout.findViewById(R.id.ivprogressspinner1).setVisibility(View.GONE);
 		isProgressShowing = false;
-		isProgressShowing = false;
 	}
 
 	void showProgressView()
@@ -1448,21 +1450,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				case EventHandler.MediaPlayerPlaying:
 
 					isPlayingJpg = false;
-					player.surfaceView.setVisibility(View.VISIBLE);
-					player.imageView.setVisibility(View.GONE);
+					
 					player.mrlPlaying = player.getCurrentMRL();
 					
-					//View gets played, show time count
-					//And send to Google Analytics
-					//And send to Firebase
+					//View gets played, show time count, and start buffering
 					startTimeCounter();
-					EvercamPlayApplication.sendEventAnalytics(player, R.string.category_streaming_rtsp,
-							R.string.action_streaming_rtsp_success, R.string.label_streaming_rtsp_success);
-					
-					StreamFeedbackItem successItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), true);
-					successItem.setCameraId(evercamCamera.getCameraId());
-					successItem.setUrl(player.mrlPlaying);
-					firebaseHelper.pushRtspItem(successItem);
 					
 					break;
 
@@ -1510,7 +1502,29 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 				case EventHandler.MediaPlayerVout:
 					Log.v(TAG, "EventHandler.MediaPlayerVout");
+					
+					//Buffering finished and start to show the video
+					player.surfaceView.setVisibility(View.VISIBLE);
+					player.imageView.setVisibility(View.GONE);
 					player.hideProgressView();
+					
+					//And send to Google Analytics
+					//And send to Firebase
+					EvercamPlayApplication.sendEventAnalytics(player, R.string.category_streaming_rtsp,
+							R.string.action_streaming_rtsp_success, R.string.label_streaming_rtsp_success);
+					
+					StreamFeedbackItem successItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), true);
+					successItem.setCameraId(evercamCamera.getCameraId());
+					successItem.setUrl(player.mrlPlaying);
+					if(startTime != null)
+					{
+						long timeDifferenceLong = (new Date()).getTime() - startTime.getTime();
+						float timeDifferenceFloat = (float)timeDifferenceLong/1000;
+						Log.d(TAG, "Time difference: " + timeDifferenceFloat + " seconds");
+						successItem.setLoadTime(timeDifferenceFloat);
+						startTime = null;
+					}
+					firebaseHelper.pushRtspItem(successItem);
 
 					if (VideoActivity.mediaUrls.get(mrlIndex).isLocalNetwork == false)
 					{
@@ -1709,6 +1723,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					if(!isJpgSuccessful)
 					{					
 						//Successfully played JPG view, send Google Analytics event
+						Log.d(TAG, "Jpg success!");
 						isJpgSuccessful = true;
 						EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_jpg,
 								R.string.action_streaming_jpg_success, R.string.label_streaming_jpg_success);
@@ -1716,7 +1731,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						successItem.setCameraId(evercamCamera.getCameraId());
 						successItem.setUrl(successUrl);
 						firebaseHelper.pushJpgItem(successItem);
-					}				
+					}	
+					else
+					{
+						Log.d(TAG, "Jpg success but already reported");
+					}
 				}
 				// do not show message on local network failure request.
 				else if (((!isFirstImageLocalEnded && !isFirstImageLiveEnded
