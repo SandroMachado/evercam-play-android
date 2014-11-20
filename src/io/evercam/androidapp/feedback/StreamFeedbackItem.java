@@ -1,10 +1,14 @@
 package io.evercam.androidapp.feedback;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import android.content.Context;
+import android.util.Log;
 import io.evercam.androidapp.utils.DataCollector;
 
 public class StreamFeedbackItem 
 {
+	private final static String TAG = "evercamplay-StreamFeedbackItem";
 	private String user = "";
 	private Long timestamp;
 	private Context context;
@@ -102,5 +106,39 @@ public class StreamFeedbackItem
 		this.network = dataCollector.getNetworkString();
 		this.device = DataCollector.getDeviceName();
 		this.android_version = DataCollector.getAndroidVersion();
+	}
+
+	@Override
+	public String toString() {
+		return "StreamFeedbackItem [user=" + user + ", timestamp=" + timestamp
+				+ "url=" + url + ", camera_id="
+				+ camera_id + ", is_success=" + is_success + ", load_time="
+				+ load_time + ", network=" + network + ", app_version="
+				+ app_version + ", device=" + device + ", android_version="
+				+ android_version + "]";
+	}
+	
+	public String toJson()
+	{
+		JSONObject jsonObject = new JSONObject();
+		try 
+		{
+			jsonObject.put("camera_id", camera_id);
+			jsonObject.put("user", user);
+			jsonObject.put("timestamp", timestamp);
+			jsonObject.put("url", url);
+			jsonObject.put("is_success", is_success);
+			jsonObject.put("load_time", load_time);
+			jsonObject.put("network", network);
+			jsonObject.put("app_version", app_version);
+			jsonObject.put("device", device);
+			jsonObject.put("android_version", android_version);
+			
+		} 
+		catch (JSONException e) 
+		{
+			Log.e(TAG, e.toString());
+		}
+		return jsonObject.toString();
 	}
 }

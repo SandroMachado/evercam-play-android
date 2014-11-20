@@ -5,6 +5,7 @@ public final class Constants
 	public static final boolean isAppTrackingEnabled = true;
 
 	public static final String bugsense_ApiKey = "560565cb";
+	public static final String LOGENTRIES_TOKEN = "65a08184-a03f-4f8a-ae05-a9ce8e66bdd6";
 
 	public static final String GCM_SENDER_ID = "614642678474";
 

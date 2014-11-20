@@ -75,6 +75,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.logentries.android.AndroidLogger;
+
 import io.evercam.androidapp.R;
 
 public class VideoActivity extends ParentActivity implements SurfaceHolder.Callback,IVideoPlayer
@@ -176,6 +178,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	
 	private FirebaseHelper firebaseHelper;
 	private Date startTime;
+	private AndroidLogger logger;
+	private String username = "";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -210,6 +214,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 			initialPageElements();
 
+			if(AppData.defaultUser != null)
+			{
+				username = AppData.defaultUser.getUsername();
+			}
+			logger = AndroidLogger.getLogger(getApplicationContext(), Constants.LOGENTRIES_TOKEN, false);
+			
 			startPlay();
 		}
 		catch (OutOfMemoryError e)
@@ -568,6 +578,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 	private void startPlay()
 	{
+		logger.info("User: " + username + " is viewing camera: " + startingCameraID);
 		loadImageFromCache(startingCameraID);
 
 		checkNetworkStatus();
@@ -1491,6 +1502,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							failedItem.setCameraId(evercamCamera.getCameraId());
 							failedItem.setUrl(player.getCurrentMRL());
 							firebaseHelper.pushRtspItem(failedItem);
+							logger.info(failedItem.toJson());
 						}
 						isPlayingJpg = true;
 						player.showToast(videoActivity.get().getString(R.string.msg_switch_to_jpg));
@@ -1525,6 +1537,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						startTime = null;
 					}
 					firebaseHelper.pushRtspItem(successItem);
+					
+					logger.info(successItem.toJson());
 
 					if (VideoActivity.mediaUrls.get(mrlIndex).isLocalNetwork == false)
 					{

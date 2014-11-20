@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.bugsense.trace.BugSenseHandler;
+import com.logentries.android.AndroidLogger;
 
 public class LoginActivity extends ParentActivity
 {
@@ -48,7 +49,8 @@ public class LoginActivity extends ParentActivity
 	private String TAG = "evercamplay-LoginActivity";
 	private CustomProgressDialog customProgressDialog;
 	private TextView signUpLink;
-
+	private AndroidLogger logger;
+	
 	private enum InternetCheckType
 	{
 		LOGIN, SIGNUP
@@ -66,6 +68,8 @@ public class LoginActivity extends ParentActivity
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.login);
 		setUnderLine();
+		
+		logger = AndroidLogger.getLogger(getApplicationContext(), Constants.LOGENTRIES_TOKEN, false);
 
 		if (Constants.isAppTrackingEnabled)
 		{
