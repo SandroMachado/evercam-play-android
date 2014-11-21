@@ -19,34 +19,18 @@ import android.widget.TextView;
 public class CustomedDialog
 {
 	/**
-	 * Alert dialog with title, message, and OK button.
+	 * Helper method to show unexpected error dialog.
 	 */
-	public static AlertDialog getAlertDialog(Context ctx, String title, String message)
+	public static void showUnexpectedErrorDialog(Activity activity)
 	{
-		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ctx,
-				io.evercam.androidapp.R.style.ThemeDialog);
-		dialogBuilder.setTitle(title);
-		dialogBuilder.setMessage(message);
-		dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener(){
+		getStandardStyledDialog(activity, R.string.msg_error_occurred,R.string.msg_exception,new DialogInterface.OnClickListener(){
 
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
 				dialog.dismiss();
 			}
-		});
-		AlertDialog dialog = dialogBuilder.create();
-		dialog.setCanceledOnTouchOutside(false);
-		return dialog;
-	}
-
-	/**
-	 * Helper method to show unexpected error dialog.
-	 */
-	public static void showUnexpectedErrorDialog(Context context)
-	{
-		getAlertDialog(context, context.getString(R.string.msg_error_occurred),
-				context.getString(R.string.msg_exception)).show();
+		}, null, R.string.ok, 0 ).show();
 	}
 
 	/**
@@ -113,10 +97,19 @@ public class CustomedDialog
 		messageTextView.setText(message);
 
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity).setView(dialogLayout)
-				.setCancelable(false).setPositiveButton(positiveButton, positiveListener)
-				.setNegativeButton(negativeButton, negativeListener);
+				.setCancelable(false).setPositiveButton(positiveButton, positiveListener);
+		if(negativeButton != 0)
+		{
+			dialogBuilder.setNegativeButton(negativeButton, negativeListener);
+		}
 		AlertDialog alertDialog = dialogBuilder.create();
 		return alertDialog;
+	}
+	
+	public static AlertDialog getCanNotPlayDialog(final Activity activity,DialogInterface.OnClickListener positiveListener )
+	{
+		return getStandardStyledDialog(activity, R.string.msg_unable_to_play, R.string.msg_please_check_camera,
+				positiveListener, null, R.string.ok, 0);
 	}
 
 	/**

@@ -17,7 +17,6 @@ import io.evercam.androidapp.feedback.StreamFeedbackItem;
 import io.evercam.androidapp.tasks.DeleteCameraTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
-import io.evercam.androidapp.utils.DataCollector;
 import io.evercam.androidapp.utils.EnumConstants.DeleteType;
 import io.evercam.androidapp.utils.EvercamFile;
 import io.evercam.androidapp.utils.PrefsManager;
@@ -119,9 +118,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	static boolean enableLogs = true;
 
 	// image tasks and thread variables
-	private int sleepIntervalMinTime = 1000; // interval between two requests of
+	private int sleepIntervalMinTime = 200; // interval between two requests of
 											// images
-	private int intervalAdjustment = 100; // how much milli seconds to increment
+	private int intervalAdjustment = 10; // how much milli seconds to increment
 										// or decrement on image failure or
 										// success
 	private int sleepInterval = sleepIntervalMinTime + 290; // starting image
@@ -557,7 +556,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 			default:
 				return true;
-
 			}
 		}
 		catch (OutOfMemoryError e)
@@ -1143,22 +1141,22 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		toast.show();
 	}
 
-	void showMediaFailureDialog()
+	private void showMediaFailureDialog()
 	{
-		CustomedDialog.getAlertDialog(VideoActivity.this, getString(R.string.msg_unable_to_play),
-				getString(R.string.msg_please_check_camera), new DialogInterface.OnClickListener(){
+		CustomedDialog.getCanNotPlayDialog(this, new DialogInterface.OnClickListener(){
 
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
 
-						VideoActivity.this.getActionBar().show();
-						paused = true;
-						isShowingFailureMessage = false;
-						dialog.dismiss();
-						hideProgressView();
-					}
-				}).show();
+				VideoActivity.this.getActionBar().show();
+				paused = true;
+				isShowingFailureMessage = false;
+				dialog.dismiss();
+				hideProgressView();
+				timeCounter.stop();
+			}
+		}).show();
 		isShowingFailureMessage = true;
 		showImagesVideo = false;
 	}
@@ -1638,7 +1636,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 							response = Commons.getDrawablefromUrlAuthenticated(url,
 									evercamCamera.getUsername(), evercamCamera.getPassword(),
-									evercamCamera.cookies, 10000);
+									evercamCamera.cookies, 5000);
 							if (response != null) 
 							{
 								successiveFailureCount = 0;
@@ -1649,7 +1647,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						{
 							if (enableLogs) Log.e(TAG,
 									e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-							successiveFailureCount++;
 							continue;
 						}
 						catch (Exception e)
@@ -1658,7 +1655,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 									+ "ImageURl=[" + url + "]" + "\r\n");
 
 							AbandonedJpgUrl.add(url);
-							successiveFailureCount++;
 						} finally
 						{
 							downloadEndCount++;
@@ -1681,18 +1677,19 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				catch (EvercamException e)
 				{
 					Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
-					successiveFailureCount++;
 				}
 				catch (Exception e)
 				{
 					Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
-					successiveFailureCount++;
 				}
 				catch (OutOfMemoryError e)
 				{
 					Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-					successiveFailureCount++;
 				}
+			}
+			if(response == null)
+			{
+				successiveFailureCount++;
 			}
 			return response;
 		}
@@ -1712,96 +1709,91 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				{
 					isFirstImageLiveEnded = true;
 				}
-				
-				//Debugging logs
+
 				Log.d(TAG, "Failure count:" + successiveFailureCount);
-				if(result != null)
+
+				if(!paused && !end)
+				{
+				if (result != null)
 				{
 					Log.d(TAG, "result not null");
+					if(result.getIntrinsicWidth() > 0
+							&& result.getIntrinsicHeight() > 0)
+					{
+						Log.d(TAG, "Width and height > 0");
+						if(myStartImageTime >= latestStartImageTime)
+						{
+							Log.d(TAG, "myStartImageTime >= latestStartImageTime");
+							if (isLocalNetworkRequest) isFirstImageLocalReceived = true;
+							else isFirstImageLiveReceived = true;
+							if (isLocalNetworkRequest && localnetworkSettings.equalsIgnoreCase("0")) isLocalNetwork = true;
+
+							latestStartImageTime = myStartImageTime;
+
+							if (mediaPlayerView.getVisibility() != View.VISIBLE
+									&& VideoActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) VideoActivity.this
+									.getActionBar().hide();
+
+							if (showImagesVideo) imageView.setImageDrawable(result);
+
+							hideProgressView();
+							
+							//Image received, start time counter, need more tests
+							startTimeCounter();
+							
+							if(!isJpgSuccessful)
+							{					
+								//Successfully played JPG view, send Google Analytics event
+								Log.d(TAG, "Jpg success!");
+								isJpgSuccessful = true;
+								EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_jpg,
+										R.string.action_streaming_jpg_success, R.string.label_streaming_jpg_success) ;
+								StreamFeedbackItem successItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), true);
+								successItem.setCameraId(evercamCamera.getCameraId());
+								successItem.setUrl(successUrl);
+								firebaseHelper.pushJpgItem(successItem);
+							}	
+							else
+							{
+								Log.d(TAG, "Jpg success but already reported");
+							}
+						}
+						else
+						{
+							if (enableLogs) Log.i(TAG, "downloaded image discarded. ");
+						}
 				}
-				else
+				}
+				else if(result == null)
 				{
 					Log.d(TAG, "result is null");
-				}
-
-				if (result != null && result.getIntrinsicWidth() > 0
-						&& result.getIntrinsicHeight() > 0
-						&& myStartImageTime >= latestStartImageTime && !paused && !end)
-				{
-					if (isLocalNetworkRequest) isFirstImageLocalReceived = true;
-					else isFirstImageLiveReceived = true;
-					if (isLocalNetworkRequest && localnetworkSettings.equalsIgnoreCase("0")) isLocalNetwork = true;
-
-					latestStartImageTime = myStartImageTime;
-
-					if (mediaPlayerView.getVisibility() != View.VISIBLE
-							&& VideoActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) VideoActivity.this
-							.getActionBar().hide();
-
-					if (showImagesVideo) imageView.setImageDrawable(result);
-
-					hideProgressView();
-					
-					//Image received, start time counter, need more tests
-					startTimeCounter();
-					
-					if(!isJpgSuccessful)
-					{					
-						//Successfully played JPG view, send Google Analytics event
-						Log.d(TAG, "Jpg success!");
-						isJpgSuccessful = true;
-						EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_jpg,
-								R.string.action_streaming_jpg_success, R.string.label_streaming_jpg_success) ;
-						StreamFeedbackItem successItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), true);
-						successItem.setCameraId(evercamCamera.getCameraId());
-						successItem.setUrl(successUrl);
-						firebaseHelper.pushJpgItem(successItem);
-					}	
-					else
+					if(
+				successiveFailureCount > 10
+						&& !isShowingFailureMessage)
 					{
-						Log.d(TAG, "Jpg success but already reported");
+						Log.d(TAG, "successiveFailureCount > 5 && !isShowingFailureMessage");
+						if(myStartImageTime >= latestStartImageTime)
+						{
+							Log.d(TAG, "myStartImageTime >= latestStartImageTime");
+							showMediaFailureDialog();
+							imageThread.cancel(true);
+							
+							//Failed to play JPG view, send Google Analytics event
+							EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_jpg,
+									R.string.action_streaming_jpg_failed, R.string.label_streaming_jpg_failed);
+							
+							//Send Firebase
+							StreamFeedbackItem failedItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), false);
+							failedItem.setCameraId(evercamCamera.getCameraId());
+							failedItem.setUrl(evercamCamera.getExternalSnapshotUrl());
+							firebaseHelper.pushJpgItem(failedItem);
+						}
 					}
 				}
-				// do not show message on local network failure request.
-//				else if (((!isFirstImageLocalEnded && !isFirstImageLiveEnded
-//						&& !isFirstImageLocalReceived && !isFirstImageLiveReceived && localnetworkSettings
-//							.equalsIgnoreCase("0")) // local task ended. Now
-//													// this is live image
-//													// request
-				else if(
-				successiveFailureCount > 5
-
-				// ( ( !isFirstImageLocalReceived &&
-				// localnetworkSettings.equalsIgnoreCase("1") )
-				// || (!isFirstImageLiveReceived &&
-				// localnetworkSettings.equalsIgnoreCase("2") )
-				// || (isFirstImageLocalEnded && !isLocalNetworkRequest ) //
-				// loclal task ended. Now this is live image request
-				// || (isFirstImageLiveEnded && isLocalNetworkRequest ) // Image
-				// Live task ended. Now this is local image request
-				// || successiveFailureCount > 10
-				//
-				
-						&& !isShowingFailureMessage
-						&& myStartImageTime >= latestStartImageTime
-						&& !paused && !end) // end endif condition
-				{
-					showMediaFailureDialog();
-					imageThread.cancel(true);
-					
-					//Failed to play JPG view, send Google Analytics event
-					EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_jpg,
-							R.string.action_streaming_jpg_failed, R.string.label_streaming_jpg_failed);
-					
-					//Send Firebase
-					StreamFeedbackItem failedItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), false);
-					failedItem.setCameraId(evercamCamera.getCameraId());
-					failedItem.setUrl(evercamCamera.getExternalSnapshotUrl());
-					firebaseHelper.pushJpgItem(failedItem);
 				}
 				else
 				{
-					if (enableLogs) Log.i(TAG, "downloaded image discarded. ");
+					Log.d(TAG, "paused or ended");
 				}
 			}
 			catch (OutOfMemoryError e)
