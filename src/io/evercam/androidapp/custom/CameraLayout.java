@@ -386,7 +386,7 @@ public class CameraLayout extends LinearLayout
 						{
 							drawable = Commons.getDrawablefromUrlAuthenticated(externalJpgUrl,
 									evercamCamera.getUsername(), evercamCamera.getPassword(),
-									cookies, 3000);
+									cookies, 5000);
 						}
 
 						if (drawable == null)
@@ -396,7 +396,7 @@ public class CameraLayout extends LinearLayout
 								internalJpgUrl = evercamCamera.getInternalSnapshotUrl();
 								drawable = Commons.getDrawablefromUrlAuthenticated(internalJpgUrl,
 										evercamCamera.getUsername(), evercamCamera.getPassword(),
-										cookies, 3000);
+										cookies, 5000);
 							}
 						}
 					}
@@ -406,7 +406,7 @@ public class CameraLayout extends LinearLayout
 						{
 							drawable = Commons.getDrawablefromUrlAuthenticated(internalJpgUrl,
 									evercamCamera.getUsername(), evercamCamera.getPassword(), cookies,
-									3000);
+									5000);
 						}
 					}
 				}

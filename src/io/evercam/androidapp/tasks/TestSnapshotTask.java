@@ -65,7 +65,7 @@ public class TestSnapshotTask extends AsyncTask<Void, Void, Drawable>
 		ArrayList<Cookie> cookies = new ArrayList<Cookie>();
 		try
 		{
-			return Commons.getDrawablefromUrlAuthenticated(url, username, password, cookies, 3000);
+			return Commons.getDrawablefromUrlAuthenticated(url, username, password, cookies, 5000);
 		}
 		catch (Exception e)
 		{

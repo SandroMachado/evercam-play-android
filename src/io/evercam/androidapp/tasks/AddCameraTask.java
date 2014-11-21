@@ -192,7 +192,7 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
 			try
 			{
 				Drawable drawable = Commons.getDrawablefromUrlAuthenticated(externalFullUrl,
-						username, password, cookies, 3000);
+						username, password, cookies, 5000);
 				if (drawable != null)
 				{
 					// Save this image.
@@ -229,7 +229,7 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
 			try
 			{
 				Drawable drawable = Commons.getDrawablefromUrlAuthenticated(internalFullUrl,
-						username, password, cookies, 3000);
+						username, password, cookies, 5000);
 				if (drawable != null)
 				{
 					// Save this image.

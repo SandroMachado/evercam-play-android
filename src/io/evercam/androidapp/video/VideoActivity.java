@@ -119,9 +119,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	static boolean enableLogs = true;
 
 	// image tasks and thread variables
-	private int sleepIntervalMinTime = 201; // interval between two requests of
+	private int sleepIntervalMinTime = 1000; // interval between two requests of
 											// images
-	private int intervalAdjustment = 1; // how much milli seconds to increment
+	private int intervalAdjustment = 100; // how much milli seconds to increment
 										// or decrement on image failure or
 										// success
 	private int sleepInterval = sleepIntervalMinTime + 290; // starting image
@@ -1638,7 +1638,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 							response = Commons.getDrawablefromUrlAuthenticated(url,
 									evercamCamera.getUsername(), evercamCamera.getPassword(),
-									evercamCamera.cookies, 3000);
+									evercamCamera.cookies, 10000);
 							if (response != null) 
 							{
 								successiveFailureCount = 0;
@@ -1712,6 +1712,17 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				{
 					isFirstImageLiveEnded = true;
 				}
+				
+				//Debugging logs
+				Log.d(TAG, "Failure count:" + successiveFailureCount);
+				if(result != null)
+				{
+					Log.d(TAG, "result not null");
+				}
+				else
+				{
+					Log.d(TAG, "result is null");
+				}
 
 				if (result != null && result.getIntrinsicWidth() > 0
 						&& result.getIntrinsicHeight() > 0
@@ -1740,7 +1751,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						Log.d(TAG, "Jpg success!");
 						isJpgSuccessful = true;
 						EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_jpg,
-								R.string.action_streaming_jpg_success, R.string.label_streaming_jpg_success);
+								R.string.action_streaming_jpg_success, R.string.label_streaming_jpg_success) ;
 						StreamFeedbackItem successItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), true);
 						successItem.setCameraId(evercamCamera.getCameraId());
 						successItem.setUrl(successUrl);
@@ -1752,12 +1763,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					}
 				}
 				// do not show message on local network failure request.
-				else if (((!isFirstImageLocalEnded && !isFirstImageLiveEnded
-						&& !isFirstImageLocalReceived && !isFirstImageLiveReceived && localnetworkSettings
-							.equalsIgnoreCase("0")) // local task ended. Now
-													// this is live image
-													// request
-				|| successiveFailureCount > 10
+//				else if (((!isFirstImageLocalEnded && !isFirstImageLiveEnded
+//						&& !isFirstImageLocalReceived && !isFirstImageLiveReceived && localnetworkSettings
+//							.equalsIgnoreCase("0")) // local task ended. Now
+//													// this is live image
+//													// request
+				else if(
+				successiveFailureCount > 5
 
 				// ( ( !isFirstImageLocalReceived &&
 				// localnetworkSettings.equalsIgnoreCase("1") )
@@ -1769,7 +1781,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				// Live task ended. Now this is local image request
 				// || successiveFailureCount > 10
 				//
-				)
+				
 						&& !isShowingFailureMessage
 						&& myStartImageTime >= latestStartImageTime
 						&& !paused && !end) // end endif condition
