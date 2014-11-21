@@ -1154,7 +1154,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				isShowingFailureMessage = false;
 				dialog.dismiss();
 				hideProgressView();
-				timeCounter.stop();
+			//	timeCounter.stop();
 			}
 		}).show();
 		isShowingFailureMessage = true;
