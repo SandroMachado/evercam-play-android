@@ -2,10 +2,14 @@ package io.evercam.androidapp.utils;
 
 import io.evercam.androidapp.exceptions.ConnectivityException;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,6 +30,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.params.ConnManagerPNames;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -38,9 +43,14 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 
+import com.mashape.unirest.http.Unirest;
+
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.http.AndroidHttpClient;
@@ -108,7 +118,10 @@ public class Commons
 
 			HttpGet get = new HttpGet(url);
 			HttpResponse response = httpClient.execute(host, get, credContext);
-			drawable = Drawable.createFromStream(response.getEntity().getContent(), "src");
+			HttpEntity entity = response.getEntity();
+			BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
+			InputStream stream = bufHttpEntity.getContent();
+			drawable = Drawable.createFromStream(stream, "src");
 			httpClient.close();
 		}
 		catch (Exception e)
@@ -121,14 +134,13 @@ public class Commons
 	}
 
 	// get the drawable image from the camera with authentication (cookies,
-	// digest or
-	// http)
+	// digest or http)
 	public static Drawable getDrawablefromUrlAuthenticated(String URL, String login, String pass,
 			ArrayList<Cookie> cookies, int timeoutMillies) throws Exception
 	{
 		Drawable rv = null;
 
-		// Making first image request with authorization header, availabel
+		// Making first image request with authorization header, available
 		// cookies, and Get method
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpGet get = new HttpGet(URL);
@@ -155,8 +167,8 @@ public class Commons
 		}
 		else
 		{
-			// Log.i(TAG, "Requesting cookies for URL [" + URL + "], login [" +
-			// login + "], pass [" + pass + "]");
+//			 Log.i(TAG, "Requesting cookies for URL [" + URL + "], login [" +
+//			 login + "], pass [" + pass + "]");
 			// Getting redirected URL (Login URL)
 			HttpUriRequest currentReq = (HttpUriRequest) httpcontext
 					.getAttribute(ExecutionContext.HTTP_REQUEST);
@@ -268,23 +280,7 @@ public class Commons
 								+ input.available());
 
 				if (entity.getContentType().getValue().contains("html")
-						&& !entity.getContentType().getValue().contains("image")) // html
-				// has
-				// been
-				// returned.
-				// We
-				// may
-				// need
-				// to
-				// make
-				// a
-				// request
-				// with
-				// get
-				// method
-				// on
-				// image
-				// url.
+						&& !entity.getContentType().getValue().contains("image"))
 				{
 					r = new BufferedReader(new InputStreamReader(input));
 					responseHtml = "";
