@@ -27,3 +27,6 @@ proguard/
 .project
 .settings/
 lint.xml
+
+# Mac OS
+.DS_Store
