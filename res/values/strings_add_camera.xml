@@ -23,7 +23,7 @@
     <string name="hint_id">roof-cam</string>
     <string name="hint_name">Rooftop Camera</string>
     <string name="hint_username">Username</string>
-    <string name="hint_password">Password</string>
+    <string name="hint_camera_password">Password</string>
     <string name="hint_jpg_path">/snapshot.jpg</string>
     <string name="hint_external_host">149.5.43.10</string>
     <string name="hint_external_http">External HTTP Port</string>

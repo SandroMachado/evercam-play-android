@@ -146,7 +146,7 @@
                 android:id="@+id/add_password_edit"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_password"
+                android:hint="@string/hint_camera_password"
                 android:singleLine="true"
                 android:textSize="17sp" />
         </LinearLayout>

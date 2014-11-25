@@ -135,18 +135,16 @@ public class LocalStorageActivity extends Activity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		switch (item.getItemId())
+		int itemId = item.getItemId();
+		if(itemId == R.id.menu_start_datetime)
 		{
-		case R.id.menu_start_datetime:
 			showDateTimePickerDialog();
-			return true;
-		case android.R.id.home:
-			this.finish();
-			return true;
-
-		default:
-			return true;
 		}
+		else if (itemId == android.R.id.home)
+		{
+			finish();
+		}
+		return true;
 	}
 
 	private void showDateTimePickerDialog()

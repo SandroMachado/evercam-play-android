@@ -491,12 +491,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		int itemId = item.getItemId();
 		try
 		{
-			switch (item.getItemId())
+			if (itemId == R.id.video_menu_delete_camera)
 			{
-			case R.id.video_menu_delete_camera:
-
 				CustomedDialog.getConfirmRemoveDialog(VideoActivity.this,
 						new DialogInterface.OnClickListener(){
 
@@ -517,51 +516,33 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 								}
 							}
 						}, R.string.msg_confirm_remove_camera).show();
-
-				return true;
-
-			case R.id.video_menu_view_camera:
-
+			}
+			else if (itemId == R.id.video_menu_view_camera)
+			{
 				editStarted = true;
 				Intent viewIntent = new Intent(VideoActivity.this, ViewCameraActivity.class);
 				startActivityForResult(viewIntent, Constants.REQUEST_CODE_VIEW_CAMERA);
-				return true;
-
-			case R.id.video_menu_edit_camera:
-
+			}
+			else if (itemId == R.id.video_menu_edit_camera)
+			{
 				editStarted = true;
 
 				Intent editIntent = new Intent(VideoActivity.this, AddEditCameraActivity.class);
 				editIntent.putExtra(Constants.KEY_IS_EDIT, true);
 				startActivityForResult(editIntent, Constants.REQUEST_CODE_PATCH_CAMERA);
-
-				return true;
-
-			case R.id.video_menu_local_storage:
-
+			}
+			else if (itemId == R.id.video_menu_local_storage)
+			{
 				startActivity(new Intent(VideoActivity.this, LocalStorageActivity.class));
-
-				// case R.id.menusettings_video:
-				// optionsActivityStarted = true;
-				// paused = true;
-				// startActivity(new Intent(this, VideoPrefsActivity.class));
-				// mediaPlayerView.setVisibility(View.GONE);
-				//
-				// showProgressView();
-				//
-				// return true;
-			case android.R.id.home:
-				this.finish();
-				return true;
-
-			default:
-				return true;
+			}
+			else if (itemId == android.R.id.home)
+			{
+				finish();
 			}
 		}
 		catch (OutOfMemoryError e)
 		{
 			Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-			return true;
 		}
 		catch (Exception e)
 		{
@@ -570,8 +551,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			{
 				BugSenseHandler.sendException(e);
 			}
-			return true;
 		}
+		return true;
 	}
 
 	private void startPlay()

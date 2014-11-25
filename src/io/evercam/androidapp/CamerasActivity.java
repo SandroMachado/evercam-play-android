@@ -142,10 +142,9 @@ public class CamerasActivity extends ParentActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		switch (item.getItemId())
+		int itemId = item.getItemId();
+		if(itemId == R.id.menurefresh)
 		{
-		case R.id.menurefresh:
-
 			EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
 					R.string.action_refresh, R.string.label_list_refresh);
 
@@ -153,55 +152,49 @@ public class CamerasActivity extends ParentActivity implements
 
 			startCameraLoadingTask();
 
-			return true;
-
-		case R.id.menu_add_camera:
-
+		}
+		else if (itemId == R.id.menu_add_camera)
+		{
 			showAddCameraOptionsDialog();
-
-			return true;
-
-		case R.id.menu_settings:
+		}
+		else if (itemId == R.id.menu_settings)
+		{
 			EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
 					R.string.action_settings, R.string.label_settings);
 
 			startActivity(new Intent(CamerasActivity.this, CameraPrefsActivity.class));
-
-			return true;
-
-		case R.id.menu_manage_accounts:
+		}
+		else if (itemId == R.id.menu_manage_accounts)
+		{
 			EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
 					R.string.action_manage_account, R.string.label_account);
 
 			startActivityForResult(new Intent(CamerasActivity.this, ManageAccountsActivity.class),
 					Constants.REQUEST_CODE_MANAGE_ACCOUNT);
-
-			return true;
-
-		case R.id.menu_about:
+		}
+		else if (itemId == R.id.menu_about)
+		{
 			EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
 					R.string.action_about, R.string.label_about);
 
 			startActivity(new Intent(CamerasActivity.this, AboutDialog.class));
 
-			return true;
-
-		case R.id.menu_logout:
+		}
+		else if (itemId == R.id.menu_logout)
+		{
 			showSignOutDialog();
-
-			return true;
-			
-		case R.id.menu_feedback:
+		}
+		else if (itemId == R.id.menu_feedback)
+		{
 			startActivity(new Intent(CamerasActivity.this, FeedbackActivity.class));
 
-			// Temporarily disable slide menu
-			// case android.R.id.home:
-			// slideMenu.show();
-
-		default:
+		}
+		else
+		{
 			return super.onOptionsItemSelected(item);
 		}
-
+		
+		return true;
 	}
 
 	@Override

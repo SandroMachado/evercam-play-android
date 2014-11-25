@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.evercam.androidapp"
     android:versionCode="53"
-    android:versionName="1.2.3" >
+    android:versionName="1.2.3 (Debug)" >
 
     <!-- versionCode36 - 1.1.7  - Hikvision local storage, first page loading faster -->
     <!-- versionCode39 - 1.1.8 - Only load snapshots for cameras within screen, new offline image -->
@@ -14,7 +14,7 @@
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="20" />
+        android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
