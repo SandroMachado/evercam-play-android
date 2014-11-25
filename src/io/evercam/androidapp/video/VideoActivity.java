@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
+import org.apache.http.cookie.Cookie;
 import org.videolan.libvlc.EventHandler;
 import org.videolan.libvlc.IVideoPlayer;
 import org.videolan.libvlc.LibVLC;
@@ -558,6 +559,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private void startPlay()
 	{
 		logger.info("User: " + username + " is viewing camera: " + startingCameraID);
+		
+		paused = false;
+		end = false;
 		loadImageFromCache(startingCameraID);
 
 		checkNetworkStatus();
@@ -1325,6 +1329,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			while (!end && !isCancelled() && showImagesVideo)
 			{
+				paused = false;
 				try
 				{
 					// wait for starting
@@ -1352,6 +1357,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						}
 						DownloadImage tasklive = new DownloadImage();
 
+						Log.d(TAG, "downloadStartCount : " + downloadStartCount + "    downloadEndCount" + downloadEndCount);
 						if (downloadStartCount - downloadEndCount < 9)
 						{
 							tasklive.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -1601,8 +1607,14 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		@Override
 		protected Drawable doInBackground(String... urls)
 		{
-			if (!showImagesVideo) return null;
+			ArrayList<Cookie> cookies = new ArrayList<Cookie>();
+			if (!showImagesVideo) 
+			{
+				return null;
+			}
 			Drawable response = null;
+			if(!paused && !end)
+			{
 			if (evercamCamera.hasCredentials())
 			{
 				for (String url : urls)
@@ -1617,7 +1629,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 							response = Commons.getDrawablefromUrlAuthenticated(url,
 									evercamCamera.getUsername(), evercamCamera.getPassword(),
-									evercamCamera.cookies, 5000);
+								    cookies, 5000);
 							if (response != null) 
 							{
 								successiveFailureCount = 0;
@@ -1628,7 +1640,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						{
 							if (enableLogs) Log.e(TAG,
 									e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+							successiveFailureCount++;
 							continue;
+							
 						}
 						catch (Exception e)
 						{
@@ -1636,7 +1650,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 									+ "ImageURl=[" + url + "]" + "\r\n");
 
 							AbandonedJpgUrl.add(url);
-						} finally
+							successiveFailureCount++;
+						}
+						finally
 						{
 							downloadEndCount++;
 						}
@@ -1647,6 +1663,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			{
 				try
 				{
+					downloadStartCount++;
 					Camera camera = Camera.getById(evercamCamera.getCameraId(), false);
 					InputStream stream = camera.getSnapshotFromEvercam();
 					response = Drawable.createFromStream(stream, "src");
@@ -1658,19 +1675,27 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				catch (EvercamException e)
 				{
 					Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
+					successiveFailureCount++;
 				}
 				catch (Exception e)
 				{
 					Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
+					successiveFailureCount++;
 				}
 				catch (OutOfMemoryError e)
 				{
 					Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+					successiveFailureCount++;
+				}
+				finally
+				{
+					downloadEndCount++;
 				}
 			}
-			if(response == null)
+			}
+			else
 			{
-				successiveFailureCount++;
+				Log.d(TAG, "Paused or ended");
 			}
 			return response;
 		}

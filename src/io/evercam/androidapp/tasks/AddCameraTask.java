@@ -155,22 +155,25 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
 		}
 		else
 		{
-			CustomedDialog.getConfirmCreateDialog(activity, new DialogInterface.OnClickListener(){
-				@Override
-				public void onClick(DialogInterface dialog, int which)
-				{
-					readyToCreateCamera = true;
-					return;
-				}
-			}, new DialogInterface.OnClickListener(){
-				@Override
-				public void onClick(DialogInterface dialog, int which)
-				{
-					readyToCreateCamera = false;
-					customProgressDialog.dismiss();
-					return;
-				}
-			}).show();
+			if(!activity.isFinishing())
+			{
+				CustomedDialog.getConfirmCreateDialog(activity, new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						readyToCreateCamera = true;
+						return;
+					}
+				}, new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						readyToCreateCamera = false;
+						customProgressDialog.dismiss();
+						return;
+					}
+				}).show();
+			}
 		}
 	}
 
