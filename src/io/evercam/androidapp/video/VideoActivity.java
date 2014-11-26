@@ -1355,13 +1355,23 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						{
 							imageLiveLocalURL = "";
 						}
-						DownloadImage tasklive = new DownloadImage();
+						DownloadImage taskExternal = new DownloadImage();
+						DownloadImage taskLocal = new DownloadImage();
 
 						Log.d(TAG, "downloadStartCount : " + downloadStartCount + "    downloadEndCount" + downloadEndCount);
 						if (downloadStartCount - downloadEndCount < 9)
 						{
-							tasklive.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-									new String[] { imageLiveCameraURL, imageLiveLocalURL });
+							if(!imageLiveCameraURL.isEmpty())
+							{
+								taskExternal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+										new String[] { imageLiveCameraURL});
+							}
+							if(!imageLiveLocalURL.isEmpty())
+							{
+								taskLocal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+										new String[] { imageLiveLocalURL});
+							}
+							
 						}
 
 						if (downloadStartCount - downloadEndCount > 9 && sleepInterval < 2000)
