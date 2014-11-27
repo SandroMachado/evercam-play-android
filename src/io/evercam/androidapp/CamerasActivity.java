@@ -187,7 +187,6 @@ public class CamerasActivity extends ParentActivity implements
 		else if (itemId == R.id.menu_feedback)
 		{
 			startActivity(new Intent(CamerasActivity.this, FeedbackActivity.class));
-
 		}
 		else
 		{

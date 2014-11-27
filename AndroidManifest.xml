@@ -136,8 +136,7 @@
         </activity>
         <activity
             android:name=".LocalStorageActivity"
-            android:label="@string/title_activity_local_storage"
-            android:logo="@drawable/ic_navigation_back" >
+            android:label="@string/title_activity_local_storage">
         </activity>
         <activity
             android:name=".FeedbackActivity"

@@ -3,7 +3,9 @@ package io.evercam.androidapp.video;
 import io.evercam.Camera;
 import io.evercam.EvercamException;
 import io.evercam.androidapp.AddEditCameraActivity;
+import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
+import io.evercam.androidapp.FeedbackActivity;
 import io.evercam.androidapp.LocalStorageActivity;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.ViewCameraActivity;
@@ -169,6 +171,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private Handler handler = new MyHandler(this);
 
 	private boolean editStarted = false;
+	private boolean feedbackStarted = false;
 
 	private Handler timerHandler = new Handler();
 	private Thread timerThread;
@@ -246,7 +249,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			}
 		}
 		else
-		// If back from view camera
+		// If back from view camera or feedback
 		{
 			startPlay();
 		}
@@ -260,6 +263,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			super.onResume();
 			this.paused = false;
 			editStarted = false;
+			feedbackStarted = false;
 
 			if (optionsActivityStarted)
 			{
@@ -315,6 +319,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			paused = false;
 			end = false;
 			editStarted = false;
+			feedbackStarted = false;
 
 			if (optionsActivityStarted)
 			{
@@ -364,7 +369,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				this.paused = true;
 			}
 			// Do not finish if user get into edit camera screen.
-			if (!editStarted)
+			if (!editStarted && !feedbackStarted)
 			{
 				this.finish();
 			}
@@ -539,6 +544,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			else if (itemId == android.R.id.home)
 			{
 				finish();
+			}
+			else if (itemId == R.id.video_menu_feedback)
+			{
+				feedbackStarted = true;
+				startActivityForResult(new Intent(VideoActivity.this, FeedbackActivity.class), Constants.REQUEST_CODE_FEEDBACK);
 			}
 		}
 		catch (OutOfMemoryError e)
@@ -1344,7 +1354,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					{
 						imageLiveCameraURL = evercamCamera.getExternalSnapshotUrl();
 						imageLiveLocalURL = evercamCamera.getInternalSnapshotUrl();
-						Log.v(TAG, imageLiveCameraURL);
 
 						if (AbandonedJpgUrl.contains(imageLiveCameraURL))
 						{
