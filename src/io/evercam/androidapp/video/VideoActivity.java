@@ -1358,7 +1358,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						DownloadImage taskExternal = new DownloadImage();
 						DownloadImage taskLocal = new DownloadImage();
 
-						Log.d(TAG, "downloadStartCount : " + downloadStartCount + "    downloadEndCount" + downloadEndCount);
 						if (downloadStartCount - downloadEndCount < 9)
 						{
 							if(!imageLiveCameraURL.isEmpty())
@@ -1496,6 +1495,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							StreamFeedbackItem failedItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), false);
 							failedItem.setCameraId(evercamCamera.getCameraId());
 							failedItem.setUrl(player.getCurrentMRL());
+							failedItem.setType(StreamFeedbackItem.TYPE_RTSP);
 							firebaseHelper.pushRtspItem(failedItem);
 							logger.info(failedItem.toJson());
 						}
@@ -1523,6 +1523,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					StreamFeedbackItem successItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), true);
 					successItem.setCameraId(evercamCamera.getCameraId());
 					successItem.setUrl(player.mrlPlaying);
+					successItem.setType(StreamFeedbackItem.TYPE_RTSP);
 					if(startTime != null)
 					{
 						long timeDifferenceLong = (new Date()).getTime() - startTime.getTime();
@@ -1767,7 +1768,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 								StreamFeedbackItem successItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), true);
 								successItem.setCameraId(evercamCamera.getCameraId());
 								successItem.setUrl(successUrl);
+								successItem.setType(StreamFeedbackItem.TYPE_JPG);
 								firebaseHelper.pushJpgItem(successItem);
+								logger.info(successItem.toJson());
 							}	
 							else
 							{
@@ -1802,7 +1805,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							StreamFeedbackItem failedItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), false);
 							failedItem.setCameraId(evercamCamera.getCameraId());
 							failedItem.setUrl(evercamCamera.getExternalSnapshotUrl());
+							failedItem.setType(StreamFeedbackItem.TYPE_JPG);
 							firebaseHelper.pushJpgItem(failedItem);
+							logger.info(failedItem.toJson());
 						}
 					}
 				}

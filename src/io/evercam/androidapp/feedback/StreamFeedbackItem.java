@@ -9,12 +9,15 @@ import io.evercam.androidapp.utils.DataCollector;
 public class StreamFeedbackItem 
 {
 	private final static String TAG = "evercamplay-StreamFeedbackItem";
+	public final static String TYPE_JPG = "jpg";
+	public final static String TYPE_RTSP = "rtsp";
 	private String user = "";
 	private Long timestamp;
 	private Context context;
 	
 	//Camera stream details;
 	private String url = "";
+	private String type = "";
 	private String camera_id = "";
 	private Boolean is_success;
 	private Float load_time; 
@@ -42,6 +45,16 @@ public class StreamFeedbackItem
 	public void setCameraId(String cameraId) 
 	{
 		this.camera_id = cameraId;
+	}
+	
+	public void setType(String type)
+	{
+		this.type = type;
+	}
+	
+	public String getType()
+	{
+		return type;
 	}
 	
 	public void setLoadTime(Float loadTime)
@@ -107,16 +120,6 @@ public class StreamFeedbackItem
 		this.device = DataCollector.getDeviceName();
 		this.android_version = DataCollector.getAndroidVersion();
 	}
-
-	@Override
-	public String toString() {
-		return "StreamFeedbackItem [user=" + user + ", timestamp=" + timestamp
-				+ "url=" + url + ", camera_id="
-				+ camera_id + ", is_success=" + is_success + ", load_time="
-				+ load_time + ", network=" + network + ", app_version="
-				+ app_version + ", device=" + device + ", android_version="
-				+ android_version + "]";
-	}
 	
 	public String toJson()
 	{
@@ -133,7 +136,7 @@ public class StreamFeedbackItem
 			jsonObject.put("app_version", app_version);
 			jsonObject.put("device", device);
 			jsonObject.put("android_version", android_version);
-			
+			jsonObject.put("type", type);
 		} 
 		catch (JSONException e) 
 		{
