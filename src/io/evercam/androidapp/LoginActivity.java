@@ -180,7 +180,7 @@ public class LoginActivity extends ParentActivity
 				API.setUserKeyPair(userApiKey, userApiId);
 				User evercamUser = new User(username);
 				newUser = new AppUser();
-				newUser.setUsername(username);
+				newUser.setUsername(evercamUser.getUsername());
 				newUser.setPassword(password);
 				newUser.setIsDefault(true);
 				newUser.setCountry(evercamUser.getCountry());

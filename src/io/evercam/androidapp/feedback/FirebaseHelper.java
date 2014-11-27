@@ -32,6 +32,8 @@ public class FirebaseHelper
 		if(defaultUser != null)
 		{
 			username = defaultUser.getUsername();
+			//Replace 
+			username = username.replace(".", "dot");
 		}
 		else
 		{

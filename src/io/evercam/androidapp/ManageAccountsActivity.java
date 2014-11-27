@@ -458,7 +458,7 @@ public class ManageAccountsActivity extends ParentActivity
 						API.setUserKeyPair(userApiKey, userApiId);
 						User evercamUser = new User(username);
 						newUser = new AppUser();
-						newUser.setUsername(username);
+						newUser.setUsername(evercamUser.getUsername());
 						newUser.setPassword(password);
 						newUser.setCountry(evercamUser.getCountry());
 						newUser.setEmail(evercamUser.getEmail());

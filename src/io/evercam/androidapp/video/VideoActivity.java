@@ -1370,7 +1370,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 								taskLocal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
 										new String[] { imageLiveLocalURL});
 							}
-							
 						}
 
 						if (downloadStartCount - downloadEndCount > 9 && sleepInterval < 2000)
