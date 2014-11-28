@@ -14,12 +14,4 @@
         android:right="14dp"
         android:top="14dp" />
 
-</shape><!--
-stroke color = 776da8
-
-<corners
-        android:bottomLeftRadius="5dp"
-        android:bottomRightRadius="5dp"
-        android:topLeftRadius="5dp"
-        android:topRightRadius="5dp" />
--->
+</shape>

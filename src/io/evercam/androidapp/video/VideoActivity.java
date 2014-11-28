@@ -72,6 +72,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -98,6 +99,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private ProgressView progressView = null;
 	private TextView offlineTextView;
 	private TextView timeCountTextView;
+	private LinearLayout controlMenuLayout;
 
 	// media player
 	private LibVLC libvlc;
@@ -113,6 +115,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private RelativeLayout imageViewLayout;
 	private ImageView imageView;
 	private ImageView mediaPlayerView;
+	private ImageView snapshotMenuView;
 
 	private long downloadStartCount = 0;
 	private long downloadEndCount = 0;
@@ -619,6 +622,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			isLocalNetwork = false;
 
 			mediaPlayerView.setVisibility(View.GONE);
+			controlMenuLayout.setVisibility(View.GONE);
 
 			paused = false;
 			end = false;
@@ -778,6 +782,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			fadeInAnimation.cancel();
 			fadeInAnimation.reset();
 
+			snapshotMenuView.clearAnimation();
 			mediaPlayerView.clearAnimation();
 		}
 
@@ -800,8 +805,16 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			public void onAnimationEnd(Animation animation)
 			{
 
-				if (!paused) mediaPlayerView.setVisibility(View.GONE);
-				else mediaPlayerView.setVisibility(View.VISIBLE);
+				if (!paused) 
+				{
+					mediaPlayerView.setVisibility(View.GONE);
+					controlMenuLayout.setVisibility(View.GONE);
+				}
+				else 
+				{
+					mediaPlayerView.setVisibility(View.VISIBLE);
+					controlMenuLayout.setVisibility(View.VISIBLE);
+				}
 
 				int orientation = VideoActivity.this.getResources().getConfiguration().orientation;
 				if (!paused && orientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -812,6 +825,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		});
 
 		mediaPlayerView.startAnimation(fadeInAnimation);
+		snapshotMenuView.startAnimation(fadeInAnimation);
 	}
 
 	private boolean isCurrentMRLValid()
@@ -989,7 +1003,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 			if (media != null && media.length() > 0)
 			{
-				//showToast(getString(R.string.reconnecting) + media);
 				Log.d(TAG, getString(R.string.reconnecting) + media);
 			}
 
@@ -1001,8 +1014,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			EvercamPlayApplication.sendCaughtException(this, e);
 			if (!isPlayingJpg)
 			{
-//				Toast.makeText(this, "Error reconnecting! " + media + " ::::: " + e.getMessage(),
-//						Toast.LENGTH_LONG).show();
 				Log.e(TAG, "Error reconnecting! " + media + " ::::: " + e.getMessage());
 			}
 		}
@@ -1036,6 +1047,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			isFirstImageLocalEnded = false;
 
 			mediaPlayerView.setVisibility(View.GONE);
+			controlMenuLayout.setVisibility(View.GONE);
 
 			readSetPreferences();
 
@@ -1192,7 +1204,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	{
 		imageViewLayout = (RelativeLayout) this.findViewById(R.id.camimage1);
 		imageView = (ImageView) this.findViewById(R.id.img_camera1);
+		controlMenuLayout = (LinearLayout) this.findViewById(R.id.player_control_layout);
 		mediaPlayerView = (ImageView) this.findViewById(R.id.ivmediaplayer1);
+		snapshotMenuView = (ImageView) this.findViewById(R.id.player_savesnapshot);
 
 		surfaceView = (SurfaceView) findViewById(R.id.surface1);
 		surfaceHolder = surfaceView.getHolder();
@@ -1228,6 +1242,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 					mediaPlayerView.setImageBitmap(null);
 					mediaPlayerView.setVisibility(View.VISIBLE);
+					controlMenuLayout.setVisibility(View.VISIBLE);
 					mediaPlayerView.setImageResource(android.R.drawable.ic_media_pause);
 
 					startMediaPlayerAnimation();
@@ -1249,6 +1264,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				{
 					timeCountTextView.setVisibility(View.GONE);
 					mediaPlayerView.clearAnimation();
+					snapshotMenuView.clearAnimation();
 					if (fadeInAnimation != null && fadeInAnimation.hasStarted()
 							&& !fadeInAnimation.hasEnded())
 					{
@@ -1256,6 +1272,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						fadeInAnimation.reset();
 					}
 					mediaPlayerView.setVisibility(View.VISIBLE);
+					controlMenuLayout.setVisibility(View.VISIBLE);
 					mediaPlayerView.setImageBitmap(null);
 					mediaPlayerView.setImageResource(android.R.drawable.ic_media_play);
 
@@ -1287,10 +1304,32 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					mediaPlayerView.setImageResource(android.R.drawable.ic_media_pause);
 
 					mediaPlayerView.setVisibility(View.VISIBLE);
+					controlMenuLayout.setVisibility(View.VISIBLE);
 
 					startMediaPlayerAnimation();
 				}
-
+			}
+		});
+		
+		snapshotMenuView.setOnClickListener(new OnClickListener() 
+		{
+			@Override
+			public void onClick(View v) 
+			{
+				if(isPlayingJpg)
+				{
+					
+				}
+//				Log.d(TAG, "url:" + mrlPlaying + " " + mVideoWidth + " " + mVideoHeight);
+//				byte[] imageByteArray = libvlc.getThumbnail(mrlPlaying, mVideoWidth, mVideoHeight);
+//				if(imageByteArray != null)
+//				{
+//					Log.d(TAG, "haha");
+//				}
+//				else
+//				{
+//					Log.d(TAG, "byte is null");
+//				}
 			}
 		});
 

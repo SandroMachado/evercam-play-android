@@ -26,13 +26,28 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
+        <LinearLayout
+            android:id="@+id/player_control_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:orientation="horizontal">
+            
         <ImageView
             android:id="@+id/ivmediaplayer1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:background="@layout/image_bg"
-            android:visibility="gone" />
+             />
+        
+        <ImageView
+            android:id="@+id/player_savesnapshot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@layout/image_bg"
+            android:src="@drawable/ic_action_save"/>
+        </LinearLayout>
 
         <io.evercam.androidapp.custom.ProgressView
             android:id="@+id/ivprogressspinner1"
@@ -51,7 +66,7 @@
             android:visibility="gone" />
 
         <RelativeLayout
-            android:id="@+id/video_gredient__layout"
+            android:id="@+id/video_gredient_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/gredient_image" >
