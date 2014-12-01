@@ -66,7 +66,8 @@ public class CaptureSnapshotTask extends AsyncTask<Void, Void, Boolean>
 		}
 		else
 		{
-			
+			//This should never happen
+			//TODO: But considering unexpected situation. Handle this later.
 		}
 	}
 

@@ -40,8 +40,8 @@ public class ViewCameraActivity extends Activity
 
 		if (this.getActionBar() != null)
 		{
-			this.getActionBar().setHomeButtonEnabled(true);
-			this.getActionBar().setIcon(R.drawable.ic_navigation_back);
+			this.getActionBar().setDisplayHomeAsUpEnabled(true);
+			this.getActionBar().setIcon(R.drawable.icon_50x50);
 		}
 
 		// Initial UI elements

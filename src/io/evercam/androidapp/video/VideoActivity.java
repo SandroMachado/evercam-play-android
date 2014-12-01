@@ -1435,17 +1435,22 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 								taskLocal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
 										new String[] { imageLiveLocalURL});
 							}
+							if(imageLiveCameraURL.isEmpty() && imageLiveLocalURL.isEmpty())
+							{
+								taskLocal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+										new String[] {});
+							}
 						}
 
 						if (downloadStartCount - downloadEndCount > 9 && sleepInterval < 2000)
 						{
 							sleepInterval += intervalAdjustment;
-							Log.d(TAG, "Sleep internal adjusted to: " + sleepInterval);
+							Log.d(TAG, "Sleep interval adjusted to: " + sleepInterval);
 						}
 						else if (sleepInterval >= sleepIntervalMinTime)
 						{
 							sleepInterval -= intervalAdjustment;
-							Log.d(TAG, "Sleep internal adjusted to: " + sleepInterval);
+							Log.d(TAG, "Sleep interval adjusted to: " + sleepInterval);
 						}
 					}
 				}
@@ -1690,7 +1695,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			Drawable response = null;
 			if(!paused && !end)
 			{
-			if (evercamCamera.hasCredentials())
+			if (evercamCamera.hasCredentials() && urls.length > 0)
 			{
 				for (String url : urls)
 				{
