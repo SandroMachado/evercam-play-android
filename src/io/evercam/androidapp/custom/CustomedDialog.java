@@ -4,6 +4,7 @@ import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.R;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -240,7 +241,7 @@ public class CustomedDialog
 		final View snapshotView = mInflater.inflate(R.layout.test_snapshot_dialog, null);
 		ImageView snapshotImageView = (ImageView) snapshotView
 				.findViewById(R.id.test_snapshot_image);
-		snapshotImageView.setBackgroundDrawable(drawable);
+		snapshotImageView.setImageDrawable(drawable);
 		snapshotDialog.setView(snapshotView);
 
 		Window window = snapshotDialog.getWindow();
@@ -248,6 +249,33 @@ public class CustomedDialog
 
 		layoutParams.y = -CamerasActivity.readScreenHeight(activity) / 9;
 		window.setAttributes(layoutParams);
+		return snapshotDialog;
+	}
+	
+	/**
+	 * Return a pop up dialog that ask the user whether or not to save the snapshot
+	 */
+	public static AlertDialog getConfirmSnapshotDialog(Activity activity, Drawable drawable, DialogInterface.OnClickListener listener)
+	{
+		Builder snapshotDialogBuilder = new AlertDialog.Builder(activity);
+		LayoutInflater mInflater = LayoutInflater.from(activity);
+		final View snapshotView = mInflater.inflate(R.layout.confirm_snapshot_dialog, null);
+		ImageView snapshotImageView = (ImageView) snapshotView
+				.findViewById(R.id.confirm_snapshot_image);
+		snapshotImageView.setImageDrawable(drawable);
+		snapshotDialogBuilder.setView(snapshotView);
+		snapshotDialogBuilder.setPositiveButton(activity.getString(R.string.save), listener);
+		snapshotDialogBuilder.setNegativeButton(activity.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) 
+			{
+				dialog.dismiss();
+			}
+		});
+		AlertDialog snapshotDialog = snapshotDialogBuilder.create();
+		snapshotDialog.setCanceledOnTouchOutside(false);
+
 		return snapshotDialog;
 	}
 }

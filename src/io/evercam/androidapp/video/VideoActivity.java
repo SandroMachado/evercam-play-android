@@ -16,6 +16,7 @@ import io.evercam.androidapp.dto.CameraStatus;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.feedback.FirebaseHelper;
 import io.evercam.androidapp.feedback.StreamFeedbackItem;
+import io.evercam.androidapp.tasks.CaptureSnapshotTask;
 import io.evercam.androidapp.tasks.DeleteCameraTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
@@ -1316,9 +1317,25 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			@Override
 			public void onClick(View v) 
 			{
-				if(isPlayingJpg)
+				if(imageView.getVisibility() == View.VISIBLE)
 				{
-					
+					final Drawable drawable = imageView.getDrawable();
+					if (drawable != null)
+					{
+						CustomedDialog.getConfirmSnapshotDialog(VideoActivity.this, drawable,
+								new DialogInterface.OnClickListener() 
+						{
+							@Override
+							public void onClick(DialogInterface dialog, int which) 
+							{
+								new CaptureSnapshotTask(VideoActivity.this, evercamCamera.getCameraId(), drawable).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+							}
+						}).show();
+					}
+				}
+				else if (surfaceView.getVisibility() == View.VISIBLE)
+				{
+					Log.e(TAG, "rtsp");
 				}
 //				Log.d(TAG, "url:" + mrlPlaying + " " + mVideoWidth + " " + mVideoHeight);
 //				byte[] imageByteArray = libvlc.getThumbnail(mrlPlaying, mVideoWidth, mVideoHeight);

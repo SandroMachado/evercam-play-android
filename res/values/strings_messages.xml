@@ -24,5 +24,7 @@
     <string name="msg_feedback">We\'re always looking to improve Evercam Play, so let us know if you have any suggestions.</string>
     <string name="feedback_hint">Enter your feedback</string>
     <string name="msg_confirm_quit_feedback">Are you sure you want to leave this page? Hitting back will lose any feedback you have entered.</string>
+    <string name="msg_snapshot_saved">Snapshot saved!</string>
+    <string name="msg_confirm_save_snapshot">Save snapshot?</string>
 
 </resources>
