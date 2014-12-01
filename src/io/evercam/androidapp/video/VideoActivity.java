@@ -1203,7 +1203,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 	private void initialPageElements()
 	{
-		imageViewLayout = (RelativeLayout) this.findViewById(R.id.camimage1);
+		imageViewLayout = (RelativeLayout) this.findViewById(R.id.camera_view_layout);
 		imageView = (ImageView) this.findViewById(R.id.img_camera1);
 		controlMenuLayout = (LinearLayout) this.findViewById(R.id.player_control_layout);
 		mediaPlayerView = (ImageView) this.findViewById(R.id.ivmediaplayer1);
@@ -1223,11 +1223,15 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		offlineTextView = (TextView) findViewById(R.id.offline_text_view);
 		timeCountTextView = (TextView) findViewById(R.id.time_text_view);
 
+		/**
+		 * The click listener for pause/play button
+		 */
 		mediaPlayerView.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v)
 			{
+				Log.e(TAG, "mediaPlayerView clicked!");
 				if (end)
 				{
 					Toast.makeText(VideoActivity.this, R.string.msg_try_again, Toast.LENGTH_SHORT)
@@ -1286,10 +1290,15 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			}
 		});
 
+		/**
+		 * The click listener of camera live view layout, including both RTSP and JPG view
+		*  Once clicked, if camera view is playing, show the pause menu, otherwise do nothing.
+		 */
 		imageViewLayout.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v)
 			{
+				Log.e(TAG, "imageViewLayout clicked!");
 				if (end)
 				{
 					Toast.makeText(VideoActivity.this, R.string.msg_try_again, Toast.LENGTH_SHORT)
@@ -1298,8 +1307,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				}
 				if (isProgressShowing) return;
 
-				if (!paused && !end) // video is currently playing. Now we
-										// need to pause video
+				if (!paused && !end) // video is currently playing. Show pause button
 				{
 					VideoActivity.this.getActionBar().show();
 					mediaPlayerView.setImageResource(android.R.drawable.ic_media_pause);
@@ -1317,6 +1325,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			@Override
 			public void onClick(View v) 
 			{
+				Log.e(TAG, "imageViewLayout clicked!");
+				
 				if(imageView.getVisibility() == View.VISIBLE)
 				{
 					final Drawable drawable = imageView.getDrawable();
@@ -1395,7 +1405,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			while (!end && !isCancelled() && showImagesVideo)
 			{
-				paused = false;
 				try
 				{
 					// wait for starting
@@ -1701,7 +1710,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				{
 					if (!url.isEmpty())
 					{
-						Log.d(TAG, "Running: " + url);
 						try
 						{
 							downloadStartCount++;
@@ -1806,10 +1814,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					if(result.getIntrinsicWidth() > 0
 							&& result.getIntrinsicHeight() > 0)
 					{
-						Log.d(TAG, "Width and height > 0");
 						if(myStartImageTime >= latestStartImageTime)
 						{
-							Log.d(TAG, "myStartImageTime >= latestStartImageTime");
+							//Log.d(TAG, "myStartImageTime >= latestStartImageTime");
 							if (isLocalNetworkRequest) isFirstImageLocalReceived = true;
 							else isFirstImageLiveReceived = true;
 							if (isLocalNetworkRequest && localnetworkSettings.equalsIgnoreCase("0")) isLocalNetwork = true;
@@ -1830,7 +1837,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							if(!isJpgSuccessful)
 							{					
 								//Successfully played JPG view, send Google Analytics event
-								Log.d(TAG, "Jpg success!");
+								//Log.d(TAG, "Jpg success!");
 								isJpgSuccessful = true;
 								EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_jpg,
 										R.string.action_streaming_jpg_success, R.string.label_streaming_jpg_success) ;
@@ -1843,7 +1850,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							}	
 							else
 							{
-								Log.d(TAG, "Jpg success but already reported");
+								//Log.d(TAG, "Jpg success but already reported");
 							}
 						}
 						else

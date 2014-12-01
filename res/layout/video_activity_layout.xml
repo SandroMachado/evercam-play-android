@@ -5,7 +5,7 @@
     android:background="#000000" >
 
     <RelativeLayout
-        android:id="@+id/camimage1"
+        android:id="@+id/camera_view_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_centerInParent="true"
