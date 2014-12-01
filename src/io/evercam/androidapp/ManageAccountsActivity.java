@@ -46,7 +46,7 @@ public class ManageAccountsActivity extends ParentActivity
 	private static String TAG = "evercamplay-ManageAccountsActivity";
 
 	private AlertDialog alertDialog = null;
-	private String oldDefaultUser = null;
+	private String oldDefaultUser = "";
 	private CustomProgressDialog progressDialog;
 
 	@Override
@@ -60,9 +60,6 @@ public class ManageAccountsActivity extends ParentActivity
 		}
 
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_manage_account));
-
-		// TODO: Make sure default user is not null.
-		oldDefaultUser = AppData.defaultUser.getUsername();
 
 		if (this.getActionBar() != null)
 		{
@@ -79,6 +76,7 @@ public class ManageAccountsActivity extends ParentActivity
 		ListView listview = (ListView) findViewById(R.id.email_list);
 		if (AppData.appUsers != null && AppData.appUsers.size() != 0)
 		{
+			oldDefaultUser = AppData.defaultUser.getUsername();
 			ListAdapter listAdapter = new CustomAdapter(ManageAccountsActivity.this,
 					R.layout.manage_account_list_item, R.layout.manage_account_list_item_new_user,
 					R.id.account_item_email, (ArrayList<AppUser>) AppData.appUsers);
