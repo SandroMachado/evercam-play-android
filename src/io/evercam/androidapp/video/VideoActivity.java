@@ -3,7 +3,6 @@ package io.evercam.androidapp.video;
 import io.evercam.Camera;
 import io.evercam.EvercamException;
 import io.evercam.androidapp.AddEditCameraActivity;
-import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.FeedbackActivity;
 import io.evercam.androidapp.LocalStorageActivity;
@@ -1231,7 +1230,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			@Override
 			public void onClick(View v)
 			{
-				Log.e(TAG, "mediaPlayerView clicked!");
 				if (end)
 				{
 					Toast.makeText(VideoActivity.this, R.string.msg_try_again, Toast.LENGTH_SHORT)
@@ -1298,7 +1296,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			@Override
 			public void onClick(View v)
 			{
-				Log.e(TAG, "imageViewLayout clicked!");
 				if (end)
 				{
 					Toast.makeText(VideoActivity.this, R.string.msg_try_again, Toast.LENGTH_SHORT)
@@ -1325,8 +1322,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			@Override
 			public void onClick(View v) 
 			{
-				Log.e(TAG, "imageViewLayout clicked!");
-				
 				if(imageView.getVisibility() == View.VISIBLE)
 				{
 					final Drawable drawable = imageView.getDrawable();
