@@ -1385,7 +1385,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	{
 		if(timeCounter == null)
 		{
-			timeCounter = new TimeCounter(this);
+			String timezone = "Etc/UTC";
+			if(evercamCamera!= null)
+			{
+				timezone = evercamCamera.getTimezone();
+			}
+			timeCounter = new TimeCounter(this, timezone);
 		}
 		if(!timeCounter.isStarted())
 		{

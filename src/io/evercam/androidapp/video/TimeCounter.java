@@ -1,8 +1,5 @@
 package io.evercam.androidapp.video;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import io.evercam.androidapp.R;
 import android.app.Activity;
 import android.view.View;
@@ -14,10 +11,12 @@ public class TimeCounter
 	private Thread thread;
 	private TextView timeTextView;
 	private boolean isStarted = false;
+	private String timezone;
 	
-	public TimeCounter(Activity activity)
+	public TimeCounter(Activity activity, String timezone)
 	{
 		this.activity = activity;
+		this.timezone = timezone;
 		this.timeTextView = (TextView)activity.findViewById(R.id.time_text_view);
 		Runnable countRunnable = new CountRunner();
 		thread = new Thread(countRunnable);
@@ -52,10 +51,16 @@ public class TimeCounter
 	    	@Override
 	        public void run() 
 	        {
-	    		Date now = new Date(System.currentTimeMillis());
-	    		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-	    		String timeString = formatter.format(now);
-                timeTextView.setText(timeString);
+//	    		Date now = new Date(System.currentTimeMillis());
+//	    		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+//	    		String timeString = formatter.format(now);
+//	    		timeTextView.setText(timeString);
+	    		org.joda.time.DateTimeZone timeZone = org.joda.time.DateTimeZone.forID(timezone);
+	    		org.joda.time.DateTime dateTime =  new org.joda.time.DateTime( timeZone );
+	    		org.joda.time.format.DateTimeFormatter formatter = org.joda.time.format.DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
+	    		String timeAsString = dateTime.toString(formatter);
+	    		timeTextView.setText(timeAsString);
+                
 	        }
 	    });
 	}
