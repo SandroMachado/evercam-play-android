@@ -207,12 +207,12 @@ public class MediaList {
             noVideo = mInternalList.get(position).noVideo;
         }
         ArrayList<String> options = new ArrayList<String>();
-        
-      //Moved out from the following if (!noHardwareAcceleration) block
-      		options.add(":rtsp-tcp"); //RTSP over TCP only, this make stream load much faster
-      		options.add(":sout-keep"); //Liuting
-      		options.add(":ipv4-timeout=2500"); // Liuting
 
+        //Moved out from the following if (!noHardwareAcceleration) block
+      	options.add(":rtsp-tcp"); //RTSP over TCP only, this make stream load much faster
+     // 	options.add(":sout-keep"); //Liuting
+      	options.add(":ipv4-timeout=2500"); // Liuting
+      		
         if (!noHardwareAcceleration) {
             /*
              * Set higher caching values if using iomx decoding, since some omx

@@ -26,6 +26,7 @@ import io.evercam.androidapp.utils.PrefsManager;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,6 +52,7 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
@@ -1341,17 +1343,21 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				else if (surfaceView.getVisibility() == View.VISIBLE)
 				{
 					Log.e(TAG, "rtsp");
+					try {
+							String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+									+ File.separator + "Evercam" + File.separator + "Evercam Play" + File.separator + "aaa.png";
+//							File file = new File(path);
+//							if (!file.exists())
+//								file.createNewFile();
+							if (libvlc.takeSnapShot(path, mVideoWidth, mVideoHeight)) {
+								Toast.makeText(getApplicationContext(), "success", 1000).show();
+							} else {
+								Toast.makeText(getApplicationContext(), "failed", 1000).show();
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 				}
-//				Log.d(TAG, "url:" + mrlPlaying + " " + mVideoWidth + " " + mVideoHeight);
-//				byte[] imageByteArray = libvlc.getThumbnail(mrlPlaying, mVideoWidth, mVideoHeight);
-//				if(imageByteArray != null)
-//				{
-//					Log.d(TAG, "haha");
-//				}
-//				else
-//				{
-//					Log.d(TAG, "byte is null");
-//				}
 			}
 		});
 
