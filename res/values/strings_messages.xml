@@ -25,5 +25,6 @@
     <string name="feedback_hint">Enter your feedback</string>
     <string name="msg_confirm_quit_feedback">Are you sure you want to leave this page? Hitting back will lose any feedback you have entered.</string>
     <string name="msg_snapshot_saved">Snapshot saved!</string>
+    <string name="msg_snapshot_saved_failed">Failed to save snapshot!</string>
 
 </resources>

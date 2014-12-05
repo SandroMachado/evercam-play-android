@@ -8,6 +8,7 @@ import io.evercam.androidapp.FeedbackActivity;
 import io.evercam.androidapp.LocalStorageActivity;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.ViewCameraActivity;
+import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.custom.ProgressView;
 import io.evercam.androidapp.dto.AppData;
@@ -22,6 +23,7 @@ import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EnumConstants.DeleteType;
 import io.evercam.androidapp.utils.EvercamFile;
 import io.evercam.androidapp.utils.PrefsManager;
+import io.evercam.androidapp.video.SnapshotManager.FileType;
 
 import java.io.File;
 import java.io.InputStream;
@@ -1351,17 +1353,15 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				}
 				else if (surfaceView.getVisibility() == View.VISIBLE)
 				{
-					Log.e(TAG, "rtsp");
 					try {
-							String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-									+ File.separator + "Evercam" + File.separator + "Evercam Play" + File.separator + "aaa.png";
-//							File file = new File(path);
-//							if (!file.exists())
-//								file.createNewFile();
-							if (libvlc.takeSnapShot(path, mVideoWidth, mVideoHeight)) {
-								Toast.makeText(getApplicationContext(), "success", 1000).show();
-							} else {
-								Toast.makeText(getApplicationContext(), "failed", 1000).show();
+							String path = SnapshotManager.createFilePath(evercamCamera.getCameraId(), FileType.PNG);
+							if (libvlc.takeSnapShot(path, mVideoWidth, mVideoHeight)) 
+							{
+								CustomToast.showInCenter(VideoActivity.this, R.string.msg_snapshot_saved);
+								SnapshotManager.updateGallery(path, VideoActivity.this);
+							} else 
+							{
+								CustomToast.showInCenter(VideoActivity.this, R.string.msg_snapshot_saved_failed);
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
