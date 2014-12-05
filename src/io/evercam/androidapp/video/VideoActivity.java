@@ -1224,9 +1224,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		offlineTextView = (TextView) findViewById(R.id.offline_text_view);
 		timeCountTextView = (TextView) findViewById(R.id.time_text_view);
 
-		/**
-		 * The click listener for pause/play button
-		 */
+		/** The click listener for pause/play button */
 		mediaPlayerView.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -1308,13 +1306,24 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 				if (!paused && !end) // video is currently playing. Show pause button
 				{
-					VideoActivity.this.getActionBar().show();
-					mediaPlayerView.setImageResource(android.R.drawable.ic_media_pause);
+					if(mediaPlayerView.getVisibility() == View.VISIBLE)
+					{
+						mediaPlayerView.setVisibility(View.GONE);
+						snapshotMenuView.setVisibility(View.GONE);
+						mediaPlayerView.clearAnimation();
+						snapshotMenuView.clearAnimation();
+						fadeInAnimation.reset();
+					}
+					else
+					{
+						VideoActivity.this.getActionBar().show();
+						mediaPlayerView.setImageResource(android.R.drawable.ic_media_pause);
 
-					mediaPlayerView.setVisibility(View.VISIBLE);
-					snapshotMenuView.setVisibility(View.VISIBLE);
+						mediaPlayerView.setVisibility(View.VISIBLE);
+						snapshotMenuView.setVisibility(View.VISIBLE);
 
-					startMediaPlayerAnimation();
+						startMediaPlayerAnimation();
+					}
 				}
 			}
 		});

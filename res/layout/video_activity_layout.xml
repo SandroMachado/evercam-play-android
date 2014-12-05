@@ -36,7 +36,7 @@
             android:id="@+id/ivmediaplayer1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@layout/image_bg"
+            android:background="@drawable/play_button_background_selector"
             android:visibility="gone"
              />
         
@@ -44,7 +44,7 @@
             android:id="@+id/player_savesnapshot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@layout/image_bg"
+            android:background="@drawable/play_button_background_selector"
             android:layout_toRightOf="@+id/ivmediaplayer1"
             android:src="@drawable/ic_action_save"
             android:visibility="gone"/>

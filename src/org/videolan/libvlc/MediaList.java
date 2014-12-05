@@ -210,7 +210,7 @@ public class MediaList {
 
         //Moved out from the following if (!noHardwareAcceleration) block
       	options.add(":rtsp-tcp"); //RTSP over TCP only, this make stream load much faster
-     // 	options.add(":sout-keep"); //Liuting
+      	options.add(":sout-keep"); //Liuting
       	options.add(":ipv4-timeout=2500"); // Liuting
       		
         if (!noHardwareAcceleration) {

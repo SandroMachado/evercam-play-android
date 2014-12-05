@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@layout/image_bg"
+            android:background="@drawable/play_button_off"
             android:visibility="gone" />
 
         <io.evercam.android.custom.ProgressView
