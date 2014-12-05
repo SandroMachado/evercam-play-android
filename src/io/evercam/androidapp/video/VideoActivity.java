@@ -99,7 +99,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private ProgressView progressView = null;
 	private TextView offlineTextView;
 	private TextView timeCountTextView;
-	private LinearLayout controlMenuLayout;
 
 	// media player
 	private LibVLC libvlc;
@@ -622,7 +621,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			isLocalNetwork = false;
 
 			mediaPlayerView.setVisibility(View.GONE);
-			controlMenuLayout.setVisibility(View.GONE);
+			snapshotMenuView.setVisibility(View.GONE);
 
 			paused = false;
 			end = false;
@@ -808,12 +807,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				if (!paused) 
 				{
 					mediaPlayerView.setVisibility(View.GONE);
-					controlMenuLayout.setVisibility(View.GONE);
+					snapshotMenuView.setVisibility(View.GONE);
 				}
 				else 
 				{
 					mediaPlayerView.setVisibility(View.VISIBLE);
-					controlMenuLayout.setVisibility(View.VISIBLE);
+					snapshotMenuView.setVisibility(View.VISIBLE);
 				}
 
 				int orientation = VideoActivity.this.getResources().getConfiguration().orientation;
@@ -1047,7 +1046,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			isFirstImageLocalEnded = false;
 
 			mediaPlayerView.setVisibility(View.GONE);
-			controlMenuLayout.setVisibility(View.GONE);
+			snapshotMenuView.setVisibility(View.GONE);
 
 			readSetPreferences();
 
@@ -1204,7 +1203,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	{
 		imageViewLayout = (RelativeLayout) this.findViewById(R.id.camera_view_layout);
 		imageView = (ImageView) this.findViewById(R.id.img_camera1);
-		controlMenuLayout = (LinearLayout) this.findViewById(R.id.player_control_layout);
 		mediaPlayerView = (ImageView) this.findViewById(R.id.ivmediaplayer1);
 		snapshotMenuView = (ImageView) this.findViewById(R.id.player_savesnapshot);
 
@@ -1214,6 +1212,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 		progressView = ((ProgressView) imageViewLayout.findViewById(R.id.ivprogressspinner1));
 
+		progressView.setMinimumWidth(mediaPlayerView.getWidth());
+		progressView.setMinimumHeight(mediaPlayerView.getHeight());
 		progressView.canvasColor = Color.TRANSPARENT;
 
 		isProgressShowing = true;
@@ -1245,7 +1245,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 					mediaPlayerView.setImageBitmap(null);
 					mediaPlayerView.setVisibility(View.VISIBLE);
-					controlMenuLayout.setVisibility(View.VISIBLE);
+					snapshotMenuView.setVisibility(View.VISIBLE);
 					mediaPlayerView.setImageResource(android.R.drawable.ic_media_pause);
 
 					startMediaPlayerAnimation();
@@ -1275,7 +1275,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						fadeInAnimation.reset();
 					}
 					mediaPlayerView.setVisibility(View.VISIBLE);
-					controlMenuLayout.setVisibility(View.VISIBLE);
+					snapshotMenuView.setVisibility(View.VISIBLE);
 					mediaPlayerView.setImageBitmap(null);
 					mediaPlayerView.setImageResource(android.R.drawable.ic_media_play);
 
@@ -1310,7 +1310,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					mediaPlayerView.setImageResource(android.R.drawable.ic_media_pause);
 
 					mediaPlayerView.setVisibility(View.VISIBLE);
-					controlMenuLayout.setVisibility(View.VISIBLE);
+					snapshotMenuView.setVisibility(View.VISIBLE);
 
 					startMediaPlayerAnimation();
 				}

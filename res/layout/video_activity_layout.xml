@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:background="#000000" >
 
-    <RelativeLayout
+   <RelativeLayout
         android:id="@+id/camera_view_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -26,19 +26,18 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/player_control_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:layout_centerInParent="true">
             
         <ImageView
             android:id="@+id/ivmediaplayer1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@layout/image_bg"
+            android:visibility="gone"
              />
         
         <ImageView
@@ -46,14 +45,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@layout/image_bg"
-            android:src="@drawable/ic_action_save"/>
-        </LinearLayout>
-
+            android:layout_toRightOf="@+id/ivmediaplayer1"
+            android:src="@drawable/ic_action_save"
+            android:visibility="gone"/>
+        
         <io.evercam.androidapp.custom.ProgressView
             android:id="@+id/ivprogressspinner1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_alignLeft="@+id/ivmediaplayer1"
+            android:layout_alignRight="@+id/ivmediaplayer1"
+            android:layout_alignTop="@+id/ivmediaplayer1"
+            android:layout_alignBottom="@+id/ivmediaplayer1"/>
+		</RelativeLayout>
 
         <TextView
             android:id="@+id/offline_text_view"
