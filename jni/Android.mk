@@ -64,7 +64,7 @@ LOCAL_LDLIBS := -L$(VLC_CONTRIB)/lib \
 	$(VLC_BUILD_DIR)/compat/.libs/libcompat.a \
 	-ldl -lz -lm -llog \
 	-ldvbpsi -lebml -lmatroska -ltag \
-	-logg -lFLAC -ltheora -lvorbis \
+	-logg -lFLAC -ltheora -lvorbis -lvorbisfile -lvorbisenc\
 	-lmpeg2 -la52 \
 	-lavformat -lavcodec -lswscale -lavutil -lpostproc -lgsm -lopenjpeg \
 	-lliveMedia -lUsageEnvironment -lBasicUsageEnvironment -lgroupsock \

@@ -118,6 +118,11 @@ int vlc_entry__yuv_rgb_neon (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__yuy2_i420 (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__yuy2_i422 (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__zip (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__access_output_dummy (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__access_output_file (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__access_output_http (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__access_output_livehttp (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__access_output_udp (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__a52tofloat32 (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__audio_format (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__chorus_flanger (int (*)(void *, void *, int, ...), void *);
@@ -140,7 +145,18 @@ int vlc_entry__ugly_resampler (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__dummy (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__fingerprinter (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__gnutls (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__vod_rtsp (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__xml (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__mux_asf (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__mux_avi (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__mux_dummy (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__mux_mp4 (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__mux_mpjpeg (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__mux_ogg (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__mux_ps (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__mux_ts (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__mux_wav (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__packetizer_copy (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__packetizer_dirac (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__packetizer_flac (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__packetizer_h264 (int (*)(void *, void *, int, ...), void *);
@@ -150,6 +166,25 @@ int vlc_entry__packetizer_mpeg4audio (int (*)(void *, void *, int, ...), void *)
 int vlc_entry__packetizer_mpeg4video (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__packetizer_mpegvideo (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__packetizer_vc1 (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_autodel (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_bridge (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_delay (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_description (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_display (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_dummy (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_duplicate (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_es (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_gather (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_langfromtelx (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_mosaic_bridge (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_raop (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_record (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_rtp (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_setid (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_smem (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_standard (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_stats (int (*)(void *, void *, int, ...), void *);
+int vlc_entry__stream_out_transcode (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__freetype (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__adjust (int (*)(void *, void *, int, ...), void *);
 int vlc_entry__anaglyph (int (*)(void *, void *, int, ...), void *);
@@ -304,6 +339,11 @@ int vlc_entry__vmem (int (*)(void *, void *, int, ...), void *);
  vlc_entry__yuy2_i420,
  vlc_entry__yuy2_i422,
  vlc_entry__zip,
+ vlc_entry__access_output_dummy,
+ vlc_entry__access_output_file,
+ vlc_entry__access_output_http,
+ vlc_entry__access_output_livehttp,
+ vlc_entry__access_output_udp,
  vlc_entry__a52tofloat32,
  vlc_entry__audio_format,
  vlc_entry__chorus_flanger,
@@ -326,7 +366,18 @@ int vlc_entry__vmem (int (*)(void *, void *, int, ...), void *);
  vlc_entry__dummy,
  vlc_entry__fingerprinter,
  vlc_entry__gnutls,
+ vlc_entry__vod_rtsp,
  vlc_entry__xml,
+ vlc_entry__mux_asf,
+ vlc_entry__mux_avi,
+ vlc_entry__mux_dummy,
+ vlc_entry__mux_mp4,
+ vlc_entry__mux_mpjpeg,
+ vlc_entry__mux_ogg,
+ vlc_entry__mux_ps,
+ vlc_entry__mux_ts,
+ vlc_entry__mux_wav,
+ vlc_entry__packetizer_copy,
  vlc_entry__packetizer_dirac,
  vlc_entry__packetizer_flac,
  vlc_entry__packetizer_h264,
@@ -336,6 +387,25 @@ int vlc_entry__vmem (int (*)(void *, void *, int, ...), void *);
  vlc_entry__packetizer_mpeg4video,
  vlc_entry__packetizer_mpegvideo,
  vlc_entry__packetizer_vc1,
+ vlc_entry__stream_out_autodel,
+ vlc_entry__stream_out_bridge,
+ vlc_entry__stream_out_delay,
+ vlc_entry__stream_out_description,
+ vlc_entry__stream_out_display,
+ vlc_entry__stream_out_dummy,
+ vlc_entry__stream_out_duplicate,
+ vlc_entry__stream_out_es,
+ vlc_entry__stream_out_gather,
+ vlc_entry__stream_out_langfromtelx,
+ vlc_entry__stream_out_mosaic_bridge,
+ vlc_entry__stream_out_raop,
+ vlc_entry__stream_out_record,
+ vlc_entry__stream_out_rtp,
+ vlc_entry__stream_out_setid,
+ vlc_entry__stream_out_smem,
+ vlc_entry__stream_out_standard,
+ vlc_entry__stream_out_stats,
+ vlc_entry__stream_out_transcode,
  vlc_entry__freetype,
  vlc_entry__adjust,
  vlc_entry__anaglyph,

@@ -603,7 +603,6 @@ jint Java_org_videolan_libvlc_LibVLC_getTitleCount(JNIEnv *env, jobject thiz)
     return -1;
 }
 
-//Added by Liuting
 jboolean Java_org_videolan_libvlc_LibVLC_takeSnapShot(JNIEnv *env, jobject thiz,jint number, jstring path, jint width,jint height)
 {
     jboolean isCopy;
@@ -615,5 +614,4 @@ jboolean Java_org_videolan_libvlc_LibVLC_takeSnapShot(JNIEnv *env, jobject thiz,
     if(libvlc_video_take_snapshot(mp, (int)number,psz_path , (int)width,(int)height)==0)
     return JNI_TRUE;
     return JNI_FALSE;
-    
 }
