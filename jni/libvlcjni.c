@@ -252,6 +252,9 @@ void Java_org_videolan_libvlc_LibVLC_nativeInit(JNIEnv *env, jobject thiz)
         LOGD("Using network caching of %d ms", networkCaching);
     }
 
+    methodId = (*env)->GetMethodID(env, cls, "getHttpReconnect", "()Z");
+    bool enable_http_reconnect = (*env)->CallBooleanMethod(env, thiz, methodId);
+
     methodId = (*env)->GetMethodID(env, cls, "getChroma", "()Ljava/lang/String;");
     jstring chroma = (*env)->CallObjectMethod(env, thiz, methodId);
     const char *chromastr = (*env)->GetStringUTFChars(env, chroma, 0);
@@ -308,6 +311,9 @@ void Java_org_videolan_libvlc_LibVLC_nativeInit(JNIEnv *env, jobject thiz)
         /* XXX: we can't recover from direct rendering failure */
         (hardwareAcceleration == HW_ACCELERATION_FULL) ? "" : "--no-mediacodec-dr",
         (hardwareAcceleration == HW_ACCELERATION_FULL) ? "" : NO_IOMX_DR,
+
+        /* Reconnect on lost HTTP streams, e.g. network change */
+        enable_http_reconnect ? "--http-reconnect" : "",
     };
     libvlc_instance_t *instance = libvlc_new(sizeof(argv) / sizeof(*argv), argv);
 
@@ -595,4 +601,17 @@ jint Java_org_videolan_libvlc_LibVLC_getTitleCount(JNIEnv *env, jobject thiz)
     if (mp)
         return libvlc_media_player_get_title_count(mp);
     return -1;
+}
+
+jboolean Java_org_videolan_libvlc_LibVLC_takeSnapShot(JNIEnv *env, jobject thiz,jint number, jstring path, jint width,jint height)
+{
+    jboolean isCopy;
+    libvlc_media_player_t *mp = getMediaPlayer(env, thiz);
+    /* Get C string */
+    const char* psz_path = (*env)->GetStringUTFChars(env, path, &isCopy);
+    
+    if (mp)
+    if(libvlc_video_take_snapshot(mp, (int)number,psz_path , (int)width,(int)height)==0)
+    return JNI_TRUE;
+    return JNI_FALSE;
 }
