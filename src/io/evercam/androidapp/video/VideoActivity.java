@@ -1100,7 +1100,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			mVideoWidth = surfaceView.getWidth();
 			mVideoHeight = surfaceView.getHeight() - this.getActionBar().getHeight();
 			setSize(mVideoWidth, mVideoHeight);
-
 		}
 		catch (Exception e)
 		{
@@ -1335,6 +1334,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			@Override
 			public void onClick(View v) 
 			{
+				//Hide pause/snaoshot menu 
+				mediaPlayerView.setVisibility(View.GONE);
+				snapshotMenuView.setVisibility(View.GONE);
+				mediaPlayerView.clearAnimation();
+				snapshotMenuView.clearAnimation();
+				fadeInAnimation.reset();
+				
 				if(imageView.getVisibility() == View.VISIBLE)
 				{
 					final Drawable drawable = imageView.getDrawable();
@@ -1353,19 +1359,26 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				}
 				else if (surfaceView.getVisibility() == View.VISIBLE)
 				{
-					try {
-							String path = SnapshotManager.createFilePath(evercamCamera.getCameraId(), FileType.PNG);
-							if (libvlc.takeSnapShot(path, mVideoWidth, mVideoHeight)) 
-							{
-								CustomToast.showInCenter(VideoActivity.this, R.string.msg_snapshot_saved);
-								SnapshotManager.updateGallery(path, VideoActivity.this);
-							} else 
-							{
-								CustomToast.showInCenter(VideoActivity.this, R.string.msg_snapshot_saved_failed);
+					new Handler().postDelayed(new Runnable()
+					{
+						@Override
+						public void run() 
+						{
+							try {
+								String path = SnapshotManager.createFilePath(evercamCamera.getCameraId(), FileType.PNG);
+								if (libvlc.takeSnapShot(path, mVideoWidth, mVideoHeight)) 
+								{
+									CustomToast.showInCenter(VideoActivity.this, R.string.msg_snapshot_saved);
+									SnapshotManager.updateGallery(path, VideoActivity.this);
+								} else 
+								{
+									CustomToast.showInCenter(VideoActivity.this, R.string.msg_snapshot_saved_failed);
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
 							}
-						} catch (Exception e) {
-							e.printStackTrace();
 						}
+					}, 100);
 				}
 			}
 		});
