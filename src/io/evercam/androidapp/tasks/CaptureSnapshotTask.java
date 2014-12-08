@@ -3,6 +3,7 @@ package io.evercam.androidapp.tasks;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.video.SnapshotManager;
+import io.evercam.androidapp.video.VideoActivity;
 import io.evercam.androidapp.video.SnapshotManager.FileType;
 
 import java.io.ByteArrayOutputStream;
@@ -53,12 +54,13 @@ public class CaptureSnapshotTask extends AsyncTask<Void, Void, Boolean>
 	{
 		if(success)
 		{
-			CustomToast.showInCenter(activity, R.string.msg_snapshot_saved);
+			CustomToast.showSnapshotSaved(activity);
 		}
 		else
 		{
 			//This should never happen
-			//TODO: But considering unexpected situation. Handle this later.
+			//But considering unexpected situation, show a toast
+			CustomToast.showInBottom(activity, R.string.msg_snapshot_saved_failed);
 		}
 	}
 

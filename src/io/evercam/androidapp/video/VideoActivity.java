@@ -8,6 +8,7 @@ import io.evercam.androidapp.FeedbackActivity;
 import io.evercam.androidapp.LocalStorageActivity;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.ViewCameraActivity;
+import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.custom.ProgressView;
@@ -52,11 +53,13 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -82,6 +85,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.github.johnpersano.supertoasts.SuperActivityToast;
+import com.github.johnpersano.supertoasts.SuperToast;
+import com.github.johnpersano.supertoasts.util.OnClickWrapper;
 import com.logentries.android.AndroidLogger;
 
 import io.evercam.androidapp.R;
@@ -1334,12 +1340,15 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			@Override
 			public void onClick(View v) 
 			{
-				//Hide pause/snaoshot menu 
-				mediaPlayerView.setVisibility(View.GONE);
-				snapshotMenuView.setVisibility(View.GONE);
-				mediaPlayerView.clearAnimation();
-				snapshotMenuView.clearAnimation();
-				fadeInAnimation.reset();
+				//Hide pause/snapshot menu if the live view is not paused
+				if(!paused)
+				{
+					mediaPlayerView.setVisibility(View.GONE);
+					snapshotMenuView.setVisibility(View.GONE);
+					mediaPlayerView.clearAnimation();
+					snapshotMenuView.clearAnimation();
+					fadeInAnimation.reset();
+				}
 				
 				if(imageView.getVisibility() == View.VISIBLE)
 				{
@@ -1359,26 +1368,30 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				}
 				else if (surfaceView.getVisibility() == View.VISIBLE)
 				{
+					CustomToast.showInBottom(VideoActivity.this, R.string.msg_taking_snapshot);
 					new Handler().postDelayed(new Runnable()
 					{
 						@Override
 						public void run() 
 						{
-							try {
+							try 
+							{
 								String path = SnapshotManager.createFilePath(evercamCamera.getCameraId(), FileType.PNG);
 								if (libvlc.takeSnapShot(path, mVideoWidth, mVideoHeight)) 
 								{
-									CustomToast.showInCenter(VideoActivity.this, R.string.msg_snapshot_saved);
 									SnapshotManager.updateGallery(path, VideoActivity.this);
-								} else 
+
+									CustomToast.showSnapshotSaved(VideoActivity.this);	
+								} 
+								else 
 								{
-									CustomToast.showInCenter(VideoActivity.this, R.string.msg_snapshot_saved_failed);
+									CustomToast.showInBottom(VideoActivity.this, R.string.msg_snapshot_saved_failed);
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
 						}
-					}, 100);
+					}, 200);
 				}
 			}
 		});
