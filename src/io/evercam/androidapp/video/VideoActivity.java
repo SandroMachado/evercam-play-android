@@ -822,7 +822,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				else 
 				{
 					mediaPlayerView.setVisibility(View.VISIBLE);
-					snapshotMenuView.setVisibility(View.VISIBLE);
+					if(surfaceView.getVisibility() != View.VISIBLE)
+					{
+						snapshotMenuView.setVisibility(View.VISIBLE);
+					}
 				}
 
 				int orientation = VideoActivity.this.getResources().getConfiguration().orientation;
@@ -1283,14 +1286,20 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 					}
 					mediaPlayerView.setVisibility(View.VISIBLE);
 					snapshotMenuView.setVisibility(View.VISIBLE);
+					
+					if(surfaceView.getVisibility() == View.VISIBLE)
+					{
+						snapshotMenuView.setVisibility(View.GONE);
+					}
+
 					mediaPlayerView.setImageBitmap(null);
 					mediaPlayerView.setImageResource(android.R.drawable.ic_media_play);
 
 					stopPlayer();
 
 					paused = true; // mark the images as paused. Do not stop
-									// threads, but do not show the images
-									// showing up
+								   // threads, but do not show the images
+								   // showing up
 				}
 			}
 		});
