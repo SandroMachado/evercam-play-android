@@ -8,6 +8,7 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -255,14 +256,14 @@ public class CustomedDialog
 	/**
 	 * Return a pop up dialog that ask the user whether or not to save the snapshot
 	 */
-	public static AlertDialog getConfirmSnapshotDialog(Activity activity, Drawable drawable, DialogInterface.OnClickListener listener)
+	public static AlertDialog getConfirmSnapshotDialog(Activity activity, Bitmap bitmap, DialogInterface.OnClickListener listener)
 	{
 		Builder snapshotDialogBuilder = new AlertDialog.Builder(activity);
 		LayoutInflater mInflater = LayoutInflater.from(activity);
 		final View snapshotView = mInflater.inflate(R.layout.confirm_snapshot_dialog, null);
 		ImageView snapshotImageView = (ImageView) snapshotView
 				.findViewById(R.id.confirm_snapshot_image);
-		snapshotImageView.setImageDrawable(drawable);
+		snapshotImageView.setImageBitmap(bitmap);
 		snapshotDialogBuilder.setView(snapshotView);
 		snapshotDialogBuilder.setPositiveButton(activity.getString(R.string.save), listener);
 		snapshotDialogBuilder.setNegativeButton(activity.getString(R.string.cancel), new DialogInterface.OnClickListener() {

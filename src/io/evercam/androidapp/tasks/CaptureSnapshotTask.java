@@ -24,19 +24,18 @@ public class CaptureSnapshotTask extends AsyncTask<Void, Void, Boolean>
 	
 	private Activity activity;
 	private String cameraId;
-	private Drawable drawable;
+	private Bitmap bitmap;
 	
-	public CaptureSnapshotTask(Activity activity, String cameraId, Drawable drawable)
+	public CaptureSnapshotTask(Activity activity, String cameraId, Bitmap bitmap)
 	{
 		this.activity = activity;
 		this.cameraId = cameraId;
-		this.drawable = drawable;
+		this.bitmap = bitmap;
 	}
 
 	@Override
 	protected Boolean doInBackground(Void... params) 
 	{
-		Bitmap bitmap = drawableToBitmap(drawable);
 		if(bitmap != null)
 		{
 			String savedPath = capture(bitmap);

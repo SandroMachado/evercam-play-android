@@ -51,8 +51,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -1369,16 +1372,27 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				
 				if(imageView.getVisibility() == View.VISIBLE)
 				{
-					final Drawable drawable = imageView.getDrawable();
-					if (drawable != null)
+					final Bitmap bitmap;
+					if (imageView.getDrawable() instanceof BitmapDrawable) 
 					{
-						CustomedDialog.getConfirmSnapshotDialog(VideoActivity.this, drawable,
+					    bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+					} 
+					else 
+					{
+					    Drawable drawable = imageView.getDrawable();
+					    bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+					    Canvas canvas = new Canvas(bitmap);
+					    drawable.draw(canvas);
+					}
+					if (bitmap != null)
+					{
+						CustomedDialog.getConfirmSnapshotDialog(VideoActivity.this, bitmap,
 								new DialogInterface.OnClickListener() 
 						{
 							@Override
 							public void onClick(DialogInterface dialog, int which) 
 							{
-								new CaptureSnapshotTask(VideoActivity.this, evercamCamera.getCameraId(), drawable).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+								new CaptureSnapshotTask(VideoActivity.this, evercamCamera.getCameraId(), bitmap).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 							}
 						}).show();
 					}
