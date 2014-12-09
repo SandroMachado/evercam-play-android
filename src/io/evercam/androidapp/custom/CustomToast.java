@@ -60,7 +60,7 @@ public class CustomToast
 		toast.show();
 	}
 	
-	public static void showSnapshotSaved(final Activity activity)
+	public static void showSuperSnapshotSaved(final Activity activity)
 	{
 		/**
 		 * The OnClickWrapper is needed to reattach SuperToast.OnClickListeners on orientation changes. 
@@ -78,11 +78,21 @@ public class CustomToast
 		    }
 		});
 		
+		SuperActivityToast.cancelAllSuperActivityToasts();
 		SuperActivityToast superActivityToast = new SuperActivityToast(activity, SuperToast.Type.BUTTON);
 		superActivityToast.setDuration(SuperToast.Duration.EXTRA_LONG);
 		superActivityToast.setText(activity.getString(R.string.msg_snapshot_saved));
 		superActivityToast.setButtonIcon(R.drawable.icon_gallery, activity.getString(R.string.view_in_gallery));
 		superActivityToast.setOnClickWrapper(onClickWrapper);
 		superActivityToast.show();		
+	}
+	
+	public static void showSuperToastShort(Activity activity, int message)
+	{
+		SuperActivityToast.cancelAllSuperActivityToasts();
+		SuperActivityToast superActivityToast = new SuperActivityToast(activity);
+		superActivityToast.setDuration(SuperToast.Duration.SHORT);
+		superActivityToast.setText(activity.getString(message));
+		superActivityToast.show();	
 	}
 }

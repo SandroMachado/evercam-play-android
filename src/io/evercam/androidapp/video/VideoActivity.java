@@ -1390,7 +1390,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							@Override
 							public void onClick(DialogInterface dialog, int which) 
 							{
-								CustomToast.showSnapshotSaved(VideoActivity.this);
+								CustomToast.showSuperSnapshotSaved(VideoActivity.this);
 								new Thread(new CaptureSnapshotRunnable(VideoActivity.this, evercamCamera.getCameraId(), bitmap)).start();
 							}
 						}).show();
@@ -1398,7 +1398,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				}
 				else if (surfaceView.getVisibility() == View.VISIBLE)
 				{
-					CustomToast.showInBottom(VideoActivity.this, R.string.msg_taking_snapshot);
+					CustomToast.showSuperToastShort(VideoActivity.this, R.string.msg_taking_snapshot);
+					
 					new Handler().postDelayed(new Runnable()
 					{
 						@Override
@@ -1410,8 +1411,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 								if (libvlc.takeSnapShot(path, mVideoWidth, mVideoHeight)) 
 								{
 									SnapshotManager.updateGallery(path, VideoActivity.this);
-
-									CustomToast.showSnapshotSaved(VideoActivity.this);	
+									
+									CustomToast.showSuperSnapshotSaved(VideoActivity.this);	
 								} 
 								else 
 								{
@@ -1421,7 +1422,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 								e.printStackTrace();
 							}
 						}
-					}, 200);
+					}, 500);
 				}
 			}
 		});
