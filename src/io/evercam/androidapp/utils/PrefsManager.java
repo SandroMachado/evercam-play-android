@@ -89,7 +89,7 @@ public class PrefsManager
 	public static boolean isRotateEnabled(Context context)
 	{
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-		return sharedPrefs.getBoolean(KEY_SCREEN_ROTATE, false);
+		return sharedPrefs.getBoolean(KEY_SCREEN_ROTATE, true);
 	}
 	
 	public static boolean isRleaseNotesShown(Context context, int versionCode)
