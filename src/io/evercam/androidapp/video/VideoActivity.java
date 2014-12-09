@@ -49,6 +49,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -1181,6 +1182,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 	private void setDisplayOriention()
 	{
+		/** Force landscape if it's in settings */
+		boolean autoRotateEnabled = PrefsManager.isRotateEnabled(this);
+		if(!autoRotateEnabled)
+		{
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		}
+		
 		int orientation = this.getResources().getConfiguration().orientation;
 		if (orientation == Configuration.ORIENTATION_PORTRAIT)
 		{

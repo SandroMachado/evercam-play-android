@@ -13,5 +13,12 @@
         android:entries="@array/prefs_sleep_entries"
         android:entryValues="@array/prefs_sleep_entry_values"
         android:title="@string/title_awake_time" />
+    
+    <CheckBoxPreference
+        android:key="prefsScreenRotate"
+        android:title="@string/title_rotate_screen"
+        android:summaryOn="@string/rotate_summery_on"
+        android:summaryOff="@string/rotate_summery_off"
+        android:defaultValue="true"/>
 
 </PreferenceScreen>

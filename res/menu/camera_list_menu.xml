@@ -33,7 +33,6 @@
         android:id="@+id/menu_logout"
         android:orderInCategory="7"
         android:title="@string/menu_logout"/>
-    
-
+ 
 
 </menu>

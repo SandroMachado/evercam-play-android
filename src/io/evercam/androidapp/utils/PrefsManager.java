@@ -12,6 +12,7 @@ public class PrefsManager
 	public final static String KEY_CAMERA_PER_ROW = "lstgridcamerasperrow";
 	public final static String KEY_RELEASE_NOTES_SHOWN = "isReleaseNotesShown";
 	public static final String KEY_AWAKE_TIME = "prefsAwakeTime";
+	public static final String KEY_SCREEN_ROTATE = "prefsScreenRotate";
 
 	public static void saveEvercamUserKeyPair(SharedPreferences sharedPrefs, String apiKey,
 			String apiId)
@@ -84,7 +85,13 @@ public class PrefsManager
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		return sharedPrefs.getString(KEY_AWAKE_TIME, "" + 0);
 	}
-
+	
+	public static boolean isRotateEnabled(Context context)
+	{
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		return sharedPrefs.getBoolean(KEY_SCREEN_ROTATE, false);
+	}
+	
 	public static boolean isRleaseNotesShown(Context context, int versionCode)
 	{
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);

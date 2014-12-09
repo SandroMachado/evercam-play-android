@@ -7,6 +7,7 @@ import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
 
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
@@ -137,6 +138,12 @@ public class CameraPrefsActivity extends PreferenceActivity
 					return true;
 				}
 			});
+		}
+		
+		private void setUpScreenRotate()
+		{
+			CheckBoxPreference rotatePrefs = (CheckBoxPreference) getPreferenceManager().findPreference(PrefsManager.KEY_SCREEN_ROTATE);
+			
 		}
 
 		private String getSummary(String entry)
