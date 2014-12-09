@@ -1,9 +1,6 @@
 package io.evercam.androidapp.tasks;
 
-import io.evercam.androidapp.R;
-import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.video.SnapshotManager;
-import io.evercam.androidapp.video.VideoActivity;
 import io.evercam.androidapp.video.SnapshotManager.FileType;
 
 import java.io.ByteArrayOutputStream;
@@ -15,10 +12,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.util.Log;
 
-public class CaptureSnapshotTask extends AsyncTask<Void, Void, Boolean> 
+public class CaptureSnapshotRunnable implements Runnable
 {
 	private final String TAG = "evercamplay_CaptureSnapshotTask";
 	
@@ -26,41 +21,11 @@ public class CaptureSnapshotTask extends AsyncTask<Void, Void, Boolean>
 	private String cameraId;
 	private Bitmap bitmap;
 	
-	public CaptureSnapshotTask(Activity activity, String cameraId, Bitmap bitmap)
+	public CaptureSnapshotRunnable(Activity activity, String cameraId, Bitmap bitmap)
 	{
 		this.activity = activity;
 		this.cameraId = cameraId;
 		this.bitmap = bitmap;
-	}
-
-	@Override
-	protected Boolean doInBackground(Void... params) 
-	{
-		if(bitmap != null)
-		{
-			String savedPath = capture(bitmap);
-			if(!savedPath.isEmpty())
-			{
-				SnapshotManager.updateGallery(savedPath, activity);
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	protected void onPostExecute(Boolean success) 
-	{
-		if(success)
-		{
-			CustomToast.showSnapshotSaved(activity);
-		}
-		else
-		{
-			//This should never happen
-			//But considering unexpected situation, show a toast
-			CustomToast.showInBottom(activity, R.string.msg_snapshot_saved_failed);
-		}
 	}
 
 	public static Bitmap drawableToBitmap (Drawable drawable) 
@@ -105,5 +70,19 @@ public class CaptureSnapshotTask extends AsyncTask<Void, Void, Boolean>
 			}
 		}
 		return "";
+	}
+
+	@Override
+	public void run() 
+	{
+		if(bitmap != null)
+		{
+			String savedPath = capture(bitmap);
+			if(!savedPath.isEmpty())
+			{
+				SnapshotManager.updateGallery(savedPath, activity);
+			}
+		}
+		
 	}
 }

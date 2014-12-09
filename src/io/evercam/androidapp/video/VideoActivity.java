@@ -8,7 +8,6 @@ import io.evercam.androidapp.FeedbackActivity;
 import io.evercam.androidapp.LocalStorageActivity;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.ViewCameraActivity;
-import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.custom.ProgressView;
@@ -17,7 +16,7 @@ import io.evercam.androidapp.dto.CameraStatus;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.feedback.FirebaseHelper;
 import io.evercam.androidapp.feedback.StreamFeedbackItem;
-import io.evercam.androidapp.tasks.CaptureSnapshotTask;
+import io.evercam.androidapp.tasks.CaptureSnapshotRunnable;
 import io.evercam.androidapp.tasks.DeleteCameraTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
@@ -29,7 +28,6 @@ import io.evercam.androidapp.video.SnapshotManager.FileType;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -1392,7 +1390,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							@Override
 							public void onClick(DialogInterface dialog, int which) 
 							{
-								new CaptureSnapshotTask(VideoActivity.this, evercamCamera.getCameraId(), bitmap).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+								CustomToast.showSnapshotSaved(VideoActivity.this);
+								new Thread(new CaptureSnapshotRunnable(VideoActivity.this, evercamCamera.getCameraId(), bitmap)).start();
 							}
 						}).show();
 					}
