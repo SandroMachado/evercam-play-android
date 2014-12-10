@@ -78,7 +78,7 @@ public class CustomToast
 		    }
 		});
 		
-		SuperActivityToast.cancelAllSuperActivityToasts();
+		SuperToast.cancelAllSuperToasts();
 		SuperActivityToast superActivityToast = new SuperActivityToast(activity, SuperToast.Type.BUTTON);
 		superActivityToast.setDuration(SuperToast.Duration.EXTRA_LONG);
 		superActivityToast.setText(activity.getString(R.string.msg_snapshot_saved));
@@ -88,11 +88,11 @@ public class CustomToast
 	}
 	
 	public static void showSuperToastShort(Activity activity, int message)
-	{
+	{	
 		SuperActivityToast.cancelAllSuperActivityToasts();
-		SuperActivityToast superActivityToast = new SuperActivityToast(activity);
-		superActivityToast.setDuration(SuperToast.Duration.SHORT);
-		superActivityToast.setText(activity.getString(message));
-		superActivityToast.show();	
+		SuperToast superToast = new SuperToast(activity);
+		superToast.setDuration(SuperToast.Duration.SHORT);
+		superToast.setText(activity.getString(message));
+		superToast.show();	
 	}
 }
