@@ -29,5 +29,8 @@ public final class Constants
 
 	// Values for intent bundle
 	public static final String KEY_IS_EDIT = "isEdit";
+	
+	//Bundle key
+	public static final String BUNDLE_KEY_CAMERA_ID = "cameraId";
 
 }

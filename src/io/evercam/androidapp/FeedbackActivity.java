@@ -3,6 +3,7 @@ package io.evercam.androidapp;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.feedback.FeedbackSender;
+import io.evercam.androidapp.utils.Constants;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ public class FeedbackActivity extends Activity
 {
 	private final String TAG = "evercamplay-FeedbackActivity";
 	private EditText feedbackEditText;
+	private String cameraId;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -28,6 +30,11 @@ public class FeedbackActivity extends Activity
 		
 		setContentView(R.layout.activity_feedback);
 		
+		Bundle bundle = getIntent().getExtras();
+		if(bundle != null)
+		{
+			cameraId = bundle.getString(Constants.BUNDLE_KEY_CAMERA_ID);
+		}
 		feedbackEditText = (EditText) findViewById(R.id.feedback_edit_text);
 	}
 
@@ -59,7 +66,7 @@ public class FeedbackActivity extends Activity
 					public void run() 
 					{
 						FeedbackSender feedbackSender = new FeedbackSender(FeedbackActivity.this);
-						feedbackSender.send(feedbackString);
+						feedbackSender.send(feedbackString,cameraId);
 					}
 				}).start();
 				finish();
@@ -81,20 +88,20 @@ public class FeedbackActivity extends Activity
 		showConfirmQuitDialog();
 	}
 
-	public void sendFeedback()
-	{
-		String feedbackString = feedbackEditText.getText().toString();
-		if(feedbackString.isEmpty())
-		{
-			//Do nothing
-		}
-		else
-		{
-			CustomToast.showInCenter(this, R.string.msg_feedback_sent);
-			FeedbackSender feedbackSender = new FeedbackSender(this);
-			feedbackSender.send(feedbackString);
-		}
-	}
+//	public void sendFeedback()
+//	{
+//		String feedbackString = feedbackEditText.getText().toString();
+//		if(feedbackString.isEmpty())
+//		{
+//			//Do nothing
+//		}
+//		else
+//		{
+//			CustomToast.showInCenter(this, R.string.msg_feedback_sent);
+//			FeedbackSender feedbackSender = new FeedbackSender(this);
+//			feedbackSender.send(feedbackString);
+//		}
+//	}
 	
 	private void showConfirmQuitDialog()
 	{

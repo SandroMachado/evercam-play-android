@@ -562,7 +562,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			else if (itemId == R.id.video_menu_feedback)
 			{
 				feedbackStarted = true;
-				startActivityForResult(new Intent(VideoActivity.this, FeedbackActivity.class), Constants.REQUEST_CODE_FEEDBACK);
+				Intent feedbackIntent = new Intent(VideoActivity.this, FeedbackActivity.class);
+				feedbackIntent.putExtra(Constants.BUNDLE_KEY_CAMERA_ID, evercamCamera.getCameraId());
+				startActivityForResult(feedbackIntent, Constants.REQUEST_CODE_FEEDBACK);
 			}
 			else if (itemId == R.id.video_menu_view_snapshots)
 			{
