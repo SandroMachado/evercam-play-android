@@ -564,12 +564,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 				feedbackStarted = true;
 				startActivityForResult(new Intent(VideoActivity.this, FeedbackActivity.class), Constants.REQUEST_CODE_FEEDBACK);
 			}
-//			else if (itemId == R.id.video_menu_view_snapshots)
-//			{
-//				Intent i = new Intent(
-//				Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//				startActivity(i);
-//			}
+			else if (itemId == R.id.video_menu_view_snapshots)
+			{
+				SnapshotManager.showSnapshotsInGallery(this);
+			}
 		}
 		catch (OutOfMemoryError e)
 		{

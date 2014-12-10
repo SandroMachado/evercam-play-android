@@ -1,5 +1,6 @@
 package io.evercam.androidapp.video;
 
+import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomToast;
 
 import java.io.File;
@@ -49,6 +50,12 @@ public class SnapshotManager
 		return folder.getPath() + File.separator + fileName;
 	}
 	
+	public static String getPlayFolderPath()
+	{
+		return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+		+ File.separator + SNAPSHOT_FOLDER_NAME_EVERCAM + File.separator + SNAPSHOT_FOLDER_NAME_PLAY;
+	}
+	
 	/**
 	 * Notify Gallery about the snapshot that got saved, otherwise the image
 	 * won't show in Gallery
@@ -68,8 +75,27 @@ public class SnapshotManager
 		}
 		else
 		{
-			new SingleMediaScanner(activity,path);
+			new SingleMediaScanner(activity).startScan(path, false);
 		}
+	}
+	
+	public static void showSnapshotsInGallery(Activity activity)
+	{
+		String playFolderPath = SnapshotManager.getPlayFolderPath();
+		File folder = new File(playFolderPath);
+		String[] allFiles = folder.list();
+		if(allFiles != null && allFiles.length > 0)
+		{
+			SnapshotManager.showInGallery(playFolderPath + File.separator + allFiles[0], activity);
+		}else
+		{
+			CustomToast.showInCenter(activity, R.string.msg_no_snapshot_saved);
+		}
+	}
+	
+	private static void showInGallery(String path, Activity activity)
+	{
+		new SingleMediaScanner(activity).startScan(path, true);
 	}
 	
 	private static String fileType(FileType fileType)
@@ -89,15 +115,16 @@ public class SnapshotManager
 		MediaScannerConnection connection;
 		Activity activity;
 		private String imagepath;
+		private boolean showInGallery;
 
-		public SingleMediaScanner(Activity activity, String url)
+		public SingleMediaScanner(Activity activity)
 		{
 			this.activity = activity;
-			startScan(url);
 		}
 
-		public void startScan(String url)
+		public void startScan(String url, boolean showInGallery)
 		{
+			this.showInGallery = showInGallery;
 			imagepath = url;
 			if (connection != null) connection.disconnect();
 			connection = new MediaScannerConnection(activity, this);
@@ -125,7 +152,15 @@ public class SnapshotManager
 				@Override
 				public void run() 
 				{
-					CustomToast.showSuperSnapshotSaved(activity, uriFinal);	
+					if(!showInGallery)
+					{
+						CustomToast.showSuperSnapshotSaved(activity, uriFinal);	
+					}
+					else
+					{
+						Intent intent = new Intent(Intent.ACTION_VIEW, uriFinal);
+						activity.startActivity(intent);
+					}
 				}
 			});
 			

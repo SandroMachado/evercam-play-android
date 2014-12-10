@@ -73,9 +73,7 @@ public class CustomToast
 		    @Override
 		    public void onClick(View view, Parcelable token) 
 		    {
-				Intent intent = new Intent(Intent.ACTION_VIEW,
-//				Uri.parse("content://media/internal/images/media"));
-				uri);
+				Intent intent = new Intent(Intent.ACTION_VIEW,uri);
 				activity.startActivity(intent);
 		    }
 		});
