@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.view.Gravity;
 import android.view.View;
@@ -60,7 +61,7 @@ public class CustomToast
 		toast.show();
 	}
 	
-	public static void showSuperSnapshotSaved(final Activity activity)
+	public static void showSuperSnapshotSaved(final Activity activity, final Uri uri)
 	{
 		/**
 		 * The OnClickWrapper is needed to reattach SuperToast.OnClickListeners on orientation changes. 
@@ -73,7 +74,8 @@ public class CustomToast
 		    public void onClick(View view, Parcelable token) 
 		    {
 				Intent intent = new Intent(Intent.ACTION_VIEW,
-				Uri.parse("content://media/internal/images/media"));
+//				Uri.parse("content://media/internal/images/media"));
+				uri);
 				activity.startActivity(intent);
 		    }
 		});

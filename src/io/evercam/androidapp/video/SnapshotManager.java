@@ -1,5 +1,7 @@
 package io.evercam.androidapp.video;
 
+import io.evercam.androidapp.custom.CustomToast;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,9 +14,11 @@ import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
 
 public class SnapshotManager 
 {
+	private final static String TAG = "evercamplay-SnapshotManager";
 	public static final String SNAPSHOT_FOLDER_NAME_EVERCAM = "Evercam";
 	public static final String SNAPSHOT_FOLDER_NAME_PLAY = "Evercam Play";
 	public enum FileType {PNG,JPG};
@@ -83,12 +87,12 @@ public class SnapshotManager
 	static class SingleMediaScanner implements MediaScannerConnectionClient
 	{
 		MediaScannerConnection connection;
-		Context ctxt;
+		Activity activity;
 		private String imagepath;
 
-		public SingleMediaScanner(Context ctxt, String url)
+		public SingleMediaScanner(Activity activity, String url)
 		{
-			this.ctxt = ctxt;
+			this.activity = activity;
 			startScan(url);
 		}
 
@@ -96,7 +100,7 @@ public class SnapshotManager
 		{
 			imagepath = url;
 			if (connection != null) connection.disconnect();
-			connection = new MediaScannerConnection(ctxt, this);
+			connection = new MediaScannerConnection(activity, this);
 			connection.connect();
 		}
 
@@ -115,6 +119,17 @@ public class SnapshotManager
 		@Override
 		public void onScanCompleted(String path, Uri uri)
 		{
+			final Uri uriFinal = uri;
+			Log.e(TAG, uri.getPath());
+			activity.runOnUiThread(new Runnable(){
+
+				@Override
+				public void run() 
+				{
+					CustomToast.showSuperSnapshotSaved(activity, uriFinal);	
+				}
+			});
+			
 			connection.disconnect();
 		}
 	}

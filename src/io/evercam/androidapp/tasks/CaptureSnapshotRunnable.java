@@ -1,7 +1,6 @@
 package io.evercam.androidapp.tasks;
 
 import io.evercam.androidapp.video.SnapshotManager;
-import io.evercam.androidapp.video.SnapshotManager.FileType;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -18,13 +17,13 @@ public class CaptureSnapshotRunnable implements Runnable
 	private final String TAG = "evercamplay_CaptureSnapshotTask";
 	
 	private Activity activity;
-	private String cameraId;
+	private String path;
 	private Bitmap bitmap;
 	
-	public CaptureSnapshotRunnable(Activity activity, String cameraId, Bitmap bitmap)
+	public CaptureSnapshotRunnable(Activity activity, String path, Bitmap bitmap)
 	{
 		this.activity = activity;
-		this.cameraId = cameraId;
+		this.path = path;
 		this.bitmap = bitmap;
 	}
 
@@ -54,7 +53,7 @@ public class CaptureSnapshotRunnable implements Runnable
 			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 			snapshotBitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
 
-			File f = new File(SnapshotManager.createFilePath(cameraId, FileType.JPG));
+			File f = new File(path);
 
 			try
 			{
@@ -83,6 +82,5 @@ public class CaptureSnapshotRunnable implements Runnable
 				SnapshotManager.updateGallery(savedPath, activity);
 			}
 		}
-		
 	}
 }

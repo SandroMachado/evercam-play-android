@@ -1390,8 +1390,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							@Override
 							public void onClick(DialogInterface dialog, int which) 
 							{
-								CustomToast.showSuperSnapshotSaved(VideoActivity.this);
-								new Thread(new CaptureSnapshotRunnable(VideoActivity.this, evercamCamera.getCameraId(), bitmap)).start();
+								String path = SnapshotManager.createFilePath(evercamCamera.getCameraId(), FileType.JPG);
+		
+								new Thread(new CaptureSnapshotRunnable(VideoActivity.this, path, bitmap)).start();
 							}
 						}).show();
 					}
@@ -1411,8 +1412,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 								if (libvlc.takeSnapShot(path, mVideoWidth, mVideoHeight)) 
 								{
 									SnapshotManager.updateGallery(path, VideoActivity.this);
-									
-									CustomToast.showSuperSnapshotSaved(VideoActivity.this);	
 								} 
 								else 
 								{
