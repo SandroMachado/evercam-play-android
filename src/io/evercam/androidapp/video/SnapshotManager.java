@@ -120,7 +120,6 @@ public class SnapshotManager
 		public void onScanCompleted(String path, Uri uri)
 		{
 			final Uri uriFinal = uri;
-			Log.e(TAG, uri.getPath());
 			activity.runOnUiThread(new Runnable(){
 
 				@Override

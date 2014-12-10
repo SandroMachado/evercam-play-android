@@ -74,6 +74,7 @@
     <string name="menu_edit_camera">Edit Camera</string>
     <string name="menu_local_storage">Local Storage</string>
     <string name="menu_view_camera">View Details</string>
+    <string name="menu_view_snapshot">View Snapshots</string>
 
     <!-- Feedback -->
     <string name="feedback_title">E-Play Feedback</string>
