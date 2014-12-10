@@ -52,9 +52,7 @@
     <string name="prefs_never">Never</string>
     <string name="summary_awake_time_prefix">After</string>
     <string name="summary_awake_time_suffix">of inactivity</string>
-    <string name="title_rotate_screen">Auto-rotate screen for live view</string>
-    <string name="rotate_summery_on">Use existing phone settings</string>
-    <string name="rotate_summery_off">Force landscape</string>
+    <string name="title_force_landscape">Force landscape for live view</string>
 
     <!-- Menu -->
     <string name="menu_settings">Settings</string>

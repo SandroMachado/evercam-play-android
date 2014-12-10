@@ -1190,8 +1190,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private void setDisplayOriention()
 	{
 		/** Force landscape if it's enabled in settings */
-		boolean autoRotateEnabled = PrefsManager.isRotateEnabled(this);
-		if(!autoRotateEnabled)
+		boolean forceLandscape = PrefsManager.isForceLandscape(this);
+		if(forceLandscape)
 		{
 			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		}
