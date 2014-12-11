@@ -42,7 +42,7 @@ public class SnapshotManager
 		String timeString = dateFormat.format(Calendar.getInstance().getTime());
 		String fileName = cameraId + "_" + timeString + fileType(fileType);
 		
-		File folder = new File(getPlayFolderPath(cameraId));
+		File folder = new File(getPlayFolderPathForCamera(cameraId));
 		if (!folder.exists())
 		{
 			folder.mkdirs();
@@ -51,11 +51,15 @@ public class SnapshotManager
 		return folder.getPath() + File.separator + fileName;
 	}
 	
-	public static String getPlayFolderPath(String cameraId)
+	public static String getPlayFolderPathForCamera(String cameraId)
+	{
+		return getPlayFolderPath() + File.separator + cameraId;
+	}
+	
+	public static String getPlayFolderPath()
 	{
 		return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-		+ File.separator + SNAPSHOT_FOLDER_NAME_EVERCAM + File.separator + SNAPSHOT_FOLDER_NAME_PLAY
-		+ File.separator + cameraId;
+		+ File.separator + SNAPSHOT_FOLDER_NAME_EVERCAM + File.separator + SNAPSHOT_FOLDER_NAME_PLAY;
 	}
 	
 	/**
@@ -81,9 +85,9 @@ public class SnapshotManager
 		}
 	}
 	
-	public static void showSnapshotsInGallery(Activity activity, String cameraId)
+	public static void showSnapshotsInGalleryForCamera(Activity activity, String cameraId)
 	{
-		String playFolderPath = SnapshotManager.getPlayFolderPath(cameraId);
+		String playFolderPath = SnapshotManager.getPlayFolderPathForCamera(cameraId);
 		File folder = new File(playFolderPath);
 		String[] allFiles = folder.list();
 		if(allFiles != null && allFiles.length > 0)
@@ -93,8 +97,34 @@ public class SnapshotManager
 			SnapshotManager.showInGallery(playFolderPath + File.separator + latestFile, activity);
 		}else
 		{
-			CustomToast.showInCenter(activity, R.string.msg_no_snapshot_saved);
+			CustomToast.showInCenter(activity, R.string.msg_no_snapshot_saved_camera);
 		}
+	}
+	
+	/**
+	 * The most recent snapshot from the alphabetically first camera will be displayed
+	 * @param activity
+	 */
+	public static void showAnySnapshotInGallery(Activity activity)
+	{
+		File playFolder = new File(getPlayFolderPath());
+		String[] allFolderNames = playFolder.list();
+		if(allFolderNames != null && allFolderNames.length > 0)
+		{
+			for(String cameraFolderName : allFolderNames)
+			{
+				File cameraFolder = new File(getPlayFolderPathForCamera(cameraFolderName));
+				String[] snapshotFileNames = cameraFolder.list();
+				if(snapshotFileNames!= null && snapshotFileNames.length > 0)
+				{
+					showSnapshotsInGalleryForCamera(activity, cameraFolderName);
+					return;
+				}
+			}
+		}
+		
+		//Executing here means no valid camera name folder found
+		CustomToast.showInCenterLong(activity, R.string.msg_no_snapshot_saved_main);
 	}
 	
 	/**

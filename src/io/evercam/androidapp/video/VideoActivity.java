@@ -561,7 +561,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			}
 			else if (itemId == R.id.video_menu_view_snapshots)
 			{
-				SnapshotManager.showSnapshotsInGallery(this, evercamCamera.getCameraId());
+				SnapshotManager.showSnapshotsInGalleryForCamera(this, evercamCamera.getCameraId());
 			}
 		}
 		catch (OutOfMemoryError e)

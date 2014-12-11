@@ -20,13 +20,14 @@
     <string name="msg_confirm_remove_camera">Are you sure you want to remove this camera?</string>
     <string name="msg_confirm_cancel_scan">We\'re still scanning your network, are you sure you want to cancel?</string>
     <string name="msg_offline">Camera is offline.</string>
-    <string name="msg_feedback_sent">Thanks for the feedback. We take all our feedback seriously, so we\'ll be in contact.</string>
-    <string name="msg_feedback">We\'re always looking to improve Evercam Play, so let us know if you have any suggestions.</string>
+    <string name="msg_feedback_sent">Thanks for the feedback. We take all our feedback seriously, so we\'ll be in contact</string>
+    <string name="msg_feedback">We\'re always looking to improve Evercam Play, so let us know if you have any suggestions</string>
     <string name="feedback_hint">Enter your feedback</string>
-    <string name="msg_confirm_quit_feedback">Are you sure you want to leave this page? Hitting back will lose any feedback you have entered.</string>
+    <string name="msg_confirm_quit_feedback">Are you sure you want to leave this page? Hitting back will lose any feedback you have entered</string>
     <string name="msg_snapshot_saved">Snapshot saved!</string>
     <string name="msg_snapshot_saved_failed">Failed to save snapshot!</string>
     <string name="msg_taking_snapshot">Taking snapshot&#8230;</string>
-    <string name="msg_no_snapshot_saved">No snapshot saved for this camera</string>
+    <string name="msg_no_snapshot_saved_camera">No snapshot saved for this camera</string>
+    <string name="msg_no_snapshot_saved_main">No snapshot saved yet. You can take snapshots in camera live view</string>
 
 </resources>

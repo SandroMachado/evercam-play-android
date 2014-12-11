@@ -42,6 +42,7 @@ import io.evercam.androidapp.tasks.LoadCameraListTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
+import io.evercam.androidapp.video.SnapshotManager;
 
 import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
@@ -187,6 +188,10 @@ public class CamerasActivity extends ParentActivity implements
 		else if (itemId == R.id.menu_feedback)
 		{
 			startActivity(new Intent(CamerasActivity.this, FeedbackActivity.class));
+		}
+		else if(itemId == R.id.menu_main_view_snapshots)
+		{
+			SnapshotManager.showAnySnapshotInGallery(this);
 		}
 		else
 		{
