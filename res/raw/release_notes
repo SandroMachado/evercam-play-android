@@ -1,7 +1,8 @@
 <h4>Evercam Play - IP Camera Viewer</h4>
-<h5>1.2.4 Alpha 09/12</h5> 
+<h5>1.2.4</h5> 
 <ul>
 	<li>- Now you can take snapshots from your cameras and save them locally<br/></li>
+	<li>- Force landscape option in Settings <br/></li>
 	<li>- Bug fixes related to pause & play camera live view <br/></li>
 </ul>
 <br/>
