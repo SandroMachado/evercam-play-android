@@ -1,8 +1,6 @@
 package io.evercam.androidapp.custom;
 
 import io.evercam.androidapp.R;
-import io.evercam.androidapp.video.VideoActivity;
-
 import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.util.OnClickWrapper;
@@ -11,7 +9,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.Parcelable;
 import android.view.Gravity;
 import android.view.View;

@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -48,7 +47,6 @@ import com.bugsense.trace.BugSenseHandler;
 import io.evercam.androidapp.R;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.util.Log;
 
 public class CamerasActivity extends ParentActivity implements

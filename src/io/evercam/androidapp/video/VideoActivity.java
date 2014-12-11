@@ -55,13 +55,10 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Parcelable;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -81,15 +78,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
-import com.github.johnpersano.supertoasts.SuperActivityToast;
-import com.github.johnpersano.supertoasts.SuperToast;
-import com.github.johnpersano.supertoasts.util.OnClickWrapper;
 import com.logentries.android.AndroidLogger;
 
 import io.evercam.androidapp.R;
@@ -568,7 +561,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			}
 			else if (itemId == R.id.video_menu_view_snapshots)
 			{
-				SnapshotManager.showSnapshotsInGallery(this);
+				SnapshotManager.showSnapshotsInGallery(this, evercamCamera.getCameraId());
 			}
 		}
 		catch (OutOfMemoryError e)

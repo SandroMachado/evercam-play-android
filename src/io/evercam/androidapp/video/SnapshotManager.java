@@ -5,10 +5,12 @@ import io.evercam.androidapp.custom.CustomToast;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
@@ -26,10 +28,11 @@ public class SnapshotManager
 	
 	/**
 	 * Produce a path for the snapshot to be saved in format:
-	 * Evercam folder/camera id + current time + file type ending 
-	 * For example Pictures/Evercam/Evercam Play/cameraid_20141225_091011.jpg
+	 * Folder:Evercam/Evercam Play/camera id
+	 * File name: camera id + current time + file type ending 
+	 * For example Pictures/Evercam/Evercam Play/cameraid/cameraid_20141225_091011.jpg
 	 * 
-	 * @param cameraId the camera id from Evercam
+	 * @param cameraId the unique camera id from Evercam
 	 * @param fileType PNG or JPG depend on it's from video or JPG view
 	 * @return snapshot file path
 	 */
@@ -39,9 +42,7 @@ public class SnapshotManager
 		String timeString = dateFormat.format(Calendar.getInstance().getTime());
 		String fileName = cameraId + "_" + timeString + fileType(fileType);
 		
-		File folder = new File(
-				Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-						+ File.separator + SNAPSHOT_FOLDER_NAME_EVERCAM + File.separator + SNAPSHOT_FOLDER_NAME_PLAY);
+		File folder = new File(getPlayFolderPath(cameraId));
 		if (!folder.exists())
 		{
 			folder.mkdirs();
@@ -50,10 +51,11 @@ public class SnapshotManager
 		return folder.getPath() + File.separator + fileName;
 	}
 	
-	public static String getPlayFolderPath()
+	public static String getPlayFolderPath(String cameraId)
 	{
 		return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-		+ File.separator + SNAPSHOT_FOLDER_NAME_EVERCAM + File.separator + SNAPSHOT_FOLDER_NAME_PLAY;
+		+ File.separator + SNAPSHOT_FOLDER_NAME_EVERCAM + File.separator + SNAPSHOT_FOLDER_NAME_PLAY
+		+ File.separator + cameraId;
 	}
 	
 	/**
@@ -79,18 +81,46 @@ public class SnapshotManager
 		}
 	}
 	
-	public static void showSnapshotsInGallery(Activity activity)
+	public static void showSnapshotsInGallery(Activity activity, String cameraId)
 	{
-		String playFolderPath = SnapshotManager.getPlayFolderPath();
+		String playFolderPath = SnapshotManager.getPlayFolderPath(cameraId);
 		File folder = new File(playFolderPath);
 		String[] allFiles = folder.list();
 		if(allFiles != null && allFiles.length > 0)
 		{
-			SnapshotManager.showInGallery(playFolderPath + File.separator + allFiles[0], activity);
+			String latestFile = getLatestFileName(allFiles);
+			Log.d(TAG, latestFile);
+			SnapshotManager.showInGallery(playFolderPath + File.separator + latestFile, activity);
 		}else
 		{
 			CustomToast.showInCenter(activity, R.string.msg_no_snapshot_saved);
 		}
+	}
+	
+	/**
+	 * Return the latest file name from all snapshots
+	 * @param allFiles must have at least one element
+	 */
+	public static String getLatestFileName(String[] allFiles)
+	{
+		String latestFile = "";
+
+		for(String file : allFiles)
+		{
+			if(latestFile.isEmpty())
+			{
+				latestFile = file;
+			}
+			else
+			{
+				if(file.compareTo(latestFile) >= 0)
+				{
+					latestFile = file;
+				}
+			}
+		}
+		
+		return latestFile;
 	}
 	
 	private static void showInGallery(String path, Activity activity)
