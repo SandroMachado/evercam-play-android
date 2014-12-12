@@ -102,12 +102,29 @@ public class CamerasActivity extends ParentActivity implements
 
 		activity = this;
 		checkUser();
+		
+		/**
+		 * Use Handler here because we want the title bar/menu get loaded first.
+		 * When the app starts, it will load cameras to grid view twice: 
+		 * 1. Load cameras that saved locally without image (disabled load image from cache because it blocks UI.)
+		 * 2. When camera list returned from Evercam, show them on screen with thumbnails, 
+		 * then request for snapshots in background seperately.
+		 */
 		new Handler().postDelayed(new Runnable(){
 
 			@Override
 			public void run()
 			{
-				addAllCameraViews(false, false);
+				/**
+				 * Sometimes Evercam returns the list less than 0.5 sec, so check it's returned or not before
+				 * the first load to avoid load it twice.
+				 */
+				io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) CamerasActivity.this
+						.findViewById(R.id.cameras_flow_layout);
+				if(!(camsLineView.getChildCount() > 0))
+				{
+					addAllCameraViews(false, false);
+				}
 			}
 		}, 500);
 
@@ -522,6 +539,7 @@ public class CamerasActivity extends ParentActivity implements
 			int index = 0;
 			totalCamerasInGrid = 0;
 
+			Log.d(TAG, "Add all to camera view: " + AppData.evercamCameraList.size());
 			for (EvercamCamera evercamCamera : AppData.evercamCameraList)
 			{
 				final LinearLayout cameraListLayout = new LinearLayout(this);
