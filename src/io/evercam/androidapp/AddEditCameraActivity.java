@@ -28,7 +28,6 @@ import com.bugsense.trace.BugSenseHandler;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;

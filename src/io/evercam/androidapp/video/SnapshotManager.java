@@ -5,11 +5,7 @@ import io.evercam.androidapp.custom.CustomToast;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
