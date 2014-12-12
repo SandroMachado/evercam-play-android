@@ -92,4 +92,13 @@ public class CustomToast
 		superToast.setText(activity.getString(message));
 		superToast.show();	
 	}
+	
+	public static void showInCenterExtraLong(Context context, int message)
+	{
+		SuperToast superToast = new SuperToast(context);
+		superToast.setDuration(SuperToast.Duration.EXTRA_LONG);
+		superToast.setText(context.getString(message));
+		superToast.setGravity(Gravity.CENTER, 0, 0);
+		superToast.show();	
+	}
 }

@@ -44,6 +44,6 @@
     <string name="countryNotSelected">Please select a country</string>
     <string name="invalidEmail">Invalid Email address</string>
     <string name="passwordNotMatch">Please re-enter the same password again</string>
-    <string name="confirmSignUp">Congratulations, you are now logged in with your Evercam account</string>
+    <string name="confirmSignUp">Congratulations, you\'re now logged in with your Evercam account. \n\nWe\'ve added the Evercam demo camera to your account, choose Add Camera from the menu to add your own cameras</string>
 
 </resources>

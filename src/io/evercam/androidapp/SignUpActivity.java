@@ -368,7 +368,7 @@ public class SignUpActivity extends Activity
 				SharedPreferences sharedPrefs = PreferenceManager
 						.getDefaultSharedPreferences(SignUpActivity.this);
 				PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
-				CustomToast.showInCenter(SignUpActivity.this, R.string.confirmSignUp);
+				CustomToast.showInCenterExtraLong(SignUpActivity.this, R.string.confirmSignUp);
 				showProgress(false);
 				startActivity(new Intent(SignUpActivity.this, MainActivity.class));
 			}

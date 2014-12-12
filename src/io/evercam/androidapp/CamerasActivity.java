@@ -539,7 +539,6 @@ public class CamerasActivity extends ParentActivity implements
 			int index = 0;
 			totalCamerasInGrid = 0;
 
-			Log.d(TAG, "Add all to camera view: " + AppData.evercamCameraList.size());
 			for (EvercamCamera evercamCamera : AppData.evercamCameraList)
 			{
 				final LinearLayout cameraListLayout = new LinearLayout(this);
