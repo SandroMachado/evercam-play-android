@@ -212,6 +212,27 @@ public class CustomedDialog
 				}).create();
 		return comfirmCancelDialog;
 	}
+	
+	public static AlertDialog getConfirmCancleAddCameraDialog(final Activity activity)
+	{
+		AlertDialog comfirmCancelDialog = new AlertDialog.Builder(activity)
+
+		.setMessage(R.string.msg_confirm_cancel_add_camera).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				activity.finish();
+			}
+		})
+				.setNegativeButton(R.string.no, new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						return;
+					}
+				}).create();
+		return comfirmCancelDialog;
+	}
 
 	public static AlertDialog getConfirmRemoveDialog(Activity activity,
 			DialogInterface.OnClickListener listener, int message)

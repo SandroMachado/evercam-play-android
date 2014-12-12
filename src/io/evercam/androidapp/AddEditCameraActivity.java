@@ -13,6 +13,7 @@ import io.evercam.Model;
 import io.evercam.PatchCameraBuilder;
 import io.evercam.Vendor;
 import io.evercam.androidapp.custom.CustomToast;
+import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.tasks.AddCameraTask;
 import io.evercam.androidapp.tasks.PatchCameraTask;
@@ -27,6 +28,7 @@ import com.bugsense.trace.BugSenseHandler;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -136,16 +138,59 @@ public class AddEditCameraActivity extends Activity
 	}
 
 	@Override
+	public void onBackPressed() 
+	{
+		showConfirmQuitIfAddingCamera();
+	}
+
+	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item)
 	{
 		switch (item.getItemId())
 		{
 		case android.R.id.home:
-			setResult(Constants.RESULT_FALSE);
-			this.finish();
+			showConfirmQuitIfAddingCamera();
 			return true;
 		}
 		return true;
+	}
+	
+	private void showConfirmQuitIfAddingCamera()
+	{
+		//If edit camera
+		if (addEditButton.getText().equals(getString(R.string.save_changes)))
+		{
+			setResult(Constants.RESULT_FALSE);
+			super.onBackPressed();
+		}
+		//If add camera
+		else
+		{
+			String cameraId = cameraIdEdit.getText().toString();
+			String cameraName = cameraNameEdit.getText().toString();
+			String username = usernameEdit.getText().toString();
+			String password = passwordEdit.getText().toString();
+			String externalHost = externalHostEdit.getText().toString();
+			String externalHttp = externalHttpEdit.getText().toString();
+			String externalRtsp = externalRtspEdit.getText().toString();
+			String internalHost = internalHostEdit.getText().toString();
+			String internalHttp = internalHttpEdit.getText().toString();
+			String internalRtsp = internalRtspEdit.getText().toString();
+			String jpgUrl = jpgUrlEdit.getText().toString();
+			
+			if(!(cameraId.isEmpty() && cameraName.isEmpty() && username.isEmpty() && password.isEmpty()
+					&& externalHost.isEmpty() && externalHttp.isEmpty() && externalRtsp.isEmpty()
+					&& internalHost.isEmpty() && internalHttp.isEmpty() && internalRtsp.isEmpty()
+					&& jpgUrl.isEmpty()))
+			{
+				CustomedDialog.getConfirmCancleAddCameraDialog(this).show();
+			}
+			else
+			{
+				setResult(Constants.RESULT_FALSE);
+				super.onBackPressed();
+			}
+		}
 	}
 
 	private void initialScreen()

@@ -29,5 +29,6 @@
     <string name="msg_taking_snapshot">Taking snapshot&#8230;</string>
     <string name="msg_no_snapshot_saved_camera">No snapshot saved for this camera</string>
     <string name="msg_no_snapshot_saved_main">No snapshot saved yet. You can take snapshots in camera live view</string>
-
+	<string name="msg_confirm_cancel_add_camera">You\'ll lose everything you typed in. Are you sure you want to quit?</string>
+	
 </resources>
