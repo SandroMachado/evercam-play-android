@@ -370,6 +370,8 @@ public class SignUpActivity extends Activity
 				PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
 				CustomToast.showInCenterExtraLong(SignUpActivity.this, R.string.confirmSignUp);
 				showProgress(false);
+				setResult(Constants.RESULT_TRUE);
+				finish();
 				startActivity(new Intent(SignUpActivity.this, MainActivity.class));
 			}
 			else

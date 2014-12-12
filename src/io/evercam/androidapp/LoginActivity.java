@@ -226,8 +226,8 @@ public class LoginActivity extends ParentActivity
 				AppData.defaultUser = newUser;
 				PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
 
+				setResult(Constants.RESULT_TRUE);
 				startCamerasActivity();
-				// AppData.camesList = new ArrayList<Camera>();
 			}
 			else
 			{
@@ -343,6 +343,7 @@ public class LoginActivity extends ParentActivity
 
 		Intent intent = new Intent(this, CamerasActivity.class);
 		this.startActivity(intent);
+		this.finish();
 	}
 
 	class LoginCheckInternetTask extends CheckInternetTask

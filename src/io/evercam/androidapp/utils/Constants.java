@@ -23,6 +23,8 @@ public final class Constants
 	public static final int REQUEST_CODE_VIEW_CAMERA = 4;
 	public static final int REQUEST_CODE_MANAGE_ACCOUNT = 5;
 	public static final int REQUEST_CODE_FEEDBACK = 6;
+	public static final int REQUEST_CODE_SIGN_IN = 7;
+	public static final int REQUEST_CODE_SIGN_UP = 8;
 	public static final int RESULT_TRUE = 1;
 	public static final int RESULT_FALSE = 0;
 	public static final int RESULT_ACCOUNT_CHANGED = 1;

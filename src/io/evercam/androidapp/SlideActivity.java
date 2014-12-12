@@ -73,6 +73,18 @@ public class SlideActivity extends Activity implements OnPageChangeListener
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
+	{
+		if(requestCode == Constants.REQUEST_CODE_SIGN_IN || requestCode == Constants.REQUEST_CODE_SIGN_UP)
+		{
+			if(resultCode == Constants.RESULT_TRUE)
+			{
+				finish();
+			}
+		}
+	}
+
 	private void initSlideView()
 	{
 		views = new ArrayList<View>();
@@ -104,7 +116,7 @@ public class SlideActivity extends Activity implements OnPageChangeListener
 			public void onClick(View v)
 			{
 				Intent login = new Intent(SlideActivity.this, LoginActivity.class);
-				startActivity(login);
+				startActivityForResult(login, Constants.REQUEST_CODE_SIGN_IN);
 			}
 		});
 
@@ -114,7 +126,7 @@ public class SlideActivity extends Activity implements OnPageChangeListener
 			public void onClick(View v)
 			{
 				Intent signup = new Intent(SlideActivity.this, SignUpActivity.class);
-				startActivity(signup);
+				startActivityForResult(signup, Constants.REQUEST_CODE_SIGN_UP);
 			}
 		});
 	}
@@ -163,12 +175,6 @@ public class SlideActivity extends Activity implements OnPageChangeListener
 		dots[positon].setEnabled(false);
 		dots[currentIndex].setEnabled(true);
 		currentIndex = positon;
-	}
-
-	@Override
-	public void onBackPressed()
-	{
-		// Not allowed to go back.
 	}
 
 	@Override
