@@ -36,25 +36,6 @@ public class CustomedDialog
 	}
 
 	/**
-	 * Alert dialog with single click listener
-	 */
-	public static AlertDialog getAlertDialog(Context ctx, String title, String message,
-			DialogInterface.OnClickListener listener)
-	{
-		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ctx,
-				io.evercam.androidapp.R.style.ThemeDialog);
-		dialogBuilder.setInverseBackgroundForced(false);
-
-		dialogBuilder.setTitle(title);
-		dialogBuilder.setMessage(message);
-		dialogBuilder.setPositiveButton(R.string.ok, listener);
-		AlertDialog dialogWithOneButton = dialogBuilder.create();
-		dialogWithOneButton.setCanceledOnTouchOutside(false);
-		dialogWithOneButton.closeOptionsMenu();
-		return dialogWithOneButton;
-	}
-
-	/**
 	 * The dialog that prompt to connect Internet, with listener.
 	 */
 	public static AlertDialog getNoInternetDialog(final Activity activity,
@@ -86,6 +67,8 @@ public class CustomedDialog
 	/**
 	 * The single message dialog that contains title, a message, two buttons(Yes
 	 * & No) and two listeners.
+	 * 
+	 * If int negativeButton == 0, it will be a dialog without negative button
 	 */
 	private static AlertDialog getStandardStyledDialog(final Activity activity, int title,
 			int message, DialogInterface.OnClickListener positiveListener,

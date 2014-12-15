@@ -19,11 +19,6 @@
         <item name="android:choiceMode">multipleChoiceModal</item>
     </style>
 
-    <style name="ThemeDialog" parent="@android:style/Theme.Holo.Dialog"> <!-- Theme.DeviceDefault.Dialog -->
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@color/transparent</item>
-    </style>
-
     <style name="ThemeDialogNoTitle" parent="@android:style/Theme.Holo.Dialog.NoActionBar.MinWidth"> <!-- Theme.DeviceDefault.Dialog.NoActionBar.MinWidth -->
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@color/transparent</item>

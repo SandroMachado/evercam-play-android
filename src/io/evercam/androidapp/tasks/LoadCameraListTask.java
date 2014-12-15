@@ -171,34 +171,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
 		}
 		else
 		{
-			if (!camerasActivity.isFinishing())
-			{
-				EvercamPlayApplication.sendCaughtException(camerasActivity,
-						camerasActivity.getString(R.string.exception_failed_load_cameras));
-				CustomedDialog.getAlertDialog(camerasActivity,
-						camerasActivity.getString(R.string.msg_error_occurred),
-						camerasActivity.getString(R.string.msg_exception),
-						new DialogInterface.OnClickListener(){
-							@Override
-							public void onClick(DialogInterface dialog, int which)
-							{
-								dialog.dismiss();
-								SharedPreferences sharedPrefs = PreferenceManager
-										.getDefaultSharedPreferences(camerasActivity);
-								PrefsManager.removeUserEmail(sharedPrefs);
-
-								camerasActivity.startActivity(new Intent(camerasActivity,
-										MainActivity.class));
-								new LogoutTask(camerasActivity)
-										.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-								if (camerasActivity.refresh != null)
-								{
-									camerasActivity.refresh.setActionView(null);
-								}
-							}
-						}).show();
-			}
+			//This should never happen because there is no publishProgress(false)
 		}
 		if (camerasActivity.reloadProgressDialog != null)
 		{
