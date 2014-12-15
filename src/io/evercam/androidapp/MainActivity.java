@@ -132,8 +132,6 @@ public class MainActivity extends Activity
 		{
 			Log.e(TAG, Log.getStackTraceString(e));
 			BugSenseHandler.sendException(e);
-			EvercamPlayApplication.sendEventAnalytics(this, R.string.category_error,
-					R.string.action_error_main, R.string.label_error_islogged);
 			EvercamPlayApplication.sendCaughtException(this, e);
 			CustomedDialog.showUnexpectedErrorDialog(MainActivity.this);
 		}

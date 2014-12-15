@@ -59,8 +59,7 @@ public class DeleteCameraTask extends AsyncTask<Void, Void, Boolean>
 				}
 				else
 				{
-					EvercamPlayApplication.sendEventAnalytics(activity, 
-							R.string.category_error, R.string.action_error, R.string.label_error_delete_task);
+					//This should never happen
 				}
 			}
 		}

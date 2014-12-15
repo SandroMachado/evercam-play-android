@@ -237,11 +237,8 @@ public class LoginActivity extends ParentActivity
 				}
 				else
 				{
-					EvercamPlayApplication.sendEventAnalytics(LoginActivity.this,
-							R.string.category_error, R.string.action_error_login,
-							R.string.label_error_login);
 					EvercamPlayApplication.sendCaughtException(LoginActivity.this,
-							getString(R.string.label_error_login));
+							getString(R.string.exception_error_login));
 					CustomedDialog.showUnexpectedErrorDialog(LoginActivity.this);
 				}
 

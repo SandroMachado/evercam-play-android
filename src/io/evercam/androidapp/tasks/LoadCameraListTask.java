@@ -46,10 +46,8 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
 		}
 		else
 		{
-			EvercamPlayApplication.sendEventAnalytics(camerasActivity, R.string.category_error,
-					R.string.action_error_load_camera, R.string.label_error_empty_user);
 			EvercamPlayApplication.sendCaughtException(camerasActivity,
-					camerasActivity.getString(R.string.label_error_empty_user));
+					camerasActivity.getString(R.string.exception_error_empty_user));
 			CustomedDialog.showUnexpectedErrorDialog(camerasActivity);
 			cancel(true);
 		}

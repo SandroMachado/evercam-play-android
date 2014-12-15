@@ -672,8 +672,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 		{
 			Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
 			BugSenseHandler.sendException(e);
-			EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_error,
-					R.string.action_error_video, R.string.label_error_play_video);
 			EvercamPlayApplication.sendCaughtException(this, e);
 			CustomedDialog.showUnexpectedErrorDialog(VideoActivity.this);
 		}
