@@ -41,6 +41,18 @@ public class MainActivity extends Activity
 
 		setContentView(R.layout.mainactivitylayout);
 
+		launch();
+	}
+
+	@Override
+	protected void onRestart()
+	{
+		super.onRestart();
+		launch();
+	}
+	
+	private void launch()
+	{
 		int versionCode = Commons.getAppVersionCode(this);
 		boolean isReleaseNotesShown = PrefsManager.isRleaseNotesShown(this, versionCode);
 

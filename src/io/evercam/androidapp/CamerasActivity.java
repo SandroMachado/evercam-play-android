@@ -117,7 +117,7 @@ public class CamerasActivity extends ParentActivity implements
 			{
 				/**
 				 * Sometimes Evercam returns the list less than 0.5 sec, so check it's returned or not before
-				 * the first load to avoid load it twice.
+				 * the first load to avoid loading it twice.
 				 */
 				io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) CamerasActivity.this
 						.findViewById(R.id.cameras_flow_layout);
@@ -132,6 +132,7 @@ public class CamerasActivity extends ParentActivity implements
 		// showing as animation)
 		new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.START)
 				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		
 		// notificationID =
 		// this.getIntent().getIntExtra(Constants.GCMNotificationIDString, 0);
 		// this.getIntent().putExtra(Constants.GCMNotificationIDString, 0);
@@ -905,7 +906,7 @@ public class CamerasActivity extends ParentActivity implements
 					else
 					{
 						// Re-calculate camera per row because screen size
-						// could changed because of screen rotation.
+						// could change because of screen rotation.
 						int camsOldValue = camerasPerRow;
 						camerasPerRow = recalculateCameraPerRow();
 						if (camsOldValue != camerasPerRow)
