@@ -46,7 +46,6 @@
 
     <!-- Preferences -->
     <string name="title_camera_per_row">Cameras per row</string>
-    <string name="summary_camera_per_row">Select number of cameras to show in a row</string>
     <string name="title_awake_time">Sleep</string>
     <string name="summary_awake_time">Default</string>
     <string name="prefs_never">Never</string>

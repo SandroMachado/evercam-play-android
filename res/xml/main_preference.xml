@@ -4,7 +4,6 @@
     <io.evercam.androidapp.custom.ThemedListPreference
         android:defaultValue="2"
         android:key="lstgridcamerasperrow"
-        android:summary="@string/summary_camera_per_row"
         android:title="@string/title_camera_per_row" />
     
     <io.evercam.androidapp.custom.ThemedListPreference

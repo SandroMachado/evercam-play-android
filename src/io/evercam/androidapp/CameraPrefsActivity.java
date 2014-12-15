@@ -116,10 +116,19 @@ public class CameraPrefsActivity extends PreferenceActivity
 			}
 			CharSequence[] charNumberValues = cameraNumberArrayList
 					.toArray(new CharSequence[cameraNumberArrayList.size()]);
-			ThemedListPreference interfaceList = (ThemedListPreference) getPreferenceManager()
+			final ThemedListPreference interfaceList = (ThemedListPreference) getPreferenceManager()
 					.findPreference(PrefsManager.KEY_CAMERA_PER_ROW);
 			interfaceList.setEntries(charNumberValues);
 			interfaceList.setEntryValues(charNumberValues);
+			interfaceList.setSummary(interfaceList.getValue());
+			interfaceList.setOnPreferenceChangeListener(new OnPreferenceChangeListener(){
+				@Override
+				public boolean onPreferenceChange(Preference preference, Object newValue)
+				{
+					interfaceList.setSummary(newValue.toString());
+					return true;
+				}
+			});
 		}
 
 		private void setUpSleepTime()
