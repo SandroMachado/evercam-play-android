@@ -3,7 +3,6 @@ package io.evercam.androidapp.tasks;
 import io.evercam.Camera;
 import io.evercam.CameraShare;
 import io.evercam.EvercamException;
-import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
