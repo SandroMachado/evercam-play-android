@@ -8,6 +8,7 @@ import io.evercam.androidapp.FeedbackActivity;
 import io.evercam.androidapp.LocalStorageActivity;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.ViewCameraActivity;
+import io.evercam.androidapp.custom.CameraListAdapter;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.custom.ProgressView;
@@ -2000,8 +2001,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private void loadCamerasToActionBar()
 	{
 		String[] cameraNames = getCameraNameArray();
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(VideoActivity.this,
-				android.R.layout.simple_spinner_dropdown_item, cameraNames);
+		CameraListAdapter adapter = new CameraListAdapter(VideoActivity.this,
+		//		android.R.layout.simple_spinner_dropdown_item, cameraNames);
+				R.layout.live_view_spinner, R.id.spinner_camera_name_text, cameraNames);
 		VideoActivity.this.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		OnNavigationListener navigationListener = new OnNavigationListener(){
 			@Override
@@ -2017,8 +2019,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 				evercamCamera = AppData.evercamCameraList.get(itemPosition);
 
-				if (AppData.evercamCameraList.get(itemPosition).getStatus()
-						.equalsIgnoreCase(CameraStatus.OFFLINE))
+				if (evercamCamera.getStatus().equalsIgnoreCase(CameraStatus.OFFLINE))
 				{
 					// If camera is offline, show offline msg and stop video
 					// playing.
