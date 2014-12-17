@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -37,7 +36,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bugsense.trace.BugSenseHandler;
-import com.logentries.android.AndroidLogger;
 
 public class LoginActivity extends ParentActivity
 {
@@ -126,7 +124,7 @@ public class LoginActivity extends ParentActivity
 		    public void onGlobalLayout() {
 		        int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
 		        ImageView logoImageView = (ImageView) findViewById(R.id.icon_imgview);
-		        Log.d(TAG, activityRootView.getRootView().getHeight() + " - " + activityRootView.getHeight() + " = " + heightDiff);
+		        //Log.d(TAG, activityRootView.getRootView().getHeight() + " - " + activityRootView.getHeight() + " = " + heightDiff);
 		        if (heightDiff > activityRootView.getRootView().getHeight()/3) 
 		        { 
 		        	logoImageView.setVisibility(View.GONE);

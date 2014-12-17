@@ -73,7 +73,8 @@
             android:name=".SignUpActivity"
             android:label="@string/title_activity_sign_up"
             android:logo="@drawable/icon_192x192"
-            android:windowSoftInputMode="stateHidden" >
+            android:windowSoftInputMode="stateHidden"
+            android:parentActivityName=".SlideActivity" >
         </activity>
         <activity
             android:name=".custom.AboutDialog"

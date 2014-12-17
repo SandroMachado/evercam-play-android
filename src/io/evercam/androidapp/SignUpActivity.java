@@ -74,6 +74,8 @@ public class SignUpActivity extends Activity
 
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_sign_up));
 
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		setContentView(R.layout.activity_sign_up);
 
 		setEvercamDeveloperKeypair();
