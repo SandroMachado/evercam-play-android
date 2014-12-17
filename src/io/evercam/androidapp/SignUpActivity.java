@@ -7,6 +7,7 @@ import io.evercam.User;
 import io.evercam.UserDetail;
 import io.evercam.androidapp.account.AccountUtils;
 import io.evercam.androidapp.account.UserProfile;
+import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbAppUser;
@@ -31,6 +32,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -386,6 +389,10 @@ public class SignUpActivity extends Activity
 		@Override
 		protected void onPreExecute()
 		{
+			//Hide soft keyboard
+			InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			inputMethodManager.hideSoftInputFromWindow(SignUpActivity.this.getCurrentFocus().getWindowToken(), 0);
+			
 			showProgress(true);
 		}
 

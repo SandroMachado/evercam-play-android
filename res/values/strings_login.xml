@@ -25,7 +25,7 @@
     <string name="prefix_no_user">No user</string>
 
     <!-- Sign Up Strings -->
-    <string name="login_progress_signing_up">Signing up</string>
+    <string name="login_progress_signing_up">Creating account&#8230;</string>
     <string name="firstname:">First name:</string>
     <string name="firstName">First name</string>
     <string name="lastname:">Last name:</string>

@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -201,6 +202,11 @@ public class LoginActivity extends ParentActivity
 		else
 		{
 			customProgressDialog.show(getString(R.string.login_progress_signing_in));
+			
+			//Hide soft keyboard
+			InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+			
 			loginTask = new LoginTask();
 			loginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		}
