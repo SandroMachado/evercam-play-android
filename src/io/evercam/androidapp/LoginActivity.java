@@ -19,6 +19,8 @@ import io.evercam.androidapp.utils.PrefsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -27,10 +29,12 @@ import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.bugsense.trace.BugSenseHandler;
 import com.logentries.android.AndroidLogger;
@@ -49,7 +53,6 @@ public class LoginActivity extends ParentActivity
 	private String TAG = "evercamplay-LoginActivity";
 	private CustomProgressDialog customProgressDialog;
 	private TextView signUpLink;
-	private AndroidLogger logger;
 	
 	private enum InternetCheckType
 	{
@@ -68,8 +71,6 @@ public class LoginActivity extends ParentActivity
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.login);
 		setUnderLine();
-		
-		logger = AndroidLogger.getLogger(getApplicationContext(), Constants.LOGENTRIES_TOKEN, false);
 
 		if (Constants.isAppTrackingEnabled)
 		{
@@ -109,6 +110,49 @@ public class LoginActivity extends ParentActivity
 						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			}
 		});
+		hideLogoIfNecessary();
+	}
+	
+	/**
+	 * (Currently only for portrait mode)
+	 * Hide Evercam logo when soft keyboard shows up, and show the logo when keyboard is hidden
+	 */
+	public void adjustLoginFormForKeyboardChange()
+	{
+		final View activityRootView = findViewById(R.id.login_form);
+		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() 
+		{
+		    @Override
+		    public void onGlobalLayout() {
+		        int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
+		        ImageView logoImageView = (ImageView) findViewById(R.id.icon_imgview);
+		        Log.d(TAG, activityRootView.getRootView().getHeight() + " - " + activityRootView.getHeight() + " = " + heightDiff);
+		        if (heightDiff > activityRootView.getRootView().getHeight()/3) 
+		        { 
+		        	logoImageView.setVisibility(View.GONE);
+		        }
+		        else
+		        {
+		        	logoImageView.setVisibility(View.VISIBLE);
+		        }
+		     }
+		});
+	}
+	
+	/**
+	 * Hide logo when landscape, or when soft keyboard showing up in portrait
+	 */
+	public void hideLogoIfNecessary()
+	{
+		if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+		{
+			ImageView logoImageView = (ImageView) findViewById(R.id.icon_imgview);
+			logoImageView.setVisibility(View.GONE);
+		}
+		else
+		{
+			adjustLoginFormForKeyboardChange();
+		}
 	}
 
 	public void attemptLogin()
