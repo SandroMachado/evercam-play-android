@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 /**
  * The array adapter that updates items in live view drop down list
@@ -34,6 +35,11 @@ public class CameraListAdapter extends ArrayAdapter<String>
 		View view =  super.getView(position, convertView, parent);
 		ImageView offlineIcon = (ImageView)view.findViewById(R.id.spinner_offline_icon);
 		offlineIcon.setVisibility(View.GONE);
+		
+		//Make spinner text fit landscape too
+		RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.list_spinner_layout);
+		layout.setPadding(10, 0, 10, 0);
+
 		return view;
 	}
 
