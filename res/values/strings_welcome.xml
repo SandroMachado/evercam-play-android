@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="welcome_to_evercam">Welcome to Evercam Play</string>
+    <string name="welcome_to_evercam">Evercam Play</string>
     <string name="sign_in_with_evercam">Sign in with Evercam</string>
     <string name="welcome_create_account">Create Account</string>
 

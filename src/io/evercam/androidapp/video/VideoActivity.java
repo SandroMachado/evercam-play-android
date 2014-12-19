@@ -2008,6 +2008,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 			@Override
 			public boolean onNavigationItemSelected(int itemPosition, long itemId)
 			{
+				//Stop time counter when another camera selected
+				if(timeCounter != null)
+				{
+					timeCounter.stop();
+					timeCounter = null;
+				}
+				
 				if (imageThread != null && imageThread.getStatus() != AsyncTask.Status.RUNNING)
 				{
 					imageThread.cancel(true);
