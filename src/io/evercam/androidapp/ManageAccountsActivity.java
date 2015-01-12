@@ -240,8 +240,15 @@ public class ManageAccountsActivity extends ParentActivity
 		switch (item.getItemId())
 		{
 		case android.R.id.home:
-
-			if (!AppData.defaultUser.getUsername().equals(oldDefaultUser))
+ 
+			if (AppData.defaultUser != null && oldDefaultUser != null)
+			{
+				if (!AppData.defaultUser.getUsername().equals(oldDefaultUser))
+				{
+					setResult(Constants.RESULT_ACCOUNT_CHANGED);
+				}
+			}
+			else
 			{
 				setResult(Constants.RESULT_ACCOUNT_CHANGED);
 			}

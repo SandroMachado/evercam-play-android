@@ -85,10 +85,6 @@
         <!-- Theme.DeviceDefault.Dialog.NoActionBar.MinWidth -->
 
         <activity
-            android:name=".rvideo.RVideoDateTimeDialog"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
             android:name=".rvideo.RVideoViewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
@@ -107,17 +103,6 @@
             android:name=".CameraPrefsActivity"
             android:label="@string/title_settings" >
         </activity>
-
-        <receiver
-            android:name="com.google.android.gcm.GCMBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-
-                <category android:name="io.evercam.androidapp" />
-            </intent-filter>
-        </receiver>
 
         <activity
             android:name=".AddEditCameraActivity"
