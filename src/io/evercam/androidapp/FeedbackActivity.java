@@ -51,7 +51,7 @@ public class FeedbackActivity extends Activity
 		int id = item.getItemId();
 		if (id == R.id.action_send) 
 		{
-			final String feedbackString = feedbackEditText.getText().toString();
+			final String feedbackString = feedbackEditText.getText().toString().trim();
 			if(feedbackString.isEmpty())
 			{
 				//Do nothing

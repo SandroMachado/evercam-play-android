@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.evercam.androidapp"
-    android:versionCode="62"
-    android:versionName="1.2.5" >
+    android:versionCode="63"
+    android:versionName="1.2.6" >
 
     <!-- versionCode36 - 1.1.7  - Hikvision local storage, first page loading faster -->
     <!-- versionCode39 - 1.1.8 - Only load snapshots for cameras within screen, new offline image -->
@@ -13,6 +13,7 @@
     <!-- versionCode53 - 1.2.3 - port range check, date & time, new camera title, feedback, logentries, firebase, jpg view improvements-->
     <!-- versionCode58 - 1.2.4 - Take snapshot, show time based on timezone, force landscape-->
     <!-- versionCode62 - 1.2.5 - back button, quit add camera warning-->
+    <!-- versionCode63 - 1.2.6 - bug fixes after holiday-->
 
     <uses-sdk
         android:minSdkVersion="14"
