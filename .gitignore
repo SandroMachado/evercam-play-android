@@ -30,3 +30,9 @@ lint.xml
 
 # Mac OS
 .DS_Store
+
+# Intellij project files
+*.iml
+*.ipr
+*.iws
+.idea/
