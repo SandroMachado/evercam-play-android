@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General dimensions -->
+    <!-- Changed toast_hover from 64 to 24 to make the default SuperToast and default SuperActivityToast with button on the same position. -->
+    <dimen name="toast_hover">24dp</dimen> 
+    <dimen name="buttontoast_hover">24dp</dimen>
+    <dimen name="buttontoast_x_padding">12dp</dimen>
+    <dimen name="cardtoast_margin">4dp</dimen>
+
+</resources>
