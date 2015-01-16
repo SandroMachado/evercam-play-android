@@ -74,21 +74,25 @@ public class CamerasActivity extends ParentActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
+        Log.d(TAG, "0");
 		super.onCreate(savedInstanceState);
 		if (Constants.isAppTrackingEnabled)
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
-
+        Log.d(TAG, "1");
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_camera_list));
+        Log.d(TAG, "2");
 		if (this.getActionBar() != null)
 		{
 			this.getActionBar().setHomeButtonEnabled(true);
 			this.getActionBar().setDisplayShowTitleEnabled(false);
 			this.getActionBar().setIcon(R.drawable.evercam_play_192x192);
 		}
+        Log.d(TAG, "3");
 		setContentView(R.layout.camslayoutwithslide);
 
+        Log.d(TAG, "4");
 		// Disable add user to drop down list to hide user Email
 		// Start loading camera list directly.
 		// addUsersToDropdownActionBar();

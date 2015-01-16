@@ -46,7 +46,7 @@ android {
 
 dependencies {
     compile project(':supertoasts')
-    compile 'com.android.support:support-v4:21.0.2'
+    compile 'com.android.support:support-v4:21.0.3'
     compile 'joda-time:joda-time:2.6'
     compile 'com.google.android.gms:play-services:+'
     compile 'com.android.support:multidex:1.0.0'
