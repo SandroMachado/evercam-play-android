@@ -4,19 +4,34 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/text_welcome"
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#414042"
-        android:fontFamily="sans-serif-light"
-        android:gravity="center"
-        android:padding="12sp"
-        android:paddingBottom="15sp"
-        android:paddingTop="15sp"
-        android:text="@string/welcome_to_evercam"
-        android:textColor="#ffffff"
-        android:textSize="22sp" />
+        android:gravity="center_horizontal"
+        android:background="#414042">
+
+        <ImageView
+            android:id="@+id/logo_in_slide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_50x50"
+            android:gravity="center_vertical"
+            android:paddingBottom="10sp"
+            android:paddingTop="10sp"/>
+        <TextView
+            android:id="@+id/text_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/logo_in_slide"
+            android:fontFamily="sans-serif-light"
+            android:padding="12sp"
+            android:paddingBottom="15sp"
+            android:paddingTop="15sp"
+            android:text="@string/welcome_to_evercam"
+            android:textColor="#ffffff"
+            android:textSize="22sp" />
+        </RelativeLayout>
+
 
     <View
         android:layout_width="fill_parent"
