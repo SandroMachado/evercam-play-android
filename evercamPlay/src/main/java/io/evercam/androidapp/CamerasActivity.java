@@ -36,7 +36,6 @@ import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.dto.ImageLoadingStatus;
-import io.evercam.androidapp.slidemenu.*;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.tasks.LoadCameraListTask;
 import io.evercam.androidapp.utils.Commons;
@@ -50,15 +49,13 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class CamerasActivity extends ParentActivity implements
-		SlideMenuInterface.OnSlideMenuItemClickListener
+public class CamerasActivity extends ParentActivity
 {
 	public static CamerasActivity activity = null;
 	public MenuItem refresh;
 
 	private static final String TAG = "evercamplay-CamerasActivity";
 
-	private SlideMenu slideMenu;
 	private int totalCamerasInGrid = 0;
 	private int slideoutMenuAnimationTime = 255;
 	private static int camerasPerRow = 2;
@@ -74,35 +71,20 @@ public class CamerasActivity extends ParentActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-        Log.d(TAG, "0");
 		super.onCreate(savedInstanceState);
 		if (Constants.isAppTrackingEnabled)
 		{
 			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
 		}
-        Log.d(TAG, "1");
+
 		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_camera_list));
-        Log.d(TAG, "2");
 		if (this.getActionBar() != null)
 		{
 			this.getActionBar().setHomeButtonEnabled(true);
 			this.getActionBar().setDisplayShowTitleEnabled(false);
 			this.getActionBar().setIcon(R.drawable.evercam_play_192x192);
 		}
-        Log.d(TAG, "3");
 		setContentView(R.layout.camslayoutwithslide);
-
-        Log.d(TAG, "4");
-		// Disable add user to drop down list to hide user Email
-		// Start loading camera list directly.
-		// addUsersToDropdownActionBar();
-
-		// Disable slide menu until the functionality is required.
-		// slideMenu = (SlideMenu) findViewById(R.id.slideMenu);
-		// slideMenu.init(this, R.menu.slide, this,
-		// slideoutMenuAnimationTime);
-
-		// int notificationID = 0;
 
 		activity = this;
 		checkUser();
@@ -221,88 +203,6 @@ public class CamerasActivity extends ParentActivity implements
 		}
 		
 		return true;
-	}
-
-	@Override
-	public void onSlideMenuItemClick(int itemId)
-	{
-		if (slideMenu.isShown())
-		{
-			slideMenu.hide();
-		}
-
-		switch (itemId)
-		{
-		// case R.id.slidemenu_logout:
-		// EvercamPlayApplication.sendEventAnalytics(this,
-		// R.string.category_menu,
-		// R.string.action_logout, R.string.label_user_logout);
-		// logOutUser();
-		//
-		// break;
-		//
-		// case R.id.slidemenu_about:
-		// EvercamPlayApplication.sendEventAnalytics(this,
-		// R.string.category_menu,
-		// R.string.action_about, R.string.label_about);
-		// new Handler().postDelayed(new Runnable(){
-		// @Override
-		// public void run()
-		// {
-		// startActivity(new Intent(CamerasActivity.this,
-		// AboutDialog.class));
-		// }
-		// }, slideoutMenuAnimationTime);
-		//
-		// break;
-
-		// case R.id.slidemenu_settings:
-		// EvercamPlayApplication.sendEventAnalytics(this,
-		// R.string.category_menu,
-		// R.string.action_settings, R.string.label_settings);
-		// new Handler().postDelayed(new Runnable(){
-		// @Override
-		// public void run()
-		// {
-		// startActivity(new Intent(CamerasActivity.this,
-		// CameraPrefsActivity.class));
-		// }
-		// }, slideoutMenuAnimationTime);
-		//
-		// break;
-		//
-		// case R.id.slidemenu_manage:
-		// EvercamPlayApplication.sendEventAnalytics(this,
-		// R.string.category_menu,
-		// R.string.action_manage_account, R.string.label_account);
-		// new Handler().postDelayed(new Runnable(){
-		// @Override
-		// public void run()
-		// {
-		// startActivity(new Intent(CamerasActivity.this,
-		// ManageAccountsActivity.class));
-		// isUsersAccountsActivityStarted = true;
-		// }
-		// }, slideoutMenuAnimationTime);
-		// break;
-
-		// default: // starting the notification activity
-		//
-		// NotificationActivity.NotificationID = itemId;
-		// new
-		// MarkNotificationAsReadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-		// itemId + "");
-		// new Handler().postDelayed(new Runnable(){
-		// @Override
-		// public void run()
-		// {
-		// Intent i = new Intent(new Intent(CamerasActivity.this,
-		// NotificationActivity.class));
-		// startActivity(i);
-		// }
-		// }, slideoutMenuAnimationTime);
-		// break;
-		}
 	}
 
 	@Override

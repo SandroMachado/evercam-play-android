@@ -2,8 +2,6 @@ package io.evercam.androidapp;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
-import android.support.multidex.MultiDex;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -50,14 +48,6 @@ public class EvercamPlayApplication extends Application
 		}
 		return mTrackers.get(trackerId);
 	}
-
-    //Enable MultiDex
-    @Override
-    protected void attachBaseContext(Context base)
-    {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }
 
 	private static Tracker getAppTracker(Activity activity)
 	{

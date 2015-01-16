@@ -2,18 +2,22 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId "io.evercam.androidapp"
         minSdkVersion 14
         targetSdkVersion 21
 
-        // Enabling multidex support.
-        multiDexEnabled true
-
         ndk {
             moduleName "libvlcjni"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
 
@@ -29,35 +33,22 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/DEPENDENCIES'
     }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-        }
-    }
-
-    //raise the heap limit of the dexing operation,
-    //Otherwise it causes OutOfMemoryError: GC overhead limit exceeded
-    dexOptions {
-        javaMaxHeapSize "4g"
-    }
 }
 
 dependencies {
     compile project(':supertoasts')
     compile 'com.android.support:support-v4:21.0.3'
     compile 'joda-time:joda-time:2.6'
-    compile 'com.google.android.gms:play-services:+'
-    compile 'com.android.support:multidex:1.0.0'
     compile files('libs/HCNetSDK.jar')
     compile files('libs/PlayerSDK.jar')
     compile files('libs/bugsense-3.6.1.jar')
     compile files('libs/evercam-java-1.0-withDependency-ShadedForAndroid.jar')
     compile files('libs/evercam-networkscan.jar')
-    compile files('libs/firebase-client-android-2.0.1.jar')
     compile files('libs/httpmime-4.3.4.jar')
     compile files('libs/logentries-android-2.1.4.jar')
     compile files('libs/sendgrid-0.1.2-jar.jar')
     compile files('libs/upnplib-mobile.jar')
+    //Use 6.1.71 because there is a fatal unsolved bug with Google Analytics for the latest version
+    //http://stackoverflow.com/questions/27533679/google-analytics-blocks-android-app
+    compile 'com.google.android.gms:play-services:6.1.71'
 }

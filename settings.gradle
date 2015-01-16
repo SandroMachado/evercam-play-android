@@ -1,2 +1,2 @@
-include ':evercamPlay'
 include ':supertoasts'
+include ':evercamPlay'

@@ -15,7 +15,6 @@ import io.evercam.androidapp.custom.ProgressView;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.CameraStatus;
 import io.evercam.androidapp.dto.EvercamCamera;
-import io.evercam.androidapp.feedback.FirebaseHelper;
 import io.evercam.androidapp.feedback.StreamFeedbackItem;
 import io.evercam.androidapp.tasks.CaptureSnapshotRunnable;
 import io.evercam.androidapp.tasks.DeleteCameraTask;
@@ -185,8 +184,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 	private Runnable timerRunnable;
 	
 	private TimeCounter timeCounter;
-	
-	private FirebaseHelper firebaseHelper;
+
 	private Date startTime;
 	private AndroidLogger logger;
 	private String username = "";
@@ -207,8 +205,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 			
-			firebaseHelper = new FirebaseHelper(this);
-
 			launchSleepTimer();
 
 			setDisplayOriention();
@@ -1642,7 +1638,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							failedItem.setCameraId(evercamCamera.getCameraId());
 							failedItem.setUrl(player.getCurrentMRL());
 							failedItem.setType(StreamFeedbackItem.TYPE_RTSP);
-							firebaseHelper.pushRtspItem(failedItem);
 							logger.info(failedItem.toJson());
 						}
 						isPlayingJpg = true;
@@ -1678,7 +1673,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 						successItem.setLoadTime(timeDifferenceFloat);
 						startTime = null;
 					}
-					firebaseHelper.pushRtspItem(successItem);
 					
 					logger.info(successItem.toJson());
 
@@ -1913,7 +1907,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 								successItem.setCameraId(evercamCamera.getCameraId());
 								successItem.setUrl(successUrl);
 								successItem.setType(StreamFeedbackItem.TYPE_JPG);
-								firebaseHelper.pushJpgItem(successItem);
 								logger.info(successItem.toJson());
 							}	
 							else
@@ -1950,7 +1943,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 							failedItem.setCameraId(evercamCamera.getCameraId());
 							failedItem.setUrl(evercamCamera.getExternalSnapshotUrl());
 							failedItem.setType(StreamFeedbackItem.TYPE_JPG);
-							firebaseHelper.pushJpgItem(failedItem);
 							logger.info(failedItem.toJson());
 						}
 					}

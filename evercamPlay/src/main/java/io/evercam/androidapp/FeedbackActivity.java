@@ -87,21 +87,6 @@ public class FeedbackActivity extends Activity
 	{
 		showConfirmQuitDialog();
 	}
-
-//	public void sendFeedback()
-//	{
-//		String feedbackString = feedbackEditText.getText().toString();
-//		if(feedbackString.isEmpty())
-//		{
-//			//Do nothing
-//		}
-//		else
-//		{
-//			CustomToast.showInCenter(this, R.string.msg_feedback_sent);
-//			FeedbackSender feedbackSender = new FeedbackSender(this);
-//			feedbackSender.send(feedbackString);
-//		}
-//	}
 	
 	private void showConfirmQuitDialog()
 	{
