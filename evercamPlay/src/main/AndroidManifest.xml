@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.evercam.androidapp"
-    android:versionCode="63"
-    android:versionName="1.2.6" >
+          package="io.evercam.androidapp"
+          android:versionCode="63"
+          android:versionName="1.2.6">
 
     <!-- versionCode36 - 1.1.7  - Hikvision local storage, first page loading faster -->
     <!-- versionCode39 - 1.1.8 - Only load snapshots for cameras within screen, new offline image -->
@@ -17,19 +17,19 @@
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="21" />
+        android:targetSdkVersion="21"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <!-- Cache requires it. -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- Only used for auto filling user's profile when create account -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_PROFILE"/>
     <!-- Keeps the processor from sleeping when a message is received. -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:name=".EvercamPlayApplication"
@@ -37,33 +37,33 @@
         android:icon="@drawable/evercam_play_192x192"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
 
         <!-- Theme.Black.NoTitleBar previous value -->
         <meta-data
             android:name="com.google.android.gms.analytics.globalConfigResource"
-            android:resource="@xml/app_tracker" />
+            android:resource="@xml/app_tracker"/>
 
         <activity
             android:name=".video.VideoActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/ActionBarOverlayTheme"
-            android:screenOrientation="unspecified" >
+            android:screenOrientation="unspecified">
         </activity>
         <activity
             android:name=".SlideActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar" >
+            android:theme="@android:style/Theme.Light.NoTitleBar">
         </activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/ThemeActivitySplash" >
+            android:theme="@style/ThemeActivitySplash">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
@@ -76,12 +76,12 @@
             android:label="@string/title_activity_sign_up"
             android:logo="@drawable/icon_192x192"
             android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".SlideActivity" >
+            android:parentActivityName=".SlideActivity">
         </activity>
         <activity
             android:name=".custom.AboutDialog"
             android:label="@string/app_name"
-            android:theme="@style/ThemeDialogNoTitle" >
+            android:theme="@style/ThemeDialogNoTitle">
         </activity>
         <!-- Theme.DeviceDefault.Dialog.NoActionBar.MinWidth -->
 
@@ -89,41 +89,41 @@
             android:name=".rvideo.RVideoViewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="unspecified" >
+            android:screenOrientation="unspecified">
         </activity>
-        <activity android:name=".ManageAccountsActivity" >
+        <activity android:name=".ManageAccountsActivity">
         </activity>
         <activity
             android:name=".CamerasActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label=""
             android:launchMode="singleTop"
-            android:logo="@drawable/icon_192x192" >
+            android:logo="@drawable/icon_192x192">
         </activity>
         <activity
             android:name=".CameraPrefsActivity"
-            android:label="@string/title_settings" >
+            android:label="@string/title_settings">
         </activity>
 
         <activity
             android:name=".AddEditCameraActivity"
             android:label="@string/title_activity_add_camera"
-            android:windowSoftInputMode="stateHidden" >
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".ViewCameraActivity"
             android:label="@string/title_activity_view_camera"
-            android:windowSoftInputMode="stateHidden" >
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".ScanActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_scan" >
+            android:label="@string/title_activity_scan">
         </activity>
         <activity
             android:name=".ReleaseNotesActivity"
             android:label="@string/title_release_notes"
-            android:logo="@drawable/icon_192x192" >
+            android:logo="@drawable/icon_192x192">
         </activity>
         <activity
             android:name=".LocalStorageActivity"
@@ -131,7 +131,7 @@
         </activity>
         <activity
             android:name=".FeedbackActivity"
-            android:label="@string/title_activity_feedback" >
+            android:label="@string/title_activity_feedback">
         </activity>
     </application>
 

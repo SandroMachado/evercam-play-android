@@ -25,29 +25,32 @@ package org.videolan.libvlc;
 
 /**
  * @author jpeg
- *
  */
-public class LibVlcException extends Exception {
+public class LibVlcException extends Exception
+{
     private static final long serialVersionUID = -1909522348226924189L;
 
     /**
      * Create an empty error
      */
-    public LibVlcException() {
+    public LibVlcException()
+    {
         super();
     }
 
     /**
      * @param detailMessage
      */
-    public LibVlcException(String detailMessage) {
+    public LibVlcException(String detailMessage)
+    {
         super(detailMessage);
     }
 
     /**
      * @param throwable
      */
-    public LibVlcException(Throwable throwable) {
+    public LibVlcException(Throwable throwable)
+    {
         super(throwable);
     }
 
@@ -55,7 +58,8 @@ public class LibVlcException extends Exception {
      * @param detailMessage
      * @param throwable
      */
-    public LibVlcException(String detailMessage, Throwable throwable) {
+    public LibVlcException(String detailMessage, Throwable throwable)
+    {
         super(detailMessage, throwable);
     }
 

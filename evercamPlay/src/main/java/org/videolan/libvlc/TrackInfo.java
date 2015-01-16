@@ -20,7 +20,8 @@
 
 package org.videolan.libvlc;
 
-public class TrackInfo {
+public class TrackInfo
+{
 
     public static final int TYPE_UNKNOWN = -1;
     public static final int TYPE_AUDIO = 0;

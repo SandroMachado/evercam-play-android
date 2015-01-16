@@ -1,101 +1,104 @@
 package io.evercam.androidapp;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Html;
+import android.text.util.Linkify;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import com.bugsense.trace.BugSenseHandler;
+
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
 
-import com.bugsense.trace.BugSenseHandler;
-
-import android.os.Bundle;
-import android.content.Intent;
-import android.text.Html;
-import android.text.util.Linkify;
-import android.view.View;
-import android.widget.*;
-
 // 	This activity verifies the login and requests the cams data from the api 
 public class ReleaseNotesActivity extends ParentActivity
 {
-	public String TAG = "evercamplay-ReleaseNotesActivity";
-	private Button btnReleaseNotes;
+    public String TAG = "evercamplay-ReleaseNotesActivity";
+    private Button btnReleaseNotes;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-		if (Constants.isAppTrackingEnabled)
-		{
-			BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
-		}
+        if(Constants.isAppTrackingEnabled)
+        {
+            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
+        }
 
-		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_release_notes));
+        EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_release_notes));
 
-		setContentView(R.layout.release_notes_activity_layout);
+        setContentView(R.layout.release_notes_activity_layout);
 
-		TextView textViewNotes = (TextView) findViewById(R.id.txtreleasenotes);
-		btnReleaseNotes = (Button) findViewById(R.id.btn_release_notes_ok);
+        TextView textViewNotes = (TextView) findViewById(R.id.txtreleasenotes);
+        btnReleaseNotes = (Button) findViewById(R.id.btn_release_notes_ok);
 
-		textViewNotes.setPadding(25, 14, 14, 14);
+        textViewNotes.setPadding(25, 14, 14, 14);
 
-		btnReleaseNotes.setOnClickListener(new Button.OnClickListener(){
-			@Override
-			public void onClick(View v)
-			{
-				onNotesRead();
-			}
-		});
+        btnReleaseNotes.setOnClickListener(new Button.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                onNotesRead();
+            }
+        });
 
-		String data = Commons.readRawTextFile(R.raw.release_notes, this);
-		textViewNotes.setText(Html.fromHtml(data));
-		Linkify.addLinks(textViewNotes, Linkify.EMAIL_ADDRESSES);
+        String data = Commons.readRawTextFile(R.raw.release_notes, this);
+        textViewNotes.setText(Html.fromHtml(data));
+        Linkify.addLinks(textViewNotes, Linkify.EMAIL_ADDRESSES);
 
-	}
+    }
 
-	private void onNotesRead()
-	{
-		int versionCode = Commons.getAppVersionCode(this);
-		PrefsManager.setReleaseNotesShown(this, versionCode);
+    private void onNotesRead()
+    {
+        int versionCode = Commons.getAppVersionCode(this);
+        PrefsManager.setReleaseNotesShown(this, versionCode);
 
-		Intent act = new Intent(ReleaseNotesActivity.this, MainActivity.class);
-		startActivity(act);
-		ReleaseNotesActivity.this.finish();
-	}
+        Intent act = new Intent(ReleaseNotesActivity.this, MainActivity.class);
+        startActivity(act);
+        ReleaseNotesActivity.this.finish();
+    }
 
-	@Override
-	public void onWindowFocusChanged(boolean hasfocus)
-	{
-		ScrollView svreleasenotes = (ScrollView) findViewById(R.id.svreleasenotes);
-		svreleasenotes.getLayoutParams().height = svreleasenotes.getMeasuredHeight()
-				- btnReleaseNotes.getMeasuredHeight();
-	}
+    @Override
+    public void onWindowFocusChanged(boolean hasfocus)
+    {
+        ScrollView svreleasenotes = (ScrollView) findViewById(R.id.svreleasenotes);
+        svreleasenotes.getLayoutParams().height = svreleasenotes.getMeasuredHeight() -
+                btnReleaseNotes.getMeasuredHeight();
+    }
 
-	@Override
-	public void onBackPressed()
-	{
-		onNotesRead();
-	}
+    @Override
+    public void onBackPressed()
+    {
+        onNotesRead();
+    }
 
-	@Override
-	public void onStart()
-	{
-		super.onStart();
+    @Override
+    public void onStart()
+    {
+        super.onStart();
 
-		if (Constants.isAppTrackingEnabled)
-		{
-			BugSenseHandler.startSession(this);
-		}
-	}
+        if(Constants.isAppTrackingEnabled)
+        {
+            BugSenseHandler.startSession(this);
+        }
+    }
 
-	@Override
-	public void onStop()
-	{
-		super.onStop();
+    @Override
+    public void onStop()
+    {
+        super.onStop();
 
-		if (Constants.isAppTrackingEnabled)
-		{
-			BugSenseHandler.closeSession(this);
-		}
-	}
+        if(Constants.isAppTrackingEnabled)
+        {
+            BugSenseHandler.closeSession(this);
+        }
+    }
 
 }

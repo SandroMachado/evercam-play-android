@@ -53,7 +53,7 @@
     <string name="screen_scan_camera">Scan For Camera</string>
     <string name="screen_release_notes">Release Notes</string>
     <string name="screen_local_storage">Local Storage</string>
-    
+
     <!-- Exception Descriptions -->
     <string name="exception_user_not_saved">User saved locally is null.</string>
     <string name="exception_failed_load_cameras">Failed to load camera list in LoadCameraListTask</string>

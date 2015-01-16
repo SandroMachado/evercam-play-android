@@ -25,50 +25,53 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.Log;
 
-public class AudioOutput {
+public class AudioOutput
+{
     /**
      * Java side of the audio output module for Android.
      * Uses an AudioTrack to play decoded audio buffers.
-     *
+     * <p/>
      * TODO Use MODE_STATIC instead of MODE_STREAM with a MemoryFile (ashmem)
      */
 
-    public AudioOutput() {
+    public AudioOutput()
+    {
     }
 
     private AudioTrack mAudioTrack;
     private static final String TAG = "LibVLC/aout";
 
-    public void init(int sampleRateInHz, int channels, int samples) {
+    public void init(int sampleRateInHz, int channels, int samples)
+    {
         Log.d(TAG, sampleRateInHz + ", " + channels + ", " + samples + "=>" + channels * samples);
         int minBufferSize = AudioTrack.getMinBufferSize(sampleRateInHz,
-                                                        AudioFormat.CHANNEL_OUT_STEREO,
-                                                        AudioFormat.ENCODING_PCM_16BIT);
-        mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
-                                     sampleRateInHz,
-                                     AudioFormat.CHANNEL_OUT_STEREO,
-                                     AudioFormat.ENCODING_PCM_16BIT,
-                                     Math.max(minBufferSize, channels * samples * 2),
-                                     AudioTrack.MODE_STREAM);
+                AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT);
+        mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRateInHz,
+                AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT,
+                Math.max(minBufferSize, channels * samples * 2), AudioTrack.MODE_STREAM);
     }
 
-    public void release() {
-        if (mAudioTrack != null) {
+    public void release()
+    {
+        if(mAudioTrack != null)
+        {
             mAudioTrack.release();
         }
         mAudioTrack = null;
     }
 
-    public void playBuffer(byte[] audioData, int bufferSize) {
-        if (mAudioTrack.getState() == AudioTrack.STATE_UNINITIALIZED)
-            return;
-        if (mAudioTrack.write(audioData, 0, bufferSize) != bufferSize) {
+    public void playBuffer(byte[] audioData, int bufferSize)
+    {
+        if(mAudioTrack.getState() == AudioTrack.STATE_UNINITIALIZED) return;
+        if(mAudioTrack.write(audioData, 0, bufferSize) != bufferSize)
+        {
             Log.w(TAG, "Could not write all the samples to the audio device");
         }
         mAudioTrack.play();
     }
 
-    public void pause() {
+    public void pause()
+    {
         mAudioTrack.pause();
     }
 }

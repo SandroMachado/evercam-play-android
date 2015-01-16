@@ -1,12 +1,5 @@
 package io.evercam.androidapp;
 
-import io.evercam.androidapp.utils.Constants;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.bugsense.trace.BugSenseHandler;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,215 +13,226 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bugsense.trace.BugSenseHandler;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.evercam.androidapp.utils.Constants;
+
 public class SlideActivity extends Activity implements OnPageChangeListener
 {
-	private final String TAG = "evercamplay-SlideActivity";
+    private final String TAG = "evercamplay-SlideActivity";
 
-	private ViewPager viewPager;
-	private ViewPagerAdapter viewPagerAdapter;
+    private ViewPager viewPager;
+    private ViewPagerAdapter viewPagerAdapter;
 
-	private List<View> views;
-	private ImageView[] dots;
-	private static final int[] pics = { R.drawable.play_page_intro, R.drawable.play_page_feature,
-			R.drawable.play_page_next };
-	private int currentIndex;
+    private List<View> views;
+    private ImageView[] dots;
+    private static final int[] pics = {R.drawable.play_page_intro, R.drawable.play_page_feature,
+            R.drawable.play_page_next};
+    private int currentIndex;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.indexslide);
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.indexslide);
 
-		if (Constants.isAppTrackingEnabled)
-		{
-			BugSenseHandler.initAndStartSession(SlideActivity.this, Constants.bugsense_ApiKey);
-		}
+        if(Constants.isAppTrackingEnabled)
+        {
+            BugSenseHandler.initAndStartSession(SlideActivity.this, Constants.bugsense_ApiKey);
+        }
 
-		EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_welcome_slides));
+        EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_welcome_slides));
 
-		initSlideView();
-		initDots();
-		initLinks();
-	}
+        initSlideView();
+        initDots();
+        initLinks();
+    }
 
-	@Override
-	public void onStart()
-	{
-		super.onStart();
+    @Override
+    public void onStart()
+    {
+        super.onStart();
 
-		if (Constants.isAppTrackingEnabled)
-		{
-			BugSenseHandler.startSession(this);
-		}
-	}
+        if(Constants.isAppTrackingEnabled)
+        {
+            BugSenseHandler.startSession(this);
+        }
+    }
 
-	@Override
-	public void onStop()
-	{
-		super.onStop();
+    @Override
+    public void onStop()
+    {
+        super.onStop();
 
-		if (Constants.isAppTrackingEnabled)
-		{
-			BugSenseHandler.closeSession(this);
-		}
-	}
+        if(Constants.isAppTrackingEnabled)
+        {
+            BugSenseHandler.closeSession(this);
+        }
+    }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
-	{
-		if(requestCode == Constants.REQUEST_CODE_SIGN_IN || requestCode == Constants.REQUEST_CODE_SIGN_UP)
-		{
-			if(resultCode == Constants.RESULT_TRUE)
-			{
-				finish();
-			}
-		}
-	}
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode == Constants.REQUEST_CODE_SIGN_IN || requestCode == Constants
+                .REQUEST_CODE_SIGN_UP)
+        {
+            if(resultCode == Constants.RESULT_TRUE)
+            {
+                finish();
+            }
+        }
+    }
 
-	private void initSlideView()
-	{
-		views = new ArrayList<View>();
-		LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(
-				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+    private void initSlideView()
+    {
+        views = new ArrayList<View>();
+        LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(LayoutParams
+                .WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
-		for (int index = 0; index < pics.length; index++)
-		{
-			ImageView imageView = new ImageView(this);
-			imageView.setLayoutParams(mParams);
-			imageView.setImageResource(pics[index]);
-			views.add(imageView);
-		}
-		viewPager = (ViewPager) findViewById(R.id.page);
+        for(int index = 0; index < pics.length; index++)
+        {
+            ImageView imageView = new ImageView(this);
+            imageView.setLayoutParams(mParams);
+            imageView.setImageResource(pics[index]);
+            views.add(imageView);
+        }
+        viewPager = (ViewPager) findViewById(R.id.page);
 
-		viewPagerAdapter = new ViewPagerAdapter(views);
-		viewPager.setAdapter(viewPagerAdapter);
+        viewPagerAdapter = new ViewPagerAdapter(views);
+        viewPager.setAdapter(viewPagerAdapter);
 
-		viewPager.setOnPageChangeListener(this);
-	}
+        viewPager.setOnPageChangeListener(this);
+    }
 
-	private void initLinks()
-	{
-		TextView loginTextView = (TextView) findViewById(R.id.text_login);
-		TextView signUpTextView = (TextView) findViewById(R.id.text_signup);
-		loginTextView.setOnClickListener(new OnClickListener(){
+    private void initLinks()
+    {
+        TextView loginTextView = (TextView) findViewById(R.id.text_login);
+        TextView signUpTextView = (TextView) findViewById(R.id.text_signup);
+        loginTextView.setOnClickListener(new OnClickListener()
+        {
 
-			@Override
-			public void onClick(View v)
-			{
-				Intent login = new Intent(SlideActivity.this, LoginActivity.class);
-				startActivityForResult(login, Constants.REQUEST_CODE_SIGN_IN);
-			}
-		});
+            @Override
+            public void onClick(View v)
+            {
+                Intent login = new Intent(SlideActivity.this, LoginActivity.class);
+                startActivityForResult(login, Constants.REQUEST_CODE_SIGN_IN);
+            }
+        });
 
-		signUpTextView.setOnClickListener(new OnClickListener(){
+        signUpTextView.setOnClickListener(new OnClickListener()
+        {
 
-			@Override
-			public void onClick(View v)
-			{
-				Intent signup = new Intent(SlideActivity.this, SignUpActivity.class);
-				startActivityForResult(signup, Constants.REQUEST_CODE_SIGN_UP);
-			}
-		});
-	}
+            @Override
+            public void onClick(View v)
+            {
+                Intent signup = new Intent(SlideActivity.this, SignUpActivity.class);
+                startActivityForResult(signup, Constants.REQUEST_CODE_SIGN_UP);
+            }
+        });
+    }
 
-	private void initDots()
-	{
-		LinearLayout dotLayout = (LinearLayout) findViewById(R.id.dot_layout);
-		dots = new ImageView[pics.length];
+    private void initDots()
+    {
+        LinearLayout dotLayout = (LinearLayout) findViewById(R.id.dot_layout);
+        dots = new ImageView[pics.length];
 
-		for (int index = 0; index < pics.length; index++)
-		{
-			dots[index] = (ImageView) dotLayout.getChildAt(index);
-			dots[index].setEnabled(true);
-			dots[index].setOnClickListener(new OnClickListener(){
+        for(int index = 0; index < pics.length; index++)
+        {
+            dots[index] = (ImageView) dotLayout.getChildAt(index);
+            dots[index].setEnabled(true);
+            dots[index].setOnClickListener(new OnClickListener()
+            {
 
-				@Override
-				public void onClick(View view)
-				{
-					int position = (Integer) view.getTag();
-					setCurrentView(position);
-					setCurrentDot(position);
-				}
+                @Override
+                public void onClick(View view)
+                {
+                    int position = (Integer) view.getTag();
+                    setCurrentView(position);
+                    setCurrentDot(position);
+                }
 
-			});
-			dots[index].setTag(index);
-		}
-		currentIndex = 0;
-		dots[currentIndex].setEnabled(false);
-	}
+            });
+            dots[index].setTag(index);
+        }
+        currentIndex = 0;
+        dots[currentIndex].setEnabled(false);
+    }
 
-	private void setCurrentView(int position)
-	{
-		if (position < 0 || position >= pics.length)
-		{
-			return;
-		}
-		viewPager.setCurrentItem(position);
-	}
+    private void setCurrentView(int position)
+    {
+        if(position < 0 || position >= pics.length)
+        {
+            return;
+        }
+        viewPager.setCurrentItem(position);
+    }
 
-	private void setCurrentDot(int positon)
-	{
-		if (positon < 0 || positon > pics.length - 1 || currentIndex == positon)
-		{
-			return;
-		}
-		dots[positon].setEnabled(false);
-		dots[currentIndex].setEnabled(true);
-		currentIndex = positon;
-	}
+    private void setCurrentDot(int positon)
+    {
+        if(positon < 0 || positon > pics.length - 1 || currentIndex == positon)
+        {
+            return;
+        }
+        dots[positon].setEnabled(false);
+        dots[currentIndex].setEnabled(true);
+        currentIndex = positon;
+    }
 
-	@Override
-	public void onPageScrollStateChanged(int arg0)
-	{
-	}
+    @Override
+    public void onPageScrollStateChanged(int arg0)
+    {
+    }
 
-	@Override
-	public void onPageScrolled(int arg0, float arg1, int arg2)
-	{
-	}
+    @Override
+    public void onPageScrolled(int arg0, float arg1, int arg2)
+    {
+    }
 
-	@Override
-	public void onPageSelected(int position)
-	{
-		setCurrentDot(position);
-	}
+    @Override
+    public void onPageSelected(int position)
+    {
+        setCurrentDot(position);
+    }
 
-	private class ViewPagerAdapter extends PagerAdapter
-	{
-		private List<View> views;
+    private class ViewPagerAdapter extends PagerAdapter
+    {
+        private List<View> views;
 
-		public ViewPagerAdapter(List<View> views)
-		{
-			this.views = views;
-		}
+        public ViewPagerAdapter(List<View> views)
+        {
+            this.views = views;
+        }
 
-		@Override
-		public void destroyItem(View view, int position, Object arg2)
-		{
-			((ViewPager) view).removeView(views.get(position));
-		}
+        @Override
+        public void destroyItem(View view, int position, Object arg2)
+        {
+            ((ViewPager) view).removeView(views.get(position));
+        }
 
-		@Override
-		public int getCount()
-		{
-			if (views != null)
-			{
-				return views.size();
-			}
-			return 0;
-		}
+        @Override
+        public int getCount()
+        {
+            if(views != null)
+            {
+                return views.size();
+            }
+            return 0;
+        }
 
-		@Override
-		public Object instantiateItem(View view, int position)
-		{
-			((ViewPager) view).addView(views.get(position), 0);
-			return views.get(position);
-		}
+        @Override
+        public Object instantiateItem(View view, int position)
+        {
+            ((ViewPager) view).addView(views.get(position), 0);
+            return views.get(position);
+        }
 
-		@Override
-		public boolean isViewFromObject(View view, Object object)
-		{
-			return (view == object);
-		}
-	}
+        @Override
+        public boolean isViewFromObject(View view, Object object)
+        {
+            return (view == object);
+        }
+    }
 }

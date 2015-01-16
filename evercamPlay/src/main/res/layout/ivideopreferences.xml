@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
         android:defaultValue="0"
         android:entries="@array/pref_LocalNetwork_entries"
         android:entryValues="@array/pref_LocalNetwork_values"
         android:key="pref_enablocalnetwork"
-        android:title="Use Local Network" />
+        android:title="Use Local Network"/>
 
 </PreferenceScreen>

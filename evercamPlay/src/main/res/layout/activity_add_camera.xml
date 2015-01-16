@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -14,7 +14,7 @@
             android:layout_marginLeft="10sp"
             android:layout_marginRight="10sp"
             android:layout_marginTop="10sp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/add_id_txt"
@@ -22,7 +22,7 @@
                 android:layout_height="20sp"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/evercam_id"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <EditText
                 android:id="@+id/add_id_edit"
@@ -31,7 +31,7 @@
                 android:hint="@string/hint_id"
                 android:inputType="text"
                 android:singleLine="true"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <TextView
                 android:id="@+id/add_id_txt_view"
@@ -40,7 +40,7 @@
                 android:layout_marginLeft="12sp"
                 android:textColor="#ffffff"
                 android:textSize="17sp"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </LinearLayout>
 
         <LinearLayout
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
             android:layout_marginRight="10sp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/add_name_txt"
@@ -56,7 +56,7 @@
                 android:layout_height="20sp"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/friendly_name"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <EditText
                 android:id="@+id/add_name_edit"
@@ -65,14 +65,14 @@
                 android:hint="@string/hint_name"
                 android:inputType="text"
                 android:singleLine="true"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
-            android:layout_marginRight="10sp" >
+            android:layout_marginRight="10sp">
 
             <TextView
                 android:id="@+id/vendor_txt"
@@ -81,19 +81,19 @@
                 android:layout_gravity="center"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/vendor"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <Spinner
                 android:id="@+id/vendor_spinner"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
-            android:layout_marginRight="10sp" >
+            android:layout_marginRight="10sp">
 
             <TextView
                 android:id="@+id/model_txt"
@@ -102,19 +102,19 @@
                 android:layout_gravity="center"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/model"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <Spinner
                 android:id="@+id/model_spinner"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
-            android:layout_marginRight="10sp" >
+            android:layout_marginRight="10sp">
 
             <TextView
                 android:id="@+id/credentials_txt"
@@ -123,7 +123,7 @@
                 android:layout_gravity="center"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/credentials"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <EditText
                 android:id="@+id/add_username_edit"
@@ -132,7 +132,7 @@
                 android:hint="@string/hint_username"
                 android:inputType="text"
                 android:singleLine="true"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <TextView
                 android:id="@+id/add_colon"
@@ -140,7 +140,7 @@
                 android:layout_height="20sp"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/colon"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <EditText
                 android:id="@+id/add_password_edit"
@@ -148,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_camera_password"
                 android:singleLine="true"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -156,7 +156,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
             android:layout_marginRight="10sp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/add_jpg_url_txt"
@@ -164,7 +164,7 @@
                 android:layout_height="20sp"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/jpg_url"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <EditText
                 android:id="@+id/add_jpg_edit"
@@ -173,7 +173,7 @@
                 android:hint="@string/hint_jpg_path"
                 android:inputType="text"
                 android:singleLine="true"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
         </LinearLayout>
 
         <TextView
@@ -185,7 +185,7 @@
             android:layout_marginTop="10sp"
             android:fontFamily="sans-serif"
             android:text="@string/external_title"
-            android:textSize="17sp" />
+            android:textSize="17sp"/>
 
         <View
             android:layout_width="fill_parent"
@@ -193,14 +193,14 @@
             android:layout_marginLeft="10sp"
             android:layout_marginRight="10sp"
             android:layout_marginTop="1dp"
-            android:background="#dc4c3f" />
+            android:background="#dc4c3f"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
             android:layout_marginRight="10sp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/add_external_host_txt"
@@ -208,7 +208,7 @@
                 android:layout_height="20sp"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/external_host"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <EditText
                 android:id="@+id/add_external_host_edit"
@@ -217,7 +217,7 @@
                 android:hint="@string/hint_external_host"
                 android:inputType="text"
                 android:singleLine="true"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -225,7 +225,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
             android:layout_marginRight="10sp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/add_external_http_txt"
@@ -233,7 +233,7 @@
                 android:layout_height="20sp"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/http_port"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <EditText
                 android:id="@+id/add_external_http_edit"
@@ -242,7 +242,7 @@
                 android:hint="@string/hint_external_http"
                 android:inputType="number"
                 android:singleLine="true"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -250,7 +250,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
             android:layout_marginRight="10sp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/add_external_rtsp_txt"
@@ -258,7 +258,7 @@
                 android:layout_height="20sp"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/rtsp_port"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <EditText
                 android:id="@+id/add_external_rtsp_edit"
@@ -267,7 +267,7 @@
                 android:hint="@string/hint_external_rtsp"
                 android:inputType="number"
                 android:singleLine="true"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
         </LinearLayout>
 
         <TextView
@@ -279,7 +279,7 @@
             android:layout_marginTop="10sp"
             android:fontFamily="sans-serif"
             android:text="@string/internal_title"
-            android:textSize="17sp" />
+            android:textSize="17sp"/>
 
         <View
             android:layout_width="fill_parent"
@@ -287,14 +287,14 @@
             android:layout_marginLeft="10sp"
             android:layout_marginRight="10sp"
             android:layout_marginTop="1dp"
-            android:background="#dc4c3f" />
+            android:background="#dc4c3f"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
             android:layout_marginRight="10sp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/add_internal_host_txt"
@@ -302,7 +302,7 @@
                 android:layout_height="20sp"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/internal_host"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <EditText
                 android:id="@+id/add_internal_host_edit"
@@ -311,7 +311,7 @@
                 android:hint="@string/hint_internal_host"
                 android:inputType="text"
                 android:singleLine="true"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -319,7 +319,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
             android:layout_marginRight="10sp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/add_internal_http_txt"
@@ -327,7 +327,7 @@
                 android:layout_height="20sp"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/http_port"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <EditText
                 android:id="@+id/add_internal_http_edit"
@@ -336,7 +336,7 @@
                 android:hint="@string/hint_internal_http"
                 android:inputType="number"
                 android:singleLine="true"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -344,7 +344,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
             android:layout_marginRight="10sp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/add_internal_rtsp_txt"
@@ -352,7 +352,7 @@
                 android:layout_height="20sp"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/rtsp_port"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <EditText
                 android:id="@+id/add_internal_rtsp_edit"
@@ -361,7 +361,7 @@
                 android:hint="@string/hint_internal_rtsp"
                 android:inputType="number"
                 android:singleLine="true"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -371,7 +371,7 @@
             android:layout_marginLeft="10sp"
             android:layout_marginRight="10sp"
             android:layout_marginTop="40dp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/button_add_edit_camera"
@@ -379,7 +379,7 @@
                 android:layout_height="40dp"
                 android:layout_weight=".75"
                 android:background="@+drawable/signup_btn_selector"
-                android:textColor="@+drawable/signup_btn_txt_selector" />
+                android:textColor="@+drawable/signup_btn_txt_selector"/>
 
             <Button
                 android:id="@+id/button_test_snapshot"
@@ -390,7 +390,7 @@
                 android:background="@drawable/btn_selector"
                 android:text="@string/test"
                 android:textColor="#ffffff"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
         </LinearLayout>
     </LinearLayout>
 

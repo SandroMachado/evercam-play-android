@@ -1,26 +1,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true" >
+        android:layout_centerVertical="true">
 
         <SurfaceView
             android:id="@+id/surface_hikvision"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="#00000000" />
-        
+            android:background="#00000000"/>
+
         <io.evercam.androidapp.custom.ProgressView
             android:id="@+id/local_storage_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"/>
     </RelativeLayout>
 
 </RelativeLayout>

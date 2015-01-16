@@ -17,32 +17,32 @@
 <resources>
 
     <declare-styleable name="AppTheme">
-        <attr name="actionbarCompatTitleStyle" format="reference" />
-        <attr name="actionbarCompatItemStyle" format="reference" />
-        <attr name="actionbarCompatItemHomeStyle" format="reference" />
-        <attr name="actionbarCompatProgressIndicatorStyle" format="reference" />
+        <attr name="actionbarCompatTitleStyle" format="reference"/>
+        <attr name="actionbarCompatItemStyle" format="reference"/>
+        <attr name="actionbarCompatItemHomeStyle" format="reference"/>
+        <attr name="actionbarCompatProgressIndicatorStyle" format="reference"/>
     </declare-styleable>
     <declare-styleable name="BezelImageView">
-        <attr name="maskDrawable" format="reference" />
-        <attr name="borderDrawable" format="reference" />
+        <attr name="maskDrawable" format="reference"/>
+        <attr name="borderDrawable" format="reference"/>
     </declare-styleable>
     <declare-styleable name="SlidingMenu">
-        <attr name="viewAbove" format="reference" />
-        <attr name="viewBehind" format="reference" />
-        <attr name="behindOffset" format="dimension" />
-        <attr name="behindScrollScale" format="float" />
+        <attr name="viewAbove" format="reference"/>
+        <attr name="viewBehind" format="reference"/>
+        <attr name="behindOffset" format="dimension"/>
+        <attr name="behindScrollScale" format="float"/>
         <attr name="aboveTouchMode">
-            <enum name="margin" value="0" />
-            <enum name="fullscreen" value="1" />
+            <enum name="margin" value="0"/>
+            <enum name="fullscreen" value="1"/>
         </attr>
         <attr name="behindTouchMode">
-            <enum name="margin" value="0" />
-            <enum name="fullscreen" value="1" />
+            <enum name="margin" value="0"/>
+            <enum name="fullscreen" value="1"/>
         </attr>
-        <attr name="shadowDrawable" format="reference" />
-        <attr name="shadowWidth" format="dimension" />
-        <attr name="behindFadeEnabled" format="boolean" />
-        <attr name="behindFadeDegree" format="float" />
+        <attr name="shadowDrawable" format="reference"/>
+        <attr name="shadowWidth" format="dimension"/>
+        <attr name="behindFadeEnabled" format="boolean"/>
+        <attr name="behindFadeDegree" format="float"/>
     </declare-styleable>
 
 </resources>

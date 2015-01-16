@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/img_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/camera_img"
@@ -19,7 +19,7 @@
             android:background="#ffffff"
             android:paddingLeft="2sp"
             android:paddingRight="2sp"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <ProgressBar
             android:id="@+id/progress"
@@ -28,7 +28,7 @@
             android:layout_height="65dip"
             android:layout_gravity="center"
             android:layout_marginLeft="5sp"
-            android:visibility="visible" />
+            android:visibility="visible"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -40,14 +40,14 @@
         android:layout_marginLeft="5sp"
         android:layout_marginTop="5dip"
         android:layout_toRightOf="@+id/img_layout"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/camera_ip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dip"
-            android:textSize="17sp" />
+            android:textSize="17sp"/>
 
         <TextView
             android:id="@+id/camera_model"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dip"
             android:layout_marginTop="5dip"
-            android:textSize="17sp" />
+            android:textSize="17sp"/>
     </LinearLayout>
 
 </RelativeLayout>

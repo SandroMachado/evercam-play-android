@@ -1,27 +1,27 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".LoginActivity" >
+       xmlns:tools="http://schemas.android.com/tools"
+       tools:context=".LoginActivity">
 
     <!-- Login form -->
 
-   <RelativeLayout
+    <RelativeLayout
         android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15sp" >
+        android:layout_marginBottom="15sp">
 
         <LinearLayout
             android:id="@+id/login_form_layout"
             style="@style/LoginFormContainer"
             android:layout_centerHorizontal="true"
             android:orientation="vertical">
-            
-          <ImageView
-            android:id="@+id/icon_imgview"
-            android:layout_width="180sp"
-            android:layout_height="180sp"
-            android:layout_gravity="center"
-            android:src="@+drawable/icon_192x192" />
+
+            <ImageView
+                android:id="@+id/icon_imgview"
+                android:layout_width="180sp"
+                android:layout_height="180sp"
+                android:layout_gravity="center"
+                android:src="@+drawable/icon_192x192"/>
 
             <EditText
                 android:id="@+id/editUsername"
@@ -31,7 +31,7 @@
                 android:layout_marginTop="40dp"
                 android:hint="@string/hint_email"
                 android:inputType="text"
-                android:singleLine="true" />
+                android:singleLine="true"/>
 
             <EditText
                 android:id="@+id/editPassword"
@@ -41,7 +41,7 @@
                 android:fontFamily="sans-serif"
                 android:hint="@string/hint_password"
                 android:inputType="textPassword"
-                android:singleLine="true" />
+                android:singleLine="true"/>
 
             <Button
                 android:id="@+id/btnLogin"
@@ -53,7 +53,7 @@
                 android:layout_marginTop="35dp"
                 android:background="@drawable/btn_selector"
                 android:text="@string/action_sign_in_with_evercam"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"/>
         </LinearLayout>
 
         <TextView
@@ -63,7 +63,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:textColor="@drawable/txt_selector"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
     </RelativeLayout>
 
 </merge>

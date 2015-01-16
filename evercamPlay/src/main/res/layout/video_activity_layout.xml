@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#000000" >
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#000000">
 
-   <RelativeLayout
+    <RelativeLayout
         android:id="@+id/camera_view_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_centerInParent="true"
-        android:layout_gravity="center" >
+        android:layout_gravity="center">
 
         <ImageView
             android:id="@+id/img_camera1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_centerInParent="true"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"/>
 
         <SurfaceView
             android:id="@+id/surface1"
@@ -24,40 +24,40 @@
             android:layout_height="fill_parent"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:id="@+id/player_control_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true">
-            
-        <ImageView
-            android:id="@+id/ivmediaplayer1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/play_button_background_selector"
-            android:visibility="gone"
-             />
-        
-        <ImageView
-            android:id="@+id/player_savesnapshot"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/play_button_background_selector"
-            android:layout_toRightOf="@+id/ivmediaplayer1"
-            android:src="@drawable/ic_action_save"
-            android:visibility="gone"/>
-        
-        <io.evercam.androidapp.custom.ProgressView
-            android:id="@+id/ivprogressspinner1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/ivmediaplayer1"
-            android:layout_alignRight="@+id/ivmediaplayer1"
-            android:layout_alignTop="@+id/ivmediaplayer1"
-            android:layout_alignBottom="@+id/ivmediaplayer1"/>
-		</RelativeLayout>
+
+            <ImageView
+                android:id="@+id/ivmediaplayer1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/play_button_background_selector"
+                android:visibility="gone"
+                />
+
+            <ImageView
+                android:id="@+id/player_savesnapshot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/play_button_background_selector"
+                android:layout_toRightOf="@+id/ivmediaplayer1"
+                android:src="@drawable/ic_action_save"
+                android:visibility="gone"/>
+
+            <io.evercam.androidapp.custom.ProgressView
+                android:id="@+id/ivprogressspinner1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/ivmediaplayer1"
+                android:layout_alignRight="@+id/ivmediaplayer1"
+                android:layout_alignTop="@+id/ivmediaplayer1"
+                android:layout_alignBottom="@+id/ivmediaplayer1"/>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/offline_text_view"
@@ -67,13 +67,13 @@
             android:text="@string/msg_offline"
             android:textColor="#dc4c3f"
             android:textSize="17sp"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:id="@+id/video_gredient_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/gredient_image" >
+            android:background="@drawable/gredient_image">
 
             <TextView
                 android:id="@+id/time_text_view"
@@ -87,7 +87,7 @@
                 android:shadowRadius="2.0"
                 android:textColor="#cccccc"
                 android:textSize="15sp"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </RelativeLayout>
     </RelativeLayout>
 

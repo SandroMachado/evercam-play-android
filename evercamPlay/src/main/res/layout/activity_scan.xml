@@ -1,6 +1,6 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ScanActivity" >
+       xmlns:tools="http://schemas.android.com/tools"
+       tools:context=".ScanActivity">
 
     <!-- Scan progress -->
 
@@ -10,13 +10,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="8dp"/>
 
         <TextView
             android:id="@+id/scan_status_message"
@@ -26,7 +26,7 @@
             android:fontFamily="sans-serif-light"
             android:gravity="center"
             android:text="@string/msg_scanning"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <Button
             android:id="@+id/button_cancel_scan"
@@ -39,7 +39,7 @@
             android:paddingRight="20sp"
             android:text="@string/cancel"
             android:textColor="@+drawable/signup_btn_txt_selector"
-            android:textSize="17sp" />
+            android:textSize="17sp"/>
     </LinearLayout>
 
     <!-- Scan Result -->
@@ -49,12 +49,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10sp"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <ListView
             android:id="@+id/scan_result_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
         </ListView>
     </RelativeLayout>
 
@@ -67,7 +67,7 @@
         android:layout_gravity="center"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/scan_result_message"
@@ -77,7 +77,7 @@
             android:fontFamily="sans-serif-light"
             android:gravity="center"
             android:text="@string/msg_no_camera_found"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <Button
             android:id="@+id/button_add_camera_manually"
@@ -89,7 +89,7 @@
             android:paddingRight="10sp"
             android:text="@string/btn_text_add_manually"
             android:textColor="#ffffff"
-            android:textSize="17sp" />
+            android:textSize="17sp"/>
     </LinearLayout>
 
 </merge>

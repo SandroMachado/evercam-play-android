@@ -17,7 +17,7 @@
         <item>5 minutes</item>
         <item>Never</item>
     </string-array>
-    
+
     <string-array name="prefs_sleep_entry_values">
         <item>30</item>
         <item>60</item>
