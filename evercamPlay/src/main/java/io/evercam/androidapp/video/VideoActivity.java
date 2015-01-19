@@ -466,7 +466,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        MenuItem editItem = menu.findItem(R.id.video_menu_edit_camera);
+  //      MenuItem editItem = menu.findItem(R.id.video_menu_edit_camera);
         MenuItem viewItem = menu.findItem(R.id.video_menu_view_camera);
         MenuItem localStorageItem = menu.findItem(R.id.video_menu_local_storage);
 
@@ -475,12 +475,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             //Hide 'Edit' option for shared camera
             if(evercamCamera.canEdit())
             {
-                editItem.setVisible(true);
+ //               editItem.setVisible(true);
                 viewItem.setVisible(true);
             }
             else
             {
-                editItem.setVisible(false);
+  //              editItem.setVisible(false);
                 viewItem.setVisible(true);
             }
 
@@ -538,14 +538,15 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 Intent viewIntent = new Intent(VideoActivity.this, ViewCameraActivity.class);
                 startActivityForResult(viewIntent, Constants.REQUEST_CODE_VIEW_CAMERA);
             }
-            else if(itemId == R.id.video_menu_edit_camera)
-            {
-                editStarted = true;
-
-                Intent editIntent = new Intent(VideoActivity.this, AddEditCameraActivity.class);
-                editIntent.putExtra(Constants.KEY_IS_EDIT, true);
-                startActivityForResult(editIntent, Constants.REQUEST_CODE_PATCH_CAMERA);
-            }
+            //Remove edit camera from menu because it's now in 'View Details - Edit'
+//            else if(itemId == R.id.video_menu_edit_camera)
+//            {
+//                editStarted = true;
+//
+//                Intent editIntent = new Intent(VideoActivity.this, AddEditCameraActivity.class);
+//                editIntent.putExtra(Constants.KEY_IS_EDIT, true);
+//                startActivityForResult(editIntent, Constants.REQUEST_CODE_PATCH_CAMERA);
+//            }
             else if(itemId == R.id.video_menu_local_storage)
             {
                 startActivity(new Intent(VideoActivity.this, LocalStorageActivity.class));

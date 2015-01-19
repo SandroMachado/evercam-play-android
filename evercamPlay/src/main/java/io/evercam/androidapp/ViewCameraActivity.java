@@ -1,10 +1,14 @@
 package io.evercam.androidapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,6 +26,7 @@ public class ViewCameraActivity extends Activity
     private TextView cameraIdTextView;
     private TextView cameraNameTextView;
     private TextView cameraOwnerTextView;
+    private TextView cameraTimezoneTextView;
     private TextView cameraVendorTextView;
     private TextView cameraModelTextView;
     private TextView cameraUsernameTextView;
@@ -33,6 +38,7 @@ public class ViewCameraActivity extends Activity
     private TextView cameraExternalHostTextView;
     private TextView cameraExternalHttpTextView;
     private TextView cameraExternalRtspTextView;
+    private Button editLinkButton;
 
     private EvercamCamera evercamCamera;
 
@@ -87,6 +93,33 @@ public class ViewCameraActivity extends Activity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+
+        getMenuInflater().inflate(R.menu.menu_view_details, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        MenuItem editItem = menu.findItem(R.id.menu_action_edit);
+
+        if(evercamCamera != null)
+        {
+            if(evercamCamera.canEdit())
+            {
+                editItem.setVisible(true);
+            }
+            else
+            {
+                editItem.setVisible(false);
+            }
+        }
+        return true;
+    }
+
+    @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item)
     {
         switch(item.getItemId())
@@ -94,17 +127,35 @@ public class ViewCameraActivity extends Activity
             case android.R.id.home:
                 this.finish();
                 return true;
+            case R.id.menu_action_edit:
+                linkToEditCamera();
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode == Constants.REQUEST_CODE_PATCH_CAMERA)
+        {
+            //If camera details have been edited, return to live view
+            if(resultCode == Constants.RESULT_TRUE)
+            {
+                setResult(Constants.RESULT_TRUE);
+                finish();
+            }
+        }
     }
 
     private void initialScreen()
     {
         canEditDetailLayout = (LinearLayout) findViewById(R.id.can_edit_detail_layout);
+        editLinkButton = (Button) findViewById(R.id.button_edit_camera_link);
 
         cameraIdTextView = (TextView) findViewById(R.id.view_id_value);
         cameraNameTextView = (TextView) findViewById(R.id.view_name_value);
         cameraOwnerTextView = (TextView) findViewById(R.id.view_owner_value);
+        cameraTimezoneTextView = (TextView) findViewById(R.id.view_timezone_value);
         cameraVendorTextView = (TextView) findViewById(R.id.view_vendor_value);
         cameraModelTextView = (TextView) findViewById(R.id.view_model_value);
 
@@ -118,6 +169,14 @@ public class ViewCameraActivity extends Activity
         cameraExternalHostTextView = (TextView) findViewById(R.id.view_external_host_value);
         cameraExternalHttpTextView = (TextView) findViewById(R.id.view_external_http_value);
         cameraExternalRtspTextView = (TextView) findViewById(R.id.view_external_rtsp_value);
+
+        editLinkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                linkToEditCamera();
+            }
+        });
     }
 
     private void fillCameraDetails(EvercamCamera camera)
@@ -127,6 +186,7 @@ public class ViewCameraActivity extends Activity
             cameraIdTextView.setText(camera.getCameraId());
             cameraNameTextView.setText(camera.getName());
             cameraOwnerTextView.setText(camera.getRealOwner());
+            cameraTimezoneTextView.setText(camera.getTimezone());
             if(camera.getVendor().isEmpty())
             {
                 setAsNotSpecified(cameraVendorTextView);
@@ -144,16 +204,6 @@ public class ViewCameraActivity extends Activity
                 cameraModelTextView.setText(camera.getModel());
             }
 
-            if(evercamCamera.canEdit())
-            {
-                canEditDetailLayout.setVisibility(View.VISIBLE);
-
-            }
-            else
-            {
-                canEditDetailLayout.setVisibility(View.GONE);
-            }
-
             //Show more details if user has the rights
             fillCanEditDetails(camera);
         }
@@ -163,6 +213,7 @@ public class ViewCameraActivity extends Activity
     {
         if(camera.canEdit())
         {
+            editLinkButton.setVisibility(View.VISIBLE);
             canEditDetailLayout.setVisibility(View.VISIBLE);
 
             if(camera.getUsername().isEmpty())
@@ -256,5 +307,12 @@ public class ViewCameraActivity extends Activity
     {
         textView.setText(R.string.not_specified);
         textView.setTextColor(Color.GRAY);
+    }
+
+    private void linkToEditCamera()
+    {
+        Intent intent = new Intent(ViewCameraActivity.this, AddEditCameraActivity.class);
+        intent.putExtra(Constants.KEY_IS_EDIT, true);
+        startActivityForResult(intent, Constants.REQUEST_CODE_PATCH_CAMERA);
     }
 }

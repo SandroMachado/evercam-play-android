@@ -70,6 +70,7 @@
     <!-- View Camera Details -->
     <string name="view_evercam_id">Evercam ID:</string>
     <string name="view_owner">Owner:</string>
+    <string name="view_timezone">Timezone:</string>
     <string name="view_friendly_name">Name:</string>
     <string name="view_vendor">Vendor:</string>
     <string name="view_model">Model:</string>
@@ -80,5 +81,6 @@
     <string name="view_host">IP address:</string>
     <string name="view_http">HTTP Port:</string>
     <string name="view_rtsp">RTSP Port:</string>
+    <string name="button_text_edit">Edit</string>
 
 </resources>

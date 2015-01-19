@@ -62,6 +62,7 @@
     <string name="menu_refresh">Refresh All</string>
     <string name="menu_add_camera">Add Camera</string>
     <string name="menu_send">Send</string>
+    <string name="menu_edit">Edit</string>
     <string name="title_activity_add_camera">Add Camera</string>
     <string name="title_activity_view_camera">Camera Details</string>
     <string name="title_activity_scan">Network Scan</string>
