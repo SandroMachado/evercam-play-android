@@ -472,10 +472,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
         if(evercamCamera != null)
         {
+            //Hide 'Edit' option for shared camera
             if(evercamCamera.canEdit())
             {
                 editItem.setVisible(true);
-                viewItem.setVisible(false);
+                viewItem.setVisible(true);
             }
             else
             {

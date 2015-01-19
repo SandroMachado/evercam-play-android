@@ -73,6 +73,12 @@
     <string name="view_friendly_name">Name:</string>
     <string name="view_vendor">Vendor:</string>
     <string name="view_model">Model:</string>
-    <string name="view_not_set">Not set</string>
+    <string name="not_specified">Not specified</string>
+    <string name="view_username">Username:</string>
+    <string name="view_password">Password:</string>
+    <string name="view_snapshot_url">Snapshot:</string>
+    <string name="view_host">IP address:</string>
+    <string name="view_http">HTTP Port:</string>
+    <string name="view_rtsp">RTSP Port:</string>
 
 </resources>
