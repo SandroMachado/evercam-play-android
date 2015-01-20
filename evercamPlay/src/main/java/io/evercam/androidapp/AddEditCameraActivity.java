@@ -749,6 +749,10 @@ public class AddEditCameraActivity extends Activity
 
     private void buildModelSpinner(ArrayList<Model> modelList, String selectedModel)
     {
+        if(selectedModel != null && !selectedModel.isEmpty())
+        {
+            selectedModel = selectedModel.toLowerCase(Locale.UK);
+        }
         if(modelMap == null)
         {
             modelMap = new TreeMap<String, String>();
@@ -1098,6 +1102,10 @@ public class AddEditCameraActivity extends Activity
                 if(cameraEdit != null && !cameraEdit.getModel().isEmpty())
                 {
                     buildModelSpinner(modelList, cameraEdit.getModel());
+                }
+                else if(discoveredCamera != null &&!discoveredCamera.getModel().isEmpty())
+                {
+                    buildModelSpinner(modelList, discoveredCamera.getModel());
                 }
                 else
                 {
