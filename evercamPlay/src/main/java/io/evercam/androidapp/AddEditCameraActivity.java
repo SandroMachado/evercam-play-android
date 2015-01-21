@@ -38,7 +38,6 @@ import io.evercam.androidapp.tasks.PatchCameraTask;
 import io.evercam.androidapp.tasks.TestSnapshotTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
-import io.evercam.androidapp.utils.EvercamApiHelper;
 import io.evercam.androidapp.video.VideoActivity;
 import io.evercam.network.discovery.DiscoveredCamera;
 
@@ -76,8 +75,6 @@ public class AddEditCameraActivity extends Activity
         {
             BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
         }
-
-        EvercamApiHelper.setEvercamDeveloperKeypair(this);
 
         Bundle bundle = getIntent().getExtras();
         // Edit Camera

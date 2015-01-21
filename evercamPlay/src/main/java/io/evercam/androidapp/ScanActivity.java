@@ -37,7 +37,6 @@ import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.tasks.ScanForCameraTask;
 import io.evercam.androidapp.utils.Constants;
-import io.evercam.androidapp.utils.EvercamApiHelper;
 import io.evercam.network.cambase.CambaseAPI;
 import io.evercam.network.cambase.CambaseException;
 import io.evercam.network.discovery.DiscoveredCamera;
@@ -238,7 +237,6 @@ public class ScanActivity extends Activity
 
     private void startDiscovery()
     {
-        EvercamApiHelper.setEvercamDeveloperKeypair(this);
         scanTask = new ScanForCameraTask(ScanActivity.this);
         scanTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

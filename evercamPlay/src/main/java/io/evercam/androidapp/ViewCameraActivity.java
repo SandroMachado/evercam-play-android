@@ -15,7 +15,6 @@ import com.bugsense.trace.BugSenseHandler;
 
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.utils.Constants;
-import io.evercam.androidapp.utils.EvercamApiHelper;
 import io.evercam.androidapp.video.VideoActivity;
 
 public class ViewCameraActivity extends Activity
@@ -49,8 +48,6 @@ public class ViewCameraActivity extends Activity
         {
             BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
         }
-
-        EvercamApiHelper.setEvercamDeveloperKeypair(this);
 
         evercamCamera = VideoActivity.evercamCamera;
 

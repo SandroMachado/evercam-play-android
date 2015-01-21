@@ -457,7 +457,6 @@ public class ManageAccountsActivity extends ParentActivity
                 }
                 else
                 {
-                    setEvercamDeveloperKeypair();
                     try
                     {
                         ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(username,
@@ -528,14 +527,6 @@ public class ManageAccountsActivity extends ParentActivity
                 alertDialog.dismiss();
             }
         }
-    }
-
-    private void setEvercamDeveloperKeypair()
-    {
-        PropertyReader propertyReader = new PropertyReader(getApplicationContext());
-        String developerAppKey = propertyReader.getPropertyStr(PropertyReader.KEY_API_KEY);
-        String developerAppID = propertyReader.getPropertyStr(PropertyReader.KEY_API_ID);
-        API.setDeveloperKeyPair(developerAppKey, developerAppID);
     }
 
     class AccountCheckInternetTask extends CheckInternetTask

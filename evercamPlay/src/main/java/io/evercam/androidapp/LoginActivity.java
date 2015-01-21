@@ -35,7 +35,6 @@ import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.Constants;
-import io.evercam.androidapp.utils.EvercamApiHelper;
 import io.evercam.androidapp.utils.PrefsManager;
 
 public class LoginActivity extends ParentActivity
@@ -77,8 +76,6 @@ public class LoginActivity extends ParentActivity
         {
             BugSenseHandler.initAndStartSession(LoginActivity.this, Constants.bugsense_ApiKey);
         }
-
-        EvercamApiHelper.setEvercamDeveloperKeypair(this);
 
         Button btnLogin = (Button) findViewById(R.id.btnLogin);
 
