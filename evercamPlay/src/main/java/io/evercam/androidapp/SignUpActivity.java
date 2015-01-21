@@ -73,8 +73,6 @@ public class SignUpActivity extends Activity
             BugSenseHandler.initAndStartSession(SignUpActivity.this, Constants.bugsense_ApiKey);
         }
 
-        EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_sign_up));
-
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_sign_up);
@@ -388,8 +386,10 @@ public class SignUpActivity extends Activity
         protected void onPreExecute()
         {
             //Hide soft keyboard
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(SignUpActivity.this.getCurrentFocus().getWindowToken(), 0);
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context
+                    .INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(SignUpActivity.this.getCurrentFocus()
+                    .getWindowToken(), 0);
 
             showProgress(true);
         }
@@ -400,10 +400,12 @@ public class SignUpActivity extends Activity
             try
             {
                 User.create(userDetail);
-                ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(userDetail.getUsername(), userDetail.getPassword());
+                ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(userDetail.getUsername
+                        (), userDetail.getPassword());
                 String userApiKey = userKeyPair.getApiKey();
                 String userApiId = userKeyPair.getApiId();
-                SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(SignUpActivity.this);
+                SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences
+                        (SignUpActivity.this);
                 PrefsManager.saveEvercamUserKeyPair(sharedPrefs, userApiKey, userApiId);
                 API.setUserKeyPair(userApiKey, userApiId);
                 User evercamUser = new User(userDetail.getUsername());

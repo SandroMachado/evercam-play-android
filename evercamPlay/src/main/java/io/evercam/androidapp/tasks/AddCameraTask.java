@@ -160,23 +160,23 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
             {
                 CustomedDialog.getConfirmCreateDialog(activity,
                         new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        readyToCreateCamera = true;
-                        return;
-                    }
-                }, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        readyToCreateCamera = false;
-                        customProgressDialog.dismiss();
-                        return;
-                    }
-                }).show();
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                readyToCreateCamera = true;
+                                return;
+                            }
+                        }, new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                readyToCreateCamera = false;
+                                customProgressDialog.dismiss();
+                                return;
+                            }
+                        }).show();
             }
         }
     }
@@ -235,12 +235,14 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
             ArrayList<Cookie> cookies = new ArrayList<Cookie>();
             try
             {
-                Drawable drawable = Commons.getDrawablefromUrlAuthenticated(internalFullUrl, username, password, cookies, 5000);
+                Drawable drawable = Commons.getDrawablefromUrlAuthenticated(internalFullUrl,
+                        username, password, cookies, 5000);
                 if(drawable != null)
                 {
                     // Save this image.
                     Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-                    new Thread(new SaveImageRunnable(activity, bitmap, cameraDetail.getId())).start();
+                    new Thread(new SaveImageRunnable(activity, bitmap,
+                            cameraDetail.getId())).start();
                     return true;
                 }
             }

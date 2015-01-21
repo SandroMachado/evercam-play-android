@@ -61,7 +61,6 @@ import java.util.concurrent.RejectedExecutionException;
 
 import io.evercam.Camera;
 import io.evercam.EvercamException;
-import io.evercam.androidapp.AddEditCameraActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.FeedbackActivity;
 import io.evercam.androidapp.LocalStorageActivity;
@@ -199,8 +198,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             {
                 BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
             }
-
-            EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_video));
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -466,7 +463,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-  //      MenuItem editItem = menu.findItem(R.id.video_menu_edit_camera);
+        //      MenuItem editItem = menu.findItem(R.id.video_menu_edit_camera);
         MenuItem viewItem = menu.findItem(R.id.video_menu_view_camera);
         MenuItem localStorageItem = menu.findItem(R.id.video_menu_local_storage);
 
@@ -475,12 +472,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             //Hide 'Edit' option for shared camera
             if(evercamCamera.canEdit())
             {
- //               editItem.setVisible(true);
+                //               editItem.setVisible(true);
                 viewItem.setVisible(true);
             }
             else
             {
-  //              editItem.setVisible(false);
+                //              editItem.setVisible(false);
                 viewItem.setVisible(true);
             }
 
@@ -539,14 +536,16 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 startActivityForResult(viewIntent, Constants.REQUEST_CODE_VIEW_CAMERA);
             }
             //Remove edit camera from menu because it's now in 'View Details - Edit'
-//            else if(itemId == R.id.video_menu_edit_camera)
-//            {
-//                editStarted = true;
-//
-//                Intent editIntent = new Intent(VideoActivity.this, AddEditCameraActivity.class);
-//                editIntent.putExtra(Constants.KEY_IS_EDIT, true);
-//                startActivityForResult(editIntent, Constants.REQUEST_CODE_PATCH_CAMERA);
-//            }
+            //            else if(itemId == R.id.video_menu_edit_camera)
+            //            {
+            //                editStarted = true;
+            //
+            //                Intent editIntent = new Intent(VideoActivity.this,
+            // AddEditCameraActivity.class);
+            //                editIntent.putExtra(Constants.KEY_IS_EDIT, true);
+            //                startActivityForResult(editIntent,
+            // Constants.REQUEST_CODE_PATCH_CAMERA);
+            //            }
             else if(itemId == R.id.video_menu_local_storage)
             {
                 startActivity(new Intent(VideoActivity.this, LocalStorageActivity.class));
@@ -1664,15 +1663,21 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                             Log.d(TAG, "Failed to play video stream");
                             if(!player.isNextMRLValid())
                             {
-                                EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_rtsp, R.string.action_streaming_rtsp_failed, R.string.label_streaming_rtsp_failed);
-                                StreamFeedbackItem failedItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), false);
+                                EvercamPlayApplication.sendEventAnalytics(VideoActivity.this,
+                                        R.string.category_streaming_rtsp,
+                                        R.string.action_streaming_rtsp_failed,
+                                        R.string.label_streaming_rtsp_failed);
+                                StreamFeedbackItem failedItem = new StreamFeedbackItem
+                                        (VideoActivity.this, AppData.defaultUser.getUsername(),
+                                                false);
                                 failedItem.setCameraId(evercamCamera.getCameraId());
                                 failedItem.setUrl(player.getCurrentMRL());
                                 failedItem.setType(StreamFeedbackItem.TYPE_RTSP);
                                 logger.info(failedItem.toJson());
                             }
                             isPlayingJpg = true;
-                            player.showToast(videoActivity.get().getString(R.string.msg_switch_to_jpg));
+                            player.showToast(videoActivity.get().getString(R.string
+                                    .msg_switch_to_jpg));
                             player.showImagesVideo = true;
                             player.createNewImageThread();
                         }
@@ -1689,9 +1694,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
                         //And send to Google Analytics
                         //And send to Firebase
-                        EvercamPlayApplication.sendEventAnalytics(player, R.string.category_streaming_rtsp, R.string.action_streaming_rtsp_success, R.string.label_streaming_rtsp_success);
+                        EvercamPlayApplication.sendEventAnalytics(player,
+                                R.string.category_streaming_rtsp,
+                                R.string.action_streaming_rtsp_success,
+                                R.string.label_streaming_rtsp_success);
 
-                        StreamFeedbackItem successItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), true);
+                        StreamFeedbackItem successItem = new StreamFeedbackItem(VideoActivity
+                                .this, AppData.defaultUser.getUsername(), true);
                         successItem.setCameraId(evercamCamera.getCameraId());
                         successItem.setUrl(player.mrlPlaying);
                         successItem.setType(StreamFeedbackItem.TYPE_RTSP);
@@ -1708,9 +1717,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
                         if(VideoActivity.mediaUrls.get(mrlIndex).isLocalNetwork == false)
                         {
-                            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(player);
+                            SharedPreferences sharedPrefs = PreferenceManager
+                                    .getDefaultSharedPreferences(player);
                             SharedPreferences.Editor editor = sharedPrefs.edit();
-                            editor.putString("pref_mrlplaying" + evercamCamera.getCameraId(), player.mrlPlaying);
+                            editor.putString("pref_mrlplaying" + evercamCamera.getCameraId(),
+                                    player.mrlPlaying);
                             editor.commit();
                         }
 
@@ -1805,7 +1816,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                 downloadStartCount++;
                                 myStartImageTime = SystemClock.uptimeMillis();
 
-                                response = Commons.getDrawablefromUrlAuthenticated(url, evercamCamera.getUsername(), evercamCamera.getPassword(), cookies, 5000);
+                                response = Commons.getDrawablefromUrlAuthenticated(url,
+                                        evercamCamera.getUsername(), evercamCamera.getPassword(),
+                                        cookies, 5000);
                                 if(response != null)
                                 {
                                     successiveFailureCount = 0;
@@ -1815,14 +1828,16 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                             catch(OutOfMemoryError e)
                             {
                                 if(enableLogs)
-                                    Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+                                    Log.e(TAG, e.toString() + "-::OOM::-" + Log
+                                            .getStackTraceString(e));
                                 successiveFailureCount++;
                                 continue;
 
                             }
                             catch(Exception e)
                             {
-                                Log.e(TAG, "Exception get camera with auth: " + e.toString() + "\r\n" + "ImageURl=[" + url + "]" + "\r\n");
+                                Log.e(TAG, "Exception get camera with auth: " + e.toString() +
+                                        "\r\n" + "ImageURl=[" + url + "]" + "\r\n");
 
                                 AbandonedJpgUrl.add(url);
                                 successiveFailureCount++;
@@ -1905,12 +1920,15 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                 //Log.d(TAG, "myStartImageTime >= latestStartImageTime");
                                 if(isLocalNetworkRequest) isFirstImageLocalReceived = true;
                                 else isFirstImageLiveReceived = true;
-                                if(isLocalNetworkRequest && localnetworkSettings.equalsIgnoreCase("0"))
+                                if(isLocalNetworkRequest && localnetworkSettings.equalsIgnoreCase
+                                        ("0"))
                                     isLocalNetwork = true;
 
                                 latestStartImageTime = myStartImageTime;
 
-                                if(mediaPlayerView.getVisibility() != View.VISIBLE && VideoActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+                                if(mediaPlayerView.getVisibility() != View.VISIBLE &&
+                                        VideoActivity.this.getResources().getConfiguration()
+                                                .orientation == Configuration.ORIENTATION_LANDSCAPE)
                                     VideoActivity.this.getActionBar().hide();
 
                                 if(showImagesVideo) imageView.setImageDrawable(result);
@@ -1925,8 +1943,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                     //Successfully played JPG view, send Google Analytics event
                                     //Log.d(TAG, "Jpg success!");
                                     isJpgSuccessful = true;
-                                    EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_jpg, R.string.action_streaming_jpg_success, R.string.label_streaming_jpg_success);
-                                    StreamFeedbackItem successItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), true);
+                                    EvercamPlayApplication.sendEventAnalytics(VideoActivity.this,
+                                            R.string.category_streaming_jpg,
+                                            R.string.action_streaming_jpg_success,
+                                            R.string.label_streaming_jpg_success);
+                                    StreamFeedbackItem successItem = new StreamFeedbackItem
+                                            (VideoActivity.this, AppData.defaultUser.getUsername
+                                                    (), true);
                                     successItem.setCameraId(evercamCamera.getCameraId());
                                     successItem.setUrl(successUrl);
                                     successItem.setType(StreamFeedbackItem.TYPE_JPG);
@@ -1956,10 +1979,15 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                 imageThread.cancel(true);
 
                                 //Failed to play JPG view, send Google Analytics event
-                                EvercamPlayApplication.sendEventAnalytics(VideoActivity.this, R.string.category_streaming_jpg, R.string.action_streaming_jpg_failed, R.string.label_streaming_jpg_failed);
+                                EvercamPlayApplication.sendEventAnalytics(VideoActivity.this,
+                                        R.string.category_streaming_jpg,
+                                        R.string.action_streaming_jpg_failed,
+                                        R.string.label_streaming_jpg_failed);
 
                                 //Send Firebase
-                                StreamFeedbackItem failedItem = new StreamFeedbackItem(VideoActivity.this, AppData.defaultUser.getUsername(), false);
+                                StreamFeedbackItem failedItem = new StreamFeedbackItem
+                                        (VideoActivity.this, AppData.defaultUser.getUsername(),
+                                                false);
                                 failedItem.setCameraId(evercamCamera.getCameraId());
                                 failedItem.setUrl(evercamCamera.getExternalSnapshotUrl());
                                 failedItem.setType(StreamFeedbackItem.TYPE_JPG);
@@ -2052,7 +2080,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 else
                 {
                     offlineTextView.setVisibility(View.GONE);
-                    setCameraForPlaying(VideoActivity.this, AppData.evercamCameraList.get(itemPosition));
+                    setCameraForPlaying(VideoActivity.this, AppData.evercamCameraList.get
+                            (itemPosition));
                     createPlayer(getCurrentMRL());
                 }
                 return false;

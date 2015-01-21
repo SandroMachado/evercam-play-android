@@ -405,7 +405,8 @@ public class CameraLayout extends LinearLayout
                             {
                                 internalJpgUrl = evercamCamera.getInternalSnapshotUrl();
                                 drawable = Commons.getDrawablefromUrlAuthenticated
-                                        (internalJpgUrl, evercamCamera.getUsername(), evercamCamera.getPassword(), cookies, 5000);
+                                        (internalJpgUrl, evercamCamera.getUsername(),
+                                                evercamCamera.getPassword(), cookies, 5000);
                             }
                         }
                     }
@@ -413,7 +414,9 @@ public class CameraLayout extends LinearLayout
                     {
                         if(!internalJpgUrl.isEmpty())
                         {
-                            drawable = Commons.getDrawablefromUrlAuthenticated(internalJpgUrl, evercamCamera.getUsername(), evercamCamera.getPassword(), cookies, 5000);
+                            drawable = Commons.getDrawablefromUrlAuthenticated(internalJpgUrl,
+                                    evercamCamera.getUsername(), evercamCamera.getPassword(),
+                                    cookies, 5000);
                         }
                     }
                 }
@@ -461,7 +464,8 @@ public class CameraLayout extends LinearLayout
         @Override
         protected void onPostExecute(Drawable drawable)
         {
-            if(drawable != null && !end && drawable.getIntrinsicWidth() > 0 && drawable.getIntrinsicHeight() > 0)
+            if(drawable != null && !end && drawable.getIntrinsicWidth() > 0 && drawable
+                    .getIntrinsicHeight() > 0)
             {
                 cameraRelativeLayout.setBackgroundDrawable(drawable);
                 CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_received;
@@ -473,16 +477,19 @@ public class CameraLayout extends LinearLayout
                 // new SaveImageTask(context, bitmap,
                 // evercamCamera.getCameraId())
                 // .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                new Thread(new SaveImageRunnable(context, bitmap, evercamCamera.getCameraId())).start();
+                new Thread(new SaveImageRunnable(context, bitmap, evercamCamera.getCameraId()))
+                        .start();
             }
 
             synchronized(this)
             {
                 isTaskended = true;
 
-                if(liveImageTask.isTaskended && CameraLayout.this.evercamCamera.loadingStatus != ImageLoadingStatus.live_received)
+                if(liveImageTask.isTaskended && CameraLayout.this.evercamCamera.loadingStatus !=
+                        ImageLoadingStatus.live_received)
                 {
-                    CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_not_received;
+                    CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus
+                            .live_not_received;
                 }
                 if(liveImageTask.isTaskended)
                 {

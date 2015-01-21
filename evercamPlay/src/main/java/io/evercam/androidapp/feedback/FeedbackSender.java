@@ -65,7 +65,8 @@ public class FeedbackSender
         sendgrid.setSubject(TITLE_FEEDBACK);
         String contentString = fullName + " says: \n\n" + feedbackString + "\n\nVersion: " +
                 dataCollector.getAppVersion() + "\nDevice: " + DataCollector.getDeviceName() +
-                "\nAndroid " + DataCollector.getAndroidVersion() + "\nNetwork: " + dataCollector.getNetworkString();
+                "\nAndroid " + DataCollector.getAndroidVersion() + "\nNetwork: " + dataCollector
+                .getNetworkString();
         if(cameraId != null)
         {
             contentString += "\nCamera ID: " + cameraId;

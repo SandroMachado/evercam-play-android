@@ -96,13 +96,13 @@ public class FeedbackActivity extends Activity
         if(!feedbackString.isEmpty())
         {
             CustomedDialog.getConfirmQuitFeedbackDialog(this, new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
-                            finish();
-                        }
-                    }).show();
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    finish();
+                }
+            }).show();
         }
         else
         {

@@ -48,8 +48,6 @@ public class LocalStorageActivity extends Activity
             BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
         }
 
-        EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_local_storage));
-
         evercamCamera = VideoActivity.evercamCamera;
 
         if(this.getActionBar() != null)
@@ -161,17 +159,17 @@ public class LocalStorageActivity extends Activity
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this).setView
                 (dialogLayout).setPositiveButton(R.string.play,
                 new DialogInterface.OnClickListener()
-        {
+                {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                dialog.dismiss();
-                surfaceView.setVisibility(View.VISIBLE);
-                showProgressView();
-                hikvisionSdk.startPlayback(getTimeFromPicker(datePicker, timePicker));
-            }
-        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.dismiss();
+                        surfaceView.setVisibility(View.VISIBLE);
+                        showProgressView();
+                        hikvisionSdk.startPlayback(getTimeFromPicker(datePicker, timePicker));
+                    }
+                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
         {
 
             @Override

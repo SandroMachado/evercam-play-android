@@ -82,8 +82,6 @@ public class ScanActivity extends Activity
             BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
         }
 
-        EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_scan_camera));
-
         scanProgressView = findViewById(R.id.scan_status_layout);
         scanResultListView = findViewById(R.id.scan_result_layout);
         scanResultNoCameraView = findViewById(R.id.scan_result_no_camera_layout);
@@ -420,7 +418,8 @@ public class ScanActivity extends Activity
             }
             else
             {
-                Drawable questionImage = ScanActivity.this.getResources().getDrawable(R.drawable.question_img_trans);
+                Drawable questionImage = ScanActivity.this.getResources().getDrawable(R.drawable
+                        .question_img_trans);
                 drawableArray.put(position, questionImage);
             }
 

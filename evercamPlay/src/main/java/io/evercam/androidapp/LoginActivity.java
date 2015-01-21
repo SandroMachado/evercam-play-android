@@ -78,8 +78,6 @@ public class LoginActivity extends ParentActivity
             BugSenseHandler.initAndStartSession(LoginActivity.this, Constants.bugsense_ApiKey);
         }
 
-        EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_login));
-
         EvercamApiHelper.setEvercamDeveloperKeypair(this);
 
         Button btnLogin = (Button) findViewById(R.id.btnLogin);
@@ -374,7 +372,8 @@ public class LoginActivity extends ParentActivity
     private void setUnderLine()
     {
         signUpLink = (TextView) findViewById(R.id.signupLink);
-        SpannableString spanString = new SpannableString(this.getResources().getString(R.string.create_account));
+        SpannableString spanString = new SpannableString(this.getResources().getString(R.string
+                .create_account));
         spanString.setSpan(new UnderlineSpan(), 0, spanString.length(), 0);
         signUpLink.setText(spanString);
     }

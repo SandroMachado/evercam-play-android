@@ -39,20 +39,25 @@
     <string name="label_streaming_jpg_success">Successfully played JPG stream</string>
     <string name="label_streaming_jpg_failed">Failed to play JPG stream while the camera is online</string>
 
-    <!-- Screen Names -->
-    <string name="screen_login">Login</string>
-    <string name="screen_sign_up">Sign Up</string>
-    <string name="screen_camera_list">Camera Grid View</string>
-    <string name="screen_preference">Cameras Preferences</string>
-    <string name="screen_manage_account">Manage Accounts</string>
-    <string name="screen_welcome_slides">Welcome Page</string>
-    <string name="screen_video">Video View</string>
+    <!-- Screen Names: Only send 'Add' and 'Edit' screen events manually because they share the same Activity -->
     <string name="screen_add_camera">Add Camera</string>
     <string name="screen_edit_camera">Edit Camera</string>
-    <string name="screen_view_camera">View Camera Detail</string>
-    <string name="screen_scan_camera">Scan For Camera</string>
+
+    <!-- Removed screen names, should be removed later -->
+    <!--
+    <string name="screen_camera_list">Camera Grid View</string>
+    <string name="screen_welcome_slides">Welcome Page</string>
+    <string name="screen_video">Video View</string>
+    <string name="screen_login">Login</string>
+    <string name="screen_sign_up">Sign Up</string>
     <string name="screen_release_notes">Release Notes</string>
+    <string name="screen_scan_camera">Scan For Camera</string>
+    <string name="screen_preference">Cameras Preferences</string>
+    <string name="screen_manage_account">Manage Accounts</string>
+    <string name="screen_view_camera">View Camera Detail</string>
     <string name="screen_local_storage">Local Storage</string>
+    -->
+
 
     <!-- Exception Descriptions -->
     <string name="exception_user_not_saved">User saved locally is null.</string>

@@ -42,7 +42,8 @@ public class GradientTitleLayout extends RelativeLayout
 
     public void removeGradientShadow()
     {
-        RelativeLayout backgroundLayout = (RelativeLayout) findViewById(R.id.gredient_background_layout);
+        RelativeLayout backgroundLayout = (RelativeLayout) findViewById(R.id
+                .gredient_background_layout);
         backgroundLayout.setBackgroundColor(Color.TRANSPARENT);
     }
 }

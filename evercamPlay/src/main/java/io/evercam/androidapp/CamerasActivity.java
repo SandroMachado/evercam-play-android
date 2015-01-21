@@ -78,7 +78,6 @@ public class CamerasActivity extends ParentActivity
             BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
         }
 
-        EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_camera_list));
         if(this.getActionBar() != null)
         {
             this.getActionBar().setHomeButtonEnabled(true);
@@ -697,9 +696,12 @@ public class CamerasActivity extends ParentActivity
             {
                 dialog.dismiss();
 
-                EvercamPlayApplication.sendEventAnalytics(CamerasActivity.this, R.string.category_menu, R.string.action_add_camera, R.string.label_add_camera_scan);
+                EvercamPlayApplication.sendEventAnalytics(CamerasActivity.this,
+                        R.string.category_menu, R.string.action_add_camera,
+                        R.string.label_add_camera_scan);
 
-                startActivityForResult(new Intent(CamerasActivity.this, ScanActivity.class), Constants.REQUEST_CODE_ADD_CAMERA);
+                startActivityForResult(new Intent(CamerasActivity.this, ScanActivity.class),
+                        Constants.REQUEST_CODE_ADD_CAMERA);
             }
         });
     }
@@ -736,7 +738,8 @@ public class CamerasActivity extends ParentActivity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                EvercamPlayApplication.sendEventAnalytics(CamerasActivity.this, R.string.category_menu, R.string.action_logout, R.string.label_user_logout);
+                EvercamPlayApplication.sendEventAnalytics(CamerasActivity.this,
+                        R.string.category_menu, R.string.action_logout, R.string.label_user_logout);
                 logOutUser();
             }
         }).show();
@@ -783,7 +786,8 @@ public class CamerasActivity extends ParentActivity
 
     private Rect readLiveBoundsOfScrollView()
     {
-        CustomScrollView scrollView = (CustomScrollView) CamerasActivity.this.findViewById(R.id.cameras_scroll_view);
+        CustomScrollView scrollView = (CustomScrollView) CamerasActivity.this.findViewById(R.id
+                .cameras_scroll_view);
         return scrollView.getLiveBoundsRect();
     }
 

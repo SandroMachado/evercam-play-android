@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--<item-->
-        <!--android:id="@+id/video_menu_edit_camera"-->
-        <!--android:orderInCategory="1"-->
-        <!--android:showAsAction="never"-->
-        <!--android:visible="false"-->
-        <!--android:title="@string/menu_edit_camera"/>-->
+    <!--android:id="@+id/video_menu_edit_camera"-->
+    <!--android:orderInCategory="1"-->
+    <!--android:showAsAction="never"-->
+    <!--android:visible="false"-->
+    <!--android:title="@string/menu_edit_camera"/>-->
     <item
         android:id="@+id/video_menu_view_camera"
         android:orderInCategory="2"

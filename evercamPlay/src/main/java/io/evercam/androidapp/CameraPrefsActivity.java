@@ -38,8 +38,6 @@ public class CameraPrefsActivity extends PreferenceActivity
 
         screenWidth = CamerasActivity.readScreenWidth(this);
 
-        EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_preference));
-
         getFragmentManager().beginTransaction().replace(android.R.id.content,
                 new MyPreferenceFragment()).commit();
         this.setDefaultKeyMode(DEFAULT_KEYS_DISABLE);
@@ -157,7 +155,8 @@ public class CameraPrefsActivity extends PreferenceActivity
             }
             else
             {
-                return getString(R.string.summary_awake_time_prefix) + " " + entry + " " + getString(R.string.summary_awake_time_suffix);
+                return getString(R.string.summary_awake_time_prefix) + " " + entry + " " +
+                        getString(R.string.summary_awake_time_suffix);
             }
         }
     }

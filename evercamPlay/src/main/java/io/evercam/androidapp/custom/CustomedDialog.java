@@ -28,14 +28,14 @@ public class CustomedDialog
     {
         getStandardStyledDialog(activity, R.string.msg_error_occurred, R.string.msg_exception,
                 new DialogInterface.OnClickListener()
-        {
+                {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                dialog.dismiss();
-            }
-        }, null, R.string.ok, 0).show();
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.dismiss();
+                    }
+                }, null, R.string.ok, 0).show();
     }
 
     /**
@@ -187,13 +187,13 @@ public class CustomedDialog
                 .setMessage(R.string.msg_confirm_sign_out).setPositiveButton(R.string.yes,
                         listener).setNegativeButton(R.string.no,
                         new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        return;
-                    }
-                }).create();
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                return;
+                            }
+                        }).create();
         return comfirmLogoutDialog;
     }
 
@@ -205,13 +205,13 @@ public class CustomedDialog
                 .setMessage(R.string.msg_confirm_cancel_scan).setPositiveButton(R.string.yes,
                         listener).setNegativeButton(R.string.no,
                         new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        return;
-                    }
-                }).create();
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                return;
+                            }
+                        }).create();
         return comfirmCancelDialog;
     }
 
@@ -247,13 +247,13 @@ public class CustomedDialog
                 .setMessage(message).setPositiveButton(R.string.remove,
                         listener).setNegativeButton(R.string.cancel,
                         new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        return;
-                    }
-                }).create();
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                return;
+                            }
+                        }).create();
         return comfirmLogoutDialog;
     }
 
@@ -283,16 +283,19 @@ public class CustomedDialog
     /**
      * Return a pop up dialog that ask the user whether or not to save the snapshot
      */
-    public static AlertDialog getConfirmSnapshotDialog(Activity activity, Bitmap bitmap, DialogInterface.OnClickListener listener)
+    public static AlertDialog getConfirmSnapshotDialog(Activity activity, Bitmap bitmap,
+                                                       DialogInterface.OnClickListener listener)
     {
         Builder snapshotDialogBuilder = new AlertDialog.Builder(activity);
         LayoutInflater mInflater = LayoutInflater.from(activity);
         final View snapshotView = mInflater.inflate(R.layout.confirm_snapshot_dialog, null);
-        ImageView snapshotImageView = (ImageView) snapshotView.findViewById(R.id.confirm_snapshot_image);
+        ImageView snapshotImageView = (ImageView) snapshotView.findViewById(R.id
+                .confirm_snapshot_image);
         snapshotImageView.setImageBitmap(bitmap);
         snapshotDialogBuilder.setView(snapshotView);
         snapshotDialogBuilder.setPositiveButton(activity.getString(R.string.save), listener);
-        snapshotDialogBuilder.setNegativeButton(activity.getString(R.string.cancel), new DialogInterface.OnClickListener()
+        snapshotDialogBuilder.setNegativeButton(activity.getString(R.string.cancel),
+                new DialogInterface.OnClickListener()
         {
 
             @Override

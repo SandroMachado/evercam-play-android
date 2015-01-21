@@ -93,6 +93,8 @@ public class EvercamPlayApplication extends Application
     public static void sendCaughtExceptionNotImportant(Activity activity, Exception e)
     {
         Tracker tracker = getAppTracker(activity);
-        tracker.send(new HitBuilders.ExceptionBuilder().setDescription(e.getStackTrace()[0].toString().replace("io.evercam.androidapp", e.toString())).setFatal(false).build());
+        tracker.send(new HitBuilders.ExceptionBuilder().setDescription(e.getStackTrace()[0]
+                .toString().replace("io.evercam.androidapp", e.toString())).setFatal(false).build
+                ());
     }
 }

@@ -58,8 +58,6 @@ public class ManageAccountsActivity extends ParentActivity
             BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
         }
 
-        EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_manage_account));
-
         if(this.getActionBar() != null)
         {
             this.getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -180,7 +178,8 @@ public class ManageAccountsActivity extends ParentActivity
                                                     user.setIsDefault(true);
                                                     users.updateAppUser(user);
                                                     PrefsManager.saveUserEmail(PreferenceManager
-                                                            .getDefaultSharedPreferences(ManageAccountsActivity.this)
+                                                            .getDefaultSharedPreferences
+                                                                    (ManageAccountsActivity.this)
                                                             , user.getEmail());
                                                     AppData.defaultUser = user;
                                                 }
@@ -461,7 +460,8 @@ public class ManageAccountsActivity extends ParentActivity
                     setEvercamDeveloperKeypair();
                     try
                     {
-                        ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(username, password);
+                        ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(username,
+                                password);
                         String userApiKey = userKeyPair.getApiKey();
                         String userApiId = userKeyPair.getApiId();
                         API.setUserKeyPair(userApiKey, userApiId);
@@ -481,7 +481,8 @@ public class ManageAccountsActivity extends ParentActivity
                     }
                     catch(EvercamException e)
                     {
-                        if(e.getMessage().contains(getString(R.string.prefix_invalid)) || e.getMessage().contains(getString(R.string.prefix_no_user)))
+                        if(e.getMessage().contains(getString(R.string.prefix_invalid)) || e
+                                .getMessage().contains(getString(R.string.prefix_no_user)))
                         {
                             errorMessage = e.getMessage();
                         }
@@ -514,7 +515,8 @@ public class ManageAccountsActivity extends ParentActivity
                 }
                 else
                 {
-                    EvercamPlayApplication.sendCaughtException(ManageAccountsActivity.this, getString(R.string.exception_error_login));
+                    EvercamPlayApplication.sendCaughtException(ManageAccountsActivity.this,
+                            getString(R.string.exception_error_login));
                     CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
                 }
 

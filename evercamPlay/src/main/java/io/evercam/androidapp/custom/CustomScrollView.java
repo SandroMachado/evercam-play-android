@@ -67,8 +67,10 @@ public class CustomScrollView extends ScrollView
         getDrawingRect(scrollViewBounds);
         //		Log.d(TAG, scrollViewBounds.top + " " + scrollViewBounds.bottom + " "
         //				+ scrollViewBounds.left + " " + scrollViewBounds.right);
-        Rect rectWithExtension = new Rect(scrollViewBounds.left, scrollViewBounds.top, scrollViewBounds.right, scrollViewBounds.bottom + scrollViewBounds.bottom / 4);
-        //		Log.d(TAG, "Extended: " + rectWithExtension.top + " " + rectWithExtension.bottom + " "
+        Rect rectWithExtension = new Rect(scrollViewBounds.left, scrollViewBounds.top,
+                scrollViewBounds.right, scrollViewBounds.bottom + scrollViewBounds.bottom / 4);
+        //		Log.d(TAG, "Extended: " + rectWithExtension.top + " " + rectWithExtension.bottom +
+        // " "
         //				+ rectWithExtension.left + " " + rectWithExtension.right);
         return rectWithExtension;
     }

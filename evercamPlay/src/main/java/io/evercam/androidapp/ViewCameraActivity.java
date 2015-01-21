@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,7 +52,6 @@ public class ViewCameraActivity extends Activity
 
         EvercamApiHelper.setEvercamDeveloperKeypair(this);
 
-        EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_view_camera));
         evercamCamera = VideoActivity.evercamCamera;
 
         setContentView(R.layout.activity_view_camera);
@@ -170,7 +168,8 @@ public class ViewCameraActivity extends Activity
         cameraExternalHttpTextView = (TextView) findViewById(R.id.view_external_http_value);
         cameraExternalRtspTextView = (TextView) findViewById(R.id.view_external_rtsp_value);
 
-        editLinkButton.setOnClickListener(new View.OnClickListener() {
+        editLinkButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v)
             {
@@ -294,7 +293,7 @@ public class ViewCameraActivity extends Activity
             }
             if(internalRtsp != 0)
             {
-                cameraExternalRtspTextView.setText(String.valueOf(camera.getInternalRtsp()));
+                cameraInternalRtspTextView.setText(String.valueOf(camera.getInternalRtsp()));
             }
             else
             {

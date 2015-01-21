@@ -922,7 +922,8 @@ public class AddEditCameraActivity extends Activity
                 String externalFullUrl = getExternalUrl(jpgUrl);
                 if(externalFullUrl != null)
                 {
-                    new TestSnapshotTask(externalFullUrl, username, password, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new TestSnapshotTask(externalFullUrl, username, password,
+                            this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }
             // External is empty, test internal only.
@@ -931,20 +932,25 @@ public class AddEditCameraActivity extends Activity
                 String internalFullUrl = getInternalUrl(jpgUrl);
                 if(internalFullUrl != null)
                 {
-                    new TestSnapshotTask(internalFullUrl, username, password, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new TestSnapshotTask(internalFullUrl, username, password,
+                            this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }
             // Both not empty, give options to choose
             else
             {
-                final View optionsView = getLayoutInflater().inflate(R.layout.test_snapshot_options_list, null);
-                final AlertDialog dialog = new AlertDialog.Builder(this).setView(optionsView).setCancelable(true).setNegativeButton(R.string.cancel, null).create();
+                final View optionsView = getLayoutInflater().inflate(R.layout
+                        .test_snapshot_options_list, null);
+                final AlertDialog dialog = new AlertDialog.Builder(this).setView(optionsView)
+                        .setCancelable(true).setNegativeButton(R.string.cancel, null).create();
                 dialog.show();
 
                 Button internalButton = (Button) optionsView.findViewById(R.id.btn_test_internal);
                 Button externalButton = (Button) optionsView.findViewById(R.id.btn_test_external);
-                internalButton.setText(internalButton.getText() + " (" + internalHostEdit.getText().toString() + ")");
-                externalButton.setText(externalButton.getText() + " (" + externalHostEdit.getText().toString() + ")");
+                internalButton.setText(internalButton.getText() + " (" + internalHostEdit.getText
+                        ().toString() + ")");
+                externalButton.setText(externalButton.getText() + " (" + externalHostEdit.getText
+                        ().toString() + ")");
 
                 internalButton.setOnClickListener(new OnClickListener()
                 {
@@ -955,7 +961,9 @@ public class AddEditCameraActivity extends Activity
                         String internalFullUrl = getInternalUrl(jpgUrl);
                         if(internalFullUrl != null)
                         {
-                            new TestSnapshotTask(internalFullUrl, username, password, AddEditCameraActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            new TestSnapshotTask(internalFullUrl, username, password,
+                                    AddEditCameraActivity.this).executeOnExecutor(AsyncTask
+                                    .THREAD_POOL_EXECUTOR);
                         }
                     }
                 });
@@ -969,7 +977,9 @@ public class AddEditCameraActivity extends Activity
                         String externalFullUrl = getExternalUrl(jpgUrl);
                         if(externalFullUrl != null)
                         {
-                            new TestSnapshotTask(externalFullUrl, username, password, AddEditCameraActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            new TestSnapshotTask(externalFullUrl, username, password,
+                                    AddEditCameraActivity.this).executeOnExecutor(AsyncTask
+                                    .THREAD_POOL_EXECUTOR);
                         }
                     }
                 });
@@ -995,7 +1005,8 @@ public class AddEditCameraActivity extends Activity
             int internalHttpInt = getPortIntByString(internalHttp);
             if(internalHttpInt != 0)
             {
-                return getString(R.string.prefix_http) + internalHost + ":" + internalHttp + jpgEnding;
+                return getString(R.string.prefix_http) + internalHost + ":" + internalHttp +
+                        jpgEnding;
             }
             else
             {
@@ -1022,7 +1033,8 @@ public class AddEditCameraActivity extends Activity
             int externalHttpInt = getPortIntByString(externalHttp);
             if(externalHttpInt != 0)
             {
-                return getString(R.string.prefix_http) + externalHost + ":" + externalHttp + jpgEnding;
+                return getString(R.string.prefix_http) + externalHost + ":" + externalHttp +
+                        jpgEnding;
             }
             else
             {
@@ -1088,7 +1100,8 @@ public class AddEditCameraActivity extends Activity
             }
             catch(EvercamException e)
             {
-                EvercamPlayApplication.sendCaughtException(AddEditCameraActivity.this, e.toString() + " " + "with vendor id: " + vendorId);
+                EvercamPlayApplication.sendCaughtException(AddEditCameraActivity.this,
+                        e.toString() + " " + "with vendor id: " + vendorId);
                 Log.e(TAG, e.toString());
             }
             return null;
@@ -1103,7 +1116,7 @@ public class AddEditCameraActivity extends Activity
                 {
                     buildModelSpinner(modelList, cameraEdit.getModel());
                 }
-                else if(discoveredCamera != null &&!discoveredCamera.getModel().isEmpty())
+                else if(discoveredCamera != null && !discoveredCamera.getModel().isEmpty())
                 {
                     buildModelSpinner(modelList, discoveredCamera.getModel());
                 }

@@ -44,8 +44,6 @@ public class SlideActivity extends Activity implements OnPageChangeListener
             BugSenseHandler.initAndStartSession(SlideActivity.this, Constants.bugsense_ApiKey);
         }
 
-        EvercamPlayApplication.sendScreenAnalytics(this, getString(R.string.screen_welcome_slides));
-
         initSlideView();
         initDots();
         initLinks();

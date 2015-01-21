@@ -64,7 +64,8 @@ public class CustomAdapter extends ArrayAdapter<AppUser>
         {
             ((TextView) view.findViewById(emailViewId)).setText(appUser.getEmail());
             TextView usernameTextView = (TextView) view.findViewById(R.id.account_item_username);
-            usernameTextView.setText(appUser.getUsername() + (appUser.getIsDefault() ? " - Default" : ""));
+            usernameTextView.setText(appUser.getUsername() + (appUser.getIsDefault() ? " - " +
+                    "Default" : ""));
         }
 
         return view;

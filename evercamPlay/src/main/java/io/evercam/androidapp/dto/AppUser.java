@@ -134,13 +134,15 @@ public class AppUser
 
     public String toStringAll()
     {
-        return "id[" + id + "], email [" + email + "], password [" + password + "], isDefault [" + isDefault + "]";
+        return "id[" + id + "], email [" + email + "], password [" + password + "], " +
+                "isDefault [" + isDefault + "]";
     }
 
     @Override
     public String toString()
     {
-        return "id[" + id + "], email [" + email + "], password [" + password + "], isDefault [" + isDefault + "]";
+        return "id[" + id + "], email [" + email + "], password [" + password + "], " +
+                "isDefault [" + isDefault + "]";
     }
 
 }

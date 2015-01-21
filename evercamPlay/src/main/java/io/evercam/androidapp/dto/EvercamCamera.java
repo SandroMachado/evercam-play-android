@@ -442,7 +442,16 @@ public class EvercamCamera
         if(getClass() != obj.getClass()) return false;
         EvercamCamera other = (EvercamCamera) obj;
         if(cameraId.equals(other.cameraId) && externalRtspUrl.equals(other.externalRtspUrl) &&
-                internalRtspUrl.equals(other.internalRtspUrl) && externalSnapshotUrl.equals(other.externalSnapshotUrl) && internalSnapshotUrl.equals(other.internalSnapshotUrl) && mac.equals(other.mac) && model.equals(other.model) && name.equals(other.name) && owner.equals(other.owner) && password.equals(other.password) && timezone.equals(other.timezone) && username.equals(other.username) && vendor.equals(other.vendor) && internalHost.equals(other.internalHost) && externalHost.equals(other.externalHost) && internalHttp == other.internalHttp && externalHttp == other.externalHttp && internalRtsp == other.internalRtsp && externalRtsp == other.externalRtsp && realOwner.equals(other.realOwner) && canEdit == other.canEdit && canDelete == other.canDelete)
+                internalRtspUrl.equals(other.internalRtspUrl) && externalSnapshotUrl.equals(other
+                .externalSnapshotUrl) && internalSnapshotUrl.equals(other.internalSnapshotUrl) &&
+                mac.equals(other.mac) && model.equals(other.model) && name.equals(other.name) &&
+                owner.equals(other.owner) && password.equals(other.password) && timezone.equals
+                (other.timezone) && username.equals(other.username) && vendor.equals(other
+                .vendor) && internalHost.equals(other.internalHost) && externalHost.equals(other
+                .externalHost) && internalHttp == other.internalHttp && externalHttp == other
+                .externalHttp && internalRtsp == other.internalRtsp && externalRtsp == other
+                .externalRtsp && realOwner.equals(other.realOwner) && canEdit == other.canEdit &&
+                canDelete == other.canDelete)
         {
             return true;
         }
@@ -452,6 +461,17 @@ public class EvercamCamera
     @Override
     public String toString()
     {
-        return "EvercamCamera [loadingStatus=" + loadingStatus + ", id=" + id + ", cameraId=" + cameraId + ", name=" + name + ", owner=" + owner + ", realOwner=" + realOwner + ", canEdit=" + canEdit + ", canDelete=" + canDelete + ", username=" + username + ", password=" + password + ", timezone=" + timezone + ", vendor=" + vendor + ", model=" + model + ", mac=" + mac + ", externalSnapshotUrl=" + externalSnapshotUrl + ", internalSnapshotUrl=" + internalSnapshotUrl + ", externalRtspUrl=" + externalRtspUrl + ", internalRtspUrl=" + internalRtspUrl + ", status=" + status + ", hasCredentials=" + hasCredentials + ", internalHost=" + internalHost + ", externalHost=" + externalHost + ", internalHttp=" + internalHttp + ", internalRtsp=" + internalRtsp + ", externalHttp=" + externalHttp + ", externalRtsp=" + externalRtsp + "]";
+        return "EvercamCamera [loadingStatus=" + loadingStatus + ", id=" + id + ", " +
+                "cameraId=" + cameraId + ", name=" + name + ", owner=" + owner + ", " +
+                "realOwner=" + realOwner + ", canEdit=" + canEdit + ", " +
+                "canDelete=" + canDelete + ", username=" + username + ", " +
+                "password=" + password + ", timezone=" + timezone + ", vendor=" + vendor + ", " +
+                "model=" + model + ", mac=" + mac + ", externalSnapshotUrl=" +
+                externalSnapshotUrl + ", internalSnapshotUrl=" + internalSnapshotUrl + ", " +
+                "externalRtspUrl=" + externalRtspUrl + ", internalRtspUrl=" + internalRtspUrl +
+                ", status=" + status + ", hasCredentials=" + hasCredentials + ", " +
+                "internalHost=" + internalHost + ", externalHost=" + externalHost + ", " +
+                "internalHttp=" + internalHttp + ", internalRtsp=" + internalRtsp + ", " +
+                "externalHttp=" + externalHttp + ", externalRtsp=" + externalRtsp + "]";
     }
 }
