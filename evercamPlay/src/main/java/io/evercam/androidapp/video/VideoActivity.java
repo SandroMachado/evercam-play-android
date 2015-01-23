@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -565,6 +566,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             else if(itemId == R.id.video_menu_view_snapshots)
             {
                 SnapshotManager.showSnapshotsInGalleryForCamera(this, evercamCamera.getCameraId());
+            }
+            else if(itemId == R.id.video_menu_create_shortcut)
+            {
+                HomeShortcut.create(getApplicationContext(), evercamCamera);
             }
         }
         catch(OutOfMemoryError e)

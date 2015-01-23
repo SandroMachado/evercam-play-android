@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--<item-->
-    <!--android:id="@+id/video_menu_edit_camera"-->
-    <!--android:orderInCategory="1"-->
-    <!--android:showAsAction="never"-->
-    <!--android:visible="false"-->
-    <!--android:title="@string/menu_edit_camera"/>-->
     <item
         android:id="@+id/video_menu_view_camera"
-        android:orderInCategory="2"
+        android:orderInCategory="1"
         android:visible="false"
         android:showAsAction="never"
         android:title="@string/menu_view_camera"/>
     <item
         android:id="@+id/video_menu_delete_camera"
-        android:orderInCategory="3"
+        android:orderInCategory="2"
         android:showAsAction="never"
         android:title="@string/menu_delete_camera"/>
 
     <item
         android:id="@+id/video_menu_view_snapshots"
-        android:orderInCategory="4"
+        android:orderInCategory="3"
         android:showAsAction="never"
         android:title="@string/menu_view_snapshot"/>
+
+    <item
+        android:id="@+id/video_menu_create_shortcut"
+        android:orderInCategory="4"
+        android:showAsAction="never"
+        android:title="@string/menu_create_shortcut"/>
 
     <item
         android:id="@+id/video_menu_local_storage"
@@ -35,5 +35,6 @@
         android:orderInCategory="6"
         android:showAsAction="never"
         android:title="@string/menu_feedback"/>
+
 
 </menu>
