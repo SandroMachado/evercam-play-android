@@ -42,7 +42,6 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme">
 
-        <!-- Theme.Black.NoTitleBar previous value -->
         <meta-data
             android:name="com.google.android.gms.analytics.globalConfigResource"
             android:resource="@xml/app_tracker"/>

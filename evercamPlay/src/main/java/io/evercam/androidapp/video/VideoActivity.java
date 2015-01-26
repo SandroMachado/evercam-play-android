@@ -43,6 +43,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.logentries.android.AndroidLogger;
 
 import org.apache.http.cookie.Cookie;
@@ -570,6 +571,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             else if(itemId == R.id.video_menu_create_shortcut)
             {
                 HomeShortcut.create(getApplicationContext(), evercamCamera);
+                CustomToast.showSuperToastShort(this, R.string.msg_shortcut_created);
             }
         }
         catch(OutOfMemoryError e)
