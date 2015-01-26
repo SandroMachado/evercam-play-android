@@ -18,6 +18,7 @@ import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
+import io.evercam.androidapp.video.VideoActivity;
 
 public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
 {
@@ -157,6 +158,8 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
     {
         Log.d(TAG, "Done");
 
+        launchLiveViewForShortcutCamera(camerasActivity.liveViewCameraId);
+
         if(canLoad[0])
         {
             if(reload)
@@ -178,6 +181,14 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
     @Override
     protected void onPostExecute(Boolean success)
     {
+        //Already handled in onProgressUpdate
+    }
 
+    private void launchLiveViewForShortcutCamera (String cameraId)
+    {
+        if(!cameraId.isEmpty())
+        {
+            VideoActivity.startPlayingVideoForCamera(camerasActivity, cameraId);
+        }
     }
 }

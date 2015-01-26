@@ -46,12 +46,14 @@ import io.evercam.androidapp.tasks.LoadCameraListTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
+import io.evercam.androidapp.video.HomeShortcut;
 import io.evercam.androidapp.video.SnapshotManager;
 
 public class CamerasActivity extends ParentActivity
 {
     public static CamerasActivity activity = null;
     public MenuItem refresh;
+    public String liveViewCameraId = "";
 
     private static final String TAG = "evercamplay-CamerasActivity";
 
@@ -65,9 +67,7 @@ public class CamerasActivity extends ParentActivity
     private enum InternetCheckType
     {
         START, RESTART
-    }
-
-    ;
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -85,6 +85,8 @@ public class CamerasActivity extends ParentActivity
             this.getActionBar().setIcon(R.drawable.evercam_play_192x192);
         }
         setContentView(R.layout.camslayoutwithslide);
+
+        readShortcutCameraId();
 
         activity = this;
         checkUser();
@@ -261,6 +263,15 @@ public class CamerasActivity extends ParentActivity
         }
 
         startCameraLoadingTask();
+    }
+
+    private void readShortcutCameraId()
+    {
+        Intent liveViewIntent = this.getIntent();
+        if(liveViewIntent != null && liveViewIntent.getExtras() != null)
+        {
+            liveViewCameraId = liveViewIntent.getExtras().getString(HomeShortcut.KEY_CAMERA_ID, "");
+        }
     }
 
     private void checkUser()

@@ -53,14 +53,6 @@
             android:label="@string/app_name"
             android:theme="@style/ActionBarOverlayTheme"
             android:screenOrientation="unspecified">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <!-- Accepts URIs that begin with "evercam://cameras/live” -->
-                <data android:scheme="@string/data_scheme"
-                      android:host="@string/data_host"
-                      android:pathPrefix="@string/data_path" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".SlideActivity"
@@ -75,6 +67,13 @@
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
+
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <!-- Accepts URIs that begin with "evercam://cameras/streams” -->
+                <data android:scheme="@string/data_scheme"
+                      android:host="@string/data_host"
+                      android:pathPrefix="@string/data_path" />
             </intent-filter>
         </activity>
         <activity

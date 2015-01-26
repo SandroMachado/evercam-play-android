@@ -18,6 +18,7 @@ import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
+import io.evercam.androidapp.video.HomeShortcut;
 
 /*
  * Main starting activity. 
@@ -26,6 +27,7 @@ import io.evercam.androidapp.utils.PrefsManager;
 public class MainActivity extends Activity
 {
     private static final String TAG = "evercamplay-MainActivity";
+    private String liveViewCameraId = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -36,6 +38,8 @@ public class MainActivity extends Activity
         {
             BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
         }
+
+        readShortcutCameraId();
 
         setContentView(R.layout.mainactivitylayout);
 
@@ -91,6 +95,12 @@ public class MainActivity extends Activity
 
         Intent intent = new Intent(this, CamerasActivity.class);
         intent.putExtra(Constants.GCMNotificationIDString, notificationID);
+
+        //Parse the camera id from shortcut to the next activity
+        if(!liveViewCameraId.isEmpty())
+        {
+            intent.putExtra(HomeShortcut.KEY_CAMERA_ID, liveViewCameraId);
+        }
         this.startActivity(intent);
 
         MainActivity.this.finish();
@@ -146,6 +156,15 @@ public class MainActivity extends Activity
             CustomedDialog.showUnexpectedErrorDialog(MainActivity.this);
         }
         return (AppData.defaultUser != null);
+    }
+
+    private void readShortcutCameraId()
+    {
+        Intent liveViewIntent = this.getIntent();
+        if(liveViewIntent != null && liveViewIntent.getExtras() != null)
+        {
+            liveViewCameraId = liveViewIntent.getExtras().getString(HomeShortcut.KEY_CAMERA_ID, "");
+        }
     }
 
     class MainCheckInternetTask extends CheckInternetTask

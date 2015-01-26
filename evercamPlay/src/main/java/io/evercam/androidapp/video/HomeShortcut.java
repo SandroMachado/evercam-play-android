@@ -9,7 +9,7 @@ import io.evercam.androidapp.dto.EvercamCamera;
 
 public class HomeShortcut
 {
-    private static final String KEY_CAMERA_ID = "cameraId";
+    public static final String KEY_CAMERA_ID = "cameraId";
 
     /**
      * Create a shortcut that link to specific camera live view on home screen
@@ -18,7 +18,7 @@ public class HomeShortcut
     {
         //The intent that launches the live view for specific camera
         Intent shortcutIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getLiveViewUri(context)));
-        shortcutIntent.putExtra(KEY_CAMERA_ID, evercamCamera.getId());
+        shortcutIntent.putExtra(KEY_CAMERA_ID, evercamCamera.getCameraId());
 
         Intent addIntent = new Intent();
         addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
