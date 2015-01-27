@@ -14,7 +14,7 @@
     <!-- versionCode58 - 1.2.4 - Take snapshot, show time based on timezone, force landscape-->
     <!-- versionCode62 - 1.2.5 - back button, quit add camera warning-->
     <!-- versionCode63 - 1.2.6 - bug fixes after holiday-->
-    <!-- versionCode70 - 1.2.7 - switch to Android Studio, scan bug fix, view camera details, naming changes-->
+    <!-- versionCode70 - 1.2.7 - switch to Android Studio, scan bug fix, view camera details, naming changes, home shortcut-->
 
     <uses-sdk
         android:minSdkVersion="14"
