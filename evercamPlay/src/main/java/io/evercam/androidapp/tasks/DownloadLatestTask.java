@@ -34,7 +34,7 @@ public class DownloadLatestTask extends AsyncTask<Void, Void, Bitmap>
     {
         try
         {
-            Snapshot latestSnapshot = Camera.getLatestArchivedSnapshot(cameraId, true);
+            Snapshot latestSnapshot = Snapshot.getLatestArchivedSnapshot(cameraId, true);
             byte[] snapshotByte = latestSnapshot.getData();
 
             Bitmap bitmap = BitmapFactory.decodeByteArray(snapshotByte, 0, snapshotByte.length);

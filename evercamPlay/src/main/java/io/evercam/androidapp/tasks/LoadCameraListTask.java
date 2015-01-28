@@ -61,7 +61,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
             AppData.evercamCameraList = new DbCamera(camerasActivity.getApplicationContext())
                     .getCamerasByOwner(user.getUsername(), 500);
 
-            ArrayList<Camera> cameras = User.getCameras(user.getUsername(), true, true);
+            ArrayList<Camera> cameras = Camera.getAll(user.getUsername(), true, true);
 
             ArrayList<EvercamCamera> evercamCameras = new ArrayList<EvercamCamera>();
             for(io.evercam.Camera camera : cameras)

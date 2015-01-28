@@ -1147,7 +1147,7 @@ public class AddEditCameraActivity extends Activity
         {
             try
             {
-                ArrayList<Model> modelList = Model.getAll(null, modelName, vendorId);
+                ArrayList<Model> modelList = Model.getAll(modelName, vendorId);
                 if(modelList.size() > 0)
                 {
                     return modelList.get(0);
