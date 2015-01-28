@@ -30,7 +30,6 @@ public class EvercamPlayApplication extends Application
         super();
     }
 
-
     @Override
     public void onCreate()
     {
