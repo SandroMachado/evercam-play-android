@@ -2,6 +2,7 @@ package io.evercam.androidapp;
 
 import android.app.Activity;
 import android.app.Application;
+import android.util.Log;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -28,6 +29,7 @@ public class EvercamPlayApplication extends Application
     public EvercamPlayApplication()
     {
         super();
+        Log.d(TAG, "E-Play launched");
     }
 
 //    @Override

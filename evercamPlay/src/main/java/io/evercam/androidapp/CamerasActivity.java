@@ -215,6 +215,8 @@ public class CamerasActivity extends ParentActivity
     public void onRestart()
     {
         super.onRestart();
+        Log.d(TAG, "Camera list on restart");
+
         try
         {
             new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.RESTART)

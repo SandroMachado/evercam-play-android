@@ -3,6 +3,8 @@ package io.evercam.androidapp.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.github.johnpersano.supertoasts.SuperToast;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -13,6 +15,7 @@ import io.evercam.User;
 import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.R;
+import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
@@ -160,10 +163,29 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
 
         if(!camerasActivity.liveViewCameraId.isEmpty())
         {
-            camerasActivity.removeAllCameraViews();
-            camerasActivity.addAllCameraViews(false, true);
+            boolean cameraIsAccessible = false;
+            for(EvercamCamera camera : AppData.evercamCameraList)
+            {
+                if(camera.getCameraId().equals(camerasActivity.liveViewCameraId))
+                {
+                    cameraIsAccessible = true;
+                    break;
+                }
+            }
 
-            VideoActivity.startPlayingVideoForCamera(camerasActivity, camerasActivity.liveViewCameraId);
+            if(cameraIsAccessible == true)
+            {
+                camerasActivity.removeAllCameraViews();
+                camerasActivity.addAllCameraViews(false, true);
+
+                VideoActivity.startPlayingVideoForCamera(camerasActivity, camerasActivity.liveViewCameraId);
+            }
+            else
+            {
+                camerasActivity.removeAllCameraViews();
+                camerasActivity.addAllCameraViews(true, true);
+                CustomToast.showSuperToastShort(camerasActivity, camerasActivity.getString(R.string.msg_can_not_access_camera));
+            }
             camerasActivity.liveViewCameraId = "";
         }
         else

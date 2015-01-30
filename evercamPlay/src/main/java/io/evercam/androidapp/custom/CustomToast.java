@@ -100,6 +100,15 @@ public class CustomToast
         superToast.show();
     }
 
+    public static void showSuperToastShort(Activity activity, String message)
+    {
+        SuperActivityToast.cancelAllSuperActivityToasts();
+        SuperToast superToast = new SuperToast(activity);
+        superToast.setDuration(SuperToast.Duration.SHORT);
+        superToast.setText(message);
+        superToast.show();
+    }
+
     public static void showInCenterExtraLong(Context context, int message)
     {
         SuperToast superToast = new SuperToast(context);
