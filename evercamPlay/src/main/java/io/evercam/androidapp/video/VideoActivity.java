@@ -465,21 +465,19 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        //      MenuItem editItem = menu.findItem(R.id.video_menu_edit_camera);
         MenuItem viewItem = menu.findItem(R.id.video_menu_view_camera);
         MenuItem localStorageItem = menu.findItem(R.id.video_menu_local_storage);
+        MenuItem shortcutItem = menu.findItem(R.id.video_menu_create_shortcut);
 
         if(evercamCamera != null)
         {
             //Hide 'Edit' option for shared camera
             if(evercamCamera.canEdit())
             {
-                //               editItem.setVisible(true);
                 viewItem.setVisible(true);
             }
             else
             {
-                //              editItem.setVisible(false);
                 viewItem.setVisible(true);
             }
 
@@ -490,6 +488,15 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             else
             {
                 localStorageItem.setVisible(false);
+            }
+
+            if(evercamCamera.isOffline())
+            {
+                shortcutItem.setVisible(false);
+            }
+            else
+            {
+                shortcutItem.setVisible(true);
             }
         }
         else
@@ -653,7 +660,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
             loadImageFromCache(evercamCamera.getCameraId());
 
-            if(!evercamCamera.getStatus().equals(CameraStatus.OFFLINE))
+            if(!evercamCamera.isOffline())
             {
                 startDownloading = true;
             }
@@ -2073,7 +2080,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
                 evercamCamera = AppData.evercamCameraList.get(itemPosition);
 
-                if(evercamCamera.getStatus().equalsIgnoreCase(CameraStatus.OFFLINE))
+                if(evercamCamera.isOffline())
                 {
                     // If camera is offline, show offline msg and stop video
                     // playing.

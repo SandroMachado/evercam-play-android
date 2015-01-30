@@ -119,6 +119,24 @@ public class EvercamCamera
         return status;
     }
 
+    public boolean isActive()
+    {
+        if(getStatus().equalsIgnoreCase(CameraStatus.ACTIVE))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isOffline()
+    {
+        if(getStatus().equalsIgnoreCase(CameraStatus.OFFLINE))
+        {
+            return true;
+        }
+        return false;
+    }
+
     public String getCameraId()
     {
         return cameraId;

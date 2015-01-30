@@ -54,7 +54,7 @@ public class CameraListAdapter extends ArrayAdapter<String>
         ImageView offlineIcon = (ImageView) view.findViewById(R.id.spinner_offline_icon);
         EvercamCamera evercamCamera = AppData.evercamCameraList.get(position);
 
-        if(evercamCamera.getStatus().equalsIgnoreCase(CameraStatus.OFFLINE))
+        if(evercamCamera.isOffline())
         {
             offlineIcon.setVisibility(View.VISIBLE);
         }

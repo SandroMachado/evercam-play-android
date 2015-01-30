@@ -254,7 +254,7 @@ public class CameraLayout extends LinearLayout
         }
 
         imageMessage.setVisibility(View.VISIBLE);
-        if((evercamCamera.getStatus() + "").contains(CameraStatus.ACTIVE))
+        if(evercamCamera.isActive())
         {
             imageMessage.setText("");
         }
@@ -285,7 +285,7 @@ public class CameraLayout extends LinearLayout
             cameraRelativeLayout.removeView(loadingAnimation);
         }
 
-        if((evercamCamera.getStatus() + "").contains(CameraStatus.ACTIVE))
+        if(evercamCamera.isActive())
         {
             imageMessage.setText(R.string.msg_unable_to_connect);
         }
@@ -392,7 +392,7 @@ public class CameraLayout extends LinearLayout
                 {
                     if(!evercamCamera.getExternalHost().isEmpty())
                     {
-                        if(evercamCamera.getStatus().equals(CameraStatus.ACTIVE))
+                        if(evercamCamera.isActive())
                         {
                             drawable = Commons.getDrawablefromUrlAuthenticated(externalJpgUrl,
                                     evercamCamera.getUsername(), evercamCamera.getPassword(),
