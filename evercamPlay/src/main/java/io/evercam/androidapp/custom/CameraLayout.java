@@ -471,12 +471,7 @@ public class CameraLayout extends LinearLayout
                 CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_received;
 
                 Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-                // Tests showing that use either Runnable and AsyncTask is not
-                // making
-                // any difference on speed of camera list loading
-                // new SaveImageTask(context, bitmap,
-                // evercamCamera.getCameraId())
-                // .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
                 new Thread(new SaveImageRunnable(context, bitmap, evercamCamera.getCameraId()))
                         .start();
             }

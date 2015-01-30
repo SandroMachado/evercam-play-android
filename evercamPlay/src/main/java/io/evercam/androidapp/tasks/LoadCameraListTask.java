@@ -158,19 +158,28 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
     {
         Log.d(TAG, "Done");
 
-        launchLiveViewForShortcutCamera(camerasActivity.liveViewCameraId);
-
-        if(canLoad[0])
+        if(!camerasActivity.liveViewCameraId.isEmpty())
         {
-            if(reload)
-            {
-                camerasActivity.removeAllCameraViews();
-                camerasActivity.addAllCameraViews(true, true);
-            }
+            camerasActivity.removeAllCameraViews();
+            camerasActivity.addAllCameraViews(false, true);
+
+            VideoActivity.startPlayingVideoForCamera(camerasActivity, camerasActivity.liveViewCameraId);
+            camerasActivity.liveViewCameraId = "";
         }
         else
         {
-            //This should never happen because there is no publishProgress(false)
+            if(canLoad[0])
+            {
+                if(reload)
+                {
+                    camerasActivity.removeAllCameraViews();
+                    camerasActivity.addAllCameraViews(true, true);
+                }
+            }
+            else
+            {
+                //This should never happen because there is no publishProgress(false)
+            }
         }
         if(camerasActivity.reloadProgressDialog != null)
         {
@@ -182,13 +191,5 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
     protected void onPostExecute(Boolean success)
     {
         //Already handled in onProgressUpdate
-    }
-
-    private void launchLiveViewForShortcutCamera (String cameraId)
-    {
-        if(!cameraId.isEmpty())
-        {
-            VideoActivity.startPlayingVideoForCamera(camerasActivity, cameraId);
-        }
     }
 }

@@ -823,7 +823,7 @@ public class CamerasActivity extends ParentActivity
                 }
                 else if(type == InternetCheckType.RESTART)
                 {
-                    if(reloadCameraList)
+                    if(reloadCameraList || !liveViewCameraId.isEmpty())
                     {
                         // If returned from account management, the
                         // default user could possibly changed,
