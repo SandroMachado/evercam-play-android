@@ -18,6 +18,7 @@ import android.util.Log;
 import io.evercam.EvercamException;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.dto.EvercamCamera;
+import io.evercam.androidapp.utils.EvercamFile;
 
 public class HomeShortcut
 {
@@ -60,9 +61,13 @@ public class HomeShortcut
         Bitmap bitmap = null;
         try
         {
-            //Load thumbnail from evercam camera object
-            byte[] snapshotByte = evercamCamera.camera.getThumbnailData();
-            bitmap = BitmapFactory.decodeByteArray(snapshotByte, 0, snapshotByte.length);
+            bitmap = getThumbnailFor(context, evercamCamera);
+
+            if(bitmap == null)
+            {
+                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_192x192);
+                return Bitmap.createScaledBitmap(bitmap, 192, 192, false);
+            }
 
             //Resize the thumbnail for desktop icon size
             bitmap = Bitmap.createScaledBitmap(bitmap, 192, 192, false);
@@ -87,6 +92,21 @@ public class HomeShortcut
         }
 
         return bitmap;
+    }
+
+    private static Bitmap getThumbnailFor(Context context, EvercamCamera evercamCamera) throws EvercamException
+    {
+        if(evercamCamera.camera != null)
+        {
+            //Load thumbnail from Evercam camera object if not null
+            byte[] snapshotByte = evercamCamera.camera.getThumbnailData();
+            return BitmapFactory.decodeByteArray(snapshotByte, 0, snapshotByte.length);
+        }
+        else
+        {
+            //Otherwise load from cache
+            return EvercamFile.loadBitmapForCamera(context, evercamCamera.getCameraId());
+        }
     }
 
     /**

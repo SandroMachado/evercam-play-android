@@ -728,44 +728,14 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     // Loads image from cache. First image gets loaded correctly and hence we
     // can start making requests concurrently as well
-    public boolean loadImageFromCache(String cameraId)
+    public void loadImageFromCache(String cameraId)
     {
-        try
+        imageView.setImageDrawable(null);
+        Drawable drawable = EvercamFile.loadDrawableForCamera(this, cameraId);
+        if(drawable != null)
         {
-            imageView.setImageDrawable(null);
-
-            File cacheFile = EvercamFile.getCacheFileRelative(this, cameraId);
-            if(cacheFile.exists())
-            {
-                Drawable result = Drawable.createFromPath(cacheFile.getPath());
-                if(result != null)
-                {
-                    imageView.setImageDrawable(result);
-
-                    Log.d(TAG, "Loaded first image from Cache: " + media_width + ":" +
-                            media_height);
-                    return true;
-                }
-                else
-                {
-                    Log.e(TAG, "No image saved with camera: " + cameraId);
-                }
-            }
+            imageView.setImageDrawable(drawable);
         }
-        catch(OutOfMemoryError e)
-        {
-            Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-        }
-        catch(Exception e)
-        {
-            Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-            if(Constants.isAppTrackingEnabled)
-            {
-                BugSenseHandler.sendException(e);
-            }
-        }
-
-        return false;
     }
 
     // Read preferences for playing options audio and Video(images)
