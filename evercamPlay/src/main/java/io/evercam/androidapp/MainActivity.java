@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
+import io.evercam.androidapp.authentication.EvercamAccount;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dal.DbCamera;
@@ -142,8 +143,7 @@ public class MainActivity extends Activity
             String defaultEmail = PrefsManager.getUserEmail(this);
             if(defaultEmail != null)
             {
-                DbAppUser dbUser = new DbAppUser(this);
-                AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
+                AppUser defaultUser = new EvercamAccount(this).retrieveUserByEmail(defaultEmail);
                 AppData.defaultUser = defaultUser;
                 AppData.evercamCameraList = new DbCamera(this).getCamerasByOwner(defaultUser
                         .getUsername(), 500);

@@ -30,6 +30,7 @@ import com.bugsense.trace.BugSenseHandler;
 
 import java.util.concurrent.RejectedExecutionException;
 
+import io.evercam.androidapp.authentication.EvercamAccount;
 import io.evercam.androidapp.custom.AboutDialog;
 import io.evercam.androidapp.custom.CameraLayout;
 import io.evercam.androidapp.custom.CustomProgressDialog;
@@ -283,17 +284,19 @@ public class CamerasActivity extends ParentActivity
             String defaultEmail = PrefsManager.getUserEmail(this);
             if(defaultEmail != null)
             {
-                try
-                {
-                    DbAppUser dbUser = new DbAppUser(this);
-                    AppUser defaultUser = dbUser.getAppUserByEmail(defaultEmail);
-                    AppData.defaultUser = defaultUser;
-                }
-                catch(Exception e)
-                {
-                    Log.e(TAG, e.toString());
-                    EvercamPlayApplication.sendCaughtException(this, e.toString());
-                }
+            //Remove all code related to database user for new authentication
+//                try
+//                {
+//                    DbAppUser dbUser = new DbAppUser(this);
+//                    AppData.defaultUser = dbUser.getAppUserByEmail(defaultEmail);
+//                }
+//                catch(Exception e)
+//                {
+//                    Log.e(TAG, e.toString());
+//                    EvercamPlayApplication.sendCaughtException(this, e.toString());
+//                }
+
+                AppData.defaultUser = new EvercamAccount(this).retrieveUserByEmail(defaultEmail);
             }
             else
             // User is not saved locally, send as a bug.

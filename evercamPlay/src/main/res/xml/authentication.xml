@@ -2,5 +2,5 @@
                        android:accountType="@string/account_type"
                        android:icon="@drawable/icon_192x192"
                        android:smallIcon="@drawable/icon_50x50"
-                       android:label="@string/app_name"
+                       android:label="@string/account_name"
                        android:accountPreferences="@xml/authentication_preference"/>

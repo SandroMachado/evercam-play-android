@@ -28,6 +28,7 @@ import io.evercam.API;
 import io.evercam.ApiKeyPair;
 import io.evercam.EvercamException;
 import io.evercam.User;
+import io.evercam.androidapp.authentication.EvercamAccount;
 import io.evercam.androidapp.custom.CustomAdapter;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
@@ -38,7 +39,6 @@ import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
-import io.evercam.androidapp.utils.PropertyReader;
 
 public class ManageAccountsActivity extends ParentActivity
 {
@@ -371,7 +371,7 @@ public class ManageAccountsActivity extends ParentActivity
                 }
             }
 
-            AppData.appUsers = dbUser.getAllAppUsers(1000);
+            AppData.appUsers = new EvercamAccount(this).retrieveUserList();
 
             if(closeActivity)
             {
@@ -404,13 +404,12 @@ public class ManageAccountsActivity extends ParentActivity
     {
         try
         {
-            DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
-            AppData.appUsers = dbUser.getAllAppUsers(100);
+            AppData.appUsers = new EvercamAccount(this).retrieveUserList();
 
             ListAdapter listAdapter = new CustomAdapter(ManageAccountsActivity.this,
                     R.layout.manage_account_list_item,
                     R.layout.manage_account_list_item_new_user, R.id.account_item_email,
-                    (ArrayList<AppUser>) AppData.appUsers);
+                    AppData.appUsers);
             ListView listview = (ListView) findViewById(R.id.email_list);
             listview.setAdapter(null);
             listview.setAdapter(listAdapter);

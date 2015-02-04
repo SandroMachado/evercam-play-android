@@ -1,5 +1,7 @@
 package io.evercam.androidapp;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,6 +29,7 @@ import io.evercam.API;
 import io.evercam.ApiKeyPair;
 import io.evercam.EvercamException;
 import io.evercam.User;
+import io.evercam.androidapp.authentication.EvercamAccount;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
@@ -265,16 +268,10 @@ public class LoginActivity extends ParentActivity
 
             if(success)
             {
-                DbAppUser dbUser = new DbAppUser(LoginActivity.this);
-
-                if(dbUser.getAppUserByUsername(newUser.getUsername()) != null)
-                {
-                    dbUser.deleteAppUserByUsername(newUser.getUsername());
-                }
-                dbUser.updateAllIsDefaultFalse();
-
-                dbUser.addAppUser(newUser);
                 AppData.defaultUser = newUser;
+                new EvercamAccount(LoginActivity.this).add(newUser);
+
+                //Save the user Email as default user in shared preference
                 PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
 
                 setResult(Constants.RESULT_TRUE);
@@ -334,21 +331,7 @@ public class LoginActivity extends ParentActivity
         String defaultEmail = PrefsManager.getUserEmail(sharedPrefs);
         if(defaultEmail != null)
         {
-            try
-            {
-                DbAppUser dbUser = new DbAppUser(this);
-                AppUser defaultUser;
-                defaultUser = dbUser.getAppUserByEmail(defaultEmail);
-                AppData.defaultUser = defaultUser;
-            }
-            catch(NumberFormatException e)
-            {
-                e.printStackTrace();
-            }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-            }
+            AppData.defaultUser = new EvercamAccount(this).retrieveUserByEmail(defaultEmail);
         }
 
         if(AppData.defaultUser != null)

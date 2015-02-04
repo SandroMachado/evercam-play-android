@@ -34,14 +34,16 @@ public class EvercamAuthenticator extends AbstractAccountAuthenticator
                              String authTokenType, String[] requiredFeatures, Bundle options)
             throws NetworkErrorException
     {
-        final Intent intent = new Intent(mContext, LoginActivity.class);
-        intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-        intent.putExtra(Constants.KEY_AUTH_TYPE, authTokenType);
-        intent.putExtra(Constants.KEY_IS_ADD_ACCOUNT, true);
-        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
-        final Bundle bundle = new Bundle();
-        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
-        return bundle;
+        //TODO: Will implement this after getting account management work
+//        final Intent intent = new Intent(mContext, LoginActivity.class);
+//        intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+//        intent.putExtra(Constants.KEY_AUTH_TYPE, authTokenType);
+//        intent.putExtra(Constants.KEY_IS_ADD_ACCOUNT, true);
+//        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+//        final Bundle bundle = new Bundle();
+//        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+//        return bundle;
+        return null;
     }
 
     @Override

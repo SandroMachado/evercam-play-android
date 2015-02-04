@@ -6,7 +6,7 @@ import java.util.List;
 public final class AppData
 {
     public static ArrayList<EvercamCamera> evercamCameraList = new ArrayList<EvercamCamera>();
-    public static List<AppUser> appUsers;
+    public static ArrayList<AppUser> appUsers;
 
     public static AppUser defaultUser = null;
 
