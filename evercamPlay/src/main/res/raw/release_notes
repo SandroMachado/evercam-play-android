@@ -1,11 +1,15 @@
 <h4>Evercam Play - IP Camera Viewer</h4>
 
-<h5>1.2.7</h5>
+<h5>1.2.8 Alpha 04/02</h5>
 
 <ul>
-    <li>- Added view camera details option in live view<br/></li>
-	<li>- Bug fixes around scanning for cameras<br/></li>
 	<li>- Home screen shortcut link to camera live view<br/></li>
+</ul>
+<br/>
+<b>Version 1.2.7</b>
+<ul>
+	<li><br/>- Added view camera details option in live view<br/></li>
+	<li>- Bug fixes around scanning for cameras<br/></li>
 </ul>
 <br/>
 <b>Version 1.2.4 - 1.2.6</b>
@@ -54,7 +58,6 @@
 <b>Version 1.1.6</b>
 <ul>
 	<li><br/>- Now you can remove cameras that are shared with you from your account<br/></li>
-	<li>- Small bug fixes<br/></li>
 </ul>
 <br/>
 <b>Version 1.1.5</b>
@@ -93,7 +96,6 @@
 <ul>
 	<li>- You can now view multiple Evercam accounts<br/></li>
 	<li>- Added ability to choose number of cameras per row</li>
-	<li>- Fixed some small bugs</li>
 </ul>
 
 <br/><br />Let us know what you think. Send any suggestions or feedback to play@evercam.io<br/>
