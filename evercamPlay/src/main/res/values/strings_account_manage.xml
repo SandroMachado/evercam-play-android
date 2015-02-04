@@ -9,4 +9,7 @@
     <string name="switching_account">Switching account&#8230;</string>
     <string name="msg_account_already_added"> has already been added.</string>
 
+    <string name="account_name">Evercam</string>
+    <string name="account_type">io.evercam.android.account</string>
+
 </resources>
