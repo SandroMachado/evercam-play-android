@@ -33,7 +33,6 @@ import io.evercam.androidapp.authentication.EvercamAccount;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
-import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;

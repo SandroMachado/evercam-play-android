@@ -11,7 +11,6 @@ import com.bugsense.trace.BugSenseHandler;
 
 import io.evercam.androidapp.authentication.EvercamAccount;
 import io.evercam.androidapp.custom.CustomedDialog;
-import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;

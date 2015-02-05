@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,9 +20,6 @@ import android.widget.ProgressBar;
 
 import com.bugsense.trace.BugSenseHandler;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.evercam.API;
 import io.evercam.ApiKeyPair;
 import io.evercam.EvercamException;
@@ -33,7 +29,6 @@ import io.evercam.androidapp.custom.CustomAdapter;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
-import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
@@ -77,7 +72,7 @@ public class ManageAccountsActivity extends ParentActivity
             ListAdapter listAdapter = new CustomAdapter(ManageAccountsActivity.this,
                     R.layout.manage_account_list_item,
                     R.layout.manage_account_list_item_new_user, R.id.account_item_email,
-                    (ArrayList<AppUser>) AppData.appUsers);
+                    AppData.appUsers);
             listview.setAdapter(listAdapter);
         }
         else
@@ -127,7 +122,7 @@ public class ManageAccountsActivity extends ParentActivity
                         {
                             progressDialog.show(ManageAccountsActivity.this.getString(R.string
                                     .switching_account));
-                            setDefaultUser(user.getId() + "", true, dialog);
+                            updateDefaultUser(user.getId() + "", true, dialog);
                             ed_dialog_layout.setEnabled(false);
                             ed_dialog_layout.setClickable(false);
                         }
@@ -138,7 +133,7 @@ public class ManageAccountsActivity extends ParentActivity
                         @Override
                         public void onClick(View v)
                         {
-                            setDefaultUser(user.getId() + "", false, dialog);
+                            updateDefaultUser(user.getId() + "", false, dialog);
                             ed_dialog_layout.setEnabled(false);
                             ed_dialog_layout.setClickable(false);
                         }
@@ -160,40 +155,13 @@ public class ManageAccountsActivity extends ParentActivity
                             CustomedDialog.getConfirmRemoveDialog(ManageAccountsActivity.this,
                                     new DialogInterface.OnClickListener()
                                     {
-
                                         @Override
                                         public void onClick(DialogInterface warningDialog,
                                                             int which)
                                         {
-                                            try
-                                            {
-                                                DbAppUser users = new DbAppUser
-                                                        (ManageAccountsActivity.this);
-                                                users.deleteAppUserByEmail(user.getEmail());
-                                                if(users.getDefaultUsersCount() == 0 && users
-                                                        .getAppUsersCount() > 0)
-                                                {
-                                                    int maxid = users.getMaxID();
-                                                    AppUser user = users.getAppUserByID(maxid);
-                                                    user.setIsDefault(true);
-                                                    users.updateAppUser(user);
-                                                    PrefsManager.saveUserEmail(PreferenceManager
-                                                            .getDefaultSharedPreferences
-                                                                    (ManageAccountsActivity.this)
-                                                            , user.getEmail());
-                                                    AppData.defaultUser = user;
-                                                }
-
-                                                showAllAccounts();
-                                                dialog.dismiss();
-                                            }
-                                            catch(Exception e)
-                                            {
-                                                if(Constants.isAppTrackingEnabled)
-                                                {
-                                                    BugSenseHandler.sendException(e);
-                                                }
-                                            }
+                                            new EvercamAccount(ManageAccountsActivity.this).remove(user.getEmail());
+                                            showAllAccounts();
+                                            dialog.dismiss();
                                         }
                                     }, R.string.msg_confirm_remove).show();
                         }
@@ -342,35 +310,41 @@ public class ManageAccountsActivity extends ParentActivity
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void setDefaultUser(final String userId, final Boolean closeActivity,
+    /**
+     * Update shared preference that stores default user's Email
+     *
+     * @param closeActivity after updating, close the account manage activity or not
+     * @param dialogToDismiss the account manage dialog that is showing
+     */
+    public void updateDefaultUser(final String userEmail, final Boolean closeActivity,
                                final AlertDialog dialogToDismiss)
     {
-        try
-        {
-            DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
+//            DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
+//
+//            List<AppUser> appUsers = dbUser.getAllAppUsers(1000);
+//            for(int count = 0; count < appUsers.size(); count++)
+//            {
+//                AppUser user = appUsers.get(count);
+//                if((user.getId() + "").equalsIgnoreCase(userId))
+//                {
+//                    if(!user.getIsDefault())
+//                    {
+//                        user.setIsDefault(true);
+//                        dbUser.updateAppUser(user);
+//                        PrefsManager.saveUserEmail(PreferenceManager.getDefaultSharedPreferences
+//                                (ManageAccountsActivity.this), user.getEmail());
+//                        AppData.defaultUser = user;
+//                    }
+//                }
+//                else if(user.getIsDefault())
+//                {
+//                    user.setIsDefault(false);
+//                    dbUser.updateAppUser(user);
+//                }
+//            }
 
-            List<AppUser> appUsers = dbUser.getAllAppUsers(1000);
-            for(int count = 0; count < appUsers.size(); count++)
-            {
-                AppUser user = appUsers.get(count);
-                if((user.getId() + "").equalsIgnoreCase(userId))
-                {
-                    if(!user.getIsDefault())
-                    {
-                        user.setIsDefault(true);
-                        dbUser.updateAppUser(user);
-                        PrefsManager.saveUserEmail(PreferenceManager.getDefaultSharedPreferences
-                                (ManageAccountsActivity.this), user.getEmail());
-                        AppData.defaultUser = user;
-                    }
-                }
-                else if(user.getIsDefault())
-                {
-                    user.setIsDefault(false);
-                    dbUser.updateAppUser(user);
-                }
-            }
-
+            PrefsManager.saveUserEmail(PreferenceManager.getDefaultSharedPreferences
+                    (ManageAccountsActivity.this), userEmail);
             AppData.appUsers = new EvercamAccount(this).retrieveUserList();
 
             if(closeActivity)
@@ -390,14 +364,6 @@ public class ManageAccountsActivity extends ParentActivity
             {
                 dialogToDismiss.dismiss();
             }
-        }
-        catch(Exception e)
-        {
-            Log.e(TAG, e.toString());
-            BugSenseHandler.sendException(e);
-            EvercamPlayApplication.sendCaughtException(this, e);
-            CustomedDialog.showUnexpectedErrorDialog(ManageAccountsActivity.this);
-        }
     }
 
     private void showAllAccounts()
@@ -443,19 +409,19 @@ public class ManageAccountsActivity extends ParentActivity
         @Override
         protected Boolean doInBackground(String... values)
         {
-            try
-            {
-                DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
-                AppUser userFromEmail = dbUser.getAppUserByEmail(username);
-                AppUser userFromUsername = dbUser.getAppUserByUsername(username);
-                if(userFromEmail != null || userFromUsername != null)
-                {
-                    errorMessage = username + " " + getString(R.string.msg_account_already_added);
-                    return false;
-
-                }
-                else
-                {
+//            try
+//            {
+                //TODO: Test how it works with adding user that already exists
+//                DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
+//                AppUser userFromEmail = dbUser.getAppUserByEmail(username);
+//                AppUser userFromUsername = dbUser.getAppUserByUsername(username);
+//                if(userFromEmail != null || userFromUsername != null)
+//                {
+//                    errorMessage = username + " " + getString(R.string.msg_account_already_added);
+//                    return false;
+//                }
+//                else
+//                {
                     try
                     {
                         ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(username,
@@ -473,7 +439,7 @@ public class ManageAccountsActivity extends ParentActivity
                         newUser.setApiId(userApiId);
 
                         // Save new user
-                        dbUser.addAppUser(newUser);
+                        new EvercamAccount(ManageAccountsActivity.this).add(newUser);
 
                         return true;
                     }
@@ -489,15 +455,15 @@ public class ManageAccountsActivity extends ParentActivity
                             // Do nothing, show alert dialog in onPostExecute
                         }
                     }
-                }
-            }
-            catch(Exception e)
-            {
-                if(Constants.isAppTrackingEnabled)
-                {
-                    BugSenseHandler.sendException(e);
-                }
-            }
+    //            }
+//            }
+//            catch(Exception e)
+//            {
+//                if(Constants.isAppTrackingEnabled)
+//                {
+//                    BugSenseHandler.sendException(e);
+//                }
+//            }
             return false;
         }
 

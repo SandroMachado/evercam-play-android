@@ -30,16 +30,15 @@ import io.evercam.User;
 import io.evercam.UserDetail;
 import io.evercam.androidapp.account.AccountUtils;
 import io.evercam.androidapp.account.UserProfile;
+import io.evercam.androidapp.authentication.EvercamAccount;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
-import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
-import io.evercam.androidapp.utils.PropertyReader;
 
 public class SignUpActivity extends Activity
 {
@@ -347,19 +346,11 @@ public class SignUpActivity extends Activity
                 EvercamPlayApplication.sendEventAnalytics(SignUpActivity.this,
                         R.string.category_sign_up, R.string.action_signup_success,
                         R.string.label_signup_successful);
-                DbAppUser dbUser = new DbAppUser(SignUpActivity.this);
 
-                if(dbUser.getAppUserByUsername(newUser.getUsername()) != null)
-                {
-                    dbUser.deleteAppUserByUsername(newUser.getUsername());
-                }
-                dbUser.updateAllIsDefaultFalse();
-
-                dbUser.addAppUser(newUser);
+                new EvercamAccount(SignUpActivity.this).add(newUser);
+                PrefsManager.saveUserEmail(SignUpActivity.this, newUser.getEmail());
                 AppData.defaultUser = newUser;
-                SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences
-                        (SignUpActivity.this);
-                PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
+
                 CustomToast.showInCenterExtraLong(SignUpActivity.this, R.string.confirmSignUp);
                 showProgress(false);
                 setResult(Constants.RESULT_TRUE);

@@ -37,9 +37,7 @@ import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomScrollView;
 import io.evercam.androidapp.custom.CustomScrollView.OnScrollStoppedListener;
 import io.evercam.androidapp.custom.CustomedDialog;
-import io.evercam.androidapp.dal.DbAppUser;
 import io.evercam.androidapp.dto.AppData;
-import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.dto.ImageLoadingStatus;
 import io.evercam.androidapp.tasks.CheckInternetTask;
@@ -284,18 +282,6 @@ public class CamerasActivity extends ParentActivity
             String defaultEmail = PrefsManager.getUserEmail(this);
             if(defaultEmail != null)
             {
-            //Remove all code related to database user for new authentication
-//                try
-//                {
-//                    DbAppUser dbUser = new DbAppUser(this);
-//                    AppData.defaultUser = dbUser.getAppUserByEmail(defaultEmail);
-//                }
-//                catch(Exception e)
-//                {
-//                    Log.e(TAG, e.toString());
-//                    EvercamPlayApplication.sendCaughtException(this, e.toString());
-//                }
-
                 AppData.defaultUser = new EvercamAccount(this).retrieveUserByEmail(defaultEmail);
             }
             else
@@ -726,13 +712,7 @@ public class CamerasActivity extends ParentActivity
     {
         try
         {
-            // delete saved username and password
-            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-            PrefsManager.removeUserEmail(sharedPrefs);
-
-            // Instead of deleting all users, only delete the default one
-            DbAppUser dbUser = new DbAppUser(this);
-            dbUser.deleteAppUserByEmail(AppData.defaultUser.getEmail());
+            new EvercamAccount(this).remove(AppData.defaultUser.getEmail());
 
             // clear real-time default app data
             AppData.defaultUser = null;
