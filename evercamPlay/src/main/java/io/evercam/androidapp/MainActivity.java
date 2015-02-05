@@ -114,10 +114,7 @@ public class MainActivity extends Activity
 
         if(Constants.isAppTrackingEnabled)
         {
-            if(Constants.isAppTrackingEnabled)
-            {
                 BugSenseHandler.startSession(this);
-            }
         }
     }
 
@@ -128,32 +125,25 @@ public class MainActivity extends Activity
 
         if(Constants.isAppTrackingEnabled)
         {
-            if(Constants.isAppTrackingEnabled)
-            {
                 BugSenseHandler.closeSession(this);
-            }
         }
     }
 
     private boolean isUserLogged()
     {
-        try
+        String defaultEmail = PrefsManager.getUserEmail(this);
+
+        if(defaultEmail != null)
         {
-            String defaultEmail = PrefsManager.getUserEmail(this);
-            if(defaultEmail != null)
-            {
-                AppUser defaultUser = new EvercamAccount(this).retrieveUserByEmail(defaultEmail);
-                AppData.defaultUser = defaultUser;
-                AppData.evercamCameraList = new DbCamera(this).getCamerasByOwner(defaultUser
-                        .getUsername(), 500);
-            }
+            Log.d(TAG, defaultEmail);
+            AppUser defaultUser = new EvercamAccount(this).retrieveUserByEmail(defaultEmail);
+            AppData.defaultUser = defaultUser;
+            AppData.evercamCameraList = new DbCamera(this).getCamerasByOwner(defaultUser
+                    .getUsername(), 500);
         }
-        catch(Exception e)
+        else
         {
-            Log.e(TAG, Log.getStackTraceString(e));
-            BugSenseHandler.sendException(e);
-            EvercamPlayApplication.sendCaughtException(this, e);
-            CustomedDialog.showUnexpectedErrorDialog(MainActivity.this);
+            Log.d(TAG, "Default user is null");
         }
         return (AppData.defaultUser != null);
     }

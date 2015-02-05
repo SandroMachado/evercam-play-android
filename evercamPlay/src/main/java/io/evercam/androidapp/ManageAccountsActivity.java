@@ -1,5 +1,9 @@
 package io.evercam.androidapp;
 
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,6 +23,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.bugsense.trace.BugSenseHandler;
+
+import java.io.IOException;
 
 import io.evercam.API;
 import io.evercam.ApiKeyPair;
@@ -122,7 +128,7 @@ public class ManageAccountsActivity extends ParentActivity
                         {
                             progressDialog.show(ManageAccountsActivity.this.getString(R.string
                                     .switching_account));
-                            updateDefaultUser(user.getId() + "", true, dialog);
+                            updateDefaultUser(user.getEmail(), true, dialog);
                             ed_dialog_layout.setEnabled(false);
                             ed_dialog_layout.setClickable(false);
                         }
@@ -133,7 +139,7 @@ public class ManageAccountsActivity extends ParentActivity
                         @Override
                         public void onClick(View v)
                         {
-                            updateDefaultUser(user.getId() + "", false, dialog);
+                            updateDefaultUser(user.getEmail(), false, dialog);
                             ed_dialog_layout.setEnabled(false);
                             ed_dialog_layout.setClickable(false);
                         }
@@ -159,8 +165,32 @@ public class ManageAccountsActivity extends ParentActivity
                                         public void onClick(DialogInterface warningDialog,
                                                             int which)
                                         {
-                                            new EvercamAccount(ManageAccountsActivity.this).remove(user.getEmail());
-                                            showAllAccounts();
+                                            new EvercamAccount(ManageAccountsActivity.this).remove(user.getEmail(), new AccountManagerCallback<Boolean>() {
+                                                @Override
+                                                public void run(AccountManagerFuture<Boolean> future) {
+                                                    // This is the line that actually starts the call to remove the account.
+                                                    try
+                                                    {
+                                                        boolean isAccountDeleted = future.getResult();
+                                                        if(isAccountDeleted)
+                                                        {
+                                                            showAllAccounts();
+                                                        }
+                                                    }
+                                                    catch(OperationCanceledException e)
+                                                    {
+                                                        e.printStackTrace();
+                                                    }
+                                                    catch(IOException e)
+                                                    {
+                                                        e.printStackTrace();
+                                                    }
+                                                    catch(AuthenticatorException e)
+                                                    {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            });
                                             dialog.dismiss();
                                         }
                                     }, R.string.msg_confirm_remove).show();
@@ -319,32 +349,9 @@ public class ManageAccountsActivity extends ParentActivity
     public void updateDefaultUser(final String userEmail, final Boolean closeActivity,
                                final AlertDialog dialogToDismiss)
     {
-//            DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
-//
-//            List<AppUser> appUsers = dbUser.getAllAppUsers(1000);
-//            for(int count = 0; count < appUsers.size(); count++)
-//            {
-//                AppUser user = appUsers.get(count);
-//                if((user.getId() + "").equalsIgnoreCase(userId))
-//                {
-//                    if(!user.getIsDefault())
-//                    {
-//                        user.setIsDefault(true);
-//                        dbUser.updateAppUser(user);
-//                        PrefsManager.saveUserEmail(PreferenceManager.getDefaultSharedPreferences
-//                                (ManageAccountsActivity.this), user.getEmail());
-//                        AppData.defaultUser = user;
-//                    }
-//                }
-//                else if(user.getIsDefault())
-//                {
-//                    user.setIsDefault(false);
-//                    dbUser.updateAppUser(user);
-//                }
-//            }
-
             PrefsManager.saveUserEmail(PreferenceManager.getDefaultSharedPreferences
                     (ManageAccountsActivity.this), userEmail);
+
             AppData.appUsers = new EvercamAccount(this).retrieveUserList();
 
             if(closeActivity)
@@ -368,25 +375,15 @@ public class ManageAccountsActivity extends ParentActivity
 
     private void showAllAccounts()
     {
-        try
-        {
-            AppData.appUsers = new EvercamAccount(this).retrieveUserList();
+        AppData.appUsers = new EvercamAccount(this).retrieveUserList();
 
-            ListAdapter listAdapter = new CustomAdapter(ManageAccountsActivity.this,
-                    R.layout.manage_account_list_item,
-                    R.layout.manage_account_list_item_new_user, R.id.account_item_email,
-                    AppData.appUsers);
-            ListView listview = (ListView) findViewById(R.id.email_list);
-            listview.setAdapter(null);
-            listview.setAdapter(listAdapter);
-        }
-        catch(Exception e)
-        {
-            if(Constants.isAppTrackingEnabled)
-            {
-                BugSenseHandler.sendException(e);
-            }
-        }
+        ListAdapter listAdapter = new CustomAdapter(ManageAccountsActivity.this,
+                R.layout.manage_account_list_item,
+                R.layout.manage_account_list_item_new_user, R.id.account_item_email,
+                AppData.appUsers);
+        ListView listview = (ListView) findViewById(R.id.email_list);
+        listview.setAdapter(null);
+        listview.setAdapter(listAdapter);
     }
 
     private class AddAccountTask extends AsyncTask<String, Void, Boolean>
@@ -409,61 +406,39 @@ public class ManageAccountsActivity extends ParentActivity
         @Override
         protected Boolean doInBackground(String... values)
         {
-//            try
-//            {
-                //TODO: Test how it works with adding user that already exists
-//                DbAppUser dbUser = new DbAppUser(ManageAccountsActivity.this);
-//                AppUser userFromEmail = dbUser.getAppUserByEmail(username);
-//                AppUser userFromUsername = dbUser.getAppUserByUsername(username);
-//                if(userFromEmail != null || userFromUsername != null)
-//                {
-//                    errorMessage = username + " " + getString(R.string.msg_account_already_added);
-//                    return false;
-//                }
-//                else
-//                {
-                    try
-                    {
-                        ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(username,
-                                password);
-                        String userApiKey = userKeyPair.getApiKey();
-                        String userApiId = userKeyPair.getApiId();
-                        API.setUserKeyPair(userApiKey, userApiId);
-                        User evercamUser = new User(username);
-                        newUser = new AppUser();
-                        newUser.setUsername(evercamUser.getUsername());
-                        newUser.setPassword(password);
-                        newUser.setCountry(evercamUser.getCountry());
-                        newUser.setEmail(evercamUser.getEmail());
-                        newUser.setApiKey(userApiKey);
-                        newUser.setApiId(userApiId);
+            try
+            {
+                ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(username,
+                        password);
+                String userApiKey = userKeyPair.getApiKey();
+                String userApiId = userKeyPair.getApiId();
+                API.setUserKeyPair(userApiKey, userApiId);
+                User evercamUser = new User(username);
+                newUser = new AppUser();
+                newUser.setUsername(evercamUser.getUsername());
+                newUser.setPassword(password);
+                newUser.setCountry(evercamUser.getCountry());
+                newUser.setEmail(evercamUser.getEmail());
+                newUser.setApiKey(userApiKey);
+                newUser.setApiId(userApiId);
 
-                        // Save new user
-                        new EvercamAccount(ManageAccountsActivity.this).add(newUser);
+                // Save new user
+                new EvercamAccount(ManageAccountsActivity.this).add(newUser);
 
-                        return true;
-                    }
-                    catch(EvercamException e)
-                    {
-                        if(e.getMessage().contains(getString(R.string.prefix_invalid)) || e
-                                .getMessage().contains(getString(R.string.prefix_no_user)))
-                        {
-                            errorMessage = e.getMessage();
-                        }
-                        else
-                        {
-                            // Do nothing, show alert dialog in onPostExecute
-                        }
-                    }
-    //            }
-//            }
-//            catch(Exception e)
-//            {
-//                if(Constants.isAppTrackingEnabled)
-//                {
-//                    BugSenseHandler.sendException(e);
-//                }
-//            }
+                return true;
+            }
+            catch(EvercamException e)
+            {
+                if(e.getMessage().contains(getString(R.string.prefix_invalid)) || e
+                        .getMessage().contains(getString(R.string.prefix_no_user)))
+                {
+                    errorMessage = e.getMessage();
+                }
+                else
+                {
+                    // Do nothing, show alert dialog in onPostExecute
+                }
+            }
             return false;
         }
 

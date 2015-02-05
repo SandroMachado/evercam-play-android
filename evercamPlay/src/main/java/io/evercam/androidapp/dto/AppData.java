@@ -10,7 +10,7 @@ public final class AppData
 
     public static AppUser defaultUser = null;
 
-    public void reset()
+    public static void reset()
     {
         evercamCameraList.clear();
         appUsers = null;

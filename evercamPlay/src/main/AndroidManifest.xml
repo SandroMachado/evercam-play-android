@@ -36,6 +36,7 @@
 
     <!-- Necessary for authentication-->
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
 
     <application
         android:name=".EvercamPlayApplication"

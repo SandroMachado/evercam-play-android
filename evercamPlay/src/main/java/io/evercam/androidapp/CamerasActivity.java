@@ -1,19 +1,21 @@
 package io.evercam.androidapp;
 
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -28,6 +30,7 @@ import android.widget.LinearLayout;
 
 import com.bugsense.trace.BugSenseHandler;
 
+import java.io.IOException;
 import java.util.concurrent.RejectedExecutionException;
 
 import io.evercam.androidapp.authentication.EvercamAccount;
@@ -233,25 +236,11 @@ public class CamerasActivity extends ParentActivity
         if(requestCode == Constants.REQUEST_CODE_ADD_CAMERA || requestCode == Constants
                 .REQUEST_CODE_DELETE_CAMERA)
         {
-            if(resultCode == Constants.RESULT_TRUE)
-            {
-                reloadCameraList = true;
-            }
-            else
-            {
-                reloadCameraList = false;
-            }
+            reloadCameraList = (resultCode == Constants.RESULT_TRUE);
         }
         else if(requestCode == Constants.REQUEST_CODE_MANAGE_ACCOUNT)
         {
-            if(resultCode == Constants.RESULT_ACCOUNT_CHANGED)
-            {
-                reloadCameraList = true;
-            }
-            else
-            {
-                reloadCameraList = false;
-            }
+            reloadCameraList = (resultCode == Constants.RESULT_ACCOUNT_CHANGED);
         }
     }
 
@@ -710,19 +699,11 @@ public class CamerasActivity extends ParentActivity
 
     private void logOutUser()
     {
-        try
-        {
-            new EvercamAccount(this).remove(AppData.defaultUser.getEmail());
+        new EvercamAccount(this).remove(AppData.defaultUser.getEmail(), null);
 
-            // clear real-time default app data
-            AppData.defaultUser = null;
-            AppData.appUsers.clear();
-            AppData.evercamCameraList.clear();
-        }
-        catch(Exception e)
-        {
-            Log.e(TAG, "Error: sign out" + e.toString());
-        }
+        // clear real-time default app data
+        AppData.reset();
+
         finish();
         startActivity(new Intent(this, SlideActivity.class));
     }

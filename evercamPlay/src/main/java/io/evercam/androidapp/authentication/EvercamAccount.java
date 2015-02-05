@@ -2,6 +2,7 @@ package io.evercam.androidapp.authentication;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -16,6 +17,7 @@ import io.evercam.androidapp.utils.PrefsManager;
 
 public class EvercamAccount
 {
+    private final String TAG = "evercamplay-EvercamAccount";
     private Context mContext;
     private final AccountManager mAccountManager;
 
@@ -36,16 +38,17 @@ public class EvercamAccount
         mAccountManager.setUserData(account, Constants.KEY_COUNTRY, newUser.getCountry());
     }
 
-    public void remove(String email)
+    public void remove(final String email, AccountManagerCallback<Boolean> callback)
     {
         final Account account = getAccountByEmail(email);
-        mAccountManager.removeAccount(account, null, null);
+        mAccountManager.removeAccount(account, callback, null);
 
         //If removing default user, update the shared preference as well
         String defaultEmail = PrefsManager.getUserEmail(mContext);
         if(TextUtils.equals(defaultEmail, email))
         {
             PrefsManager.removeUserEmail(PreferenceManager.getDefaultSharedPreferences(mContext));
+            AppData.defaultUser = null;
         }
     }
 
@@ -101,7 +104,7 @@ public class EvercamAccount
                 userList.add(appUser);
             }
 
-            //If default user doesn't exist, set the first one in user list af default
+            //If default user doesn't exist, set the first one in user list as default
             if(!defaultUserMatched)
             {
                 AppUser newDefaultUser = userList.get(0);
