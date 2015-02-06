@@ -26,7 +26,7 @@ import io.evercam.androidapp.video.HomeShortcut;
  * */
 public class MainActivity extends Activity
 {
-    private static final String TAG = "evercamplay-MainActivity";
+    private static final String TAG = "evercam-MainActivity";
     private String liveViewCameraId = "";
 
     @Override
@@ -143,7 +143,7 @@ public class MainActivity extends Activity
         }
         else
         {
-            Log.d(TAG, "Default user is null");
+            Log.d(TAG, "Null default user");
         }
         return (AppData.defaultUser != null);
     }

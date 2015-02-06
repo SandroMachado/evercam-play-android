@@ -57,7 +57,7 @@ public class CamerasActivity extends ParentActivity
     public MenuItem refresh;
     public String liveViewCameraId = "";
 
-    private static final String TAG = "evercamplay-CamerasActivity";
+    private static final String TAG = "evercam-CamerasActivity";
 
     private int totalCamerasInGrid = 0;
     private int slideoutMenuAnimationTime = 255;
@@ -599,8 +599,6 @@ public class CamerasActivity extends ParentActivity
     private final void stopGcmRegisterActions()
     {
 
-        Log.i(TAG, "StopGcmRegisterActions called");
-
         if(mHandleMessageReceiverRegistered) // unregister only if registered
             // otherwise
             // illegalArgumentException
@@ -614,13 +612,9 @@ public class CamerasActivity extends ParentActivity
         public void onReceive(Context context, Intent intent)
         {
 
-            Log.i(TAG, "AlertMessage Received ");
-
             String AlertMessage = intent.getStringExtra("AlertMessage");
-            Log.i(TAG, "AlertMessage [" + AlertMessage + "]");
 
             String ApiCamera = intent.getStringExtra("ApiCamera");
-            Log.i(TAG, "ApiCamera [" + ApiCamera + "]");
         }
     };
 

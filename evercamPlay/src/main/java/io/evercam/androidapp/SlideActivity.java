@@ -80,13 +80,14 @@ public class SlideActivity extends Activity implements OnPageChangeListener
             if(resultCode == Constants.RESULT_TRUE)
             {
                 finish();
+                startActivity(new Intent(this, MainActivity.class));
             }
         }
     }
 
     private void initSlideView()
     {
-        views = new ArrayList<View>();
+        views = new ArrayList<>();
         LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(LayoutParams
                 .WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 

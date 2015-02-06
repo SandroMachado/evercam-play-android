@@ -324,19 +324,16 @@ public class LoginActivity extends ParentActivity
     }
 
     @Override
-    protected void onRestart()
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        super.onRestart();
-        String defaultEmail = PrefsManager.getUserEmail(sharedPrefs);
-        if(defaultEmail != null)
+        if(requestCode == Constants.REQUEST_CODE_SIGN_UP)
         {
-            AppData.defaultUser = new EvercamAccount(this).retrieveUserByEmail(defaultEmail);
-        }
+            if(resultCode == Constants.RESULT_TRUE)
+            {
+                setResult(Constants.RESULT_TRUE);
 
-        if(AppData.defaultUser != null)
-        {
-            Intent intent = new Intent(this, CamerasActivity.class);
-            startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -398,7 +395,7 @@ public class LoginActivity extends ParentActivity
                 else if(type == InternetCheckType.SIGNUP)
                 {
                     Intent signupIntent = new Intent(LoginActivity.this, SignUpActivity.class);
-                    startActivity(signupIntent);
+                    startActivityForResult(signupIntent,Constants.REQUEST_CODE_SIGN_UP);
                 }
             }
             else

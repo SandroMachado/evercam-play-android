@@ -42,7 +42,7 @@ import io.evercam.androidapp.utils.PrefsManager;
 
 public class SignUpActivity extends Activity
 {
-    private final String TAG = "evercamplay-SignUpActivity";
+    private final String TAG = "evercam-SignUpActivity";
     // Auto filled profiles
     private String filledFirstname = "";
     private String filledLastname = "";
@@ -240,7 +240,7 @@ public class SignUpActivity extends Activity
 
     private void initCountryMap()
     {
-        countryMap = new TreeMap<String, String>();
+        countryMap = new TreeMap<>();
 
         for(String countryCode : Locale.getISOCountries())
         {
@@ -290,7 +290,7 @@ public class SignUpActivity extends Activity
         {
             // If exceptions happen here, will not influence app functionality.
             // Just catch it to avoid crashing.
-            Log.e(TAG, e.toString());
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -355,7 +355,6 @@ public class SignUpActivity extends Activity
                 showProgress(false);
                 setResult(Constants.RESULT_TRUE);
                 finish();
-                startActivity(new Intent(SignUpActivity.this, MainActivity.class));
             }
             else
             {

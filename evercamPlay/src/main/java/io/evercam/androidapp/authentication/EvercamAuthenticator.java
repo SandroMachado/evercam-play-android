@@ -8,8 +8,10 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Slide;
 
 import io.evercam.androidapp.LoginActivity;
+import io.evercam.androidapp.SlideActivity;
 import io.evercam.androidapp.utils.Constants;
 
 public class EvercamAuthenticator extends AbstractAccountAuthenticator
@@ -34,16 +36,10 @@ public class EvercamAuthenticator extends AbstractAccountAuthenticator
                              String authTokenType, String[] requiredFeatures, Bundle options)
             throws NetworkErrorException
     {
-        //TODO: Will implement this after getting account management work
-//        final Intent intent = new Intent(mContext, LoginActivity.class);
-//        intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-//        intent.putExtra(Constants.KEY_AUTH_TYPE, authTokenType);
-//        intent.putExtra(Constants.KEY_IS_ADD_ACCOUNT, true);
-//        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
-//        final Bundle bundle = new Bundle();
-//        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
-//        return bundle;
-        return null;
+        final Intent intent = new Intent(mContext, SlideActivity.class);
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+        return bundle;
     }
 
     @Override
