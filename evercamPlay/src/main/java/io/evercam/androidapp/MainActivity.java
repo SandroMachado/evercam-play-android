@@ -34,7 +34,7 @@ public class MainActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG,"onCreate");
+        Log.d(TAG, "onCreate");
         if(Constants.isAppTrackingEnabled)
         {
             BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
@@ -114,7 +114,7 @@ public class MainActivity extends Activity
 
         if(Constants.isAppTrackingEnabled)
         {
-                BugSenseHandler.startSession(this);
+            BugSenseHandler.startSession(this);
         }
     }
 
@@ -125,7 +125,7 @@ public class MainActivity extends Activity
 
         if(Constants.isAppTrackingEnabled)
         {
-                BugSenseHandler.closeSession(this);
+            BugSenseHandler.closeSession(this);
         }
     }
 

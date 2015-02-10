@@ -8,11 +8,8 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.transition.Slide;
 
-import io.evercam.androidapp.LoginActivity;
 import io.evercam.androidapp.SlideActivity;
-import io.evercam.androidapp.utils.Constants;
 
 public class EvercamAuthenticator extends AbstractAccountAuthenticator
 {
@@ -33,8 +30,8 @@ public class EvercamAuthenticator extends AbstractAccountAuthenticator
 
     @Override
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
-                             String authTokenType, String[] requiredFeatures, Bundle options)
-            throws NetworkErrorException
+                             String authTokenType, String[] requiredFeatures,
+                             Bundle options) throws NetworkErrorException
     {
         final Intent intent = new Intent(mContext, SlideActivity.class);
         final Bundle bundle = new Bundle();
@@ -50,8 +47,8 @@ public class EvercamAuthenticator extends AbstractAccountAuthenticator
     }
 
     @Override
-    public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, String
-            authTokenType, Bundle options) throws NetworkErrorException
+    public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account,
+                               String authTokenType, Bundle options) throws NetworkErrorException
     {
         return null;
     }
@@ -71,7 +68,8 @@ public class EvercamAuthenticator extends AbstractAccountAuthenticator
     }
 
     @Override
-    public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account, String[] features) throws NetworkErrorException
+    public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account,
+                              String[] features) throws NetworkErrorException
     {
         return null;
     }

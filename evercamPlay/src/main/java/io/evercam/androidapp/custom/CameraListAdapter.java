@@ -9,7 +9,6 @@ import android.widget.RelativeLayout;
 
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.dto.AppData;
-import io.evercam.androidapp.dto.CameraStatus;
 import io.evercam.androidapp.dto.EvercamCamera;
 
 /**

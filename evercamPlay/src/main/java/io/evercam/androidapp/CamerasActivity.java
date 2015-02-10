@@ -1,9 +1,5 @@
 package io.evercam.androidapp;
 
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -30,7 +26,6 @@ import android.widget.LinearLayout;
 
 import com.bugsense.trace.BugSenseHandler;
 
-import java.io.IOException;
 import java.util.concurrent.RejectedExecutionException;
 
 import io.evercam.androidapp.authentication.EvercamAccount;
@@ -69,7 +64,9 @@ public class CamerasActivity extends ParentActivity
     private enum InternetCheckType
     {
         START, RESTART
-    };
+    }
+
+    ;
 
     @Override
     public void onCreate(Bundle savedInstanceState)

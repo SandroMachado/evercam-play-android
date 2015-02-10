@@ -86,10 +86,11 @@ public class EvercamAccount
 
         String defaultEmail = PrefsManager.getUserEmail(mContext);
         boolean defaultUserMatched = false;
-        Account[] accounts = mAccountManager.getAccountsByType(mContext.getString(R.string.account_type));
+        Account[] accounts = mAccountManager.getAccountsByType(mContext.getString(R.string
+                .account_type));
         if(accounts.length > 0)
         {
-            for (Account account : accounts)
+            for(Account account : accounts)
             {
                 AppUser appUser = retrieveUserByEmail(account.name);
                 if(defaultEmail != null)

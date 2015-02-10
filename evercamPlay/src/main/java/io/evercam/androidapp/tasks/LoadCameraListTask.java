@@ -3,15 +3,12 @@ package io.evercam.androidapp.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.github.johnpersano.supertoasts.SuperToast;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import io.evercam.API;
 import io.evercam.Camera;
 import io.evercam.EvercamException;
-import io.evercam.User;
 import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.R;
@@ -178,13 +175,15 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
                 camerasActivity.removeAllCameraViews();
                 camerasActivity.addAllCameraViews(false, true);
 
-                VideoActivity.startPlayingVideoForCamera(camerasActivity, camerasActivity.liveViewCameraId);
+                VideoActivity.startPlayingVideoForCamera(camerasActivity,
+                        camerasActivity.liveViewCameraId);
             }
             else
             {
                 camerasActivity.removeAllCameraViews();
                 camerasActivity.addAllCameraViews(true, true);
-                CustomToast.showSuperToastShort(camerasActivity, camerasActivity.getString(R.string.msg_can_not_access_camera));
+                CustomToast.showSuperToastShort(camerasActivity, camerasActivity.getString(R
+                        .string.msg_can_not_access_camera));
             }
             camerasActivity.liveViewCameraId = "";
         }

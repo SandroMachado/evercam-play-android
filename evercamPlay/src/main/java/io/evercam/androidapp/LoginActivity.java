@@ -1,7 +1,5 @@
 package io.evercam.androidapp;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -395,7 +393,7 @@ public class LoginActivity extends ParentActivity
                 else if(type == InternetCheckType.SIGNUP)
                 {
                     Intent signupIntent = new Intent(LoginActivity.this, SignUpActivity.class);
-                    startActivityForResult(signupIntent,Constants.REQUEST_CODE_SIGN_UP);
+                    startActivityForResult(signupIntent, Constants.REQUEST_CODE_SIGN_UP);
                 }
             }
             else

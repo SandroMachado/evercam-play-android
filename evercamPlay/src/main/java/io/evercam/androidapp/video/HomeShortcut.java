@@ -11,7 +11,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.util.Log;
 
@@ -52,8 +51,8 @@ public class HomeShortcut
 
     private static String getLiveViewUri(Context context)
     {
-        return context.getString(R.string.data_scheme) + "://" + context.getString(R.string.data_host)
-                + context.getString(R.string.data_path);
+        return context.getString(R.string.data_scheme) + "://" + context.getString(R.string
+                .data_host) + context.getString(R.string.data_path);
     }
 
     private static Bitmap getIconForShortcut(EvercamCamera evercamCamera, Context context)
@@ -65,7 +64,8 @@ public class HomeShortcut
 
             if(bitmap == null)
             {
-                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_192x192);
+                bitmap = BitmapFactory.decodeResource(context.getResources(),
+                        R.drawable.icon_192x192);
                 return Bitmap.createScaledBitmap(bitmap, 192, 192, false);
             }
 
@@ -83,7 +83,8 @@ public class HomeShortcut
             bitmap = addBorder(bitmap, 0, 30, 20, 30, Color.TRANSPARENT);
 
             //Append Evercam logo as overlay
-            Bitmap logoBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_40x40);
+            Bitmap logoBitmap = BitmapFactory.decodeResource(context.getResources(),
+                    R.drawable.icon_40x40);
             appendOverlay(bitmap, logoBitmap);
         }
         catch(EvercamException e)
@@ -94,7 +95,8 @@ public class HomeShortcut
         return bitmap;
     }
 
-    private static Bitmap getThumbnailFor(Context context, EvercamCamera evercamCamera) throws EvercamException
+    private static Bitmap getThumbnailFor(Context context, EvercamCamera evercamCamera) throws
+            EvercamException
     {
         if(evercamCamera.camera != null)
         {
@@ -111,12 +113,13 @@ public class HomeShortcut
 
     /**
      * Add border to existing bitmap
-     **/
+     */
     private static Bitmap addBorder(Bitmap bmp, int topBorderSize, int bottomBorderSize,
                                     int leftBorderSize, int rightBorderSize, int color)
     {
-        Bitmap bmpWithBorder = Bitmap.createBitmap(bmp.getWidth() + leftBorderSize + rightBorderSize,
-                bmp.getHeight() + topBorderSize + bottomBorderSize, bmp.getConfig());
+        Bitmap bmpWithBorder = Bitmap.createBitmap(bmp.getWidth() + leftBorderSize +
+                rightBorderSize, bmp.getHeight() + topBorderSize + bottomBorderSize,
+                bmp.getConfig());
         Canvas canvas = new Canvas(bmpWithBorder);
         canvas.drawColor(color);
         canvas.drawBitmap(bmp, leftBorderSize, topBorderSize, null);
@@ -128,8 +131,8 @@ public class HomeShortcut
      */
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap)
     {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(),
+                Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
         final int color = 0xff424242;

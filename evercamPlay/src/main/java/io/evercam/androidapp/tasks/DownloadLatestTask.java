@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 
-import io.evercam.Camera;
 import io.evercam.EvercamException;
 import io.evercam.Snapshot;
 import io.evercam.androidapp.custom.CameraLayout;

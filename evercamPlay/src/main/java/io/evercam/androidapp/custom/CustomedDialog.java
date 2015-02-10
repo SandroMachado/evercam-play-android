@@ -296,14 +296,14 @@ public class CustomedDialog
         snapshotDialogBuilder.setPositiveButton(activity.getString(R.string.save), listener);
         snapshotDialogBuilder.setNegativeButton(activity.getString(R.string.cancel),
                 new DialogInterface.OnClickListener()
-        {
+                {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                dialog.dismiss();
-            }
-        });
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.dismiss();
+                    }
+                });
         AlertDialog snapshotDialog = snapshotDialogBuilder.create();
         snapshotDialog.setCanceledOnTouchOutside(false);
 

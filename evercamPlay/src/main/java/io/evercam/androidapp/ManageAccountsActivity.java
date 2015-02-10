@@ -165,13 +165,20 @@ public class ManageAccountsActivity extends ParentActivity
                                         public void onClick(DialogInterface warningDialog,
                                                             int which)
                                         {
-                                            new EvercamAccount(ManageAccountsActivity.this).remove(user.getEmail(), new AccountManagerCallback<Boolean>() {
+                                            new EvercamAccount(ManageAccountsActivity.this)
+                                                    .remove(user.getEmail(),
+                                                            new AccountManagerCallback<Boolean>()
+                                            {
                                                 @Override
-                                                public void run(AccountManagerFuture<Boolean> future) {
-                                                    // This is the line that actually starts the call to remove the account.
+                                                public void run(AccountManagerFuture<Boolean>
+                                                                        future)
+                                                {
+                                                    // This is the line that actually starts the
+                                                    // call to remove the account.
                                                     try
                                                     {
-                                                        boolean isAccountDeleted = future.getResult();
+                                                        boolean isAccountDeleted = future
+                                                                .getResult();
                                                         if(isAccountDeleted)
                                                         {
                                                             showAllAccounts();
@@ -343,34 +350,34 @@ public class ManageAccountsActivity extends ParentActivity
     /**
      * Update shared preference that stores default user's Email
      *
-     * @param closeActivity after updating, close the account manage activity or not
+     * @param closeActivity   after updating, close the account manage activity or not
      * @param dialogToDismiss the account manage dialog that is showing
      */
     public void updateDefaultUser(final String userEmail, final Boolean closeActivity,
-                               final AlertDialog dialogToDismiss)
+                                  final AlertDialog dialogToDismiss)
     {
-            PrefsManager.saveUserEmail(PreferenceManager.getDefaultSharedPreferences
-                    (ManageAccountsActivity.this), userEmail);
+        PrefsManager.saveUserEmail(PreferenceManager.getDefaultSharedPreferences
+                (ManageAccountsActivity.this), userEmail);
 
-            AppData.appUsers = new EvercamAccount(this).retrieveUserList();
+        AppData.appUsers = new EvercamAccount(this).retrieveUserList();
 
-            if(closeActivity)
+        if(closeActivity)
+        {
+            if(!AppData.defaultUser.getUsername().equals(oldDefaultUser))
             {
-                if(!AppData.defaultUser.getUsername().equals(oldDefaultUser))
-                {
-                    setResult(Constants.RESULT_ACCOUNT_CHANGED);
-                }
-                ManageAccountsActivity.this.finish();
+                setResult(Constants.RESULT_ACCOUNT_CHANGED);
             }
-            else
-            {
-                showAllAccounts();
-            }
+            ManageAccountsActivity.this.finish();
+        }
+        else
+        {
+            showAllAccounts();
+        }
 
-            if(dialogToDismiss != null && dialogToDismiss.isShowing())
-            {
-                dialogToDismiss.dismiss();
-            }
+        if(dialogToDismiss != null && dialogToDismiss.isShowing())
+        {
+            dialogToDismiss.dismiss();
+        }
     }
 
     private void showAllAccounts()
@@ -378,9 +385,8 @@ public class ManageAccountsActivity extends ParentActivity
         AppData.appUsers = new EvercamAccount(this).retrieveUserList();
 
         ListAdapter listAdapter = new CustomAdapter(ManageAccountsActivity.this,
-                R.layout.manage_account_list_item,
-                R.layout.manage_account_list_item_new_user, R.id.account_item_email,
-                AppData.appUsers);
+                R.layout.manage_account_list_item, R.layout.manage_account_list_item_new_user,
+                R.id.account_item_email, AppData.appUsers);
         ListView listview = (ListView) findViewById(R.id.email_list);
         listview.setAdapter(null);
         listview.setAdapter(listAdapter);
@@ -408,8 +414,7 @@ public class ManageAccountsActivity extends ParentActivity
         {
             try
             {
-                ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(username,
-                        password);
+                ApiKeyPair userKeyPair = API.requestUserKeyPairFromEvercam(username, password);
                 String userApiKey = userKeyPair.getApiKey();
                 String userApiId = userKeyPair.getApiId();
                 API.setUserKeyPair(userApiKey, userApiId);
@@ -429,8 +434,8 @@ public class ManageAccountsActivity extends ParentActivity
             }
             catch(EvercamException e)
             {
-                if(e.getMessage().contains(getString(R.string.prefix_invalid)) || e
-                        .getMessage().contains(getString(R.string.prefix_no_user)))
+                if(e.getMessage().contains(getString(R.string.prefix_invalid)) || e.getMessage()
+                        .contains(getString(R.string.prefix_no_user)))
                 {
                     errorMessage = e.getMessage();
                 }
