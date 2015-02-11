@@ -2,7 +2,6 @@ package io.evercam.androidapp;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -55,7 +54,6 @@ public class CamerasActivity extends ParentActivity
     private static final String TAG = "evercam-CamerasActivity";
 
     private int totalCamerasInGrid = 0;
-    private int slideoutMenuAnimationTime = 255;
     private static int camerasPerRow = 2;
     public boolean reloadCameraList = false;
 
@@ -65,8 +63,6 @@ public class CamerasActivity extends ParentActivity
     {
         START, RESTART
     }
-
-    ;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -513,11 +509,8 @@ public class CamerasActivity extends ParentActivity
     protected void onDestroy()
     {
         super.onDestroy();
-        stopGcmRegisterActions();
         removeAllCameraViews();
     }
-
-    boolean mHandleMessageReceiverRegistered = false;
 
     /**
      * If screen get scrolled, for the moment of scroll stopping, load camera
@@ -592,28 +585,6 @@ public class CamerasActivity extends ParentActivity
             }
         });
     }
-
-    private final void stopGcmRegisterActions()
-    {
-
-        if(mHandleMessageReceiverRegistered) // unregister only if registered
-            // otherwise
-            // illegalArgumentException
-            unregisterReceiver(mHandleMessageReceiver);
-
-    }
-
-    private final BroadcastReceiver mHandleMessageReceiver = new BroadcastReceiver()
-    {
-        @Override
-        public void onReceive(Context context, Intent intent)
-        {
-
-            String AlertMessage = intent.getStringExtra("AlertMessage");
-
-            String ApiCamera = intent.getStringExtra("ApiCamera");
-        }
-    };
 
     @Override
     public void onConfigurationChanged(Configuration newConfig)

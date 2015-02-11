@@ -86,7 +86,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 {
     public static EvercamCamera evercamCamera;
 
-    private final static String TAG = "evercamplay-VideoActivity";
+    private final static String TAG = "evercam-VideoActivity";
 
     private static List<MediaURL> mediaUrls = null;
     private static int mrlIndex = -1;
@@ -322,7 +322,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             if(optionsActivityStarted)
             {
                 mrlPlaying = null;
-                setCameraForPlaying(this, evercamCamera);
+                setCameraForPlaying(evercamCamera);
 
                 createPlayer(getCurrentMRL());
             }
@@ -617,7 +617,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         return false;
     }
 
-    private void setCameraForPlaying(Context context, EvercamCamera evercamCamera)
+    private void setCameraForPlaying(EvercamCamera evercamCamera)
     {
         try
         {
@@ -672,7 +672,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
             mrlPlaying = evercamCamera.getExternalRtspUrl();
 
-            mediaUrls = new ArrayList<MediaURL>();
+            mediaUrls = new ArrayList<>();
             mrlIndex = -1;
 
             if(mrlPlaying != null)
@@ -779,7 +779,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             mediaPlayerView.clearAnimation();
         }
 
-        fadeInAnimation = AnimationUtils.loadAnimation(VideoActivity.this, R.layout.fadein);
+        fadeInAnimation = AnimationUtils.loadAnimation(VideoActivity.this, R.anim.fadein);
 
         fadeInAnimation.setAnimationListener(new Animation.AnimationListener()
         {
@@ -1208,7 +1208,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                     hideProgressView();
                 }
             }).show();
-            return;
         }
     }
 
@@ -1578,7 +1577,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
         public MyHandler(VideoActivity owner)
         {
-            videoActivity = new WeakReference<VideoActivity>(owner);
+            videoActivity = new WeakReference<>(owner);
         }
 
         @Override
@@ -1702,7 +1701,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                             SharedPreferences.Editor editor = sharedPrefs.edit();
                             editor.putString("pref_mrlplaying" + evercamCamera.getCameraId(),
                                     player.mrlPlaying);
-                            editor.commit();
+                            editor.apply();
                         }
 
                         break;
@@ -1777,7 +1776,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         @Override
         protected Drawable doInBackground(String... urls)
         {
-            ArrayList<Cookie> cookies = new ArrayList<Cookie>();
+            ArrayList<Cookie> cookies = new ArrayList<>();
             if(!showImagesVideo)
             {
                 return null;
@@ -1841,11 +1840,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                         {
                             successiveFailureCount = 0;
                         }
-                    }
-                    catch(EvercamException e)
-                    {
-                        Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
-                        successiveFailureCount++;
                     }
                     catch(Exception e)
                     {
@@ -2000,7 +1994,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private String[] getCameraNameArray()
     {
-        ArrayList<String> cameraNames = new ArrayList<String>();
+        ArrayList<String> cameraNames = new ArrayList<>();
 
         for(int count = 0; count < AppData.evercamCameraList.size(); count++)
         {
@@ -2060,7 +2054,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 else
                 {
                     offlineTextView.setVisibility(View.GONE);
-                    setCameraForPlaying(VideoActivity.this, AppData.evercamCameraList.get
+                    setCameraForPlaying(AppData.evercamCameraList.get
                             (itemPosition));
                     createPlayer(getCurrentMRL());
                 }
