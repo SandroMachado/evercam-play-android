@@ -155,6 +155,7 @@
             android:name=".recordings.RecordingWebActivity"
             android:icon="@drawable/icon_50x50"
             android:label="@string/title_activity_recording_web"
+            android:configChanges="keyboard|keyboardHidden|screenSize|orientation"
             android:parentActivityName=".video.VideoActivity">
         </activity>
     </application>

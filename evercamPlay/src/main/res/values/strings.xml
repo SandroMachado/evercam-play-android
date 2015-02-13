@@ -72,8 +72,8 @@
     <string name="menu_edit_camera">Edit Camera</string>
     <string name="menu_local_storage">Local Storage</string>
     <string name="menu_view_camera">View Details</string>
-    <string name="menu_view_snapshot">View Snapshots</string>
-    <string name="menu_create_shortcut">Add to homescreen</string>
+    <string name="menu_view_snapshot">Saved Images</string>
+    <string name="menu_create_shortcut">Add to Desktop</string>
     <string name="menu_view_recordings">View Recordings</string>
 
     <!-- Feedback -->
