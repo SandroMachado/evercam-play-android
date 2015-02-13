@@ -74,6 +74,7 @@
     <string name="menu_view_camera">View Details</string>
     <string name="menu_view_snapshot">View Snapshots</string>
     <string name="menu_create_shortcut">Add to homescreen</string>
+    <string name="menu_view_recordings">View Recordings</string>
 
     <!-- Feedback -->
     <string name="feedback_title">E-Play Feedback</string>
@@ -86,6 +87,7 @@
     <string name="data_scheme">evercam</string>
     <string name="data_host">cameras</string>
     <string name="data_path">/streams</string>
+    <string name="title_activity_recording_web">Recordings</string>
 
 </resources>
 

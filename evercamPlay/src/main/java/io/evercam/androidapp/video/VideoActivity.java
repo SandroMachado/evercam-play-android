@@ -3,7 +3,6 @@ package io.evercam.androidapp.video;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -59,12 +58,13 @@ import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
 import io.evercam.Camera;
-import io.evercam.EvercamException;
 import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.FeedbackActivity;
 import io.evercam.androidapp.LocalStorageActivity;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.R;
+import io.evercam.androidapp.recordings.RecordingWebActivity;
+
 import io.evercam.androidapp.ViewCameraActivity;
 import io.evercam.androidapp.custom.CameraListAdapter;
 import io.evercam.androidapp.custom.CustomToast;
@@ -575,6 +575,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             {
                 HomeShortcut.create(getApplicationContext(), evercamCamera);
                 CustomToast.showSuperToastShort(this, R.string.msg_shortcut_created);
+            }
+            else if(itemId == R.id.video_menu_view_recordings)
+            {
+                Intent recordingIntent = new Intent(this, RecordingWebActivity.class);
+                recordingIntent.putExtra(Constants.BUNDLE_KEY_CAMERA_ID, evercamCamera.getCameraId());
+                startActivity(recordingIntent);
             }
         }
         catch(OutOfMemoryError e)
