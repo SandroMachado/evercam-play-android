@@ -24,6 +24,7 @@ public class RecordingWebActivity extends Activity
         String cameraId = bundle.getString(Constants.BUNDLE_KEY_CAMERA_ID);
 
         RecordingWebView webView = (RecordingWebView) findViewById(R.id.recordings_webview);
+        //TODO: Show progress when page is loading
      //   ProgressBar progressBar = (ProgressBar) findViewById(R.id.recordings_progress);
         webView.loadRecordingWidget(cameraId);
     }
