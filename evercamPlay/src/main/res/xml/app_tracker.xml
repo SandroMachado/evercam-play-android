@@ -60,6 +60,9 @@
     <screenName name="io.evercam.androidapp.AddEditCameraActivity">
         Add/Edit Camera
     </screenName>
+    <screenName name="io.evercam.androidapp.recordings.RecordingWebView">
+        Recordings
+    </screenName>
 
 
 </resources>
