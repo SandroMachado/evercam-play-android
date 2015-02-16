@@ -10,11 +10,13 @@ import android.widget.ProgressBar;
 import com.bugsense.trace.BugSenseHandler;
 
 import io.evercam.androidapp.R;
+import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.utils.Constants;
 
 
 public class RecordingWebActivity extends Activity
 {
+    public static CustomProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -31,9 +33,9 @@ public class RecordingWebActivity extends Activity
         Bundle bundle = getIntent().getExtras();
         String cameraId = bundle.getString(Constants.BUNDLE_KEY_CAMERA_ID);
 
+        progressDialog = new CustomProgressDialog(this);
+
         RecordingWebView webView = (RecordingWebView) findViewById(R.id.recordings_webview);
-        //TODO: Show progress when page is loading
-     //   ProgressBar progressBar = (ProgressBar) findViewById(R.id.recordings_progress);
         webView.loadRecordingWidget(cameraId);
     }
 

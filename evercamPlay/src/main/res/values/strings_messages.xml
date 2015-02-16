@@ -32,5 +32,6 @@
     <string name="msg_confirm_cancel_add_camera">You\'ll lose everything you typed in. Are you sure you want to quit?</string>
     <string name="msg_shortcut_created">Shortcut created on home screen</string>
     <string name="msg_can_not_access_camera">This camera is not accessible from your account</string>
+    <string name="msg_loading">Loading&#8230;</string>
 
 </resources>
