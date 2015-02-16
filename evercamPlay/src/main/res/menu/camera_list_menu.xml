@@ -22,14 +22,6 @@
         android:orderInCategory="4"
         android:title="@string/menu_settings"/>
     <item
-        android:id="@+id/menu_main_view_snapshots"
-        android:orderInCategory="5"
-        android:title="@string/menu_view_snapshot"/>
-    <item
-        android:id="@+id/menu_about"
-        android:orderInCategory="6"
-        android:title="@string/menu_about"/>
-    <item
         android:id="@+id/menu_feedback"
         android:orderInCategory="7"
         android:title="@string/menu_feedback"/>

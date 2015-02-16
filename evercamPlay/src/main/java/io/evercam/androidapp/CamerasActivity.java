@@ -28,7 +28,6 @@ import com.bugsense.trace.BugSenseHandler;
 import java.util.concurrent.RejectedExecutionException;
 
 import io.evercam.androidapp.authentication.EvercamAccount;
-import io.evercam.androidapp.custom.AboutDialog;
 import io.evercam.androidapp.custom.CameraLayout;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomScrollView;
@@ -178,14 +177,6 @@ public class CamerasActivity extends ParentActivity
             startActivityForResult(new Intent(CamerasActivity.this, ManageAccountsActivity.class)
                     , Constants.REQUEST_CODE_MANAGE_ACCOUNT);
         }
-        else if(itemId == R.id.menu_about)
-        {
-            EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
-                    R.string.action_about, R.string.label_about);
-
-            startActivity(new Intent(CamerasActivity.this, AboutDialog.class));
-
-        }
         else if(itemId == R.id.menu_logout)
         {
             showSignOutDialog();
@@ -193,10 +184,6 @@ public class CamerasActivity extends ParentActivity
         else if(itemId == R.id.menu_feedback)
         {
             startActivity(new Intent(CamerasActivity.this, FeedbackActivity.class));
-        }
-        else if(itemId == R.id.menu_main_view_snapshots)
-        {
-            SnapshotManager.showAnySnapshotInGallery(this);
         }
         else
         {

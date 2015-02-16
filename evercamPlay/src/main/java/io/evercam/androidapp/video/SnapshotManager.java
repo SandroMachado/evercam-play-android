@@ -18,7 +18,7 @@ import io.evercam.androidapp.custom.CustomToast;
 
 public class SnapshotManager
 {
-    private final static String TAG = "evercamplay-SnapshotManager";
+    private final static String TAG = "evercam-SnapshotManager";
     public static final String SNAPSHOT_FOLDER_NAME_EVERCAM = "Evercam";
     public static final String SNAPSHOT_FOLDER_NAME_PLAY = "Evercam Play";
 
@@ -70,7 +70,7 @@ public class SnapshotManager
      * Notify Gallery about the snapshot that got saved, otherwise the image
      * won't show in Gallery
      *
-     * @param full snapshot path
+     * @param path full snapshot path
      */
     public static void updateGallery(String path, Activity activity)
     {
