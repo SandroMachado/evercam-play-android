@@ -52,6 +52,11 @@
     <string name="summary_awake_time_prefix">After</string>
     <string name="summary_awake_time_suffix">of inactivity</string>
     <string name="title_force_landscape">Force landscape for live view</string>
+    <string name="category_general">General</string>
+    <string name="category_about">About</string>
+    <string name="prefs_title_version">Version</string>
+    <string name="prefs_title_about">About Evercam</string>
+    <string name="evercam_url">http://www.evercam.io</string>
 
     <!-- Menu -->
     <string name="menu_settings">Settings</string>

@@ -13,6 +13,8 @@ public class PrefsManager
     public final static String KEY_RELEASE_NOTES_SHOWN = "isReleaseNotesShown";
     public static final String KEY_AWAKE_TIME = "prefsAwakeTime";
     public static final String KEY_FORCE_LANDSCAPE = "prefsForceLandscape";
+    public static final String KEY_VERSION = "version_preference";
+    public static final String KEY_ABOUT = "about_preference";
 
     public static void saveEvercamUserKeyPair(SharedPreferences sharedPrefs, String apiKey,
                                               String apiId)
@@ -21,16 +23,6 @@ public class PrefsManager
         editor.putString(KEY_USER_API_KEY, apiKey);
         editor.putString(KEY_USER_API_ID, apiId);
         editor.commit();
-    }
-
-    public static String getUserApiKey(SharedPreferences sharedPrefs)
-    {
-        return sharedPrefs.getString(KEY_USER_API_KEY, null);
-    }
-
-    public static String getUserApiId(SharedPreferences sharedPrefs)
-    {
-        return sharedPrefs.getString(KEY_USER_API_ID, null);
     }
 
     public static void saveUserEmail(SharedPreferences sharedPrefs, String email)

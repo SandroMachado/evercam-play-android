@@ -1,5 +1,7 @@
 package io.evercam.androidapp;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 
 import io.evercam.androidapp.custom.ThemedListPreference;
 import io.evercam.androidapp.utils.Constants;
+import io.evercam.androidapp.utils.DataCollector;
 import io.evercam.androidapp.utils.PrefsManager;
 
 public class CameraPrefsActivity extends PreferenceActivity
@@ -93,6 +96,7 @@ public class CameraPrefsActivity extends PreferenceActivity
             addPreferencesFromResource(R.xml.main_preference);
             setCameraNumbersForScreen(screenWidth);
             setUpSleepTime();
+            fillAbout();
         }
 
         private void setCameraNumbersForScreen(int screenWidth)
@@ -143,6 +147,24 @@ public class CameraPrefsActivity extends PreferenceActivity
                     String entry = sleepListPrefs.getEntries()[index].toString();
                     sleepListPrefs.setSummary(getSummary(entry));
                     return true;
+                }
+            });
+        }
+
+        private void fillAbout()
+        {
+            final Preference versionPrefs = getPreferenceManager()
+                    .findPreference(PrefsManager.KEY_VERSION);
+            final Preference aboutPrefs = getPreferenceManager()
+                    .findPreference(PrefsManager.KEY_ABOUT);
+            versionPrefs.setSummary(new DataCollector(this.getActivity()).getAppVersion());
+            aboutPrefs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference)
+                {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.evercam_url)));
+                    startActivity(intent);
+                    return false;
                 }
             });
         }
