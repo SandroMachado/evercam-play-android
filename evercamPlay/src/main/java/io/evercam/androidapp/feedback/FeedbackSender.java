@@ -15,7 +15,7 @@ import io.evercam.androidapp.utils.PropertyReader;
 
 public class FeedbackSender
 {
-    private final String TAG = "evercamplay-FeedbackSender";
+    private final String TAG = "evercam-FeedbackSender";
     private final String TO_EMAIL = "play@evercam.io";
     private final String TITLE_FEEDBACK = "Evercam Play Feedback";
     private Context context;

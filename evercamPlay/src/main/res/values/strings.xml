@@ -87,6 +87,8 @@
     <string name="wifi">WiFi</string>
     <string name="three_g">3G</string>
     <string name="unknown">Unknown</string>
+    <string name="feedback_from">From:</string>
+    <string name="hint_full_name">Name</string>
 
     <!-- Intent action data-->
     <string name="data_scheme">evercam</string>
