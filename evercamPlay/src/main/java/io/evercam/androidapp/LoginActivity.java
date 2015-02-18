@@ -208,7 +208,10 @@ public class LoginActivity extends ParentActivity
             //Hide soft keyboard
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context
                     .INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            if(getCurrentFocus() != null)
+            {
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
 
             loginTask = new LoginTask();
             loginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

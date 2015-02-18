@@ -4,7 +4,7 @@ public class AppUser
 {
     private int id;
     private String email;
-    private String username;
+    private String username = "";
     private String password;
     private String country;
     private boolean isDefault = false;
