@@ -85,23 +85,23 @@
                     android:textSize="17sp"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
 
-                <TextView
-                    android:id="@+id/country_txt"
-                    android:layout_width="90sp"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
-                    android:text="@string/country:"
-                    android:textSize="17sp"/>
+                <!--<TextView-->
+                    <!--android:id="@+id/country_txt"-->
+                    <!--android:layout_width="90sp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:fontFamily="sans-serif-light"-->
+                    <!--android:text="@string/country:"-->
+                    <!--android:textSize="17sp"/>-->
 
-                <Spinner
-                    android:id="@+id/country_spinner"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
+                <!--<Spinner-->
+                    <!--android:id="@+id/country_spinner"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"/>-->
+            <!--</LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="match_parent"

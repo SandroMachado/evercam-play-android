@@ -37,11 +37,9 @@
     <string name="password:">Password:</string>
     <string name="password">Password</string>
     <string name="re_password">Confirm Password</string>
-    <string name="country:">Country:</string>
     <string name="spinnerFistItem">Please select</string>
 
     <!-- Sign Up Message -->
-    <string name="countryNotSelected">Please select a country</string>
     <string name="invalidEmail">Invalid Email address</string>
     <string name="passwordNotMatch">Please re-enter the same password again</string>
     <string name="confirmSignUp">Congratulations, you\'re now logged in with your Evercam account. \n\nWe\'ve added a demo camera for you - add your own from the menu</string>

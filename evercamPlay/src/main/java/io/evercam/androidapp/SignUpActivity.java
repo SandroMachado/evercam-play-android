@@ -54,8 +54,6 @@ public class SignUpActivity extends Activity
     private EditText passwordEdit;
     private EditText repasswordEdit;
     private Button signupBtn;
-    private Spinner countrySpinner;
-    private TreeMap<String, String> countryMap;
     private View signUpFormView;
     private View signUpStatusView;
     private CreateUserTask createUserTask;
@@ -112,11 +110,9 @@ public class SignUpActivity extends Activity
         passwordEdit = (EditText) findViewById(R.id.password_edit);
         repasswordEdit = (EditText) findViewById(R.id.repassword_edit);
         signupBtn = (Button) findViewById(R.id.sign_up_button);
-        countrySpinner = (Spinner) findViewById(R.id.country_spinner);
 
         fillDefaultProfile();
 
-        setSpinnerAdapter();
         signupBtn.setOnClickListener(new OnClickListener()
         {
             @Override
@@ -135,7 +131,6 @@ public class SignUpActivity extends Activity
         String lastname = lastnameEdit.getText().toString();
         String username = usernameEdit.getText().toString();
         String email = emailEdit.getText().toString();
-        String countryname = countrySpinner.getSelectedItem().toString();
         String password = passwordEdit.getText().toString();
         String repassword = repasswordEdit.getText().toString();
 
@@ -159,17 +154,6 @@ public class SignUpActivity extends Activity
         else
         {
             user.setLastname(lastname);
-        }
-
-        if(countryname.equals(getResources().getString(R.string.spinnerFistItem)))
-        {
-            CustomToast.showInCenter(this, R.string.countryNotSelected);
-            return null;
-        }
-        else
-        {
-            String countrycode = countryMap.get(countryname).toLowerCase(Locale.UK);
-            user.setCountrycode(countrycode);
         }
 
         if(TextUtils.isEmpty(username))
@@ -235,29 +219,6 @@ public class SignUpActivity extends Activity
             user.setPassword(password);
         }
         return user;
-    }
-
-    private void initCountryMap()
-    {
-        countryMap = new TreeMap<>();
-
-        for(String countryCode : Locale.getISOCountries())
-        {
-            Locale locale = new Locale("", countryCode);
-            countryMap.put(locale.getDisplayName(), countryCode);
-        }
-    }
-
-    private void setSpinnerAdapter()
-    {
-        initCountryMap();
-        Set<String> set = countryMap.keySet();
-        String[] countryArray = Commons.joinStringArray(new String[]{getResources().getString(R
-                .string.spinnerFistItem)}, set.toArray(new String[0]));
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(SignUpActivity.this,
-                android.R.layout.simple_spinner_item, countryArray);
-        spinnerArrayAdapter.setDropDownViewResource(R.layout.country_spinner);
-        countrySpinner.setAdapter(spinnerArrayAdapter);
     }
 
     private void readFromAccount()
@@ -368,9 +329,10 @@ public class SignUpActivity extends Activity
             //Hide soft keyboard
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context
                     .INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(SignUpActivity.this.getCurrentFocus()
-                    .getWindowToken(), 0);
-
+            if(SignUpActivity.this.getCurrentFocus() != null)
+            {
+                inputMethodManager.hideSoftInputFromWindow(SignUpActivity.this.getCurrentFocus().getWindowToken(), 0);
+            }
             showProgress(true);
         }
 
@@ -393,7 +355,6 @@ public class SignUpActivity extends Activity
                 newUser.setUsername(userDetail.getUsername());
                 newUser.setPassword(userDetail.getPassword());
                 newUser.setIsDefault(true);
-                newUser.setCountry(evercamUser.getCountry());
                 newUser.setEmail(evercamUser.getEmail());
                 newUser.setApiKey(userApiKey);
                 newUser.setApiId(userApiId);
