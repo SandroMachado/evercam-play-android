@@ -25,6 +25,7 @@ import android.widget.ProgressBar;
 import com.bugsense.trace.BugSenseHandler;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import io.evercam.API;
 import io.evercam.ApiKeyPair;
@@ -72,19 +73,9 @@ public class ManageAccountsActivity extends ParentActivity
 
         // create and start the task to show all user accounts
         ListView listview = (ListView) findViewById(R.id.email_list);
-        if(AppData.appUsers != null && AppData.appUsers.size() != 0)
-        {
-            oldDefaultUser = AppData.defaultUser.getUsername();
-            ListAdapter listAdapter = new CustomAdapter(ManageAccountsActivity.this,
-                    R.layout.manage_account_list_item,
-                    R.layout.manage_account_list_item_new_user, R.id.account_item_email,
-                    AppData.appUsers);
-            listview.setAdapter(listAdapter);
-        }
-        else
-        {
-            showAllAccounts();
-        }
+
+        oldDefaultUser = AppData.defaultUser.getUsername();
+        showAllAccounts();
 
         listview.setOnItemClickListener(new OnItemClickListener()
         {
@@ -356,10 +347,9 @@ public class ManageAccountsActivity extends ParentActivity
     public void updateDefaultUser(final String userEmail, final Boolean closeActivity,
                                   final AlertDialog dialogToDismiss)
     {
-        PrefsManager.saveUserEmail(PreferenceManager.getDefaultSharedPreferences
-                (ManageAccountsActivity.this), userEmail);
-
-        AppData.appUsers = new EvercamAccount(this).retrieveUserList();
+        EvercamAccount evercamAccount = new EvercamAccount(this);
+        evercamAccount.updateDefaultUser(userEmail);
+        AppData.appUsers = evercamAccount.retrieveUserList();
 
         if(closeActivity)
         {
@@ -382,11 +372,11 @@ public class ManageAccountsActivity extends ParentActivity
 
     private void showAllAccounts()
     {
-        AppData.appUsers = new EvercamAccount(this).retrieveUserList();
+        ArrayList<AppUser> appUsers= new EvercamAccount(this).retrieveUserList();
 
         ListAdapter listAdapter = new CustomAdapter(ManageAccountsActivity.this,
                 R.layout.manage_account_list_item, R.layout.manage_account_list_item_new_user,
-                R.id.account_item_email, AppData.appUsers);
+                R.id.account_item_email, appUsers);
         ListView listview = (ListView) findViewById(R.id.email_list);
         listview.setAdapter(null);
         listview.setAdapter(listAdapter);

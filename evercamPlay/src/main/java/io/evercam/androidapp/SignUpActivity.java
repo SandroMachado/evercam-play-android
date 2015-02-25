@@ -347,7 +347,6 @@ public class SignUpActivity extends Activity
                         R.string.label_signup_successful);
 
                 new EvercamAccount(SignUpActivity.this).add(newUser);
-                PrefsManager.saveUserEmail(SignUpActivity.this, newUser.getEmail());
                 AppData.defaultUser = newUser;
 
                 CustomToast.showInCenterExtraLong(SignUpActivity.this, R.string.confirmSignUp);

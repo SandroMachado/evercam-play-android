@@ -22,40 +22,7 @@ public class PrefsManager
         SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putString(KEY_USER_API_KEY, apiKey);
         editor.putString(KEY_USER_API_ID, apiId);
-        editor.commit();
-    }
-
-    public static void saveUserEmail(SharedPreferences sharedPrefs, String email)
-    {
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putString(KEY_USER_EMAIL, email);
-        editor.commit();
-    }
-
-    public static void saveUserEmail(Context context, String email)
-    {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putString(KEY_USER_EMAIL, email);
-        editor.commit();
-    }
-
-    public static String getUserEmail(Context context)
-    {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPrefs.getString(KEY_USER_EMAIL, null);
-    }
-
-    public static String getUserEmail(SharedPreferences sharedPrefs)
-    {
-        return sharedPrefs.getString(KEY_USER_EMAIL, null);
-    }
-
-    public static void removeUserEmail(SharedPreferences sharedPrefs)
-    {
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putString(KEY_USER_EMAIL, null);
-        editor.commit();
+        editor.apply();
     }
 
     public static int getCameraPerRow(Context context, int oldNumber)
@@ -68,8 +35,8 @@ public class PrefsManager
     {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putString(KEY_CAMERA_PER_ROW, "" + 2);
-        editor.commit();
+        editor.putString(KEY_CAMERA_PER_ROW, "" + cameraPerRow);
+        editor.apply();
     }
 
     public static String getSleepTimeValue(Context context)
@@ -96,6 +63,6 @@ public class PrefsManager
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putBoolean(KEY_RELEASE_NOTES_SHOWN + versionCode, true);
-        editor.commit();
+        editor.apply();
     }
 }

@@ -35,7 +35,6 @@ import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.Constants;
-import io.evercam.androidapp.utils.PrefsManager;
 
 public class LoginActivity extends ParentActivity
 {
@@ -270,9 +269,6 @@ public class LoginActivity extends ParentActivity
             {
                 AppData.defaultUser = newUser;
                 new EvercamAccount(LoginActivity.this).add(newUser);
-
-                //Save the user Email as default user in shared preference
-                PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
 
                 setResult(Constants.RESULT_TRUE);
                 startCamerasActivity();

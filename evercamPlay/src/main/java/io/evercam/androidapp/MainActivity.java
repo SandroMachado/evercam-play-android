@@ -131,21 +131,14 @@ public class MainActivity extends Activity
 
     private boolean isUserLogged()
     {
-        String defaultEmail = PrefsManager.getUserEmail(this);
-
-        if(defaultEmail != null)
+        AppData.defaultUser = new EvercamAccount(this).getDefaultUser();
+        if(AppData.defaultUser != null)
         {
-            Log.d(TAG, defaultEmail);
-            AppUser defaultUser = new EvercamAccount(this).retrieveUserByEmail(defaultEmail);
-            AppData.defaultUser = defaultUser;
-            AppData.evercamCameraList = new DbCamera(this).getCamerasByOwner(defaultUser
+            AppData.evercamCameraList = new DbCamera(this).getCamerasByOwner(AppData.defaultUser
                     .getUsername(), 500);
+            return true;
         }
-        else
-        {
-            Log.d(TAG, "Null default user");
-        }
-        return (AppData.defaultUser != null);
+        return false;
     }
 
     private void readShortcutCameraId()

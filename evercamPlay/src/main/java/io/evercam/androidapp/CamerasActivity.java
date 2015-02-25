@@ -248,17 +248,7 @@ public class CamerasActivity extends ParentActivity
     {
         if(AppData.defaultUser == null)
         {
-            String defaultEmail = PrefsManager.getUserEmail(this);
-            if(defaultEmail != null)
-            {
-                AppData.defaultUser = new EvercamAccount(this).retrieveUserByEmail(defaultEmail);
-            }
-            else
-            // User is not saved locally, send as a bug.
-            {
-                EvercamPlayApplication.sendCaughtException(this, TAG + ":" + getString(R.string
-                        .exception_user_not_saved));
-            }
+            AppData.defaultUser = new EvercamAccount(this).getDefaultUser();
         }
     }
 
