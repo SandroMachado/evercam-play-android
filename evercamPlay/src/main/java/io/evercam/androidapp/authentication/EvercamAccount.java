@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.content.Context;
+
 import java.util.ArrayList;
 
 import io.evercam.androidapp.R;

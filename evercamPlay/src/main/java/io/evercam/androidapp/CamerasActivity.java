@@ -42,7 +42,6 @@ import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.androidapp.video.HomeShortcut;
-import io.evercam.androidapp.video.SnapshotManager;
 
 public class CamerasActivity extends ParentActivity
 {

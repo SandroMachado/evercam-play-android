@@ -1,18 +1,13 @@
 package io.evercam.androidapp.recordings;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
 
 import io.evercam.API;
 import io.evercam.androidapp.R;
-import io.evercam.androidapp.custom.CustomProgressDialog;
 
 public class RecordingWebView extends WebView
 {

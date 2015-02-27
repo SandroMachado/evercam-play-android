@@ -63,8 +63,6 @@ import io.evercam.androidapp.FeedbackActivity;
 import io.evercam.androidapp.LocalStorageActivity;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.R;
-import io.evercam.androidapp.recordings.RecordingWebActivity;
-
 import io.evercam.androidapp.ViewCameraActivity;
 import io.evercam.androidapp.custom.CameraListAdapter;
 import io.evercam.androidapp.custom.CustomToast;
@@ -73,6 +71,7 @@ import io.evercam.androidapp.custom.ProgressView;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.feedback.StreamFeedbackItem;
+import io.evercam.androidapp.recordings.RecordingWebActivity;
 import io.evercam.androidapp.tasks.CaptureSnapshotRunnable;
 import io.evercam.androidapp.tasks.DeleteCameraTask;
 import io.evercam.androidapp.utils.Commons;
