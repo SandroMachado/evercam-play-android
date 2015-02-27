@@ -232,14 +232,8 @@ public class LoginActivity extends ParentActivity
                 String userApiId = userKeyPair.getApiId();
                 API.setUserKeyPair(userApiKey, userApiId);
                 User evercamUser = new User(username);
-                newUser = new AppUser();
-                newUser.setUsername(evercamUser.getUsername());
-                newUser.setPassword(password);
-                newUser.setIsDefault(true);
-                newUser.setCountry(evercamUser.getCountry());
-                newUser.setEmail(evercamUser.getEmail());
-                newUser.setApiKey(userApiKey);
-                newUser.setApiId(userApiId);
+                newUser = new AppUser(evercamUser);
+                newUser.setApiKeyPair(userApiKey, userApiId);
                 return true;
             }
             catch(EvercamException e)

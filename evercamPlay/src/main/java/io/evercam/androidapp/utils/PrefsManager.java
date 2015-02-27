@@ -6,24 +6,12 @@ import android.preference.PreferenceManager;
 
 public class PrefsManager
 {
-    public final static String KEY_USER_API_KEY = "userApiKey";
-    public final static String KEY_USER_API_ID = "userApiId";
-    public final static String KEY_USER_EMAIL = "userEmail";
     public final static String KEY_CAMERA_PER_ROW = "lstgridcamerasperrow";
     public final static String KEY_RELEASE_NOTES_SHOWN = "isReleaseNotesShown";
     public static final String KEY_AWAKE_TIME = "prefsAwakeTime";
     public static final String KEY_FORCE_LANDSCAPE = "prefsForceLandscape";
     public static final String KEY_VERSION = "version_preference";
     public static final String KEY_ABOUT = "about_preference";
-
-    public static void saveEvercamUserKeyPair(SharedPreferences sharedPrefs, String apiKey,
-                                              String apiId)
-    {
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putString(KEY_USER_API_KEY, apiKey);
-        editor.putString(KEY_USER_API_ID, apiId);
-        editor.apply();
-    }
 
     public static int getCameraPerRow(Context context, int oldNumber)
     {

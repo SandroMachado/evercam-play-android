@@ -4,8 +4,6 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.content.Context;
-import android.util.Log;
-
 import java.util.ArrayList;
 
 import io.evercam.androidapp.R;
@@ -19,6 +17,8 @@ public class EvercamAccount
     public static final String KEY_API_KEY = "apiKey";
     public static final String KEY_API_ID = "apiId";
     public static final String KEY_IS_DEFAULT = "isDefault";
+    public static final String KEY_FIRSTNAME = "firstName";
+    public static final String KEY_LASTNAME = "lastName";
     private final String TAG = "EvercamAccount";
     private final String TRUE = "true";
     
@@ -40,6 +40,8 @@ public class EvercamAccount
         mAccountManager.setAuthToken(account, KEY_API_ID, newUser.getApiId());
         mAccountManager.setUserData(account, KEY_USERNAME, newUser.getUsername());
         mAccountManager.setUserData(account, KEY_COUNTRY, newUser.getCountry());
+        mAccountManager.setUserData(account, KEY_FIRSTNAME, newUser.getFirstName());
+        mAccountManager.setUserData(account, KEY_LASTNAME, newUser.getLastName());
         mAccountManager.setUserData(account, KEY_IS_DEFAULT, String.valueOf(newUser.getIsDefault()));
 
         //Always set the new user as default user
@@ -72,14 +74,18 @@ public class EvercamAccount
         String apiId = mAccountManager.peekAuthToken(account, KEY_API_ID);
         String username = mAccountManager.getUserData(account, KEY_USERNAME);
         String country = mAccountManager.getUserData(account, KEY_COUNTRY);
+        String firstName = mAccountManager.getUserData(account, KEY_FIRSTNAME);
+        String lastName = mAccountManager.getUserData(account, KEY_LASTNAME);
+
         String isDefaultString = mAccountManager.getUserData(account, KEY_IS_DEFAULT);
 
         AppUser appUser = new AppUser();
         appUser.setEmail(email);
-        appUser.setApiKey(apiKey);
-        appUser.setApiId(apiId);
+        appUser.setApiKeyPair(apiKey, apiId);
         appUser.setUsername(username);
         appUser.setCountry(country);
+        appUser.setFirstName(firstName);
+        appUser.setLastName(lastName);
 
         if(isDefaultString != null && isDefaultString.equals(TRUE))
         {
@@ -102,7 +108,6 @@ public class EvercamAccount
         {
             for(Account account : accounts)
             {
-                Log.d(TAG, "Account: " + account.name);
                 AppUser appUser = retrieveUserByEmail(account.name);
                 if(appUser.getIsDefault())
                 {

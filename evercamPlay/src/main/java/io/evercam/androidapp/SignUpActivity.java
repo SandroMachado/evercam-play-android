@@ -383,19 +383,10 @@ public class SignUpActivity extends Activity
                         (), userDetail.getPassword());
                 String userApiKey = userKeyPair.getApiKey();
                 String userApiId = userKeyPair.getApiId();
-                SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences
-                        (SignUpActivity.this);
-                PrefsManager.saveEvercamUserKeyPair(sharedPrefs, userApiKey, userApiId);
                 API.setUserKeyPair(userApiKey, userApiId);
                 User evercamUser = new User(userDetail.getUsername());
-                newUser = new AppUser();
-                newUser.setUsername(userDetail.getUsername());
-                newUser.setPassword(userDetail.getPassword());
-                newUser.setIsDefault(true);
-                newUser.setCountry(evercamUser.getCountry());
-                newUser.setEmail(evercamUser.getEmail());
-                newUser.setApiKey(userApiKey);
-                newUser.setApiId(userApiId);
+                newUser = new AppUser(evercamUser);
+                newUser.setApiKeyPair(userApiKey, userApiId);
                 return null;
             }
             catch(EvercamException e)

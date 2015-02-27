@@ -12,8 +12,9 @@ public class DatabaseMaster extends SQLiteOpenHelper
     // port.Remove camera id-user constraint
     // Version 6: Added fields camera owner and can edit.
     // Version 7: Add can delete
+    // Version 8: Removed database user table
     private static final String TAG = "evercamplay-DatabaseMaster";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
     private static final String DATABASE_NAME = "evercamdata";
     private Context context = null;
 
@@ -28,7 +29,6 @@ public class DatabaseMaster extends SQLiteOpenHelper
     {
         //		new DbNotifcation(this.context).onCreateCustom(db);
         new DbCamera(this.context).onCreateCustom(db);
-        new DbAppUser(this.context).onCreateCustom(db);
     }
 
     @Override
