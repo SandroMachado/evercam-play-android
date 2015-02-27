@@ -367,8 +367,11 @@ public class SignUpActivity extends Activity
             //Hide soft keyboard
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context
                     .INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(SignUpActivity.this.getCurrentFocus()
-                    .getWindowToken(), 0);
+
+            if(SignUpActivity.this.getCurrentFocus() != null)
+            {
+                inputMethodManager.hideSoftInputFromWindow(SignUpActivity.this.getCurrentFocus().getWindowToken(), 0);
+            }
 
             showProgress(true);
         }

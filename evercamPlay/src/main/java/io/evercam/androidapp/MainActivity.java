@@ -34,7 +34,6 @@ public class MainActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, "onCreate");
         if(Constants.isAppTrackingEnabled)
         {
             BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);

@@ -16,7 +16,7 @@ import io.evercam.androidapp.dto.ImageLoadingStatus;
 
 public class DownloadLatestTask extends AsyncTask<Void, Void, Bitmap>
 {
-    private final String TAG = "evercamplay-DownloadLatestTask";
+    private final String TAG = "DownloadLatestTask";
     String cameraId;
     Context context;
     CameraLayout cameraLayout;
@@ -33,12 +33,10 @@ public class DownloadLatestTask extends AsyncTask<Void, Void, Bitmap>
     {
         try
         {
-            Snapshot latestSnapshot = Snapshot.getLatestArchivedSnapshot(cameraId, true);
+            Snapshot latestSnapshot = Snapshot.getLatest(cameraId, true);
             byte[] snapshotByte = latestSnapshot.getData();
 
-            Bitmap bitmap = BitmapFactory.decodeByteArray(snapshotByte, 0, snapshotByte.length);
-
-            return bitmap;
+            return BitmapFactory.decodeByteArray(snapshotByte, 0, snapshotByte.length);
         }
         catch(EvercamException e)
         {
