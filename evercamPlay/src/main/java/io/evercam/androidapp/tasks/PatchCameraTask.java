@@ -18,7 +18,7 @@ import io.evercam.androidapp.video.VideoActivity;
 
 public class PatchCameraTask extends AsyncTask<Void, Void, EvercamCamera>
 {
-    private final String TAG = "evercamplay-PatchCameraTask";
+    private final String TAG = "PatchCameraTask";
     private CameraDetail cameraDetail;
     private Activity activity;
     private CustomProgressDialog customProgressDialog;

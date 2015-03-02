@@ -220,6 +220,17 @@ public class ManageAccountsActivity extends ParentActivity
     }
 
     @Override
+    protected void onRestart()
+    {
+        super.onRestart();
+
+        // Finish this activity on restart because there are lots of opportunities
+        // that the account has been changed, and it's hard to handle.
+        // Finishing it is a simpler way.
+        finish();
+    }
+
+    @Override
     public void onBackPressed()
     {
         if(!AppData.defaultUser.getUsername().equals(oldDefaultUser))

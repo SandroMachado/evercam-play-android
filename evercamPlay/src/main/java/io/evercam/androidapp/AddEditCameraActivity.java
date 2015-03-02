@@ -43,7 +43,7 @@ import io.evercam.network.discovery.DiscoveredCamera;
 
 public class AddEditCameraActivity extends Activity
 {
-    private final String TAG = "evercamplay-AddEditCameraActivity";
+    private final String TAG = "AddEditCameraActivity";
     private EditText cameraIdEdit;
     private TextView cameraIdTextView;
     private EditText cameraNameEdit;

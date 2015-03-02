@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import io.evercam.User;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
@@ -35,6 +37,11 @@ public class FeedbackActivity extends Activity
 
         setContentView(R.layout.activity_feedback);
 
+        if(Constants.isAppTrackingEnabled)
+        {
+            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
+        }
+
         Bundle bundle = getIntent().getExtras();
         if(bundle != null)
         {
@@ -43,6 +50,43 @@ public class FeedbackActivity extends Activity
         feedbackEditText = (EditText) findViewById(R.id.feedback_edit_text);
 
         fillUserDetail();
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        if(Constants.isAppTrackingEnabled)
+        {
+            BugSenseHandler.startSession(this);
+        }
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+
+        if(Constants.isAppTrackingEnabled)
+        {
+            BugSenseHandler.closeSession(this);
+        }
+    }
+
+    @Override
+    protected void onRestart()
+    {
+        super.onRestart();
+        if(!MainActivity.isUserLogged(this))
+        {
+            finish();
+        }
+        else
+        {
+            //Re-fill user details because user account could be changed
+            fillUserDetail();
+        }
     }
 
     @Override

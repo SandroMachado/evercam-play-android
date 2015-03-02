@@ -38,15 +38,11 @@ import io.evercam.androidapp.utils.Constants;
 
 public class LoginActivity extends ParentActivity
 {
-    public static final int loginVerifyRequestCode = 5;
-    public static int loginResultSuccessCode = 5;
-
     private EditText usernameEdit;
     private EditText passwordEdit;
     private String username;
     private String password;
     private LoginTask loginTask;
-    private SharedPreferences sharedPrefs;
     private String TAG = "evercamplay-LoginActivity";
     private CustomProgressDialog customProgressDialog;
     private TextView signUpLink;
@@ -55,8 +51,6 @@ public class LoginActivity extends ParentActivity
     {
         LOGIN, SIGNUP
     }
-
-    ;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -73,16 +67,10 @@ public class LoginActivity extends ParentActivity
 
         if(Constants.isAppTrackingEnabled)
         {
-            BugSenseHandler.initAndStartSession(LoginActivity.this, Constants.bugsense_ApiKey);
+            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
         }
 
         Button btnLogin = (Button) findViewById(R.id.btnLogin);
-
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putString("AppUserEmail", null);
-        editor.putString("AppUserPassword", null);
-        editor.commit();
 
         usernameEdit = (EditText) findViewById(R.id.editUsername);
         passwordEdit = (EditText) findViewById(R.id.editPassword);

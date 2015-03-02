@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.google.android.gms.appstate.AppState;
 
 import java.util.concurrent.RejectedExecutionException;
 
@@ -61,6 +62,8 @@ public class CamerasActivity extends ParentActivity
     {
         START, RESTART
     }
+
+    private String usernameOnStop = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -196,16 +199,33 @@ public class CamerasActivity extends ParentActivity
     public void onRestart()
     {
         super.onRestart();
-        Log.d(TAG, "Camera list on restart");
 
-        try
+        if(MainActivity.isUserLogged(this))
         {
-            new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.RESTART)
-                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            String restartedUsername = AppData.defaultUser.getUsername();
+
+            //Reload camera list if default user has been changed
+            if(!usernameOnStop.isEmpty() && !usernameOnStop.equals(restartedUsername))
+            {
+                new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.START).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+            else
+            {
+                try
+                {
+                    new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.RESTART).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                }
+                catch(RejectedExecutionException e)
+                {
+                    EvercamPlayApplication.sendCaughtExceptionNotImportant(activity, e);
+                }
+            }
         }
-        catch(RejectedExecutionException e)
+        else
         {
-            EvercamPlayApplication.sendCaughtExceptionNotImportant(activity, e);
+            startActivity(new Intent(this, SlideActivity.class));
+            finish();
         }
     }
 
@@ -584,6 +604,8 @@ public class CamerasActivity extends ParentActivity
     public void onStop()
     {
         super.onStop();
+
+        usernameOnStop = AppData.defaultUser.getUsername();
 
         if(Constants.isAppTrackingEnabled)
         {

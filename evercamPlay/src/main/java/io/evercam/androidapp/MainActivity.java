@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import com.bugsense.trace.BugSenseHandler;
 
+import io.evercam.API;
 import io.evercam.androidapp.authentication.EvercamAccount;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbCamera;
@@ -126,13 +127,14 @@ public class MainActivity extends Activity
         }
     }
 
-    private boolean isUserLogged()
+    public static boolean isUserLogged(Context context)
     {
-        AppData.defaultUser = new EvercamAccount(this).getDefaultUser();
+        AppData.defaultUser = new EvercamAccount(context).getDefaultUser();
         if(AppData.defaultUser != null)
         {
-            AppData.evercamCameraList = new DbCamera(this).getCamerasByOwner(AppData.defaultUser
+            AppData.evercamCameraList = new DbCamera(context).getCamerasByOwner(AppData.defaultUser
                     .getUsername(), 500);
+            API.setUserKeyPair(AppData.defaultUser.getApiKey(), AppData.defaultUser.getApiId());
             return true;
         }
         return false;
@@ -160,7 +162,7 @@ public class MainActivity extends Activity
         {
             if(hasNetwork)
             {
-                if(isUserLogged())
+                if(isUserLogged(MainActivity.this))
                 {
                     finish();
                     startCamerasActivity();
