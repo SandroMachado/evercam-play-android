@@ -221,6 +221,7 @@ public class CamerasActivity extends ParentActivity
                     EvercamPlayApplication.sendCaughtExceptionNotImportant(activity, e);
                 }
             }
+            usernameOnStop = "";
         }
         else
         {
@@ -605,7 +606,10 @@ public class CamerasActivity extends ParentActivity
     {
         super.onStop();
 
-        usernameOnStop = AppData.defaultUser.getUsername();
+        if(AppData.defaultUser != null)
+        {
+            usernameOnStop = AppData.defaultUser.getUsername();
+        }
 
         if(Constants.isAppTrackingEnabled)
         {
