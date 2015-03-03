@@ -61,10 +61,6 @@ public class DataCollector
 
     /**
      * Check if there is any connectivity to a Wifi network
-     *
-     * @param context
-     * @param type
-     * @return
      */
     public boolean isConnectedWifi()
     {
@@ -75,10 +71,6 @@ public class DataCollector
 
     /**
      * Check if there is any connectivity to a mobile network
-     *
-     * @param context
-     * @param type
-     * @return
      */
     public boolean isConnectedMobile()
     {
@@ -105,9 +97,6 @@ public class DataCollector
 
     /**
      * Get the network info
-     *
-     * @param context
-     * @return
      */
     private NetworkInfo getNetworkInfo()
     {

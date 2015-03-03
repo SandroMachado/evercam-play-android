@@ -24,7 +24,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.bugsense.trace.BugSenseHandler;
-import com.google.android.gms.appstate.AppState;
 
 import java.util.concurrent.RejectedExecutionException;
 
@@ -207,13 +206,16 @@ public class CamerasActivity extends ParentActivity
             //Reload camera list if default user has been changed
             if(!usernameOnStop.isEmpty() && !usernameOnStop.equals(restartedUsername))
             {
-                new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.START).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new CamerasCheckInternetTask(CamerasActivity.this,
+                        InternetCheckType.START).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
             else
             {
                 try
                 {
-                    new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.RESTART).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new CamerasCheckInternetTask(CamerasActivity.this,
+                            InternetCheckType.RESTART).executeOnExecutor(AsyncTask
+                            .THREAD_POOL_EXECUTOR);
 
                 }
                 catch(RejectedExecutionException e)

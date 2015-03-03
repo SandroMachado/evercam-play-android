@@ -132,8 +132,8 @@ public class MainActivity extends Activity
         AppData.defaultUser = new EvercamAccount(context).getDefaultUser();
         if(AppData.defaultUser != null)
         {
-            AppData.evercamCameraList = new DbCamera(context).getCamerasByOwner(AppData.defaultUser
-                    .getUsername(), 500);
+            AppData.evercamCameraList = new DbCamera(context).getCamerasByOwner(AppData
+                    .defaultUser.getUsername(), 500);
             API.setUserKeyPair(AppData.defaultUser.getApiKey(), AppData.defaultUser.getApiId());
             return true;
         }

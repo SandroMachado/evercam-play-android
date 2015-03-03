@@ -578,7 +578,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             else if(itemId == R.id.video_menu_view_recordings)
             {
                 Intent recordingIntent = new Intent(this, RecordingWebActivity.class);
-                recordingIntent.putExtra(Constants.BUNDLE_KEY_CAMERA_ID, evercamCamera.getCameraId());
+                recordingIntent.putExtra(Constants.BUNDLE_KEY_CAMERA_ID,
+                        evercamCamera.getCameraId());
                 startActivity(recordingIntent);
             }
         }
@@ -2059,8 +2060,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 else
                 {
                     offlineTextView.setVisibility(View.GONE);
-                    setCameraForPlaying(AppData.evercamCameraList.get
-                            (itemPosition));
+                    setCameraForPlaying(AppData.evercamCameraList.get(itemPosition));
                     createPlayer(getCurrentMRL());
                 }
                 return false;

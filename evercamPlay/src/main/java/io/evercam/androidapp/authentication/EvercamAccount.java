@@ -12,7 +12,7 @@ import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 
 public class EvercamAccount
-{ 
+{
     public static final String KEY_USERNAME = "username";
     public static final String KEY_COUNTRY = "country";
     public static final String KEY_API_KEY = "apiKey";
@@ -22,7 +22,7 @@ public class EvercamAccount
     public static final String KEY_LASTNAME = "lastName";
     private final String TAG = "EvercamAccount";
     private final String TRUE = "true";
-    
+
     private Context mContext;
     private final AccountManager mAccountManager;
 
@@ -43,7 +43,8 @@ public class EvercamAccount
         mAccountManager.setUserData(account, KEY_COUNTRY, newUser.getCountry());
         mAccountManager.setUserData(account, KEY_FIRSTNAME, newUser.getFirstName());
         mAccountManager.setUserData(account, KEY_LASTNAME, newUser.getLastName());
-        mAccountManager.setUserData(account, KEY_IS_DEFAULT, String.valueOf(newUser.getIsDefault()));
+        mAccountManager.setUserData(account, KEY_IS_DEFAULT, String.valueOf(newUser.getIsDefault
+                ()));
 
         //Always set the new user as default user
         updateDefaultUser(newUser.getEmail());
@@ -112,7 +113,7 @@ public class EvercamAccount
                 AppUser appUser = retrieveUserByEmail(account.name);
                 if(appUser.getIsDefault())
                 {
-                    defaultCount ++;
+                    defaultCount++;
                 }
                 userList.add(appUser);
             }

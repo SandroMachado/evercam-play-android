@@ -32,9 +32,11 @@ public class RecordingWebView extends WebView
 
         setWebViewClient(getWebViewClient());
 
-        //TODO remove <body style='margin:0;padding:0;'>, it's here only to overwrite the widget margin
+        //TODO remove <body style='margin:0;padding:0;'>, it's here only to overwrite the widget
+        // margin
         //private=false is ignored because it's pre-authenticated
-        String customHtml = "<html><body style='margin:0;padding:0;'><div evercam=\"snapshot-navigator" +
+        String customHtml = "<html><body style='margin:0;padding:0;'><div " +
+                "evercam=\"snapshot-navigator" +
                 "\"></div><script type=\"text/javascript\" src=\"https://dashboard" +
                 ".evercam.io/snapshot.navigator.js?camera=" + cameraId + "&private=false&api_id="
                 + API.getUserKeyPair()[1] +

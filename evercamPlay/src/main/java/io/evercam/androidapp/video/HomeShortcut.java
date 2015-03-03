@@ -118,7 +118,7 @@ public class HomeShortcut
                                     int leftBorderSize, int rightBorderSize, int color)
     {
         Bitmap bmpWithBorder = Bitmap.createBitmap(bmp.getWidth() + leftBorderSize +
-                rightBorderSize, bmp.getHeight() + topBorderSize + bottomBorderSize,
+                        rightBorderSize, bmp.getHeight() + topBorderSize + bottomBorderSize,
                 bmp.getConfig());
         Canvas canvas = new Canvas(bmpWithBorder);
         canvas.drawColor(color);

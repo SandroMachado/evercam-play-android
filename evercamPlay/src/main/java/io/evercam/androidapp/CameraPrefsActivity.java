@@ -160,16 +160,18 @@ public class CameraPrefsActivity extends PreferenceActivity
 
         private void fillAbout()
         {
-            final Preference versionPrefs = getPreferenceManager()
-                    .findPreference(PrefsManager.KEY_VERSION);
-            final Preference aboutPrefs = getPreferenceManager()
-                    .findPreference(PrefsManager.KEY_ABOUT);
+            final Preference versionPrefs = getPreferenceManager().findPreference(PrefsManager
+                    .KEY_VERSION);
+            final Preference aboutPrefs = getPreferenceManager().findPreference(PrefsManager
+                    .KEY_ABOUT);
             versionPrefs.setSummary(new DataCollector(this.getActivity()).getAppVersion());
-            aboutPrefs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            aboutPrefs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+            {
                 @Override
                 public boolean onPreferenceClick(Preference preference)
                 {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.evercam_url)));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string
+                            .evercam_url)));
                     startActivity(intent);
                     return false;
                 }

@@ -173,7 +173,8 @@ public class FeedbackActivity extends Activity
                     try
                     {
                         User evercamUser = new User(user.getUsername());
-                        String fullName = evercamUser.getFirstName() + " " + evercamUser.getLastName();
+                        String fullName = evercamUser.getFirstName() + " " + evercamUser
+                                .getLastName();
                         String userEmail = evercamUser.getEmail();
                         fill(fullName, userEmail);
                     }
@@ -191,7 +192,8 @@ public class FeedbackActivity extends Activity
 
     private void fill(final String fullName, final String email)
     {
-        runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable()
+        {
             @Override
             public void run()
             {

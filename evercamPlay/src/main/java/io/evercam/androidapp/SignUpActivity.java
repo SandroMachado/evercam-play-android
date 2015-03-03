@@ -367,7 +367,8 @@ public class SignUpActivity extends Activity
 
             if(SignUpActivity.this.getCurrentFocus() != null)
             {
-                inputMethodManager.hideSoftInputFromWindow(SignUpActivity.this.getCurrentFocus().getWindowToken(), 0);
+                inputMethodManager.hideSoftInputFromWindow(SignUpActivity.this.getCurrentFocus()
+                        .getWindowToken(), 0);
             }
 
             showProgress(true);
