@@ -661,15 +661,15 @@ public class CamerasActivity extends ParentActivity
         });
     }
 
-    private void logOutUser()
+    public static void logOutUser(Activity activity)
     {
-        new EvercamAccount(this).remove(AppData.defaultUser.getEmail(), null);
+        new EvercamAccount(activity).remove(AppData.defaultUser.getEmail(), null);
 
         // clear real-time default app data
         AppData.reset();
 
-        finish();
-        startActivity(new Intent(this, SlideActivity.class));
+        activity.finish();
+        activity.startActivity(new Intent(activity, SlideActivity.class));
     }
 
     private void showSignOutDialog()
@@ -681,7 +681,7 @@ public class CamerasActivity extends ParentActivity
             {
                 EvercamPlayApplication.sendEventAnalytics(CamerasActivity.this,
                         R.string.category_menu, R.string.action_logout, R.string.label_user_logout);
-                logOutUser();
+                logOutUser(CamerasActivity.this);
             }
         }).show();
     }

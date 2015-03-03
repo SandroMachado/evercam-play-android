@@ -7,6 +7,7 @@ import android.accounts.OperationCanceledException;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -42,7 +43,7 @@ import io.evercam.androidapp.utils.Constants;
 
 public class ManageAccountsActivity extends ParentActivity
 {
-    private static String TAG = "evercamplay-ManageAccountsActivity";
+    private static String TAG = "ManageAccountsActivity";
 
     private AlertDialog alertDialog = null;
     private String oldDefaultUser = "";
@@ -61,8 +62,6 @@ public class ManageAccountsActivity extends ParentActivity
         if(this.getActionBar() != null)
         {
             this.getActionBar().setDisplayHomeAsUpEnabled(true);
-            this.getActionBar().setTitle(R.string.accounts);
-            this.getActionBar().setIcon(R.drawable.icon_50x50);
         }
 
         setContentView(R.layout.manage_account_activity);
@@ -72,7 +71,11 @@ public class ManageAccountsActivity extends ParentActivity
         // create and start the task to show all user accounts
         ListView listview = (ListView) findViewById(R.id.email_list);
 
-        oldDefaultUser = AppData.defaultUser.getUsername();
+        if(AppData.defaultUser != null)
+        {
+            oldDefaultUser = AppData.defaultUser.getUsername();
+        }
+
         showAllAccounts();
 
         listview.setOnItemClickListener(new OnItemClickListener()
@@ -99,60 +102,38 @@ public class ManageAccountsActivity extends ParentActivity
                 dialog.show();
 
                 Button openDefault = (Button) ed_dialog_layout.findViewById(R.id.btn_open_account);
-                Button setDefault = (Button) ed_dialog_layout.findViewById(R.id
-                        .btn_set_default_account);
                 Button delete = (Button) ed_dialog_layout.findViewById(R.id.btn_delete_account);
 
-                if(user.getIsDefault())
+                openDefault.setOnClickListener(new OnClickListener()
                 {
-                    openDefault.setEnabled(false);
-                    setDefault.setEnabled(false);
-                }
-                else
-                {
-                    openDefault.setOnClickListener(new OnClickListener()
+                    @Override
+                    public void onClick(View v)
                     {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            progressDialog.show(ManageAccountsActivity.this.getString(R.string
-                                    .switching_account));
-                            updateDefaultUser(user.getEmail(), true, dialog);
-                            ed_dialog_layout.setEnabled(false);
-                            ed_dialog_layout.setClickable(false);
-                        }
-                    });
+                        progressDialog.show(ManageAccountsActivity.this.getString(R.string
+                                .switching_account));
+                        updateDefaultUser(user.getEmail(), true, dialog);
+                        ed_dialog_layout.setEnabled(false);
+                        ed_dialog_layout.setClickable(false);
+                    }
+                });
 
-                    setDefault.setOnClickListener(new OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            updateDefaultUser(user.getEmail(), false, dialog);
-                            ed_dialog_layout.setEnabled(false);
-                            ed_dialog_layout.setClickable(false);
-                        }
-                    });
-                }
-
-                if(AppData.appUsers != null && AppData.appUsers.size() == 2)
+                delete.setOnClickListener(new OnClickListener()
                 {
-                    // If only one user exists, don't allow to remove this user
-                    delete.setEnabled(false);
-                }
-                else
-                {
-                    delete.setOnClickListener(new OnClickListener()
+                    @Override
+                    public void onClick(View v)
                     {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            CustomedDialog.getConfirmRemoveDialog(ManageAccountsActivity.this,
-                                    new DialogInterface.OnClickListener()
+                        CustomedDialog.getConfirmRemoveDialog(ManageAccountsActivity.this,
+                                new DialogInterface.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(DialogInterface warningDialog, int which)
                                     {
-                                        @Override
-                                        public void onClick(DialogInterface warningDialog,
-                                                            int which)
+                                        if(AppData.appUsers != null && AppData.appUsers.size() == 2)
+                                        {
+                                            // If only one user exists, log out the user
+                                            CamerasActivity.logOutUser(ManageAccountsActivity.this);
+                                        }
+                                        else
                                         {
                                             new EvercamAccount(ManageAccountsActivity.this)
                                                     .remove(user.getEmail(),
@@ -187,12 +168,12 @@ public class ManageAccountsActivity extends ParentActivity
                                                     }
                                                 }
                                             });
-                                            dialog.dismiss();
                                         }
-                                    }, R.string.msg_confirm_remove).show();
-                        }
-                    });
-                }
+                                        dialog.dismiss();
+                                    }
+                                }, R.string.msg_confirm_remove).show();
+                    }
+                });
             }
         });
     }
@@ -381,7 +362,7 @@ public class ManageAccountsActivity extends ParentActivity
 
     private void showAllAccounts()
     {
-        ArrayList<AppUser> appUsers= new EvercamAccount(this).retrieveUserList();
+        ArrayList<AppUser> appUsers = new EvercamAccount(this).retrieveUserList();
 
         ListAdapter listAdapter = new CustomAdapter(ManageAccountsActivity.this,
                 R.layout.manage_account_list_item, R.layout.manage_account_list_item_new_user,

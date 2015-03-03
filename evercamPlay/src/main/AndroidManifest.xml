@@ -100,7 +100,9 @@
             android:parentActivityName=".SlideActivity">
         </activity>
 
-        <activity android:name=".ManageAccountsActivity">
+        <activity android:name=".ManageAccountsActivity"
+                  android:icon="@drawable/icon_50x50"
+                  android:label="@string/accounts">
         </activity>
         <activity
             android:name=".CamerasActivity"
