@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,6 +43,7 @@ import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.logentries.android.AndroidLogger;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.cookie.Cookie;
 import org.videolan.libvlc.EventHandler;
@@ -50,6 +52,7 @@ import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaList;
 
+import java.io.File;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -539,17 +542,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 Intent viewIntent = new Intent(VideoActivity.this, ViewCameraActivity.class);
                 startActivityForResult(viewIntent, Constants.REQUEST_CODE_VIEW_CAMERA);
             }
-            //Remove edit camera from menu because it's now in 'View Details - Edit'
-            //            else if(itemId == R.id.video_menu_edit_camera)
-            //            {
-            //                editStarted = true;
-            //
-            //                Intent editIntent = new Intent(VideoActivity.this,
-            // AddEditCameraActivity.class);
-            //                editIntent.putExtra(Constants.KEY_IS_EDIT, true);
-            //                startActivityForResult(editIntent,
-            // Constants.REQUEST_CODE_PATCH_CAMERA);
-            //            }
             else if(itemId == R.id.video_menu_local_storage)
             {
                 startActivity(new Intent(VideoActivity.this, LocalStorageActivity.class));
@@ -604,7 +596,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
         paused = false;
         end = false;
-        loadImageFromCache(startingCameraID);
+ //       loadImageFromCache(startingCameraID);
 
         checkNetworkStatus();
 
@@ -733,10 +725,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     public void loadImageFromCache(String cameraId)
     {
         imageView.setImageDrawable(null);
-        Drawable drawable = EvercamFile.loadDrawableForCamera(this, cameraId);
-        if(drawable != null)
+
+        File cacheFile = EvercamFile.getCacheFileRelative(this, cameraId);
+        if(cacheFile.exists())
         {
-            imageView.setImageDrawable(drawable);
+            Uri uri = Uri.fromFile(cacheFile);
+
+            Picasso.with(this).load(uri).into(imageView);
         }
     }
 

@@ -77,7 +77,6 @@ public class CamerasActivity extends ParentActivity
         {
             this.getActionBar().setHomeButtonEnabled(true);
             this.getActionBar().setDisplayShowTitleEnabled(false);
-            this.getActionBar().setIcon(R.drawable.evercam_play_192x192);
         }
         setContentView(R.layout.camslayoutwithslide);
 
@@ -92,7 +91,7 @@ public class CamerasActivity extends ParentActivity
          * 1. Load cameras that saved locally without image (disabled load image from cache
          * because it blocks UI.)
          * 2. When camera list returned from Evercam, show them on screen with thumbnails,
-         * then request for snapshots in background seperately.
+         * then request for snapshots in background separately.
          */
         new Handler().postDelayed(new Runnable()
         {
@@ -119,15 +118,6 @@ public class CamerasActivity extends ParentActivity
         // showing as animation)
         new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.START)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        // notificationID =
-        // this.getIntent().getIntExtra(Constants.GCMNotificationIDString, 0);
-        // this.getIntent().putExtra(Constants.GCMNotificationIDString, 0);
-        //
-        // if (notificationID > 0)
-        // {
-        // CamerasActivity.this.onSlideMenuItemClick(notificationID);
-        // }
     }
 
     @Override

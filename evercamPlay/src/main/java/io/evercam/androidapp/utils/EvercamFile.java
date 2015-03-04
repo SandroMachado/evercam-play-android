@@ -37,32 +37,6 @@ public class EvercamFile
         return externalFile;
     }
 
-    public static Drawable loadDrawableForCamera(Context context, String cameraId)
-    {
-        try
-        {
-
-            File cacheFile = EvercamFile.getCacheFileRelative(context, cameraId);
-            if(cacheFile.exists())
-            {
-                return Drawable.createFromPath(cacheFile.getPath());
-            }
-        }
-        catch(OutOfMemoryError e)
-        {
-            Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-        }
-        catch(Exception e)
-        {
-            Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-            if(Constants.isAppTrackingEnabled)
-            {
-                BugSenseHandler.sendException(e);
-            }
-        }
-        return null;
-    }
-
     public static Bitmap loadBitmapForCamera(Context context, String cameraId)
     {
         try

@@ -17,7 +17,7 @@ public class EvercamCamera
     public ImageLoadingStatus loadingStatus = ImageLoadingStatus.not_started;
     public ArrayList<Cookie> cookies = null;
 
-    private final String TAG = "evercamapp-EvercamCamera";
+    private final String TAG = "EvercamCamera";
     private boolean isLocal = false;
     public Camera camera = null;
     private int id = -1;
@@ -40,6 +40,7 @@ public class EvercamCamera
     private String internalRtspUrl = "";
     private String status = "";
     private boolean hasCredentials = false;
+    private String thumbnailUrl;
 
     // Fields for edit camera
     private String internalHost = "";
@@ -96,6 +97,7 @@ public class EvercamCamera
             internalRtsp = camera.getInternalRtspPort();
             externalHttp = camera.getExternalHttpPort();
             externalRtsp = camera.getExternalRtspPort();
+            thumbnailUrl = camera.getThumbnailUrl();
         }
         catch(EvercamException e)
         {
@@ -443,6 +445,16 @@ public class EvercamCamera
         this.externalRtsp = externalRtsp;
     }
 
+    public String getThumbnailUrl()
+    {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl)
+    {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
     public boolean isHikvision()
     {
         if(getVendor().toLowerCase(Locale.UK).contains("hikvision"))
@@ -490,6 +502,7 @@ public class EvercamCamera
                 ", status=" + status + ", hasCredentials=" + hasCredentials + ", " +
                 "internalHost=" + internalHost + ", externalHost=" + externalHost + ", " +
                 "internalHttp=" + internalHttp + ", internalRtsp=" + internalRtsp + ", " +
-                "externalHttp=" + externalHttp + ", externalRtsp=" + externalRtsp + "]";
+                "externalHttp=" + externalHttp + ", externalRtsp=" + externalRtsp + ", " +
+                "thumbnailUrl=" + thumbnailUrl + "]";
     }
 }

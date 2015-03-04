@@ -112,7 +112,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label=""
             android:launchMode="singleTop"
-            android:logo="@drawable/icon_192x192">
+            android:logo="@drawable/icon_50x50">
         </activity>
         <activity
             android:name=".CameraPrefsActivity"

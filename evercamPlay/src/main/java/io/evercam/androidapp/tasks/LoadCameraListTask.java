@@ -141,6 +141,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
             }
             else
             {
+                AppData.evercamCameraList = evercamCameras;
                 this.publishProgress(true);
             }
 
