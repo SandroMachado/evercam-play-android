@@ -136,8 +136,6 @@ public class CamerasActivity extends ParentActivity
         // showing as animation)
         new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.START)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-
     }
 
     @Override
