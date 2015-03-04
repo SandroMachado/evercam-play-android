@@ -24,7 +24,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.logentries.android.AndroidLogger;
 
+import java.util.Date;
 import java.util.concurrent.RejectedExecutionException;
 
 import io.evercam.androidapp.authentication.EvercamAccount;
@@ -36,6 +38,7 @@ import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.dto.ImageLoadingStatus;
+import io.evercam.androidapp.feedback.LoadTimeFeedbackItem;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.tasks.LoadCameraListTask;
 import io.evercam.androidapp.utils.Commons;
@@ -56,6 +59,11 @@ public class CamerasActivity extends ParentActivity
     public boolean reloadCameraList = false;
 
     public CustomProgressDialog reloadProgressDialog;
+
+    /** For user data collection, calculate how long it takes to load camera list */
+    private Date startTime;
+    private float databaseLoadTime = 0;
+    private AndroidLogger logger;
 
     private enum InternetCheckType
     {
@@ -80,6 +88,10 @@ public class CamerasActivity extends ParentActivity
         }
         setContentView(R.layout.camslayoutwithslide);
 
+        startTime = new Date();
+        logger = AndroidLogger.getLogger(getApplicationContext(), Constants.LOGENTRIES_TOKEN,
+                false);
+
         readShortcutCameraId();
 
         activity = this;
@@ -92,15 +104,17 @@ public class CamerasActivity extends ParentActivity
          * because it blocks UI.)
          * 2. When camera list returned from Evercam, show them on screen with thumbnails,
          * then request for snapshots in background separately.
+         *
+         * TODO: Check is it really necessary to keep the post delay handler here
+         * See if refresh icon stop animating or not.
          */
         new Handler().postDelayed(new Runnable()
         {
-
             @Override
             public void run()
             {
                 /**
-                 * Sometimes Evercam returns the list less than 0.5 sec,
+                 * Sometimes Evercam returns the list less than 0.1 sec?
                  * so check it's returned or not before
                  * the first load to avoid loading it twice.
                  */
@@ -110,14 +124,20 @@ public class CamerasActivity extends ParentActivity
                 if(!(camsLineView.getChildCount() > 0))
                 {
                     addAllCameraViews(false, false);
+                    if(databaseLoadTime == 0 && startTime != null)
+                    {
+                        databaseLoadTime = Commons.calculateTimeDifferenceFrom(startTime);
+                    }
                 }
             }
-        }, 500);
+        }, 1);
 
         // Start loading camera list after menu created(because need the menu
         // showing as animation)
         new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.START)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+
     }
 
     @Override
@@ -722,6 +742,25 @@ public class CamerasActivity extends ParentActivity
         CustomScrollView scrollView = (CustomScrollView) CamerasActivity.this.findViewById(R.id
                 .cameras_scroll_view);
         return scrollView.getLiveBoundsRect();
+    }
+
+    /**
+     * Calculate how long it takes for the user to see the camera list
+     */
+    public void calculateLoadingTimeAndSend()
+    {
+        if(startTime != null)
+        {
+            float timeDifferenceFloat = Commons.calculateTimeDifferenceFrom(startTime);
+            Log.d(TAG, "It takes " + databaseLoadTime + " and " + timeDifferenceFloat + " seconds to load camera list");
+            startTime = null;
+
+            LoadTimeFeedbackItem feedbackItem = new LoadTimeFeedbackItem(this,
+                    AppData.defaultUser.getUsername(),
+                    databaseLoadTime, timeDifferenceFloat);
+            databaseLoadTime = 0;
+            logger.info(feedbackItem.toJson());
+        }
     }
 
     class CamerasCheckInternetTask extends CheckInternetTask

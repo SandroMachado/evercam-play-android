@@ -44,6 +44,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.evercam.androidapp.exceptions.ConnectivityException;
@@ -482,5 +483,11 @@ public class Commons
             list.addAll(java.util.Arrays.asList(array));
         }
         return (String[]) list.toArray(new String[size]);
+    }
+
+    public static float calculateTimeDifferenceFrom(Date startTime)
+    {
+        long timeDifferenceLong = (new Date()).getTime() - startTime.getTime();
+        return (float) timeDifferenceLong / 1000;
     }
 }

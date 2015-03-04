@@ -1686,8 +1686,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                         successItem.setType(StreamFeedbackItem.TYPE_RTSP);
                         if(startTime != null)
                         {
-                            long timeDifferenceLong = (new Date()).getTime() - startTime.getTime();
-                            float timeDifferenceFloat = (float) timeDifferenceLong / 1000;
+                            float timeDifferenceFloat = Commons.calculateTimeDifferenceFrom(startTime);
                             Log.d(TAG, "Time difference: " + timeDifferenceFloat + " seconds");
                             successItem.setLoadTime(timeDifferenceFloat);
                             startTime = null;
@@ -1695,7 +1694,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
                         logger.info(successItem.toJson());
 
-                        if(VideoActivity.mediaUrls.get(mrlIndex).isLocalNetwork == false)
+                        if(!VideoActivity.mediaUrls.get(mrlIndex).isLocalNetwork)
                         {
                             SharedPreferences sharedPrefs = PreferenceManager
                                     .getDefaultSharedPreferences(player);

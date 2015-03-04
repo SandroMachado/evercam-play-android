@@ -18,6 +18,7 @@ import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
+import io.evercam.androidapp.feedback.LoadTimeFeedbackItem;
 import io.evercam.androidapp.video.VideoActivity;
 
 public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
@@ -159,6 +160,8 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
     {
         Log.d(TAG, "Done");
 
+        camerasActivity.calculateLoadingTimeAndSend();
+
         if(!camerasActivity.liveViewCameraId.isEmpty())
         {
             boolean cameraIsAccessible = false;
@@ -171,7 +174,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
                 }
             }
 
-            if(cameraIsAccessible == true)
+            if(cameraIsAccessible)
             {
                 camerasActivity.removeAllCameraViews();
                 camerasActivity.addAllCameraViews(false, true);
