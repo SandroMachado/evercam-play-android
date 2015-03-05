@@ -12,12 +12,14 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.cookie.Cookie;
 
@@ -38,7 +40,7 @@ import io.evercam.androidapp.video.VideoActivity;
 
 public class CameraLayout extends LinearLayout
 {
-    private static final String TAG = "evercamplay-CameraLayout";
+    private static final String TAG = "CameraLayout";
 
     public RelativeLayout cameraRelativeLayout;
 
@@ -52,6 +54,7 @@ public class CameraLayout extends LinearLayout
     // true, all tasks must end and no further
     // processing should be done in any thread.
     private ProgressView loadingAnimation = null;
+    private ImageView snapshotImageView;
     private TextView imageMessage = null;
     private ImageView offlineImage = null;
     private GradientTitleLayout gradientLayout;
@@ -83,6 +86,15 @@ public class CameraLayout extends LinearLayout
             cameraRelativeLayout.setLayoutParams(ivParams);
 
             this.addView(cameraRelativeLayout);
+
+            snapshotImageView = new ImageView(context);
+            RelativeLayout.LayoutParams imageViewParams = new RelativeLayout.LayoutParams
+                    (ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT);
+            snapshotImageView.setLayoutParams(imageViewParams);
+            snapshotImageView.setBackgroundColor(Color.TRANSPARENT);
+            snapshotImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            cameraRelativeLayout.addView(snapshotImageView);
 
             // control to show progress spinner
             loadingAnimation = new ProgressView(context);
@@ -230,7 +242,8 @@ public class CameraLayout extends LinearLayout
         {
             loadingAnimation.setVisibility(View.GONE);
             cameraRelativeLayout.removeView(loadingAnimation);
-            cameraRelativeLayout.setBackgroundDrawable(thumbnail);
+            //cameraRelativeLayout.setBackgroundDrawable(thumbnail);
+            snapshotImageView.setImageDrawable(thumbnail);
             return true;
         }
         else //If thumbnail is null, request latest snapshot
@@ -242,6 +255,18 @@ public class CameraLayout extends LinearLayout
         }
         return false;
     }
+
+//    private boolean showThumbnail()
+//    {
+//        String thumbnailUrl = evercamCamera.getThumbnailUrl();
+//        if(thumbnailUrl != null && !thumbnailUrl.isEmpty())
+//        {
+//            snapshotImageView.setImageDrawable();
+//            Picasso.with(context).load(thumbnailUrl).into(snapshotImageView);
+//            return true;
+//        }
+//        return false;
+//    }
 
     // Image loaded from Evercam and now set the controls appearance and
     // text accordingly
@@ -467,7 +492,7 @@ public class CameraLayout extends LinearLayout
             if(drawable != null && !end && drawable.getIntrinsicWidth() > 0 && drawable
                     .getIntrinsicHeight() > 0)
             {
-                cameraRelativeLayout.setBackgroundDrawable(drawable);
+                snapshotImageView.setImageDrawable(drawable);
                 CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_received;
 
                 Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
