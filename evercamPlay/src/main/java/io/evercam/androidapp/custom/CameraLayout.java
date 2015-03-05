@@ -16,10 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
-import com.squareup.picasso.Picasso;
 
 import org.apache.http.cookie.Cookie;
 
@@ -88,8 +86,7 @@ public class CameraLayout extends LinearLayout
 
             snapshotImageView = new ImageView(context);
             RelativeLayout.LayoutParams imageViewParams = new RelativeLayout.LayoutParams
-                    (ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT);
+                    (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             snapshotImageView.setLayoutParams(imageViewParams);
             snapshotImageView.setBackgroundColor(Color.TRANSPARENT);
             snapshotImageView.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -240,17 +237,17 @@ public class CameraLayout extends LinearLayout
         return false;
     }
 
-//    private boolean showThumbnail()
-//    {
-//        String thumbnailUrl = evercamCamera.getThumbnailUrl();
-//        if(thumbnailUrl != null && !thumbnailUrl.isEmpty())
-//        {
-//            snapshotImageView.setImageDrawable();
-//            Picasso.with(context).load(thumbnailUrl).into(snapshotImageView);
-//            return true;
-//        }
-//        return false;
-//    }
+    //    private boolean showThumbnail()
+    //    {
+    //        String thumbnailUrl = evercamCamera.getThumbnailUrl();
+    //        if(thumbnailUrl != null && !thumbnailUrl.isEmpty())
+    //        {
+    //            snapshotImageView.setImageDrawable();
+    //            Picasso.with(context).load(thumbnailUrl).into(snapshotImageView);
+    //            return true;
+    //        }
+    //        return false;
+    //    }
 
     // Image loaded from Evercam and now set the controls appearance and
     // text accordingly

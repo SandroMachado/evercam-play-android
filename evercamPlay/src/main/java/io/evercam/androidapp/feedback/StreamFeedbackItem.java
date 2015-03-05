@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import io.evercam.androidapp.utils.Constants;
-import io.evercam.androidapp.utils.DataCollector;
 import io.keen.client.java.KeenClient;
 
 public class StreamFeedbackItem extends FeedbackItem
@@ -27,7 +26,7 @@ public class StreamFeedbackItem extends FeedbackItem
 
     public StreamFeedbackItem(Context context, String username, Boolean isSuccess)
     {
-        super(context,username);
+        super(context, username);
         this.is_success = isSuccess;
     }
 
@@ -110,12 +109,14 @@ public class StreamFeedbackItem extends FeedbackItem
     public void sendToKeenIo(final KeenClient client)
     {
         final FeedbackItem feedbackItem = this;
-        new Thread(new Runnable(){
+        new Thread(new Runnable()
+        {
 
             @Override
             public void run()
             {
-                client.addEvent(Constants.KEEN_COLLECTION_STREAM_LOADING_TIME, feedbackItem.toHashMap());
+                client.addEvent(Constants.KEEN_COLLECTION_STREAM_LOADING_TIME,
+                        feedbackItem.toHashMap());
             }
         }).start();
     }

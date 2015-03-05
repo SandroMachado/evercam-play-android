@@ -228,8 +228,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             logger = AndroidLogger.getLogger(getApplicationContext(), Constants.LOGENTRIES_TOKEN,
                     false);
             client = new AndroidKeenClientBuilder(this).build();
-            keenProject = new KeenProject(Constants.KEEN_PROJECT_ID,
-                    Constants.KEEN_WRITE_KEY, Constants.KEEN_READ_KEY);
+            keenProject = new KeenProject(Constants.KEEN_PROJECT_ID, Constants.KEEN_WRITE_KEY,
+                    Constants.KEEN_READ_KEY);
             client.setDefaultProject(keenProject);
 
             startPlay();
@@ -605,7 +605,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
         paused = false;
         end = false;
- //       loadImageFromCache(startingCameraID);
+        //       loadImageFromCache(startingCameraID);
 
         checkNetworkStatus();
 
@@ -1696,7 +1696,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                         successItem.setType(StreamFeedbackItem.TYPE_RTSP);
                         if(startTime != null)
                         {
-                            float timeDifferenceFloat = Commons.calculateTimeDifferenceFrom(startTime);
+                            float timeDifferenceFloat = Commons.calculateTimeDifferenceFrom
+                                    (startTime);
                             Log.d(TAG, "Time difference: " + timeDifferenceFloat + " seconds");
                             successItem.setLoadTime(timeDifferenceFloat);
                             startTime = null;

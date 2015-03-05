@@ -137,39 +137,39 @@ public class ManageAccountsActivity extends ParentActivity
                                             new EvercamAccount(ManageAccountsActivity.this)
                                                     .remove(user.getEmail(),
                                                             new AccountManagerCallback<Boolean>()
+                                                    {
+                                                        @Override
+                                                        public void run
+                                                                (AccountManagerFuture<Boolean>
+                                                                         future)
+                                                        {
+                                                            // This is the line that
+                                                            // actually
+                                                            // starts the
+                                                            // call to remove the account.
+                                                            try
                                                             {
-                                                                @Override
-                                                                public void run
-                                                                        (AccountManagerFuture<Boolean> future)
+                                                                boolean isAccountDeleted = future
+                                                                        .getResult();
+                                                                if(isAccountDeleted)
                                                                 {
-                                                                    // This is the line that
-                                                                    // actually
-                                                                    // starts the
-                                                                    // call to remove the account.
-                                                                    try
-                                                                    {
-                                                                        boolean isAccountDeleted
-                                                                                = future
-                                                                                .getResult();
-                                                                        if(isAccountDeleted)
-                                                                        {
-                                                                            showAllAccounts();
-                                                                        }
-                                                                    }
-                                                                    catch(OperationCanceledException e)
-                                                                    {
-                                                                        e.printStackTrace();
-                                                                    }
-                                                                    catch(IOException e)
-                                                                    {
-                                                                        e.printStackTrace();
-                                                                    }
-                                                                    catch(AuthenticatorException e)
-                                                                    {
-                                                                        e.printStackTrace();
-                                                                    }
+                                                                    showAllAccounts();
                                                                 }
-                                                            });
+                                                            }
+                                                            catch(OperationCanceledException e)
+                                                            {
+                                                                e.printStackTrace();
+                                                            }
+                                                            catch(IOException e)
+                                                            {
+                                                                e.printStackTrace();
+                                                            }
+                                                            catch(AuthenticatorException e)
+                                                            {
+                                                                e.printStackTrace();
+                                                            }
+                                                        }
+                                                    });
                                         }
                                         dialog.dismiss();
                                     }

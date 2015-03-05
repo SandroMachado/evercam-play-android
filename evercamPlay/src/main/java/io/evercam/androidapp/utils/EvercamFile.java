@@ -3,7 +3,6 @@ package io.evercam.androidapp.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;

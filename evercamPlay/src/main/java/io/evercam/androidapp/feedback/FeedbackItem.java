@@ -1,16 +1,13 @@
 package io.evercam.androidapp.feedback;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.DataCollector;
-import io.keen.client.java.KeenClient;
 
 public class FeedbackItem
 {

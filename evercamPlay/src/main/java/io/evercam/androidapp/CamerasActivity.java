@@ -46,7 +46,6 @@ import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.androidapp.video.HomeShortcut;
 import io.keen.client.android.AndroidKeenClientBuilder;
-import io.keen.client.java.KeenCallback;
 import io.keen.client.java.KeenClient;
 import io.keen.client.java.KeenProject;
 
@@ -64,7 +63,9 @@ public class CamerasActivity extends ParentActivity
 
     public CustomProgressDialog reloadProgressDialog;
 
-    /** For user data collection, calculate how long it takes to load camera list */
+    /**
+     * For user data collection, calculate how long it takes to load camera list
+     */
     private Date startTime;
     private float databaseLoadTime = 0;
     private AndroidLogger logger;
@@ -128,7 +129,8 @@ public class CamerasActivity extends ParentActivity
                 if(!(camsLineView.getChildCount() > 0))
                 {
                     addAllCameraViews(false, false);
-                    if(camsLineView.getChildCount() > 0 && databaseLoadTime == 0 && startTime != null)
+                    if(camsLineView.getChildCount() > 0 && databaseLoadTime == 0 && startTime !=
+                            null)
                     {
                         databaseLoadTime = Commons.calculateTimeDifferenceFrom(startTime);
                     }
@@ -473,19 +475,19 @@ public class CamerasActivity extends ParentActivity
                  */
                 if(reloadImages)
                 {
-//                    new Handler().postDelayed(new Runnable()
-//                    {
-//                        @Override
-//                        public void run()
-//                        {
-//                            Rect cameraBounds = new Rect();
-//                            cameraListLayout.getHitRect(cameraBounds);
-//                            if(Rect.intersects(cameraBounds, bounds))
-//                            {
-//                                cameraLayout.loadImage();
-//                            }
-//                        }
-//                    }, 300);
+                    //                    new Handler().postDelayed(new Runnable()
+                    //                    {
+                    //                        @Override
+                    //                        public void run()
+                    //                        {
+                    //                            Rect cameraBounds = new Rect();
+                    //                            cameraListLayout.getHitRect(cameraBounds);
+                    //                            if(Rect.intersects(cameraBounds, bounds))
+                    //                            {
+                    //                                cameraLayout.loadImage();
+                    //                            }
+                    //                        }
+                    //                    }, 300);
                 }
 
                 totalCamerasInGrid++;
@@ -752,8 +754,8 @@ public class CamerasActivity extends ParentActivity
         logger = AndroidLogger.getLogger(getApplicationContext(), Constants.LOGENTRIES_TOKEN,
                 false);
         client = new AndroidKeenClientBuilder(this).build();
-        keenProject = new KeenProject(Constants.KEEN_PROJECT_ID,
-                Constants.KEEN_WRITE_KEY, Constants.KEEN_READ_KEY);
+        keenProject = new KeenProject(Constants.KEEN_PROJECT_ID, Constants.KEEN_WRITE_KEY,
+                Constants.KEEN_READ_KEY);
         client.setDefaultProject(keenProject);
     }
 
@@ -765,12 +767,12 @@ public class CamerasActivity extends ParentActivity
         if(startTime != null)
         {
             float timeDifferenceFloat = Commons.calculateTimeDifferenceFrom(startTime);
-            Log.d(TAG, "It takes " + databaseLoadTime + " and " + timeDifferenceFloat + " seconds to load camera list");
+            Log.d(TAG, "It takes " + databaseLoadTime + " and " + timeDifferenceFloat + " seconds" +
+                    " to load camera list");
             startTime = null;
 
             LoadTimeFeedbackItem feedbackItem = new LoadTimeFeedbackItem(this,
-                    AppData.defaultUser.getUsername(),
-                    databaseLoadTime, timeDifferenceFloat);
+                    AppData.defaultUser.getUsername(), databaseLoadTime, timeDifferenceFloat);
             databaseLoadTime = 0;
             logger.info(feedbackItem.toJson());
 

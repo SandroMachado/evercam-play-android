@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 
 import io.evercam.API;
@@ -19,8 +18,6 @@ import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
-import io.evercam.androidapp.feedback.LoadTimeFeedbackItem;
-import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.video.VideoActivity;
 
 public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
@@ -61,8 +58,8 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
 
             // Step 1: Load camera list from Evercam
             Log.d(TAG, "Step 1: Load camera list from Evercam");
-            ArrayList<EvercamCamera> databaseCameralist = new DbCamera(camerasActivity.getApplicationContext())
-                    .getCamerasByOwner(user.getUsername(), 500);
+            ArrayList<EvercamCamera> databaseCameralist = new DbCamera(camerasActivity
+                    .getApplicationContext()).getCamerasByOwner(user.getUsername(), 500);
 
             ArrayList<Camera> cameras = Camera.getAll(user.getUsername(), true, true);
 
