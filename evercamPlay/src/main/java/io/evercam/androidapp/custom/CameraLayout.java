@@ -55,7 +55,6 @@ public class CameraLayout extends LinearLayout
     // processing should be done in any thread.
     private ProgressView loadingAnimation = null;
     private ImageView snapshotImageView;
-    private TextView imageMessage = null;
     private ImageView offlineImage = null;
     private GradientTitleLayout gradientLayout;
 
@@ -106,18 +105,6 @@ public class CameraLayout extends LinearLayout
             loadingAnimation.setLayoutParams(ivProgressParams);
 
             cameraRelativeLayout.addView(loadingAnimation);
-
-            // Message to show the status of the camera
-            imageMessage = new TextView(context);
-            RelativeLayout.LayoutParams ivMessageParams = new RelativeLayout.LayoutParams(android
-                    .view.ViewGroup.LayoutParams.WRAP_CONTENT,
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-            ivMessageParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            ivMessageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            imageMessage.setLayoutParams(ivMessageParams);
-            imageMessage.setText(R.string.connecting);
-            imageMessage.setGravity(Gravity.CENTER);
-            //	cameraRelativeLayout.addView(imageMessage);
 
             offlineImage = new ImageView(context);
             RelativeLayout.LayoutParams offlineImageParams = new RelativeLayout.LayoutParams
@@ -222,14 +209,11 @@ public class CameraLayout extends LinearLayout
     private void setlayoutForLiveImageReceived()
     {
         evercamCamera.setStatus(CameraStatus.ACTIVE);
-        imageMessage.setVisibility(View.GONE);
 
         if(cameraRelativeLayout.indexOfChild(loadingAnimation) >= 0)
         {
             loadingAnimation.setVisibility(View.GONE);
             cameraRelativeLayout.removeView(loadingAnimation);
-            if(cameraRelativeLayout.indexOfChild(imageMessage) >= 0)
-                cameraRelativeLayout.removeView(imageMessage);
         }
 
         handler.removeCallbacks(LoadImageRunnable);
@@ -278,21 +262,13 @@ public class CameraLayout extends LinearLayout
             cameraRelativeLayout.removeView(loadingAnimation);
         }
 
-        imageMessage.setVisibility(View.VISIBLE);
-        if(evercamCamera.isActive())
-        {
-            imageMessage.setText("");
-        }
         else
         {
-            imageMessage.setText(evercamCamera.getStatus() + "");
             greyImageShown();
             gradientLayout.showOfflineImage(true);
 
             offlineImage.setVisibility(View.INVISIBLE);
         }
-
-        imageMessage.setTextColor(Color.RED);
 
         //Remove shadow because the gray image is showing already
         gradientLayout.removeGradientShadow();
@@ -310,14 +286,8 @@ public class CameraLayout extends LinearLayout
             cameraRelativeLayout.removeView(loadingAnimation);
         }
 
-        if(evercamCamera.isActive())
+        if(!evercamCamera.isActive())
         {
-            imageMessage.setText(R.string.msg_unable_to_connect);
-        }
-        else
-        {
-            imageMessage.setText(evercamCamera.getStatus() + "");
-            imageMessage.setTextColor(Color.RED);
             greyImageShown();
             if(!isLatestReceived)
             {
@@ -326,8 +296,6 @@ public class CameraLayout extends LinearLayout
             gradientLayout.showOfflineImage(true);
             gradientLayout.removeGradientShadow();
         }
-
-        imageMessage.setTextColor(Color.RED);
 
         // animation must have been stopped when image loaded from cache
         handler.removeCallbacks(LoadImageRunnable);
