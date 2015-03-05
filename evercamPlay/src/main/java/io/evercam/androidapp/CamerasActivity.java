@@ -128,7 +128,7 @@ public class CamerasActivity extends ParentActivity
                 if(!(camsLineView.getChildCount() > 0))
                 {
                     addAllCameraViews(false, false);
-                    if(databaseLoadTime == 0 && startTime != null)
+                    if(camsLineView.getChildCount() > 0 && databaseLoadTime == 0 && startTime != null)
                     {
                         databaseLoadTime = Commons.calculateTimeDifferenceFrom(startTime);
                     }
