@@ -45,6 +45,10 @@ import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.androidapp.video.HomeShortcut;
+import io.keen.client.android.AndroidKeenClientBuilder;
+import io.keen.client.java.KeenCallback;
+import io.keen.client.java.KeenClient;
+import io.keen.client.java.KeenProject;
 
 public class CamerasActivity extends ParentActivity
 {
@@ -64,6 +68,8 @@ public class CamerasActivity extends ParentActivity
     private Date startTime;
     private float databaseLoadTime = 0;
     private AndroidLogger logger;
+    private KeenClient client;
+    private KeenProject keenProject;
 
     private enum InternetCheckType
     {
@@ -88,9 +94,7 @@ public class CamerasActivity extends ParentActivity
         }
         setContentView(R.layout.camslayoutwithslide);
 
-        startTime = new Date();
-        logger = AndroidLogger.getLogger(getApplicationContext(), Constants.LOGENTRIES_TOKEN,
-                false);
+        initDataCollectionObjects();
 
         readShortcutCameraId();
 
@@ -742,6 +746,17 @@ public class CamerasActivity extends ParentActivity
         return scrollView.getLiveBoundsRect();
     }
 
+    private void initDataCollectionObjects()
+    {
+        startTime = new Date();
+        logger = AndroidLogger.getLogger(getApplicationContext(), Constants.LOGENTRIES_TOKEN,
+                false);
+        client = new AndroidKeenClientBuilder(this).build();
+        keenProject = new KeenProject(Constants.KEEN_PROJECT_ID,
+                Constants.KEEN_WRITE_KEY, Constants.KEEN_READ_KEY);
+        client.setDefaultProject(keenProject);
+    }
+
     /**
      * Calculate how long it takes for the user to see the camera list
      */
@@ -758,6 +773,8 @@ public class CamerasActivity extends ParentActivity
                     databaseLoadTime, timeDifferenceFloat);
             databaseLoadTime = 0;
             logger.info(feedbackItem.toJson());
+
+            feedbackItem.sendToKeenIo(client);
         }
     }
 

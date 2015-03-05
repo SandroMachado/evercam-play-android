@@ -83,6 +83,9 @@ import io.evercam.androidapp.utils.EnumConstants.DeleteType;
 import io.evercam.androidapp.utils.EvercamFile;
 import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.androidapp.video.SnapshotManager.FileType;
+import io.keen.client.android.AndroidKeenClientBuilder;
+import io.keen.client.java.KeenClient;
+import io.keen.client.java.KeenProject;
 
 public class VideoActivity extends ParentActivity implements SurfaceHolder.Callback, IVideoPlayer
 {
@@ -185,6 +188,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private Date startTime;
     private AndroidLogger logger;
+    private KeenClient client;
+    private KeenProject keenProject;
     private String username = "";
 
     @Override
@@ -222,6 +227,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             }
             logger = AndroidLogger.getLogger(getApplicationContext(), Constants.LOGENTRIES_TOKEN,
                     false);
+            client = new AndroidKeenClientBuilder(this).build();
+            keenProject = new KeenProject(Constants.KEEN_PROJECT_ID,
+                    Constants.KEEN_WRITE_KEY, Constants.KEEN_READ_KEY);
+            client.setDefaultProject(keenProject);
 
             startPlay();
         }
@@ -1654,6 +1663,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                 failedItem.setUrl(player.getCurrentMRL());
                                 failedItem.setType(StreamFeedbackItem.TYPE_RTSP);
                                 logger.info(failedItem.toJson());
+                                failedItem.sendToKeenIo(client);
                             }
                             isPlayingJpg = true;
                             player.showToast(videoActivity.get().getString(R.string
@@ -1693,6 +1703,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                         }
 
                         logger.info(successItem.toJson());
+                        successItem.sendToKeenIo(client);
 
                         if(!VideoActivity.mediaUrls.get(mrlIndex).isLocalNetwork)
                         {
@@ -1928,6 +1939,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                     successItem.setUrl(successUrl);
                                     successItem.setType(StreamFeedbackItem.TYPE_JPG);
                                     logger.info(successItem.toJson());
+                                    successItem.sendToKeenIo(client);
                                 }
                                 else
                                 {
@@ -1958,7 +1970,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                         R.string.action_streaming_jpg_failed,
                                         R.string.label_streaming_jpg_failed);
 
-                                //Send Firebase
+                                //Send Feedback
                                 StreamFeedbackItem failedItem = new StreamFeedbackItem
                                         (VideoActivity.this, AppData.defaultUser.getUsername(),
                                                 false);
@@ -1966,6 +1978,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                 failedItem.setUrl(evercamCamera.getExternalSnapshotUrl());
                                 failedItem.setType(StreamFeedbackItem.TYPE_JPG);
                                 logger.info(failedItem.toJson());
+                                failedItem.sendToKeenIo(client);
                             }
                         }
                     }

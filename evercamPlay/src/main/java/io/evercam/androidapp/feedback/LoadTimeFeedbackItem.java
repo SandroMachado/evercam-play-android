@@ -6,6 +6,12 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import io.evercam.androidapp.utils.Constants;
+import io.keen.client.java.KeenClient;
+
 public class LoadTimeFeedbackItem extends FeedbackItem
 {
     private final String TAG = "LoadTimeFeedbackItem";
@@ -25,22 +31,41 @@ public class LoadTimeFeedbackItem extends FeedbackItem
 
     public String toJson()
     {
-        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject;
         try
         {
-            jsonObject.put("user", user);
-            jsonObject.put("timestamp", timestamp);
+            jsonObject= getBaseJsonObject();
             jsonObject.put("database_load_time", database_load_time);
             jsonObject.put("evercam_load_time", evercam_load_time);
-            jsonObject.put("network", network);
-            jsonObject.put("app_version", app_version);
-            jsonObject.put("device", device);
-            jsonObject.put("android_version", android_version);
+            return jsonObject.toString();
         }
         catch(JSONException e)
         {
             Log.e(TAG, e.toString());
         }
-        return jsonObject.toString();
+        return "";
+    }
+
+    @Override
+    public HashMap<String, Object> toHashMap()
+    {
+        HashMap<String, Object> event = super.toHashMap();
+        event.put("database_load_time", database_load_time);
+        event.put("evercam_load_time", evercam_load_time);
+        return event;
+    }
+
+
+    public void sendToKeenIo(final KeenClient client)
+    {
+        final FeedbackItem feedbackItem = this;
+        new Thread(new Runnable(){
+
+            @Override
+            public void run()
+            {
+                client.addEvent(Constants.KEEN_COLLECTION_LIST_LOADING_TIME, feedbackItem.toHashMap());
+            }
+        }).start();
     }
 }

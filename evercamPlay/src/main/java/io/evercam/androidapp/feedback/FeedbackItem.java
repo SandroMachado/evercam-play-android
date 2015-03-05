@@ -1,11 +1,21 @@
 package io.evercam.androidapp.feedback;
 
 import android.content.Context;
+import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.DataCollector;
+import io.keen.client.java.KeenClient;
 
 public class FeedbackItem
 {
+    private final String TAG = "FeedbackItem";
+
     //Device details
     protected String network = "";
     protected String app_version = "";
@@ -14,11 +24,6 @@ public class FeedbackItem
     protected Context context;
     protected Long timestamp;
     protected String user = "";
-
-    public FeedbackItem()
-    {
-
-    }
 
     public FeedbackItem(Context context, String username)
     {
@@ -65,5 +70,33 @@ public class FeedbackItem
     public String getAndroid_version()
     {
         return android_version;
+    }
+
+    protected JSONObject getBaseJsonObject() throws JSONException
+    {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("user", user);
+        jsonObject.put("timestamp", timestamp);
+        jsonObject.put("network_type", network);
+        jsonObject.put("app_version", app_version);
+        jsonObject.put("device", device);
+        jsonObject.put("android_version", android_version);
+        return jsonObject;
+    }
+
+    private HashMap<String, Object> getBaseHashMap()
+    {
+        HashMap<String, Object> eventMap = new HashMap<>();
+        eventMap.put("user", user);
+        eventMap.put("network_type", network);
+        eventMap.put("app_version", app_version);
+        eventMap.put("device", device);
+        eventMap.put("android_version", android_version);
+        return eventMap;
+    }
+
+    public HashMap<String, Object> toHashMap()
+    {
+        return getBaseHashMap();
     }
 }

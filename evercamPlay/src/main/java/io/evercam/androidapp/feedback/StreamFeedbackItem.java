@@ -6,7 +6,11 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
+import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.DataCollector;
+import io.keen.client.java.KeenClient;
 
 public class StreamFeedbackItem extends FeedbackItem
 {
@@ -74,25 +78,45 @@ public class StreamFeedbackItem extends FeedbackItem
 
     public String toJson()
     {
-        JSONObject jsonObject = new JSONObject();
         try
         {
+            JSONObject jsonObject = getBaseJsonObject();
             jsonObject.put("camera_id", camera_id);
-            jsonObject.put("user", user);
-            jsonObject.put("timestamp", timestamp);
             jsonObject.put("url", url);
             jsonObject.put("is_success", is_success);
             jsonObject.put("load_time", load_time);
-            jsonObject.put("network", network);
-            jsonObject.put("app_version", app_version);
-            jsonObject.put("device", device);
-            jsonObject.put("android_version", android_version);
             jsonObject.put("type", type);
+            return jsonObject.toString();
         }
         catch(JSONException e)
         {
             Log.e(TAG, e.toString());
         }
-        return jsonObject.toString();
+        return "";
+    }
+
+    @Override
+    public HashMap<String, Object> toHashMap()
+    {
+        HashMap<String, Object> event = super.toHashMap();
+        event.put("camera_id", camera_id);
+        event.put("url", url);
+        event.put("is_success", is_success);
+        event.put("load_time", load_time);
+        event.put("type", type);
+        return event;
+    }
+
+    public void sendToKeenIo(final KeenClient client)
+    {
+        final FeedbackItem feedbackItem = this;
+        new Thread(new Runnable(){
+
+            @Override
+            public void run()
+            {
+                client.addEvent(Constants.KEEN_COLLECTION_STREAM_LOADING_TIME, feedbackItem.toHashMap());
+            }
+        }).start();
     }
 }
