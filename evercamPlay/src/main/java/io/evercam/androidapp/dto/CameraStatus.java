@@ -4,5 +4,4 @@ public class CameraStatus
 {
     public static final String ACTIVE = "Active";
     public static final String OFFLINE = "Offline";
-    public static final String UNKNOWN = "Unknown";
 }

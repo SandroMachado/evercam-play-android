@@ -593,7 +593,6 @@ public class CamerasActivity extends ParentActivity
             public void onScrollStopped()
             {
 
-                Log.d(TAG, "Scroll stopped");
                 onScreenScrolled();
             }
         });

@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.apache.http.cookie.Cookie;
 
@@ -195,6 +196,7 @@ public class CameraLayout extends LinearLayout
         String thumbnailUrl = evercamCamera.getThumbnailUrl();
         if(thumbnailUrl != null && !thumbnailUrl.isEmpty())
         {
+
             Picasso.with(context).load(thumbnailUrl).fit().into(snapshotImageView);
 
             loadingAnimation.setVisibility(View.GONE);

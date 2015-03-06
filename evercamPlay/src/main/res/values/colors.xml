@@ -18,9 +18,6 @@
 
     <color name="transparent">#00000000</color>
     <color name="slidemenu_listitem_background_color">#313131</color>
-    <color name="notificationcolor">#909090</color>
-    <color name="notificationreadcolor">#909090</color>
-    <color name="notificationunreadcolor">#C5C5C5</color>
     <color name="red">#FF0000</color>
 
 </resources>
