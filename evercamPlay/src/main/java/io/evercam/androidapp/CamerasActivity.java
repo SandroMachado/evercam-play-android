@@ -484,10 +484,7 @@ public class CamerasActivity extends ParentActivity
                             cameraListLayout.getHitRect(cameraBounds);
                             if(Rect.intersects(cameraBounds, bounds))
                             {
-                                if(evercamCamera.isActive())
-                                {
-                                    cameraLayout.loadImage();
-                                }
+                                cameraLayout.loadImage();
                             }
                         }
                     }, 300);

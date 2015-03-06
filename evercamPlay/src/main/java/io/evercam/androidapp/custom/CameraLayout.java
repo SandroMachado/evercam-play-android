@@ -273,6 +273,7 @@ public class CameraLayout extends LinearLayout
                                 Log.d(TAG, "onBitmapFailed " + evercamCamera.getCameraId());
                                 if(errorDrawable == null)
                                 {
+                                    Log.d(TAG, "onBitmapFailed " + evercamCamera.getCameraId() + " drawable is null");
                                     CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_not_received;
                                     handler.postDelayed(LoadImageRunnable, 0);
                                 }
