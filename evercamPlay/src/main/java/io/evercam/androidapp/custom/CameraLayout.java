@@ -53,7 +53,6 @@ public class CameraLayout extends LinearLayout
     private ImageView snapshotImageView;
     private ImageView offlineImage = null;
     private GradientTitleLayout gradientLayout;
-    private boolean isThumbnailReceived = false;
 
     // Handler for the handling the next request. It will call the image loading
     // thread so that it can proceed with next step.
@@ -69,9 +68,8 @@ public class CameraLayout extends LinearLayout
             evercamCamera = camera;
 
             this.setOrientation(LinearLayout.VERTICAL);
-            this.setGravity(Gravity.LEFT);
-
-            this.setBackgroundColor(Color.WHITE);
+            this.setGravity(Gravity.START);
+            this.setBackgroundColor(getResources().getColor(R.color.evercam_color_light_gray));
 
             cameraRelativeLayout = new RelativeLayout(context);
             RelativeLayout.LayoutParams ivParams = new RelativeLayout.LayoutParams(android.view
@@ -178,7 +176,7 @@ public class CameraLayout extends LinearLayout
 
     // Image loaded form camera and now set the controls appearance and text
     // accordingly
-    private void setlayoutForLiveImageReceived()
+    private void setLayoutForLiveImageReceived()
     {
         evercamCamera.setStatus(CameraStatus.ACTIVE);
         offlineImage.setVisibility(View.INVISIBLE);
@@ -197,54 +195,30 @@ public class CameraLayout extends LinearLayout
         String thumbnailUrl = evercamCamera.getThumbnailUrl();
         if(thumbnailUrl != null && !thumbnailUrl.isEmpty())
         {
-            loadingAnimation.setVisibility(View.GONE);
-            cameraRelativeLayout.removeView(loadingAnimation);
             Picasso.with(context).load(thumbnailUrl).fit().into(snapshotImageView);
 
-            isThumbnailReceived = true;
+            loadingAnimation.setVisibility(View.GONE);
+            cameraRelativeLayout.removeView(loadingAnimation);
 
             if(!evercamCamera.isActive())
             {
                 showGreyImage();
                 gradientLayout.showOfflineIcon(true);
-
-                handler.removeCallbacks(LoadImageRunnable);
             }
             return true;
         }
         else
         {
-
             offlineImage.setVisibility(View.VISIBLE);
-
-            snapshotImageView.setBackgroundColor(Color.GRAY);
+            snapshotImageView.setBackgroundColor(getResources().getColor(R.color.evercam_color_dark_gray));
             gradientLayout.removeGradientShadow();
         }
         return false;
     }
 
-    // Image loaded from Evercam and now set the controls appearance and
-    // text accordingly
-    private void setLayoutForThumbnailReceived()
-    {
-        if(cameraRelativeLayout.indexOfChild(loadingAnimation) >= 0)
-        {
-            loadingAnimation.setVisibility(View.GONE);
-            cameraRelativeLayout.removeView(loadingAnimation);
-        }
-
-        if(!evercamCamera.isActive())
-        {
-            showGreyImage();
-            gradientLayout.showOfflineIcon(true);
-        }
-
-        handler.removeCallbacks(LoadImageRunnable);
-    }
-
     // Image not received form cache, Evercam nor camera side. Set the controls
     // appearance and text accordingly
-    private void setlayoutForNoImageReceived()
+    private void setLayoutForNoImageReceived()
     {
         if(cameraRelativeLayout.indexOfChild(loadingAnimation) >= 0)
         {
@@ -279,21 +253,11 @@ public class CameraLayout extends LinearLayout
                 }
                 else if(evercamCamera.loadingStatus == ImageLoadingStatus.live_received)
                 {
-                    setlayoutForLiveImageReceived();
-                    return;
+                    setLayoutForLiveImageReceived();
                 }
                 else if(evercamCamera.loadingStatus == ImageLoadingStatus.live_not_received)
                 {
-                    setlayoutForNoImageReceived();
-                }
-                else if(evercamCamera.loadingStatus == ImageLoadingStatus.thumbnail_received)
-                {
-                    setLayoutForThumbnailReceived();
-                    return;
-                }
-                else if(evercamCamera.loadingStatus == ImageLoadingStatus.thumbnail_not_received)
-                {
-                    setlayoutForNoImageReceived();
+                    setLayoutForNoImageReceived();
                 }
             }
             catch(OutOfMemoryError e)
@@ -317,7 +281,7 @@ public class CameraLayout extends LinearLayout
 
     private void showGreyImage()
     {
-        snapshotImageView.setAlpha(0.6f);
+        snapshotImageView.setAlpha(0.5f);
     }
 
     private class DownloadLiveImageTask extends AsyncTask<Void, Drawable, Drawable>
