@@ -440,7 +440,7 @@ public class CamerasActivity extends ParentActivity
             int index = 0;
             totalCamerasInGrid = 0;
 
-            for(EvercamCamera evercamCamera : AppData.evercamCameraList)
+            for(final EvercamCamera evercamCamera : AppData.evercamCameraList)
             {
                 final LinearLayout cameraListLayout = new LinearLayout(this);
 
@@ -484,7 +484,10 @@ public class CamerasActivity extends ParentActivity
                             cameraListLayout.getHitRect(cameraBounds);
                             if(Rect.intersects(cameraBounds, bounds))
                             {
-                                cameraLayout.loadImage();
+                                if(evercamCamera.isActive())
+                                {
+                                    cameraLayout.loadImage();
+                                }
                             }
                         }
                     }, 300);
