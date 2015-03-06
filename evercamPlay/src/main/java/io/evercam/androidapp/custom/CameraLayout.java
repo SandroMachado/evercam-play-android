@@ -3,12 +3,12 @@ package io.evercam.androidapp.custom;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.v4.app.NotificationCompatSideChannelService;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -25,13 +25,11 @@ import org.apache.http.cookie.Cookie;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import io.evercam.EvercamException;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.CameraStatus;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.dto.ImageLoadingStatus;
-import io.evercam.androidapp.tasks.DownloadLatestTask;
 import io.evercam.androidapp.tasks.SaveImageRunnable;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
@@ -46,7 +44,6 @@ public class CameraLayout extends LinearLayout
     public Context context;
     public EvercamCamera evercamCamera;
     private DownloadLiveImageTask liveImageTask;
-    private DownloadLatestTask latestTask;
 
     private boolean end = false; // tells whether application has ended or not.
     // If it is
@@ -56,8 +53,7 @@ public class CameraLayout extends LinearLayout
     private ImageView snapshotImageView;
     private ImageView offlineImage = null;
     private GradientTitleLayout gradientLayout;
-
-    private boolean isLatestReceived = false;
+    private boolean isThumbnailReceived = false;
 
     // Handler for the handling the next request. It will call the image loading
     // thread so that it can proceed with next step.
@@ -159,7 +155,7 @@ public class CameraLayout extends LinearLayout
         }
     }
 
-    public void updateTitleIfdifferent()
+    public void updateTitleIfDifferent()
     {
         for(EvercamCamera camera : AppData.evercamCameraList)
         {
@@ -169,28 +165,6 @@ public class CameraLayout extends LinearLayout
             }
         }
     }
-
-//    private Drawable getThumbnailFromCamera(EvercamCamera evercamCamera)
-//    {
-//        try
-//        {
-//            if(evercamCamera.camera != null && evercamCamera.camera.isOnline())
-//            {
-//                byte[] snapshotByte = evercamCamera.camera.getThumbnailData();
-//
-//                Bitmap bitmap = BitmapFactory.decodeByteArray(snapshotByte, 0, snapshotByte.length);
-//
-//                Drawable drawable = new BitmapDrawable(context.getResources(), bitmap);
-//
-//                return drawable;
-//            }
-//        }
-//        catch(EvercamException e)
-//        {
-//            Log.e(TAG, e.toString());
-//        }
-//        return null;
-//    }
 
     // Stop the image loading process. May be need to end current activity
     public boolean stopAllActivity()
@@ -207,6 +181,7 @@ public class CameraLayout extends LinearLayout
     private void setlayoutForLiveImageReceived()
     {
         evercamCamera.setStatus(CameraStatus.ACTIVE);
+        offlineImage.setVisibility(View.INVISIBLE);
 
         if(cameraRelativeLayout.indexOfChild(loadingAnimation) >= 0)
         {
@@ -226,13 +201,12 @@ public class CameraLayout extends LinearLayout
             cameraRelativeLayout.removeView(loadingAnimation);
             Picasso.with(context).load(thumbnailUrl).fit().into(snapshotImageView);
 
+            isThumbnailReceived = true;
+
             if(!evercamCamera.isActive())
             {
-                Log.d(TAG, "camera is not active: " + evercamCamera.getCameraId());
                 showGreyImage();
                 gradientLayout.showOfflineIcon(true);
-
-                offlineImage.setVisibility(View.INVISIBLE);
 
                 handler.removeCallbacks(LoadImageRunnable);
             }
@@ -240,14 +214,18 @@ public class CameraLayout extends LinearLayout
         }
         else
         {
-            Log.d(TAG, "NO THUMBNAIL: " + evercamCamera.getCameraId());
+
+            offlineImage.setVisibility(View.VISIBLE);
+
+            snapshotImageView.setBackgroundColor(Color.GRAY);
+            gradientLayout.removeGradientShadow();
         }
         return false;
     }
 
     // Image loaded from Evercam and now set the controls appearance and
     // text accordingly
-    private void setlayoutForLatestImageReceived()
+    private void setLayoutForThumbnailReceived()
     {
         if(cameraRelativeLayout.indexOfChild(loadingAnimation) >= 0)
         {
@@ -259,12 +237,7 @@ public class CameraLayout extends LinearLayout
         {
             showGreyImage();
             gradientLayout.showOfflineIcon(true);
-
-            offlineImage.setVisibility(View.INVISIBLE);
         }
-
-        //Remove shadow because the gray image is showing already
-        gradientLayout.removeGradientShadow();
 
         handler.removeCallbacks(LoadImageRunnable);
     }
@@ -282,12 +255,8 @@ public class CameraLayout extends LinearLayout
         if(!evercamCamera.isActive())
         {
             showGreyImage();
-            if(!isLatestReceived)
-            {
-                offlineImage.setVisibility(View.VISIBLE);
-            }
+
             gradientLayout.showOfflineIcon(true);
-            gradientLayout.removeGradientShadow();
         }
 
         // animation must have been stopped when image loaded from cache
@@ -315,18 +284,14 @@ public class CameraLayout extends LinearLayout
                 }
                 else if(evercamCamera.loadingStatus == ImageLoadingStatus.live_not_received)
                 {
-                    latestTask = new DownloadLatestTask(evercamCamera.getCameraId(),
-                            CameraLayout.this);
-                    latestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     setlayoutForNoImageReceived();
                 }
-                else if(evercamCamera.loadingStatus == ImageLoadingStatus.camba_image_received)
+                else if(evercamCamera.loadingStatus == ImageLoadingStatus.thumbnail_received)
                 {
-                    setlayoutForLatestImageReceived();
-                    isLatestReceived = true;
+                    setLayoutForThumbnailReceived();
                     return;
                 }
-                else if(evercamCamera.loadingStatus == ImageLoadingStatus.camba_not_received)
+                else if(evercamCamera.loadingStatus == ImageLoadingStatus.thumbnail_not_received)
                 {
                     setlayoutForNoImageReceived();
                 }

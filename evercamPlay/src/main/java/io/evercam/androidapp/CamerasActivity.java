@@ -370,7 +370,7 @@ public class CamerasActivity extends ParentActivity
                 LinearLayout pview = (LinearLayout) camsLineView.getChildAt(i);
                 CameraLayout cameraLayout = (CameraLayout) pview.getChildAt(0);
 
-                cameraLayout.updateTitleIfdifferent();
+                cameraLayout.updateTitleIfDifferent();
             }
         }
         catch(Exception e)
@@ -475,19 +475,19 @@ public class CamerasActivity extends ParentActivity
                  */
                 if(reloadImages)
                 {
-                    //                    new Handler().postDelayed(new Runnable()
-                    //                    {
-                    //                        @Override
-                    //                        public void run()
-                    //                        {
-                    //                            Rect cameraBounds = new Rect();
-                    //                            cameraListLayout.getHitRect(cameraBounds);
-                    //                            if(Rect.intersects(cameraBounds, bounds))
-                    //                            {
-                    //                                cameraLayout.loadImage();
-                    //                            }
-                    //                        }
-                    //                    }, 300);
+                    new Handler().postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            Rect cameraBounds = new Rect();
+                            cameraListLayout.getHitRect(cameraBounds);
+                            if(Rect.intersects(cameraBounds, bounds))
+                            {
+                                cameraLayout.loadImage();
+                            }
+                        }
+                    }, 300);
                 }
 
                 totalCamerasInGrid++;
