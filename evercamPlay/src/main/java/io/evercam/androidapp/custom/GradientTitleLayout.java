@@ -27,7 +27,7 @@ public class GradientTitleLayout extends RelativeLayout
         textView.setText(title);
     }
 
-    public void showOfflineImage(boolean show)
+    public void showOfflineIcon(boolean show)
     {
         ImageView imageView = (ImageView) findViewById(R.id.offline_image_view);
         if(show)

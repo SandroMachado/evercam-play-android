@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.cookie.Cookie;
 
@@ -169,27 +170,27 @@ public class CameraLayout extends LinearLayout
         }
     }
 
-    private Drawable getThumbnailFromCamera(EvercamCamera evercamCamera)
-    {
-        try
-        {
-            if(evercamCamera.camera != null && evercamCamera.camera.isOnline())
-            {
-                byte[] snapshotByte = evercamCamera.camera.getThumbnailData();
-
-                Bitmap bitmap = BitmapFactory.decodeByteArray(snapshotByte, 0, snapshotByte.length);
-
-                Drawable drawable = new BitmapDrawable(context.getResources(), bitmap);
-
-                return drawable;
-            }
-        }
-        catch(EvercamException e)
-        {
-            Log.e(TAG, e.toString());
-        }
-        return null;
-    }
+//    private Drawable getThumbnailFromCamera(EvercamCamera evercamCamera)
+//    {
+//        try
+//        {
+//            if(evercamCamera.camera != null && evercamCamera.camera.isOnline())
+//            {
+//                byte[] snapshotByte = evercamCamera.camera.getThumbnailData();
+//
+//                Bitmap bitmap = BitmapFactory.decodeByteArray(snapshotByte, 0, snapshotByte.length);
+//
+//                Drawable drawable = new BitmapDrawable(context.getResources(), bitmap);
+//
+//                return drawable;
+//            }
+//        }
+//        catch(EvercamException e)
+//        {
+//            Log.e(TAG, e.toString());
+//        }
+//        return null;
+//    }
 
     // Stop the image loading process. May be need to end current activity
     public boolean stopAllActivity()
@@ -218,36 +219,31 @@ public class CameraLayout extends LinearLayout
 
     private boolean showThumbnail()
     {
-        Drawable thumbnail = getThumbnailFromCamera(evercamCamera);
-        if(thumbnail != null)
+        String thumbnailUrl = evercamCamera.getThumbnailUrl();
+        if(thumbnailUrl != null && !thumbnailUrl.isEmpty())
         {
             loadingAnimation.setVisibility(View.GONE);
             cameraRelativeLayout.removeView(loadingAnimation);
-            //cameraRelativeLayout.setBackgroundDrawable(thumbnail);
-            snapshotImageView.setImageDrawable(thumbnail);
+            Picasso.with(context).load(thumbnailUrl).fit().into(snapshotImageView);
+
+            if(!evercamCamera.isActive())
+            {
+                Log.d(TAG, "camera is not active: " + evercamCamera.getCameraId());
+                showGreyImage();
+                gradientLayout.showOfflineIcon(true);
+
+                offlineImage.setVisibility(View.INVISIBLE);
+
+                handler.removeCallbacks(LoadImageRunnable);
+            }
             return true;
         }
-        else //If thumbnail is null, request latest snapshot
+        else
         {
-            Log.d(TAG, "No thumbnail, request latest snapshot instead: " + evercamCamera
-                    .getCameraId());
-            latestTask = new DownloadLatestTask(evercamCamera.getCameraId(), CameraLayout.this);
-            latestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            Log.d(TAG, "NO THUMBNAIL: " + evercamCamera.getCameraId());
         }
         return false;
     }
-
-    //    private boolean showThumbnail()
-    //    {
-    //        String thumbnailUrl = evercamCamera.getThumbnailUrl();
-    //        if(thumbnailUrl != null && !thumbnailUrl.isEmpty())
-    //        {
-    //            snapshotImageView.setImageDrawable();
-    //            Picasso.with(context).load(thumbnailUrl).into(snapshotImageView);
-    //            return true;
-    //        }
-    //        return false;
-    //    }
 
     // Image loaded from Evercam and now set the controls appearance and
     // text accordingly
@@ -261,8 +257,8 @@ public class CameraLayout extends LinearLayout
 
         if(!evercamCamera.isActive())
         {
-            greyImageShown();
-            gradientLayout.showOfflineImage(true);
+            showGreyImage();
+            gradientLayout.showOfflineIcon(true);
 
             offlineImage.setVisibility(View.INVISIBLE);
         }
@@ -285,12 +281,12 @@ public class CameraLayout extends LinearLayout
 
         if(!evercamCamera.isActive())
         {
-            greyImageShown();
+            showGreyImage();
             if(!isLatestReceived)
             {
                 offlineImage.setVisibility(View.VISIBLE);
             }
-            gradientLayout.showOfflineImage(true);
+            gradientLayout.showOfflineIcon(true);
             gradientLayout.removeGradientShadow();
         }
 
@@ -354,13 +350,9 @@ public class CameraLayout extends LinearLayout
         }
     };
 
-    private void greyImageShown()
+    private void showGreyImage()
     {
-        this.setBackgroundColor(Color.GRAY);
-        if(cameraRelativeLayout.getBackground() != null)
-        {
-            cameraRelativeLayout.getBackground().setAlpha(70);
-        }
+        snapshotImageView.setAlpha(0.6f);
     }
 
     private class DownloadLiveImageTask extends AsyncTask<Void, Drawable, Drawable>
