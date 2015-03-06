@@ -259,7 +259,7 @@ public class CameraLayout extends LinearLayout
             cameraRelativeLayout.removeView(loadingAnimation);
         }
 
-        else
+        if(!evercamCamera.isActive())
         {
             greyImageShown();
             gradientLayout.showOfflineImage(true);
