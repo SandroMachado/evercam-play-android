@@ -400,7 +400,6 @@ public class CamerasActivity extends ParentActivity
             if(Constants.isAppTrackingEnabled)
             {
                 BugSenseHandler.sendException(e);
-
             }
 
             EvercamPlayApplication.sendCaughtException(this, e);
@@ -457,7 +456,7 @@ public class CamerasActivity extends ParentActivity
                         camerasPerRow);
                 params.width = params.width - 1; //1 pixels spacing between cameras
                 params.height = (int) (params.width / (1.25));
-                params.setMargins(1, 1, 0, 0); //1 pixels spacing between cameras
+                params.setMargins(0, 0, 0, 0); //No spacing between cameras
                 cameraLayout.setLayoutParams(params);
 
                 cameraListLayout.addView(cameraLayout);
@@ -626,7 +625,7 @@ public class CamerasActivity extends ParentActivity
 
         if(Constants.isAppTrackingEnabled)
         {
-            if(Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
+            BugSenseHandler.closeSession(this);
         }
     }
 
@@ -800,11 +799,6 @@ public class CamerasActivity extends ParentActivity
                 {
                     if(reloadCameraList || !liveViewCameraId.isEmpty())
                     {
-                        // If returned from account management, the
-                        // default user could possibly changed,
-                        // so remove all cameras and reload.
-
-                        // addUsersToDropdownActionBar();
                         removeAllCameraViews();
                         startLoadingCameras();
                         reloadCameraList = false;

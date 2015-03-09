@@ -65,8 +65,6 @@ public class DbCamera extends DatabaseMaster
                 "NULL" + "," + KEY_INTERNAL_RTSP + " INTEGER NULL" + "," +
                 "" + KEY_EXTERNAL_RTSP + " INTEGER NULL" + "," + KEY_REAL_OWNER + " TEXT NULL" +
                 "," + KEY_CAN_EDIT + " TEXT NULL" + "," + KEY_CAN_DELETE + " TEXT NULL"
-                // + ","+ "CONSTRAINT uniqueCamAndUser UNIQUE (" + KEY_CAMERA_ID
-                // + ", " + KEY_OWNER + ")"
                 + ")";
         db.execSQL(CREATE_TABLE_Cameras);
     }

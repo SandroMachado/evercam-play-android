@@ -40,8 +40,7 @@ public class EvercamCamera
     private String internalRtspUrl = "";
     private String status = "";
     private boolean hasCredentials = false;
-    private String thumbnailUrl;
-    private String snapshotUrl;
+    private String thumbnailUrl = "";
 
     // Fields for edit camera
     private String internalHost = "";
@@ -99,7 +98,6 @@ public class EvercamCamera
             externalHttp = camera.getExternalHttpPort();
             externalRtsp = camera.getExternalRtspPort();
             thumbnailUrl = camera.getThumbnailUrl();
-            snapshotUrl = camera.getLiveSnapshotUrl();
         }
         catch(EvercamException e)
         {
@@ -455,16 +453,6 @@ public class EvercamCamera
     public void setThumbnailUrl(String thumbnailUrl)
     {
         this.thumbnailUrl = thumbnailUrl;
-    }
-
-    public String getSnapshotUrl()
-    {
-        return snapshotUrl;
-    }
-
-    public void setSnapshotUrl(String snapshotUrl)
-    {
-        this.snapshotUrl = snapshotUrl;
     }
 
     public boolean isHikvision()

@@ -26,6 +26,8 @@ import org.apache.http.cookie.Cookie;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import io.evercam.API;
+import io.evercam.EvercamException;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.CameraStatus;
@@ -322,6 +324,14 @@ public class CameraLayout extends LinearLayout
 
             }
         };
-        Picasso.with(context).load(evercamCamera.getSnapshotUrl()).into(liveSnapshotTarget);
+        try
+        {
+            final String snapshotUrl = API.generateSnapshotUrlForCamera(evercamCamera.getCameraId());
+            Picasso.with(context).load(snapshotUrl).into(liveSnapshotTarget);
+        }
+        catch (EvercamException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

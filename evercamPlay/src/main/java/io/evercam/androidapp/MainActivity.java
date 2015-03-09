@@ -132,9 +132,8 @@ public class MainActivity extends Activity
         AppData.defaultUser = new EvercamAccount(context).getDefaultUser();
         if(AppData.defaultUser != null)
         {
-            //Testing: Only load 20 cameras see if it's faster to load for the first time
             AppData.evercamCameraList = new DbCamera(context).getCamerasByOwner(AppData
-                    .defaultUser.getUsername(), 20);
+                    .defaultUser.getUsername(), 500);
             API.setUserKeyPair(AppData.defaultUser.getApiKey(), AppData.defaultUser.getApiId());
             return true;
         }

@@ -423,29 +423,11 @@ public class Commons
                 Base64.URL_SAFE | Base64.NO_WRAP);
     }
 
-    public static void setTimeouts(HttpParams params)
-    {
-        params.setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, Constants.httptimeout);
-        params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, Constants.httptimeout);
-        params.setLongParameter(ConnManagerPNames.TIMEOUT, Constants.httptimeout);
-    }
-
     public static void setTimeouts(HttpParams params, int millis)
     {
         params.setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, millis);
         params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, millis);
         params.setLongParameter(ConnManagerPNames.TIMEOUT, millis);
-    }
-
-    public static Drawable DownlaodDrawableSync(URL url, int timeoutMillies) throws IOException
-    {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setDoInput(true);
-        connection.setConnectTimeout(timeoutMillies);
-        connection.setReadTimeout(timeoutMillies);
-        connection.connect();
-        InputStream input = connection.getInputStream();
-        return Drawable.createFromStream(input, "src");
     }
 
     public static String readRawTextFile(int id, Context ctx)
