@@ -63,9 +63,7 @@ public class CamerasActivity extends ParentActivity
 
     public CustomProgressDialog reloadProgressDialog;
 
-    /**
-     * For user data collection, calculate how long it takes to load camera list
-     */
+    /** For user data collection, calculate how long it takes to load camera list*/
     private Date startTime;
     private float databaseLoadTime = 0;
     private AndroidLogger logger;
