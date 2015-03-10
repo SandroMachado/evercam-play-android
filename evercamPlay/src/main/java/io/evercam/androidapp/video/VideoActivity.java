@@ -13,7 +13,6 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,7 +41,6 @@ import com.bugsense.trace.BugSenseHandler;
 import com.logentries.android.AndroidLogger;
 import com.squareup.picasso.Picasso;
 
-import org.apache.http.cookie.Cookie;
 import org.videolan.libvlc.EventHandler;
 import org.videolan.libvlc.IVideoPlayer;
 import org.videolan.libvlc.LibVLC;
@@ -190,8 +188,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             if(this.getActionBar() != null)
             {
                 this.getActionBar().setDisplayHomeAsUpEnabled(true);
-                this.getActionBar().setTitle("");
-                this.getActionBar().setIcon(R.drawable.icon_50x50);
             }
 
             setContentView(R.layout.video_activity_layout);
@@ -579,7 +575,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
         paused = false;
         end = false;
-        //       loadImageFromCache(startingCameraID);
 
         checkNetworkStatus();
 
@@ -641,7 +636,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
             if(mrlPlaying != null)
             {
-                addUrlIfValid(mrlPlaying, evercamCamera);
+                addUrlIfValid(mrlPlaying);
                 mrlIndex = 0;
                 mrlPlaying = null;
             }
@@ -656,7 +651,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         }
     }
 
-    private void addUrlIfValid(String url, EvercamCamera cam)
+    private void addUrlIfValid(String url)
     {
         if(url == null || url.trim().length() < 10 || !(url.startsWith("http://") || url
                 .startsWith("https://") || url.startsWith("rtsp://") || url.startsWith("tcp://")))
@@ -678,13 +673,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     {
         imageView.setImageDrawable(null);
 
-        File cacheFile = EvercamFile.getCacheFileRelative(this, cameraId);
-        if(cacheFile.exists())
-        {
-            Uri uri = Uri.fromFile(cacheFile);
-
-            Picasso.with(this).load(uri).into(imageView);
-        }
+        Bitmap cacheBitmap = EvercamFile.loadBitmapForCamera(this, cameraId);
+        imageView.setImageBitmap(cacheBitmap);
     }
 
     private void startMediaPlayerAnimation()
@@ -1342,25 +1332,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                     // requests. Rather wait for the play
                     // command
                     {
-                        String imageLiveURL = API.generateSnapshotUrlForCamera(evercamCamera.getCameraId());
-                        if(AbandonedJpgUrl.contains(imageLiveURL))
-                        {
-                            imageLiveURL = "";
-                        }
-                        DownloadImageTask taskExternal = new DownloadImageTask();
+                        DownloadImageTask downloadImageTask = new DownloadImageTask(evercamCamera.getCameraId());
 
                         if(downloadStartCount - downloadEndCount < 9)
                         {
-                            if(!imageLiveURL.isEmpty())
-                            {
-                                taskExternal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                                        imageLiveURL);
-                            }
-                            else
-                            {
-                                taskExternal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                                        new String[]{});
-                            }
+                             downloadImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
 
                         if(downloadStartCount - downloadEndCount > 9 && sleepInterval < 2000)
@@ -1568,41 +1544,19 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         }
     }
 
-    private static class AbandonedJpgUrl
-    {
-        public static ArrayList<String> abandonedArray = new ArrayList<>();
-
-        public static void add(String url)
-        {
-            if(!abandonedArray.contains(url))
-            {
-                abandonedArray.add(url);
-            }
-        }
-
-        public static boolean contains(String url)
-        {
-            if(!abandonedArray.isEmpty())
-            {
-                for(int index = 0; index < abandonedArray.size(); index++)
-                {
-                    if(abandonedArray.get(index).equals(url))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-    }
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Drawable>
+    private class DownloadImageTask extends AsyncTask<Void, Void, Drawable>
     {
         private long myStartImageTime;
         private String successUrl = "";//Only used for data collection
+        private String cameraId = "";
+
+        public DownloadImageTask(String cameraId)
+        {
+            this.cameraId = cameraId;
+        }
 
         @Override
-        protected Drawable doInBackground(String... urls)
+        protected Drawable doInBackground(Void... params)
         {
             if(!showImagesVideo)
             {
@@ -1615,7 +1569,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                     {
                         myStartImageTime = SystemClock.uptimeMillis();
                         downloadStartCount++;
-                        Camera camera = Camera.getById(evercamCamera.getCameraId(), false);
+                        Camera camera = Camera.getById(cameraId, false);
                         InputStream stream = camera.getSnapshotFromEvercam();
                         response = Drawable.createFromStream(stream, "src");
                         if(response != null)
@@ -1670,7 +1624,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                                 .orientation == Configuration.ORIENTATION_LANDSCAPE)
                                     VideoActivity.this.getActionBar().hide();
 
-                                if(showImagesVideo) imageView.setImageDrawable(result);
+                                if(showImagesVideo && cameraId.equals(evercamCamera.getCameraId()))
+                                {
+                                    //Only update JPG when the image belongs to the current camera
+                                    imageView.setImageDrawable(result);
+                                }
 
                                 hideProgressView();
 
