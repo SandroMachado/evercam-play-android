@@ -20,11 +20,11 @@ import android.widget.RelativeLayout;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.apache.http.cookie.Cookie;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 
 import io.evercam.API;
 import io.evercam.Camera;
@@ -200,7 +200,6 @@ public class CameraLayout extends LinearLayout
         String thumbnailUrl = evercamCamera.getThumbnailUrl();
         if(thumbnailUrl != null && !thumbnailUrl.isEmpty())
         {
-
             Picasso.with(context).load(thumbnailUrl).fit().into(snapshotImageView);
 
             loadingAnimation.setVisibility(View.GONE);
@@ -211,6 +210,11 @@ public class CameraLayout extends LinearLayout
                 showGreyImage();
                 gradientLayout.showOfflineIcon(true);
             }
+
+            //Save the thumbnail, it will be showing before live view get loaded
+            new Thread(new SaveImageRunnable(context, evercamCamera.getThumbnailUrl(), evercamCamera.getCameraId()))
+                                    .start();
+
             return true;
         }
         else
@@ -330,9 +334,8 @@ public class CameraLayout extends LinearLayout
             {
                 snapshotImageView.setImageBitmap(bitmap);
 
-                //Save a full size live snapshot, it will be showing before live view get loaded
-                new Thread(new SaveImageRunnable(context, bitmap, evercamCamera.getCameraId()))
-                        .start();
+                CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_received;
+                handler.postDelayed(LoadImageRunnable, 0);
             }
         }
     }
