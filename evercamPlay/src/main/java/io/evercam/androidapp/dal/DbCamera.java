@@ -64,8 +64,7 @@ public class DbCamera extends DatabaseMaster
                 "" + KEY_INTERNAL_HTTP + " INTEGER NULL" + "," + KEY_EXTERNAL_HTTP + " INTEGER " +
                 "NULL" + "," + KEY_INTERNAL_RTSP + " INTEGER NULL" + "," +
                 "" + KEY_EXTERNAL_RTSP + " INTEGER NULL" + "," + KEY_REAL_OWNER + " TEXT NULL" +
-                "," + KEY_CAN_EDIT + " TEXT NULL" + "," + KEY_CAN_DELETE + " TEXT NULL"
-                + ")";
+                "," + KEY_CAN_EDIT + " TEXT NULL" + "," + KEY_CAN_DELETE + " TEXT NULL" + ")";
         db.execSQL(CREATE_TABLE_Cameras);
     }
 

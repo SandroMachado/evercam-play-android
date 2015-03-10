@@ -39,7 +39,6 @@ import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.logentries.android.AndroidLogger;
-import com.squareup.picasso.Picasso;
 
 import org.videolan.libvlc.EventHandler;
 import org.videolan.libvlc.IVideoPlayer;
@@ -47,7 +46,6 @@ import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaList;
 
-import java.io.File;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -55,7 +53,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
-import io.evercam.API;
 import io.evercam.Camera;
 import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.FeedbackActivity;
@@ -94,7 +91,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private String mrlPlaying = null;
     private boolean showImagesVideo = false;
 
-    /** UI elements */
+    /**
+     * UI elements
+     */
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
     private ProgressView progressView = null;
@@ -106,7 +105,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private ImageView snapshotMenuView;
     private Animation fadeInAnimation = null;
 
-    /** Media player */
+    /**
+     * Media player
+     */
     private LibVLC libvlc;
     private int mVideoWidth;
     private int mVideoHeight;
@@ -120,7 +121,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private boolean isProgressShowing = true;
     static boolean enableLogs = true;
 
-    private final int MIN_SLEEP_INTERVAL= 200; // interval between two requests of
+    private final int MIN_SLEEP_INTERVAL = 200; // interval between two requests of
     // images
     private final int ADJUSTMENT_INTERVAL = 10; // how much milli seconds to increment
     // or decrement on image failure or
@@ -1332,11 +1333,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                     // requests. Rather wait for the play
                     // command
                     {
-                        DownloadImageTask downloadImageTask = new DownloadImageTask(evercamCamera.getCameraId());
+                        DownloadImageTask downloadImageTask = new DownloadImageTask(evercamCamera
+                                .getCameraId());
 
                         if(downloadStartCount - downloadEndCount < 9)
                         {
-                             downloadImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            downloadImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
 
                         if(downloadStartCount - downloadEndCount > 9 && sleepInterval < 2000)
@@ -1565,32 +1567,32 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             Drawable response = null;
             if(!paused && !end)
             {
-                    try
+                try
+                {
+                    myStartImageTime = SystemClock.uptimeMillis();
+                    downloadStartCount++;
+                    Camera camera = Camera.getById(cameraId, false);
+                    InputStream stream = camera.getSnapshotFromEvercam();
+                    response = Drawable.createFromStream(stream, "src");
+                    if(response != null)
                     {
-                        myStartImageTime = SystemClock.uptimeMillis();
-                        downloadStartCount++;
-                        Camera camera = Camera.getById(cameraId, false);
-                        InputStream stream = camera.getSnapshotFromEvercam();
-                        response = Drawable.createFromStream(stream, "src");
-                        if(response != null)
-                        {
-                            successiveFailureCount = 0;
-                        }
+                        successiveFailureCount = 0;
                     }
-                    catch(Exception e)
-                    {
-                        Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
-                        successiveFailureCount++;
-                    }
-                    catch(OutOfMemoryError e)
-                    {
-                        Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-                        successiveFailureCount++;
-                    }
-                    finally
-                    {
-                        downloadEndCount++;
-                    }
+                }
+                catch(Exception e)
+                {
+                    Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
+                    successiveFailureCount++;
+                }
+                catch(OutOfMemoryError e)
+                {
+                    Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+                    successiveFailureCount++;
+                }
+                finally
+                {
+                    downloadEndCount++;
+                }
             }
             else
             {

@@ -5,11 +5,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.support.v4.app.NotificationCompatSideChannelService;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -20,13 +17,9 @@ import android.widget.RelativeLayout;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-
-import org.apache.http.cookie.Cookie;
 
 import java.io.InputStream;
 
-import io.evercam.API;
 import io.evercam.Camera;
 import io.evercam.EvercamException;
 import io.evercam.androidapp.R;
@@ -212,15 +205,16 @@ public class CameraLayout extends LinearLayout
             }
 
             //Save the thumbnail, it will be showing before live view get loaded
-            new Thread(new SaveImageRunnable(context, evercamCamera.getThumbnailUrl(), evercamCamera.getCameraId()))
-                                    .start();
+            new Thread(new SaveImageRunnable(context, evercamCamera.getThumbnailUrl(),
+                    evercamCamera.getCameraId())).start();
 
             return true;
         }
         else
         {
             offlineImage.setVisibility(View.VISIBLE);
-            snapshotImageView.setBackgroundColor(getResources().getColor(R.color.evercam_color_dark_gray));
+            snapshotImageView.setBackgroundColor(getResources().getColor(R.color
+                    .evercam_color_dark_gray));
             gradientLayout.removeGradientShadow();
             CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_not_received;
             handler.postDelayed(LoadImageRunnable, 0);
@@ -298,7 +292,8 @@ public class CameraLayout extends LinearLayout
 
     private void showAndSaveLiveSnapshot()
     {
-        DownloadLiveSnapshotTask downloadLiveSnapshotTask = new DownloadLiveSnapshotTask(evercamCamera.getCameraId());
+        DownloadLiveSnapshotTask downloadLiveSnapshotTask = new DownloadLiveSnapshotTask
+                (evercamCamera.getCameraId());
         downloadLiveSnapshotTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -320,9 +315,10 @@ public class CameraLayout extends LinearLayout
                 InputStream stream = camera.getSnapshotFromEvercam();
                 return BitmapFactory.decodeStream(stream);
             }
-            catch (EvercamException e)
+            catch(EvercamException e)
             {
-                Log.e(TAG, "Failed to request live snapshot for: " + cameraId + " " + e.getMessage());
+                Log.e(TAG, "Failed to request live snapshot for: " + cameraId + " " + e
+                        .getMessage());
             }
             return null;
         }

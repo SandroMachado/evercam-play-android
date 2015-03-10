@@ -83,9 +83,7 @@ public class SaveImageRunnable implements Runnable
         {
             OkHttpClient client = new OkHttpClient();
 
-            Request request = new Request.Builder()
-                    .url(thumbnailUrl)
-                    .build();
+            Request request = new Request.Builder().url(thumbnailUrl).build();
 
             Response response = client.newCall(request).execute();
             return BitmapFactory.decodeStream(response.body().byteStream());
