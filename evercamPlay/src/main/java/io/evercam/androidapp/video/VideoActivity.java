@@ -620,7 +620,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             imageView.setVisibility(View.VISIBLE);
             showProgressView();
 
-            loadImageFromCache(evercamCamera.getCameraId());
+            loadImageFromCache(VideoActivity.evercamCamera.getCameraId());
 
             if(!evercamCamera.isOffline())
             {
@@ -1628,6 +1628,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                 {
                                     //Only update JPG when the image belongs to the current camera
                                     imageView.setImageDrawable(result);
+                                }
+                                else if(!cameraId.equals(evercamCamera.getCameraId()))
+                                {
+                                    Log.e(TAG, "Image received but not to show");
                                 }
 
                                 hideProgressView();

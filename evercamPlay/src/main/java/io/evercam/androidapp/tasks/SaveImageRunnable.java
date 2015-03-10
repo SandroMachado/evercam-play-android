@@ -13,16 +13,16 @@ import io.evercam.androidapp.utils.EvercamFile;
 
 public class SaveImageRunnable implements Runnable
 {
-    private static final String TAG = "evercamplay-SaveImageRunnable";
+    private static final String TAG = "SaveImageRunnable";
     private Context context;
     private Bitmap bitmap;
-    private static String cameraId;
+    private String cameraId;
 
     public SaveImageRunnable(Context context, Bitmap bitmap, String cameraId)
     {
         this.context = context;
         this.bitmap = bitmap;
-        SaveImageRunnable.cameraId = cameraId;
+        this.cameraId = cameraId;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class SaveImageRunnable implements Runnable
         saveImage(context, bitmap, cameraId);
     }
 
-    public static void saveImage(Context context, Bitmap bitmap, String cameraId)
+    public void saveImage(Context context, Bitmap bitmap, String cameraId)
     {
         try
         {
@@ -74,13 +74,14 @@ public class SaveImageRunnable implements Runnable
         }
     }
 
-    private static void checkFile(File file)
+    private void checkFile(File file)
     {
         if(file.exists())
         {
             if(file.length() > 0)
             {
                 // Valid file exists, do nothing for now.
+                //Log.d(TAG, "Cache file saved: " + cameraId);
             }
             else
             {
