@@ -1486,7 +1486,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                         Log.v(TAG, "EventHandler.MediaPlayerVout");
 
                         //Delay for 1 sec for video buffering
-                        new Handler().postDelayed(new Runnable() {
+                        new Handler().postDelayed(new Runnable()
+                        {
                             @Override
                             public void run()
                             {

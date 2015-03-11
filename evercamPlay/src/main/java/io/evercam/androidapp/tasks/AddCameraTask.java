@@ -31,9 +31,6 @@ import io.evercam.androidapp.feedback.NewCameraFeedbackItem;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.video.VideoActivity;
-import io.keen.client.android.AndroidKeenClientBuilder;
-import io.keen.client.java.KeenClient;
-import io.keen.client.java.KeenProject;
 
 public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
 {
@@ -67,8 +64,8 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
         customProgressDialog.dismiss();
         if(evercamCamera != null)
         {
-            NewCameraFeedbackItem newCameraItem = new NewCameraFeedbackItem(activity, AppData.defaultUser.getUsername(),
-                    cameraDetail.getId());
+            NewCameraFeedbackItem newCameraItem = new NewCameraFeedbackItem(activity,
+                    AppData.defaultUser.getUsername(), cameraDetail.getId());
             if(isFromScan)
             {
                 EvercamPlayApplication.sendEventAnalytics(activity, R.string.category_add_camera,

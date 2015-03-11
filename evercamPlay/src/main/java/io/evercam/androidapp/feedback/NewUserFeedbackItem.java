@@ -35,8 +35,7 @@ public class NewUserFeedbackItem extends FeedbackItem
             @Override
             public void run()
             {
-                client.addEvent(Constants.KEEN_COLLECTION_NEW_USER,
-                        feedbackItem.toHashMap());
+                client.addEvent(Constants.KEEN_COLLECTION_NEW_USER, feedbackItem.toHashMap());
             }
         }).start();
     }

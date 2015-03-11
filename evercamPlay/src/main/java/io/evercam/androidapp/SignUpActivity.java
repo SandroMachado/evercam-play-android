@@ -344,8 +344,8 @@ public class SignUpActivity extends Activity
                         R.string.category_sign_up, R.string.action_signup_success,
                         R.string.label_signup_successful);
 
-                new NewUserFeedbackItem(SignUpActivity.this, newUser.getUsername(), newUser.getEmail())
-                        .sendToKeenIo(KeenHelper.getClient(SignUpActivity.this));
+                new NewUserFeedbackItem(SignUpActivity.this, newUser.getUsername(),
+                        newUser.getEmail()).sendToKeenIo(KeenHelper.getClient(SignUpActivity.this));
 
                 new EvercamAccount(SignUpActivity.this).add(newUser);
                 AppData.defaultUser = newUser;

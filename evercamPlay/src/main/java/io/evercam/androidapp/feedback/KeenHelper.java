@@ -12,9 +12,9 @@ public class KeenHelper
     public static KeenClient getClient(Context context)
     {
         KeenClient client = new AndroidKeenClientBuilder(context).build();
-        KeenProject keenProject = new KeenProject(Constants.KEEN_PROJECT_ID, Constants.KEEN_WRITE_KEY,
-                Constants.KEEN_READ_KEY);
+        KeenProject keenProject = new KeenProject(Constants.KEEN_PROJECT_ID,
+                Constants.KEEN_WRITE_KEY, Constants.KEEN_READ_KEY);
         client.setDefaultProject(keenProject);
-        return  client;
+        return client;
     }
 }
