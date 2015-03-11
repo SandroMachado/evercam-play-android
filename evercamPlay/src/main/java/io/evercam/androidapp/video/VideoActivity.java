@@ -1403,7 +1403,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         {
             try
             {
-                VideoActivity player = videoActivity.get();
+                final VideoActivity player = videoActivity.get();
 
                 // SamplePlayer events
                 if(msg.what == videoSizeChanged)
@@ -1485,10 +1485,17 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                     case EventHandler.MediaPlayerVout:
                         Log.v(TAG, "EventHandler.MediaPlayerVout");
 
-                        //Buffering finished and start to show the video
-                        player.surfaceView.setVisibility(View.VISIBLE);
-                        player.imageView.setVisibility(View.GONE);
-                        player.hideProgressView();
+                        //Delay for 1 sec for video buffering
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run()
+                            {
+                                //Buffering finished and start to show the video
+                                player.surfaceView.setVisibility(View.VISIBLE);
+                                player.imageView.setVisibility(View.GONE);
+                                player.hideProgressView();
+                            }
+                        }, 1000);
 
                         //And send to Google Analytics
                         EvercamPlayApplication.sendEventAnalytics(player,

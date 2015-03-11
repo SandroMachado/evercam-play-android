@@ -32,7 +32,7 @@ import io.evercam.androidapp.video.VideoActivity;
 
 public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
 {
-    private final String TAG = "evercamplay-AddCameraTask";
+    private final String TAG = "AddCameraTask";
     private CameraDetail cameraDetail;
     private Activity activity;
     private CustomProgressDialog customProgressDialog;
