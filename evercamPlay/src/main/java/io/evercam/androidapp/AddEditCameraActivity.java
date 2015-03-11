@@ -59,7 +59,6 @@ public class AddEditCameraActivity extends Activity
     private EditText internalRtspEdit;
     private EditText jpgUrlEdit;
     private Button addEditButton;
-    private Button testButton;
     private TreeMap<String, String> vendorMap;
     private TreeMap<String, String> vendorMapIdAsKey;
     private TreeMap<String, String> modelMap;
@@ -206,7 +205,7 @@ public class AddEditCameraActivity extends Activity
         internalRtspEdit = (EditText) findViewById(R.id.add_internal_rtsp_edit);
         jpgUrlEdit = (EditText) findViewById(R.id.add_jpg_edit);
         addEditButton = (Button) findViewById(R.id.button_add_edit_camera);
-        testButton = (Button) findViewById(R.id.button_test_snapshot);
+        Button testButton = (Button) findViewById(R.id.button_test_snapshot);
 
         if(cameraEdit != null)
         {
@@ -309,7 +308,7 @@ public class AddEditCameraActivity extends Activity
                     CameraBuilder cameraBuilder = buildCameraWithLocalCheck();
                     if(cameraBuilder != null)
                     {
-                        boolean isFromScan = (discoveredCamera != null ? true : false);
+                        boolean isFromScan = discoveredCamera != null;
                         new AddCameraTask(cameraBuilder.build(), AddEditCameraActivity.this,
                                 isFromScan).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }

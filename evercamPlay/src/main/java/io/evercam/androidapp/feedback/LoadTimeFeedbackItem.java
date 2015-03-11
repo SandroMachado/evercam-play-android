@@ -55,7 +55,6 @@ public class LoadTimeFeedbackItem extends FeedbackItem
         return event;
     }
 
-
     public void sendToKeenIo(final KeenClient client)
     {
         final FeedbackItem feedbackItem = this;
