@@ -32,6 +32,8 @@ import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
+import io.evercam.androidapp.feedback.KeenHelper;
+import io.evercam.androidapp.feedback.NewUserFeedbackItem;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
@@ -50,7 +52,6 @@ public class SignUpActivity extends Activity
     private EditText emailEdit;
     private EditText passwordEdit;
     private EditText repasswordEdit;
-    private Button signupBtn;
     private Spinner countrySpinner;
     private TreeMap<String, String> countryMap;
     private View signUpFormView;
@@ -108,7 +109,7 @@ public class SignUpActivity extends Activity
         emailEdit = (EditText) findViewById(R.id.email_edit);
         passwordEdit = (EditText) findViewById(R.id.password_edit);
         repasswordEdit = (EditText) findViewById(R.id.repassword_edit);
-        signupBtn = (Button) findViewById(R.id.sign_up_button);
+        Button signupBtn = (Button) findViewById(R.id.sign_up_button);
         countrySpinner = (Spinner) findViewById(R.id.country_spinner);
 
         fillDefaultProfile();
@@ -342,6 +343,9 @@ public class SignUpActivity extends Activity
                 EvercamPlayApplication.sendEventAnalytics(SignUpActivity.this,
                         R.string.category_sign_up, R.string.action_signup_success,
                         R.string.label_signup_successful);
+
+                new NewUserFeedbackItem(SignUpActivity.this, newUser.getUsername(), newUser.getEmail())
+                        .sendToKeenIo(KeenHelper.getClient(SignUpActivity.this));
 
                 new EvercamAccount(SignUpActivity.this).add(newUser);
                 AppData.defaultUser = newUser;

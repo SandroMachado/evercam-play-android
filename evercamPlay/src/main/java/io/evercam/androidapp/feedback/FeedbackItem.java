@@ -7,11 +7,14 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.DataCollector;
+import io.keen.client.java.KeenClient;
 
 public class FeedbackItem
 {
     private final String TAG = "FeedbackItem";
+    protected final String FROM_ANDROID = "android";
 
     //Device details
     protected String network = "";

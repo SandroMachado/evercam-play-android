@@ -7,20 +7,14 @@ import java.util.HashMap;
 import io.evercam.androidapp.utils.Constants;
 import io.keen.client.java.KeenClient;
 
-public class NewCameraFeedbackItem extends FeedbackItem
+public class NewUserFeedbackItem extends FeedbackItem
 {
-    private String camera_id;
-    private boolean from_discovery = false;
+    private String email;
 
-    public NewCameraFeedbackItem(Context context, String username, String cameraId)
+    public NewUserFeedbackItem(Context context, String username, String email)
     {
         super(context, username);
-        this.camera_id = cameraId;
-    }
-
-    public void setIsFromDiscovery(boolean isFromDiscovery)
-    {
-        this.from_discovery = isFromDiscovery;
+        this.email = email;
     }
 
     @Override
@@ -28,8 +22,7 @@ public class NewCameraFeedbackItem extends FeedbackItem
     {
         HashMap<String, Object> map = super.toHashMap();
         map.put("from", FROM_ANDROID);
-        map.put("camera_id", camera_id);
-        map.put("from_discovery", from_discovery);
+        map.put("email", email);
 
         return map;
     }
@@ -39,11 +32,10 @@ public class NewCameraFeedbackItem extends FeedbackItem
         final FeedbackItem feedbackItem = this;
         new Thread(new Runnable()
         {
-
             @Override
             public void run()
             {
-                client.addEvent(Constants.KEEN_COLLECTION_NEW_CAMERA,
+                client.addEvent(Constants.KEEN_COLLECTION_NEW_USER,
                         feedbackItem.toHashMap());
             }
         }).start();
