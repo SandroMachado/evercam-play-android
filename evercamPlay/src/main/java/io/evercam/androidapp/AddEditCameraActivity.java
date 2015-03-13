@@ -718,7 +718,7 @@ public class AddEditCameraActivity extends Activity
                 .string.select_vendor)}, set.toArray(new String[0]));
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, vendorArray);
-        spinnerArrayAdapter.setDropDownViewResource(R.layout.country_spinner);
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner);
 
         int selectedPosition = 0;
         if(discoveredCamera != null)
@@ -786,7 +786,7 @@ public class AddEditCameraActivity extends Activity
                 .string.select_model)}, set.toArray(new String[0]));
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, fullModelArray);
-        spinnerArrayAdapter.setDropDownViewResource(R.layout.country_spinner);
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner);
         modelSpinner.setAdapter(spinnerArrayAdapter);
 
         int selectedPosition = 0;

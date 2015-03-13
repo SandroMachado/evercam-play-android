@@ -37,6 +37,7 @@ import io.evercam.androidapp.feedback.NewUserFeedbackItem;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
+import io.evercam.androidapp.utils.DataCollector;
 
 public class SignUpActivity extends Activity
 {
@@ -217,6 +218,13 @@ public class SignUpActivity extends Activity
         else
         {
             user.setPassword(password);
+        }
+
+        //Append user country if available, but the country field will not be showing in sign up form
+        String countryCode = DataCollector.getCountryCode(this);
+        if(countryCode != null && !countryCode.isEmpty())
+        {
+            user.setCountrycode(countryCode);
         }
         return user;
     }
