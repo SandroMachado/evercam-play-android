@@ -31,7 +31,7 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_gravity="bottom"
-            android:src="@drawable/icon_offline_50"
+            android:src="@drawable/icon_offline"
             android:visibility="gone"/>
 
     </LinearLayout>

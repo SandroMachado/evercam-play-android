@@ -21,7 +21,7 @@
                 android:layout_width="180sp"
                 android:layout_height="180sp"
                 android:layout_gravity="center"
-                android:src="@+drawable/icon_192x192"/>
+                android:src="@+drawable/icon_evercam"/>
 
             <EditText
                 android:id="@+id/editUsername"

@@ -71,7 +71,6 @@ public class ScanActivity extends Activity
         if(this.getActionBar() != null)
         {
             this.getActionBar().setDisplayHomeAsUpEnabled(true);
-            this.getActionBar().setIcon(R.drawable.icon_50x50);
         }
 
         setContentView(R.layout.activity_scan);

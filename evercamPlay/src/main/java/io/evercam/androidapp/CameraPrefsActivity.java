@@ -36,7 +36,6 @@ public class CameraPrefsActivity extends PreferenceActivity
         if(this.getActionBar() != null)
         {
             this.getActionBar().setDisplayHomeAsUpEnabled(true);
-            this.getActionBar().setIcon(R.drawable.icon_50x50);
         }
 
         screenWidth = CamerasActivity.readScreenWidth(this);
