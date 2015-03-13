@@ -41,9 +41,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.evercam.androidapp.exceptions.ConnectivityException;
@@ -422,29 +422,11 @@ public class Commons
                 Base64.URL_SAFE | Base64.NO_WRAP);
     }
 
-    public static void setTimeouts(HttpParams params)
-    {
-        params.setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, Constants.httptimeout);
-        params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, Constants.httptimeout);
-        params.setLongParameter(ConnManagerPNames.TIMEOUT, Constants.httptimeout);
-    }
-
     public static void setTimeouts(HttpParams params, int millis)
     {
         params.setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, millis);
         params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, millis);
         params.setLongParameter(ConnManagerPNames.TIMEOUT, millis);
-    }
-
-    public static Drawable DownlaodDrawableSync(URL url, int timeoutMillies) throws IOException
-    {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setDoInput(true);
-        connection.setConnectTimeout(timeoutMillies);
-        connection.setReadTimeout(timeoutMillies);
-        connection.connect();
-        InputStream input = connection.getInputStream();
-        return Drawable.createFromStream(input, "src");
     }
 
     public static String readRawTextFile(int id, Context ctx)
@@ -482,5 +464,11 @@ public class Commons
             list.addAll(java.util.Arrays.asList(array));
         }
         return (String[]) list.toArray(new String[size]);
+    }
+
+    public static float calculateTimeDifferenceFrom(Date startTime)
+    {
+        long timeDifferenceLong = (new Date()).getTime() - startTime.getTime();
+        return (float) timeDifferenceLong / 1000;
     }
 }

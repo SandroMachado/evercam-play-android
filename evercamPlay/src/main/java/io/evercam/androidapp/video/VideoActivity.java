@@ -5,7 +5,6 @@ import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -19,9 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,7 +40,6 @@ import android.widget.Toast;
 import com.bugsense.trace.BugSenseHandler;
 import com.logentries.android.AndroidLogger;
 
-import org.apache.http.cookie.Cookie;
 import org.videolan.libvlc.EventHandler;
 import org.videolan.libvlc.IVideoPlayer;
 import org.videolan.libvlc.LibVLC;
@@ -63,8 +59,6 @@ import io.evercam.androidapp.FeedbackActivity;
 import io.evercam.androidapp.LocalStorageActivity;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.R;
-import io.evercam.androidapp.recordings.RecordingWebActivity;
-
 import io.evercam.androidapp.ViewCameraActivity;
 import io.evercam.androidapp.custom.CameraListAdapter;
 import io.evercam.androidapp.custom.CustomToast;
@@ -73,6 +67,7 @@ import io.evercam.androidapp.custom.ProgressView;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.feedback.StreamFeedbackItem;
+import io.evercam.androidapp.recordings.RecordingWebActivity;
 import io.evercam.androidapp.tasks.CaptureSnapshotRunnable;
 import io.evercam.androidapp.tasks.DeleteCameraTask;
 import io.evercam.androidapp.utils.Commons;
@@ -81,54 +76,57 @@ import io.evercam.androidapp.utils.EnumConstants.DeleteType;
 import io.evercam.androidapp.utils.EvercamFile;
 import io.evercam.androidapp.utils.PrefsManager;
 import io.evercam.androidapp.video.SnapshotManager.FileType;
+import io.keen.client.android.AndroidKeenClientBuilder;
+import io.keen.client.java.KeenClient;
+import io.keen.client.java.KeenProject;
 
 public class VideoActivity extends ParentActivity implements SurfaceHolder.Callback, IVideoPlayer
 {
     public static EvercamCamera evercamCamera;
 
-    private final static String TAG = "evercam-VideoActivity";
+    private final static String TAG = "VideoActivity";
 
     private static List<MediaURL> mediaUrls = null;
     private static int mrlIndex = -1;
     private String mrlPlaying = null;
     private boolean showImagesVideo = false;
 
-    // display surface
+    /**
+     * UI elements
+     */
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
     private ProgressView progressView = null;
     private TextView offlineTextView;
     private TextView timeCountTextView;
+    private RelativeLayout imageViewLayout;
+    private ImageView imageView;
+    private ImageView mediaPlayerView;
+    private ImageView snapshotMenuView;
+    private Animation fadeInAnimation = null;
 
-    // media player
+    /**
+     * Media player
+     */
     private LibVLC libvlc;
     private int mVideoWidth;
     private int mVideoHeight;
     private final static int videoSizeChanged = -1;
 
-    // Screen view change variables
-    private int screen_width, screen_height;
     private int media_width = 0, media_height = 0;
-    private boolean landscape;
-
-    private RelativeLayout imageViewLayout;
-    private ImageView imageView;
-    private ImageView mediaPlayerView;
-    private ImageView snapshotMenuView;
 
     private long downloadStartCount = 0;
     private long downloadEndCount = 0;
-    private BrowseImages imageThread;
+    private BrowseJpgTask browseJpgTask;
     private boolean isProgressShowing = true;
     static boolean enableLogs = true;
 
-    // image tasks and thread variables
-    private int sleepIntervalMinTime = 200; // interval between two requests of
+    private final int MIN_SLEEP_INTERVAL = 200; // interval between two requests of
     // images
-    private int intervalAdjustment = 10; // how much milli seconds to increment
+    private final int ADJUSTMENT_INTERVAL = 10; // how much milli seconds to increment
     // or decrement on image failure or
     // success
-    private int sleepInterval = sleepIntervalMinTime + 290; // starting image
+    private int sleepInterval = MIN_SLEEP_INTERVAL + 290; // starting image
     // interval
     private boolean startDownloading = false; // start making requests soon
     // after the image is received
@@ -137,36 +135,19 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     // requests
     private static long latestStartImageTime = 0; // time of the latest request
     // that has been made
-    private boolean isFirstImageLiveReceived = false;
-    private boolean isFirstImageLocalReceived = false;
-    private boolean isFirstImageLiveEnded = false;
-    private boolean isFirstImageLocalEnded = false;
     private int successiveFailureCount = 0; // how much successive image
     // requests have failed
     private Boolean isShowingFailureMessage = false;
-    private Boolean optionsActivityStarted = false; // whether preference
-    // activity is showing or
-    // not
+    private Boolean optionsActivityStarted = false;
 
     public static String startingCameraID;
     private int defaultCameraIndex;
-    // preferences options
-    private String localnetworkSettings = "0";
-    private boolean isLocalNetwork = false;
-
-    private static String imageLiveCameraURL = "";
-    private static String imageLiveLocalURL = "";
 
     private boolean paused = false;
     private boolean isPlayingJpg = false;// If true, stop trying video
     // URL for reconnecting.
     private boolean isJpgSuccessful = false; //Whether or not the JPG view ever
     //got successfully played
-
-    private Animation fadeInAnimation = null; // animation that shows the
-    // playing icon
-    // of media player fading and
-    // disappearing
 
     private boolean end = false; // whether to end this activity or not
 
@@ -183,6 +164,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private Date startTime;
     private AndroidLogger logger;
+    private KeenClient client;
+    private KeenProject keenProject;
     private String username = "";
 
     @Override
@@ -206,8 +189,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             if(this.getActionBar() != null)
             {
                 this.getActionBar().setDisplayHomeAsUpEnabled(true);
-                this.getActionBar().setTitle("");
-                this.getActionBar().setIcon(R.drawable.icon_50x50);
             }
 
             setContentView(R.layout.video_activity_layout);
@@ -220,6 +201,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             }
             logger = AndroidLogger.getLogger(getApplicationContext(), Constants.LOGENTRIES_TOKEN,
                     false);
+            client = new AndroidKeenClientBuilder(this).build();
+            keenProject = new KeenProject(Constants.KEEN_PROJECT_ID, Constants.KEEN_WRITE_KEY,
+                    Constants.KEEN_READ_KEY);
+            client.setDefaultProject(keenProject);
 
             startPlay();
         }
@@ -269,8 +254,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
                 showProgressView();
 
-                readSetPreferences();
-
                 startDownloading = false;
                 this.paused = false;
                 this.end = false;
@@ -278,18 +261,17 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
                 latestStartImageTime = SystemClock.uptimeMillis();
 
-                if(imageThread == null)
+                if(browseJpgTask == null)
                 {
                     // ignore if image thread is null
                 }
-                else if(imageThread.getStatus() != AsyncTask.Status.RUNNING)
+                else if(browseJpgTask.getStatus() != AsyncTask.Status.RUNNING)
                 {
-                    imageThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+                    browseJpgTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
-                else if(imageThread.getStatus() == AsyncTask.Status.FINISHED)
+                else if(browseJpgTask.getStatus() == AsyncTask.Status.FINISHED)
                 {
-                    imageThread = new BrowseImages();
-                    imageThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+                    createBrowseJpgTask();
                 }
             }
         }
@@ -362,7 +344,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         end = true;
         if(!optionsActivityStarted)
         {
-            if(imageThread != null)
+            if(browseJpgTask != null)
             {
                 this.paused = true;
             }
@@ -540,17 +522,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 Intent viewIntent = new Intent(VideoActivity.this, ViewCameraActivity.class);
                 startActivityForResult(viewIntent, Constants.REQUEST_CODE_VIEW_CAMERA);
             }
-            //Remove edit camera from menu because it's now in 'View Details - Edit'
-            //            else if(itemId == R.id.video_menu_edit_camera)
-            //            {
-            //                editStarted = true;
-            //
-            //                Intent editIntent = new Intent(VideoActivity.this,
-            // AddEditCameraActivity.class);
-            //                editIntent.putExtra(Constants.KEY_IS_EDIT, true);
-            //                startActivityForResult(editIntent,
-            // Constants.REQUEST_CODE_PATCH_CAMERA);
-            //            }
             else if(itemId == R.id.video_menu_local_storage)
             {
                 startActivity(new Intent(VideoActivity.this, LocalStorageActivity.class));
@@ -579,7 +550,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             else if(itemId == R.id.video_menu_view_recordings)
             {
                 Intent recordingIntent = new Intent(this, RecordingWebActivity.class);
-                recordingIntent.putExtra(Constants.BUNDLE_KEY_CAMERA_ID, evercamCamera.getCameraId());
+                recordingIntent.putExtra(Constants.BUNDLE_KEY_CAMERA_ID,
+                        evercamCamera.getCameraId());
                 startActivity(recordingIntent);
             }
         }
@@ -604,13 +576,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
         paused = false;
         end = false;
-        loadImageFromCache(startingCameraID);
 
         checkNetworkStatus();
 
         loadCamerasToActionBar();
-
-        readSetPreferences();
     }
 
     public static boolean startPlayingVideoForCamera(Activity activity, String cameraId)
@@ -629,8 +598,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         {
             VideoActivity.evercamCamera = evercamCamera;
 
-            // ***Setting Defaults
-            readSetPreferences();
             showImagesVideo = false;
 
             downloadStartCount = 0;
@@ -639,16 +606,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
             startDownloading = false;
             latestStartImageTime = 0;
-            isFirstImageLiveReceived = false;
-            isFirstImageLocalReceived = false;
-            isFirstImageLiveEnded = false;
-            isFirstImageLocalEnded = false;
             successiveFailureCount = 0;
             isShowingFailureMessage = false;
 
             optionsActivityStarted = false;
-
-            isLocalNetwork = false;
 
             mediaPlayerView.setVisibility(View.GONE);
             snapshotMenuView.setVisibility(View.GONE);
@@ -660,7 +621,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             imageView.setVisibility(View.VISIBLE);
             showProgressView();
 
-            loadImageFromCache(evercamCamera.getCameraId());
+            loadImageFromCache(VideoActivity.evercamCamera.getCameraId());
 
             if(!evercamCamera.isOffline())
             {
@@ -669,13 +630,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
             showProgressView();
 
-            //Disabled by Liuting
-            //			SharedPreferences sharedPrefs = PreferenceManager
-            // .getDefaultSharedPreferences(this);
-            //			mrlPlaying = sharedPrefs.getString("pref_mrlplaying" + evercamCamera
-            // .getCameraId(),
-            //					null);
-
             mrlPlaying = evercamCamera.getExternalRtspUrl();
 
             mediaUrls = new ArrayList<>();
@@ -683,7 +637,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
             if(mrlPlaying != null)
             {
-                addUrlIfValid(mrlPlaying, evercamCamera);
+                addUrlIfValid(mrlPlaying);
                 mrlIndex = 0;
                 mrlPlaying = null;
             }
@@ -698,32 +652,18 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         }
     }
 
-    private void addUrlIfValid(String url, EvercamCamera cam)
+    private void addUrlIfValid(String url)
     {
         if(url == null || url.trim().length() < 10 || !(url.startsWith("http://") || url
                 .startsWith("https://") || url.startsWith("rtsp://") || url.startsWith("tcp://")))
             return;
 
         String liveURLString = evercamCamera.getExternalRtspUrl();
-        String localURLString = evercamCamera.getInternalRtspUrl();
 
-        if(!localURLString.isEmpty() && !localnetworkSettings.equalsIgnoreCase("2"))
+        MediaURL liveMRL = new MediaURL(liveURLString);
+        if(!mediaUrls.contains(liveMRL))
         {
-            MediaURL localMRL = new MediaURL(localURLString, true);
-
-            if(!mediaUrls.contains(localMRL))
-            {
-                mediaUrls.add(localMRL);
-            }
-        }
-
-        if(!localnetworkSettings.equalsIgnoreCase("1"))
-        {
-            MediaURL liveMRL = new MediaURL(liveURLString, false);
-            if(!mediaUrls.contains(liveMRL))
-            {
-                mediaUrls.add(liveMRL);
-            }
+            mediaUrls.add(liveMRL);
         }
         mrlIndex = 0;
     }
@@ -733,45 +673,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     public void loadImageFromCache(String cameraId)
     {
         imageView.setImageDrawable(null);
-        Drawable drawable = EvercamFile.loadDrawableForCamera(this, cameraId);
-        if(drawable != null)
-        {
-            imageView.setImageDrawable(drawable);
-        }
-    }
 
-    // Read preferences for playing options audio and Video(images)
-    public void readSetPreferences()
-    {
-        try
-        {
-            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-            isLocalNetwork = false;
-            String cameraId;
-            if(evercamCamera != null)
-            {
-                cameraId = evercamCamera.getCameraId();
-            }
-            else
-            {
-                cameraId = "nocamera";
-            }
-            localnetworkSettings = sharedPrefs.getString("pref_enablocalnetwork" + cameraId, "0");
-            if(localnetworkSettings.equalsIgnoreCase("1")) isLocalNetwork = true;
-            else isLocalNetwork = false;
-        }
-        catch(OutOfMemoryError e)
-        {
-            Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-        }
-        catch(Exception ex)
-        {
-            Log.e(TAG, ex.toString());
-            if(Constants.isAppTrackingEnabled)
-            {
-                BugSenseHandler.sendException(ex);
-            }
-        }
+        Bitmap cacheBitmap = EvercamFile.loadBitmapForCamera(this, cameraId);
+        imageView.setImageBitmap(cacheBitmap);
     }
 
     private void startMediaPlayerAnimation()
@@ -968,7 +872,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             {
                 //If no RTSP URL exists, start JPG view straight away
                 showImagesVideo = true;
-                createNewImageThread();
+                createBrowseJpgTask();
             }
         }
         catch(Exception e)
@@ -1047,33 +951,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         libvlc.play();
     }
 
-    public void setImageAttributesAndLoadImage()
-    {
-        try
-        {
-            isFirstImageLiveReceived = false;
-            isFirstImageLocalReceived = false;
-            isFirstImageLiveEnded = false;
-            isFirstImageLocalEnded = false;
-
-            mediaPlayerView.setVisibility(View.GONE);
-            snapshotMenuView.setVisibility(View.GONE);
-
-            readSetPreferences();
-
-            startDownloading = false;
-            this.paused = false;
-            this.end = false;
-            this.isShowingFailureMessage = false;
-        }
-        catch(Exception e)
-        {
-            Log.e(TAG, e.getMessage(), e);
-            EvercamPlayApplication.sendCaughtException(this, e);
-            if(Constants.isAppTrackingEnabled) BugSenseHandler.sendException(e);
-        }
-    }
-
     // when screen gets rotated
     @Override
     public void onConfigurationChanged(Configuration newConfig)
@@ -1089,14 +966,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             {
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
                         WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-                landscape = false;
                 this.getActionBar().show();
             }
             else
             {
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                         WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                landscape = true;
 
                 if(!paused && !end && !isProgressShowing) this.getActionBar().hide();
                 else this.getActionBar().show();
@@ -1116,38 +991,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 BugSenseHandler.sendException(e);
             }
         }
-    }
-
-    // resize the activity if screen gets rotated
-    public void resize(int imageHieght, int imageWidth)
-    {
-        int w = landscape ? screen_height : screen_width;
-        int h = landscape ? screen_width : screen_height;
-
-        // If we have the media, calculate best scaling inside bounds.
-        if(imageWidth > 0 && imageHieght > 0)
-        {
-            final float max_w = w;
-            final float max_h = h;
-            float temp_w = imageWidth;
-            float temp_h = imageHieght;
-            float factor = max_w / temp_w;
-            temp_w *= factor;
-            temp_h *= factor;
-
-            // If we went above the height limit, scale down.
-            if(temp_h > max_h)
-            {
-                factor = max_h / temp_h;
-                temp_w *= factor;
-                temp_h *= factor;
-            }
-
-            w = (int) temp_w;
-            h = (int) temp_h;
-        }
-        media_height = h;
-        media_width = w;
     }
 
     private void showToast(String text)
@@ -1432,11 +1275,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 }
             }
         });
-
-        // Get the size of the device, will be our maximum.
-        Display display = getWindowManager().getDefaultDisplay();
-        screen_width = display.getWidth();
-        screen_height = display.getHeight();
     }
 
     // Hide progress view
@@ -1453,10 +1291,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         isProgressShowing = true;
     }
 
-    private void createNewImageThread()
+    private void createBrowseJpgTask()
     {
-        imageThread = new BrowseImages();
-        imageThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        browseJpgTask = new BrowseJpgTask();
+        browseJpgTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void startTimeCounter()
@@ -1476,7 +1314,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         }
     }
 
-    public class BrowseImages extends AsyncTask<String, String, String>
+    public class BrowseJpgTask extends AsyncTask<String, String, String>
     {
         @Override
         protected String doInBackground(String... params)
@@ -1495,48 +1333,22 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                     // requests. Rather wait for the play
                     // command
                     {
-                        imageLiveCameraURL = evercamCamera.getExternalSnapshotUrl();
-                        imageLiveLocalURL = evercamCamera.getInternalSnapshotUrl();
-
-                        if(AbandonedJpgUrl.contains(imageLiveCameraURL))
-                        {
-                            imageLiveCameraURL = "";
-                        }
-
-                        if(AbandonedJpgUrl.contains(imageLiveLocalURL))
-                        {
-                            imageLiveLocalURL = "";
-                        }
-                        DownloadImage taskExternal = new DownloadImage();
-                        DownloadImage taskLocal = new DownloadImage();
+                        DownloadImageTask downloadImageTask = new DownloadImageTask(evercamCamera
+                                .getCameraId());
 
                         if(downloadStartCount - downloadEndCount < 9)
                         {
-                            if(!imageLiveCameraURL.isEmpty())
-                            {
-                                taskExternal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                                        new String[]{imageLiveCameraURL});
-                            }
-                            if(!imageLiveLocalURL.isEmpty())
-                            {
-                                taskLocal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                                        new String[]{imageLiveLocalURL});
-                            }
-                            if(imageLiveCameraURL.isEmpty() && imageLiveLocalURL.isEmpty())
-                            {
-                                taskLocal.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                                        new String[]{});
-                            }
+                            downloadImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
 
                         if(downloadStartCount - downloadEndCount > 9 && sleepInterval < 2000)
                         {
-                            sleepInterval += intervalAdjustment;
+                            sleepInterval += ADJUSTMENT_INTERVAL;
                             Log.d(TAG, "Sleep interval adjusted to: " + sleepInterval);
                         }
-                        else if(sleepInterval >= sleepIntervalMinTime)
+                        else if(sleepInterval >= MIN_SLEEP_INTERVAL)
                         {
-                            sleepInterval -= intervalAdjustment;
+                            sleepInterval -= ADJUSTMENT_INTERVAL;
                             Log.d(TAG, "Sleep interval adjusted to: " + sleepInterval);
                         }
                     }
@@ -1591,7 +1403,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         {
             try
             {
-                VideoActivity player = videoActivity.get();
+                final VideoActivity player = videoActivity.get();
 
                 // SamplePlayer events
                 if(msg.what == videoSizeChanged)
@@ -1659,12 +1471,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                 failedItem.setUrl(player.getCurrentMRL());
                                 failedItem.setType(StreamFeedbackItem.TYPE_RTSP);
                                 logger.info(failedItem.toJson());
+                                failedItem.sendToKeenIo(client);
                             }
                             isPlayingJpg = true;
                             player.showToast(videoActivity.get().getString(R.string
                                     .msg_switch_to_jpg));
                             player.showImagesVideo = true;
-                            player.createNewImageThread();
+                            player.createBrowseJpgTask();
                         }
 
                         break;
@@ -1672,13 +1485,20 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                     case EventHandler.MediaPlayerVout:
                         Log.v(TAG, "EventHandler.MediaPlayerVout");
 
-                        //Buffering finished and start to show the video
-                        player.surfaceView.setVisibility(View.VISIBLE);
-                        player.imageView.setVisibility(View.GONE);
-                        player.hideProgressView();
+                        //Delay for 1 sec for video buffering
+                        new Handler().postDelayed(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                //Buffering finished and start to show the video
+                                player.surfaceView.setVisibility(View.VISIBLE);
+                                player.imageView.setVisibility(View.GONE);
+                                player.hideProgressView();
+                            }
+                        }, 1000);
 
                         //And send to Google Analytics
-                        //And send to Firebase
                         EvercamPlayApplication.sendEventAnalytics(player,
                                 R.string.category_streaming_rtsp,
                                 R.string.action_streaming_rtsp_success,
@@ -1691,24 +1511,15 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                         successItem.setType(StreamFeedbackItem.TYPE_RTSP);
                         if(startTime != null)
                         {
-                            long timeDifferenceLong = (new Date()).getTime() - startTime.getTime();
-                            float timeDifferenceFloat = (float) timeDifferenceLong / 1000;
+                            float timeDifferenceFloat = Commons.calculateTimeDifferenceFrom
+                                    (startTime);
                             Log.d(TAG, "Time difference: " + timeDifferenceFloat + " seconds");
                             successItem.setLoadTime(timeDifferenceFloat);
                             startTime = null;
                         }
 
                         logger.info(successItem.toJson());
-
-                        if(VideoActivity.mediaUrls.get(mrlIndex).isLocalNetwork == false)
-                        {
-                            SharedPreferences sharedPrefs = PreferenceManager
-                                    .getDefaultSharedPreferences(player);
-                            SharedPreferences.Editor editor = sharedPrefs.edit();
-                            editor.putString("pref_mrlplaying" + evercamCamera.getCameraId(),
-                                    player.mrlPlaying);
-                            editor.apply();
-                        }
+                        successItem.sendToKeenIo(client);
 
                         break;
                     default:
@@ -1725,12 +1536,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     public static class MediaURL
     {
         public String url = "";
-        public boolean isLocalNetwork = false;
 
-        public MediaURL(String url, boolean isLocalNetwork)
+        public MediaURL(String url)
         {
             this.url = url;
-            this.isLocalNetwork = isLocalNetwork;
         }
 
         @Override
@@ -1745,44 +1554,20 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         }
     }
 
-    private static class AbandonedJpgUrl
-    {
-        public static ArrayList<String> abandonedArray = new ArrayList<String>();
-
-        public static void add(String url)
-        {
-            if(!abandonedArray.contains(url))
-            {
-                abandonedArray.add(url);
-            }
-        }
-
-        public static boolean contains(String url)
-        {
-            if(!abandonedArray.isEmpty())
-            {
-                for(int index = 0; index < abandonedArray.size(); index++)
-                {
-                    if(abandonedArray.get(index).equals(url))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-    }
-
-    private class DownloadImage extends AsyncTask<String, Void, Drawable>
+    private class DownloadImageTask extends AsyncTask<Void, Void, Drawable>
     {
         private long myStartImageTime;
-        private boolean isLocalNetworkRequest = false;
-        private String successUrl = "";//Only used for Firebase report
+        private String successUrl = "";//Only used for data collection
+        private String cameraId = "";
+
+        public DownloadImageTask(String cameraId)
+        {
+            this.cameraId = cameraId;
+        }
 
         @Override
-        protected Drawable doInBackground(String... urls)
+        protected Drawable doInBackground(Void... params)
         {
-            ArrayList<Cookie> cookies = new ArrayList<>();
             if(!showImagesVideo)
             {
                 return null;
@@ -1790,77 +1575,31 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             Drawable response = null;
             if(!paused && !end)
             {
-                if(evercamCamera.hasCredentials() && urls.length > 0)
+                try
                 {
-                    for(String url : urls)
+                    myStartImageTime = SystemClock.uptimeMillis();
+                    downloadStartCount++;
+                    Camera camera = Camera.getById(cameraId, false);
+                    InputStream stream = camera.getSnapshotFromEvercam();
+                    response = Drawable.createFromStream(stream, "src");
+                    if(response != null)
                     {
-                        if(!url.isEmpty())
-                        {
-                            try
-                            {
-                                downloadStartCount++;
-                                myStartImageTime = SystemClock.uptimeMillis();
-
-                                response = Commons.getDrawablefromUrlAuthenticated(url,
-                                        evercamCamera.getUsername(), evercamCamera.getPassword(),
-                                        cookies, 5000);
-                                if(response != null)
-                                {
-                                    successiveFailureCount = 0;
-                                    successUrl = url;
-                                }
-                            }
-                            catch(OutOfMemoryError e)
-                            {
-                                if(enableLogs)
-                                    Log.e(TAG, e.toString() + "-::OOM::-" + Log
-                                            .getStackTraceString(e));
-                                successiveFailureCount++;
-                                continue;
-
-                            }
-                            catch(Exception e)
-                            {
-                                Log.e(TAG, "Exception get camera with auth: " + e.toString() +
-                                        "\r\n" + "ImageURl=[" + url + "]" + "\r\n");
-
-                                AbandonedJpgUrl.add(url);
-                                successiveFailureCount++;
-                            }
-                            finally
-                            {
-                                downloadEndCount++;
-                            }
-                        }
+                        successiveFailureCount = 0;
                     }
                 }
-                else
+                catch(Exception e)
                 {
-                    try
-                    {
-                        downloadStartCount++;
-                        Camera camera = Camera.getById(evercamCamera.getCameraId(), false);
-                        InputStream stream = camera.getSnapshotFromEvercam();
-                        response = Drawable.createFromStream(stream, "src");
-                        if(response != null)
-                        {
-                            successiveFailureCount = 0;
-                        }
-                    }
-                    catch(Exception e)
-                    {
-                        Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
-                        successiveFailureCount++;
-                    }
-                    catch(OutOfMemoryError e)
-                    {
-                        Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-                        successiveFailureCount++;
-                    }
-                    finally
-                    {
-                        downloadEndCount++;
-                    }
+                    Log.e(TAG, "Request snapshot from Evercam error: " + e.toString());
+                    successiveFailureCount++;
+                }
+                catch(OutOfMemoryError e)
+                {
+                    Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
+                    successiveFailureCount++;
+                }
+                finally
+                {
+                    downloadEndCount++;
                 }
             }
             else
@@ -1877,15 +1616,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             {
                 if(!showImagesVideo) return;
 
-                if(isLocalNetworkRequest)
-                {
-                    isFirstImageLocalEnded = true;
-                }
-                else
-                {
-                    isFirstImageLiveEnded = true;
-                }
-
                 Log.d(TAG, "Failure count:" + successiveFailureCount);
 
                 if(!paused && !end)
@@ -1897,13 +1627,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                         {
                             if(myStartImageTime >= latestStartImageTime)
                             {
-                                //Log.d(TAG, "myStartImageTime >= latestStartImageTime");
-                                if(isLocalNetworkRequest) isFirstImageLocalReceived = true;
-                                else isFirstImageLiveReceived = true;
-                                if(isLocalNetworkRequest && localnetworkSettings.equalsIgnoreCase
-                                        ("0"))
-                                    isLocalNetwork = true;
-
                                 latestStartImageTime = myStartImageTime;
 
                                 if(mediaPlayerView.getVisibility() != View.VISIBLE &&
@@ -1911,7 +1634,15 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                                 .orientation == Configuration.ORIENTATION_LANDSCAPE)
                                     VideoActivity.this.getActionBar().hide();
 
-                                if(showImagesVideo) imageView.setImageDrawable(result);
+                                if(showImagesVideo && cameraId.equals(evercamCamera.getCameraId()))
+                                {
+                                    //Only update JPG when the image belongs to the current camera
+                                    imageView.setImageDrawable(result);
+                                }
+                                else if(!cameraId.equals(evercamCamera.getCameraId()))
+                                {
+                                    Log.e(TAG, "Image received but not to show");
+                                }
 
                                 hideProgressView();
 
@@ -1921,7 +1652,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                 if(!isJpgSuccessful)
                                 {
                                     //Successfully played JPG view, send Google Analytics event
-                                    //Log.d(TAG, "Jpg success!");
                                     isJpgSuccessful = true;
                                     EvercamPlayApplication.sendEventAnalytics(VideoActivity.this,
                                             R.string.category_streaming_jpg,
@@ -1934,6 +1664,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                     successItem.setUrl(successUrl);
                                     successItem.setType(StreamFeedbackItem.TYPE_JPG);
                                     logger.info(successItem.toJson());
+                                    successItem.sendToKeenIo(client);
                                 }
                                 else
                                 {
@@ -1946,7 +1677,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                             }
                         }
                     }
-                    else if(result == null)
+                    else
                     {
                         Log.d(TAG, "result is null");
                         if(successiveFailureCount > 10 && !isShowingFailureMessage)
@@ -1956,7 +1687,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                             {
                                 Log.d(TAG, "myStartImageTime >= latestStartImageTime");
                                 showMediaFailureDialog();
-                                imageThread.cancel(true);
+                                browseJpgTask.cancel(true);
 
                                 //Failed to play JPG view, send Google Analytics event
                                 EvercamPlayApplication.sendEventAnalytics(VideoActivity.this,
@@ -1964,7 +1695,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                         R.string.action_streaming_jpg_failed,
                                         R.string.label_streaming_jpg_failed);
 
-                                //Send Firebase
+                                //Send Feedback
                                 StreamFeedbackItem failedItem = new StreamFeedbackItem
                                         (VideoActivity.this, AppData.defaultUser.getUsername(),
                                                 false);
@@ -1972,6 +1703,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                 failedItem.setUrl(evercamCamera.getExternalSnapshotUrl());
                                 failedItem.setType(StreamFeedbackItem.TYPE_JPG);
                                 logger.info(failedItem.toJson());
+                                failedItem.sendToKeenIo(client);
                             }
                         }
                     }
@@ -2036,11 +1768,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                     timeCounter = null;
                 }
 
-                if(imageThread != null && imageThread.getStatus() != AsyncTask.Status.RUNNING)
+                if(browseJpgTask != null && browseJpgTask.getStatus() != AsyncTask.Status.RUNNING)
                 {
-                    imageThread.cancel(true);
+                    browseJpgTask.cancel(true);
                 }
-                imageThread = null;
+                browseJpgTask = null;
                 mrlPlaying = null;
                 showImagesVideo = false;
 
@@ -2060,8 +1792,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 else
                 {
                     offlineTextView.setVisibility(View.GONE);
-                    setCameraForPlaying(AppData.evercamCameraList.get
-                            (itemPosition));
+                    setCameraForPlaying(AppData.evercamCameraList.get(itemPosition));
                     createPlayer(getCurrentMRL());
                 }
                 return false;

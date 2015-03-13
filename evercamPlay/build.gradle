@@ -53,6 +53,9 @@ dependencies {
     compile files('libs/logentries-android-2.1.4.jar')
     compile files('libs/sendgrid-0.1.2-jar.jar')
     compile files('libs/upnplib-mobile.jar')
+    compile 'com.squareup.picasso:picasso:2.5.0'
+    compile 'io.keen:keen-client-api-android:2.1.1@aar'
+    compile 'com.squareup.okhttp:okhttp:2.2.0'
     //Use 6.1.71 because there is a fatal unsolved bug with Google Analytics for the latest version
     //http://stackoverflow.com/questions/27533679/google-analytics-blocks-android-app
     compile 'com.google.android.gms:play-services:6.1.71'

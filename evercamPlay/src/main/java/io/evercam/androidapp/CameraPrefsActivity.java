@@ -36,7 +36,6 @@ public class CameraPrefsActivity extends PreferenceActivity
         if(this.getActionBar() != null)
         {
             this.getActionBar().setDisplayHomeAsUpEnabled(true);
-            this.getActionBar().setIcon(R.drawable.icon_50x50);
         }
 
         screenWidth = CamerasActivity.readScreenWidth(this);
@@ -65,6 +64,13 @@ public class CameraPrefsActivity extends PreferenceActivity
         {
             BugSenseHandler.closeSession(this);
         }
+    }
+
+    @Override
+    protected void onRestart()
+    {
+        super.onRestart();
+        finish();
     }
 
     @Override
@@ -153,16 +159,18 @@ public class CameraPrefsActivity extends PreferenceActivity
 
         private void fillAbout()
         {
-            final Preference versionPrefs = getPreferenceManager()
-                    .findPreference(PrefsManager.KEY_VERSION);
-            final Preference aboutPrefs = getPreferenceManager()
-                    .findPreference(PrefsManager.KEY_ABOUT);
+            final Preference versionPrefs = getPreferenceManager().findPreference(PrefsManager
+                    .KEY_VERSION);
+            final Preference aboutPrefs = getPreferenceManager().findPreference(PrefsManager
+                    .KEY_ABOUT);
             versionPrefs.setSummary(new DataCollector(this.getActivity()).getAppVersion());
-            aboutPrefs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            aboutPrefs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+            {
                 @Override
                 public boolean onPreferenceClick(Preference preference)
                 {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.evercam_url)));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string
+                            .evercam_url)));
                     startActivity(intent);
                     return false;
                 }

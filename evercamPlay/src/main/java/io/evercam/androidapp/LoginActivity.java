@@ -2,11 +2,9 @@ package io.evercam.androidapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
@@ -35,19 +33,14 @@ import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.Constants;
-import io.evercam.androidapp.utils.PrefsManager;
 
 public class LoginActivity extends ParentActivity
 {
-    public static final int loginVerifyRequestCode = 5;
-    public static int loginResultSuccessCode = 5;
-
     private EditText usernameEdit;
     private EditText passwordEdit;
     private String username;
     private String password;
     private LoginTask loginTask;
-    private SharedPreferences sharedPrefs;
     private String TAG = "evercamplay-LoginActivity";
     private CustomProgressDialog customProgressDialog;
     private TextView signUpLink;
@@ -56,8 +49,6 @@ public class LoginActivity extends ParentActivity
     {
         LOGIN, SIGNUP
     }
-
-    ;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -74,16 +65,10 @@ public class LoginActivity extends ParentActivity
 
         if(Constants.isAppTrackingEnabled)
         {
-            BugSenseHandler.initAndStartSession(LoginActivity.this, Constants.bugsense_ApiKey);
+            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
         }
 
         Button btnLogin = (Button) findViewById(R.id.btnLogin);
-
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putString("AppUserEmail", null);
-        editor.putString("AppUserPassword", null);
-        editor.commit();
 
         usernameEdit = (EditText) findViewById(R.id.editUsername);
         passwordEdit = (EditText) findViewById(R.id.editPassword);
@@ -233,14 +218,8 @@ public class LoginActivity extends ParentActivity
                 String userApiId = userKeyPair.getApiId();
                 API.setUserKeyPair(userApiKey, userApiId);
                 User evercamUser = new User(username);
-                newUser = new AppUser();
-                newUser.setUsername(evercamUser.getUsername());
-                newUser.setPassword(password);
-                newUser.setIsDefault(true);
-                newUser.setCountry(evercamUser.getCountry());
-                newUser.setEmail(evercamUser.getEmail());
-                newUser.setApiKey(userApiKey);
-                newUser.setApiId(userApiId);
+                newUser = new AppUser(evercamUser);
+                newUser.setApiKeyPair(userApiKey, userApiId);
                 return true;
             }
             catch(EvercamException e)
@@ -270,9 +249,6 @@ public class LoginActivity extends ParentActivity
             {
                 AppData.defaultUser = newUser;
                 new EvercamAccount(LoginActivity.this).add(newUser);
-
-                //Save the user Email as default user in shared preference
-                PrefsManager.saveUserEmail(sharedPrefs, newUser.getEmail());
 
                 setResult(Constants.RESULT_TRUE);
                 startCamerasActivity();

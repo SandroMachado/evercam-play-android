@@ -26,13 +26,15 @@ import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.CameraStatus;
 import io.evercam.androidapp.dto.EvercamCamera;
+import io.evercam.androidapp.feedback.KeenHelper;
+import io.evercam.androidapp.feedback.NewCameraFeedbackItem;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.video.VideoActivity;
 
 public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
 {
-    private final String TAG = "evercamplay-AddCameraTask";
+    private final String TAG = "AddCameraTask";
     private CameraDetail cameraDetail;
     private Activity activity;
     private CustomProgressDialog customProgressDialog;
@@ -62,17 +64,23 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
         customProgressDialog.dismiss();
         if(evercamCamera != null)
         {
+            NewCameraFeedbackItem newCameraItem = new NewCameraFeedbackItem(activity,
+                    AppData.defaultUser.getUsername(), cameraDetail.getId());
             if(isFromScan)
             {
                 EvercamPlayApplication.sendEventAnalytics(activity, R.string.category_add_camera,
                         R.string.action_addcamera_success_scan,
                         R.string.label_addcamera_successful_scan);
+                newCameraItem.setIsFromDiscovery(true);
+
             }
             else
             {
                 EvercamPlayApplication.sendEventAnalytics(activity, R.string.category_add_camera,
                         R.string.action_addcamera_success, R.string.label_addcamera_successful);
             }
+
+            newCameraItem.sendToKeenIo(KeenHelper.getClient(activity));
 
             CustomToast.showInBottom(activity, R.string.create_success);
 

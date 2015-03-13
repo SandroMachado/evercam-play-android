@@ -11,12 +11,6 @@
         android:text="@string/open_account"/>
 
     <Button
-        android:id="@+id/btn_set_default_account"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/set_default"/>
-
-    <Button
         android:id="@+id/btn_delete_account"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

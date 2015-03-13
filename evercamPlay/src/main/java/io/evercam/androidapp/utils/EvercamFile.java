@@ -3,7 +3,6 @@ package io.evercam.androidapp.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -35,32 +34,6 @@ public class EvercamFile
                 SUFFIX_JPG;
         externalFile = new File(extCachePath);
         return externalFile;
-    }
-
-    public static Drawable loadDrawableForCamera(Context context, String cameraId)
-    {
-        try
-        {
-
-            File cacheFile = EvercamFile.getCacheFileRelative(context, cameraId);
-            if(cacheFile.exists())
-            {
-                return Drawable.createFromPath(cacheFile.getPath());
-            }
-        }
-        catch(OutOfMemoryError e)
-        {
-            Log.e(TAG, e.toString() + "-::OOM::-" + Log.getStackTraceString(e));
-        }
-        catch(Exception e)
-        {
-            Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-            if(Constants.isAppTrackingEnabled)
-            {
-                BugSenseHandler.sendException(e);
-            }
-        }
-        return null;
     }
 
     public static Bitmap loadBitmapForCamera(Context context, String cameraId)

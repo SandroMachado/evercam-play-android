@@ -11,7 +11,8 @@ public class SnapshotManagerTest extends TestCase
 
     public void testGetLatestFileName()
     {
-        assertEquals("hello_20141212_120108.png", SnapshotManager.getLatestFileName(ALL_FILES_ARRAY));
+        assertEquals("hello_20141212_120108.png", SnapshotManager.getLatestFileName
+                (ALL_FILES_ARRAY));
     }
 
 }

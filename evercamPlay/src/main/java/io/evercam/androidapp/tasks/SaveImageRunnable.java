@@ -3,7 +3,12 @@ package io.evercam.androidapp.tasks;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.util.Log;
+
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,26 +18,39 @@ import io.evercam.androidapp.utils.EvercamFile;
 
 public class SaveImageRunnable implements Runnable
 {
-    private static final String TAG = "evercamplay-SaveImageRunnable";
+    private static final String TAG = "SaveImageRunnable";
     private Context context;
+    private String thumbnailUrl = "";
+    private String cameraId;
     private Bitmap bitmap;
-    private static String cameraId;
+
+    public SaveImageRunnable(Context context, String thumbnailUrl, String cameraId)
+    {
+        this.context = context;
+        this.thumbnailUrl = thumbnailUrl;
+        this.cameraId = cameraId;
+    }
 
     public SaveImageRunnable(Context context, Bitmap bitmap, String cameraId)
     {
         this.context = context;
         this.bitmap = bitmap;
-        SaveImageRunnable.cameraId = cameraId;
+        this.cameraId = cameraId;
     }
 
     @Override
     public void run()
     {
-        saveImage(context, bitmap, cameraId);
+        saveImage();
     }
 
-    public static void saveImage(Context context, Bitmap bitmap, String cameraId)
+    public void saveImage()
     {
+        if(bitmap == null && !thumbnailUrl.isEmpty())
+        {
+            bitmap = requestForBitmapByUrl();
+        }
+
         try
         {
             File externalFile = EvercamFile.getExternalFile(context, cameraId);
@@ -59,6 +77,24 @@ public class SaveImageRunnable implements Runnable
         }
     }
 
+    private Bitmap requestForBitmapByUrl()
+    {
+        try
+        {
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder().url(thumbnailUrl).build();
+
+            Response response = client.newCall(request).execute();
+            return BitmapFactory.decodeStream(response.body().byteStream());
+        }
+        catch(IOException e)
+        {
+            Log.e(TAG, e.getMessage());
+            return null;
+        }
+    }
+
     private static void createFile(File file, Bitmap bitmap) throws IOException
     {
         if(bitmap != null)
@@ -74,13 +110,14 @@ public class SaveImageRunnable implements Runnable
         }
     }
 
-    private static void checkFile(File file)
+    private void checkFile(File file)
     {
         if(file.exists())
         {
             if(file.length() > 0)
             {
                 // Valid file exists, do nothing for now.
+                //Log.d(TAG, "Cache file saved: " + cameraId);
             }
             else
             {

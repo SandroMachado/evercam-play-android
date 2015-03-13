@@ -5,15 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
+import io.evercam.API;
 import io.evercam.androidapp.authentication.EvercamAccount;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
-import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
@@ -34,7 +33,6 @@ public class MainActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, "onCreate");
         if(Constants.isAppTrackingEnabled)
         {
             BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
@@ -129,23 +127,17 @@ public class MainActivity extends Activity
         }
     }
 
-    private boolean isUserLogged()
+    public static boolean isUserLogged(Context context)
     {
-        String defaultEmail = PrefsManager.getUserEmail(this);
-
-        if(defaultEmail != null)
+        AppData.defaultUser = new EvercamAccount(context).getDefaultUser();
+        if(AppData.defaultUser != null)
         {
-            Log.d(TAG, defaultEmail);
-            AppUser defaultUser = new EvercamAccount(this).retrieveUserByEmail(defaultEmail);
-            AppData.defaultUser = defaultUser;
-            AppData.evercamCameraList = new DbCamera(this).getCamerasByOwner(defaultUser
-                    .getUsername(), 500);
+            AppData.evercamCameraList = new DbCamera(context).getCamerasByOwner(AppData
+                    .defaultUser.getUsername(), 500);
+            API.setUserKeyPair(AppData.defaultUser.getApiKey(), AppData.defaultUser.getApiId());
+            return true;
         }
-        else
-        {
-            Log.d(TAG, "Null default user");
-        }
-        return (AppData.defaultUser != null);
+        return false;
     }
 
     private void readShortcutCameraId()
@@ -170,7 +162,7 @@ public class MainActivity extends Activity
         {
             if(hasNetwork)
             {
-                if(isUserLogged())
+                if(isUserLogged(MainActivity.this))
                 {
                     finish();
                     startCamerasActivity();

@@ -23,7 +23,7 @@ public class HomeShortcut
 {
     public static final String KEY_CAMERA_ID = "cameraId";
 
-    private static final String TAG = "evercamplay-HomeShortcut";
+    private static final String TAG = "HomeShortcut";
 
     /**
      * Create a shortcut that link to specific camera live view on home screen
@@ -65,7 +65,7 @@ public class HomeShortcut
             if(bitmap == null)
             {
                 bitmap = BitmapFactory.decodeResource(context.getResources(),
-                        R.drawable.icon_192x192);
+                        R.drawable.icon_evercam);
                 return Bitmap.createScaledBitmap(bitmap, 192, 192, false);
             }
 
@@ -118,7 +118,7 @@ public class HomeShortcut
                                     int leftBorderSize, int rightBorderSize, int color)
     {
         Bitmap bmpWithBorder = Bitmap.createBitmap(bmp.getWidth() + leftBorderSize +
-                rightBorderSize, bmp.getHeight() + topBorderSize + bottomBorderSize,
+                        rightBorderSize, bmp.getHeight() + topBorderSize + bottomBorderSize,
                 bmp.getConfig());
         Canvas canvas = new Canvas(bmpWithBorder);
         canvas.drawColor(color);

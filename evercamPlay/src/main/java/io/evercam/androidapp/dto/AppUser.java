@@ -1,45 +1,32 @@
 package io.evercam.androidapp.dto;
 
+import io.evercam.EvercamException;
+import io.evercam.User;
+
 public class AppUser
 {
     private int id;
-    private String email;
+    private String email = "";
     private String username = "";
-    private String password;
-    private String country;
+    private String country = "";
+    private String firstName = "";
+    private String lastName = "";
     private boolean isDefault = false;
-    private String apiKey;
-    private String apiId;
+    private String apiKey = "";
+    private String apiId = "";
 
     public AppUser()
     {
 
     }
 
-    public AppUser(int id, String email, String username, String password, String apiKey,
-                   String apiId, String country, boolean isDefault)
+    public AppUser(User user) throws EvercamException
     {
-        this.id = id;
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.country = country;
-        this.apiKey = apiKey;
-        this.apiId = apiId;
-        this.isDefault = isDefault;
-    }
-
-    public AppUser(int id, String email, String username, String password, String apiKey,
-                   String apiId, String country, int isDefaultInteger)
-    {
-        this.id = id;
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.country = country;
-        this.apiKey = apiKey;
-        this.apiId = apiId;
-        this.isDefault = (isDefaultInteger == 1);
+        setUsername(user.getUsername());
+        setEmail(user.getEmail());
+        setFirstName(user.getFirstName());
+        setLastName(user.getLastName());
+        setCountry(user.getCountry());
     }
 
     public String getUsername()
@@ -67,11 +54,6 @@ public class AppUser
         this.country = country;
     }
 
-    public void setApiId(String apiId)
-    {
-        this.apiId = apiId;
-    }
-
     public int getId()
     {
         return id;
@@ -80,11 +62,6 @@ public class AppUser
     public String getEmail()
     {
         return email;
-    }
-
-    public String getPassword()
-    {
-        return password;
     }
 
     public String getApiKey()
@@ -112,14 +89,10 @@ public class AppUser
         this.email = email;
     }
 
-    public void setPassword(String password)
-    {
-        this.password = password;
-    }
-
-    public void setApiKey(String apiKey)
+    public void setApiKeyPair(String apiKey, String apiId)
     {
         this.apiKey = apiKey;
+        this.apiId = apiId;
     }
 
     public void setIsDefault(boolean isDefault)
@@ -127,22 +100,39 @@ public class AppUser
         this.isDefault = isDefault;
     }
 
-    public void setisDefaultInteger(int isDefaultInteger)
+    public String getFirstName()
     {
-        this.isDefault = (isDefaultInteger == 1);
+        return firstName;
     }
 
-    public String toStringAll()
+    public void setFirstName(String firstName)
     {
-        return "id[" + id + "], email [" + email + "], password [" + password + "], " +
-                "isDefault [" + isDefault + "]";
+        this.firstName = firstName;
+    }
+
+    public String getLastName()
+    {
+        return lastName;
+    }
+
+    public void setLastName(String lastName)
+    {
+        this.lastName = lastName;
     }
 
     @Override
     public String toString()
     {
-        return "id[" + id + "], email [" + email + "], password [" + password + "], " +
-                "isDefault [" + isDefault + "]";
+        return "AppUser{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", country='" + country + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", isDefault=" + isDefault +
+                ", apiKey='" + apiKey + '\'' +
+                ", apiId='" + apiId + '\'' +
+                '}';
     }
-
 }

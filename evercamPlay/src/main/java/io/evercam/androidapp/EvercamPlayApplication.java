@@ -14,7 +14,7 @@ public class EvercamPlayApplication extends Application
 {
     private static final String PROPERTY_ID = "UA-52483995-1";
 
-    private static final String TAG = "evercamplay-EvercamPlayApplication";
+    private static final String TAG = "EvercamPlayApplication";
 
     public enum TrackerName
     {

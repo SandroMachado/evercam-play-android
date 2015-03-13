@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="evercamtheme_color">#dc4c3f</color>
+    <color name="evercam_color">#dc4c3f</color>
+    <color name="evercam_color_dark_gray">#404142</color>
+    <color name="evercam_color_light_gray">#ccc</color>
 </resources>

@@ -2,10 +2,8 @@ package io.evercam.androidapp;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -34,10 +32,11 @@ import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
+import io.evercam.androidapp.feedback.KeenHelper;
+import io.evercam.androidapp.feedback.NewUserFeedbackItem;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
-import io.evercam.androidapp.utils.PrefsManager;
 
 public class SignUpActivity extends Activity
 {
@@ -53,7 +52,7 @@ public class SignUpActivity extends Activity
     private EditText emailEdit;
     private EditText passwordEdit;
     private EditText repasswordEdit;
-    private Button signupBtn;
+
     private View signUpFormView;
     private View signUpStatusView;
     private CreateUserTask createUserTask;
@@ -109,7 +108,8 @@ public class SignUpActivity extends Activity
         emailEdit = (EditText) findViewById(R.id.email_edit);
         passwordEdit = (EditText) findViewById(R.id.password_edit);
         repasswordEdit = (EditText) findViewById(R.id.repassword_edit);
-        signupBtn = (Button) findViewById(R.id.sign_up_button);
+
+        Button signupBtn = (Button) findViewById(R.id.sign_up_button);
 
         fillDefaultProfile();
 
@@ -307,8 +307,10 @@ public class SignUpActivity extends Activity
                         R.string.category_sign_up, R.string.action_signup_success,
                         R.string.label_signup_successful);
 
+                new NewUserFeedbackItem(SignUpActivity.this, newUser.getUsername(),
+                        newUser.getEmail()).sendToKeenIo(KeenHelper.getClient(SignUpActivity.this));
+
                 new EvercamAccount(SignUpActivity.this).add(newUser);
-                PrefsManager.saveUserEmail(SignUpActivity.this, newUser.getEmail());
                 AppData.defaultUser = newUser;
 
                 CustomToast.showInCenterExtraLong(SignUpActivity.this, R.string.confirmSignUp);
@@ -329,9 +331,11 @@ public class SignUpActivity extends Activity
             //Hide soft keyboard
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context
                     .INPUT_METHOD_SERVICE);
+
             if(SignUpActivity.this.getCurrentFocus() != null)
             {
-                inputMethodManager.hideSoftInputFromWindow(SignUpActivity.this.getCurrentFocus().getWindowToken(), 0);
+                inputMethodManager.hideSoftInputFromWindow(SignUpActivity.this.getCurrentFocus()
+                        .getWindowToken(), 0);
             }
             showProgress(true);
         }
@@ -346,18 +350,12 @@ public class SignUpActivity extends Activity
                         (), userDetail.getPassword());
                 String userApiKey = userKeyPair.getApiKey();
                 String userApiId = userKeyPair.getApiId();
-                SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences
-                        (SignUpActivity.this);
-                PrefsManager.saveEvercamUserKeyPair(sharedPrefs, userApiKey, userApiId);
                 API.setUserKeyPair(userApiKey, userApiId);
                 User evercamUser = new User(userDetail.getUsername());
-                newUser = new AppUser();
-                newUser.setUsername(userDetail.getUsername());
-                newUser.setPassword(userDetail.getPassword());
-                newUser.setIsDefault(true);
-                newUser.setEmail(evercamUser.getEmail());
-                newUser.setApiKey(userApiKey);
-                newUser.setApiId(userApiId);
+
+                newUser = new AppUser(evercamUser);
+                newUser.setApiKeyPair(userApiKey, userApiId);
+
                 return null;
             }
             catch(EvercamException e)
