@@ -6,16 +6,17 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.telephony.TelephonyManager;
 
 import io.evercam.androidapp.R;
 
 public class DataCollector
 {
-    private Context context;
+    private Context mContext;
 
     public DataCollector(Context context)
     {
-        this.context = context;
+        this.mContext = context;
     }
 
     /**
@@ -27,7 +28,7 @@ public class DataCollector
         PackageInfo packageInfo;
         try
         {
-            packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            packageInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
             version = packageInfo.versionName;
         }
         catch(NameNotFoundException e)
@@ -86,13 +87,13 @@ public class DataCollector
     {
         if(isConnectedWifi())
         {
-            return context.getString(R.string.wifi);
+            return mContext.getString(R.string.wifi);
         }
         else if(isConnectedMobile())
         {
-            return context.getString(R.string.three_g);
+            return mContext.getString(R.string.three_g);
         }
-        return context.getString(R.string.unknown);
+        return mContext.getString(R.string.unknown);
     }
 
     /**
@@ -100,7 +101,7 @@ public class DataCollector
      */
     private NetworkInfo getNetworkInfo()
     {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService
+        ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService
                 (Context.CONNECTIVITY_SERVICE);
         return connectivityManager.getActiveNetworkInfo();
     }
@@ -120,5 +121,11 @@ public class DataCollector
         {
             return Character.toUpperCase(first) + s.substring(1);
         }
+    }
+
+    public static String getCountryCode(Context context)
+    {
+        TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        return telephonyManager.getNetworkCountryIso();
     }
 }
