@@ -258,7 +258,7 @@ public class SignUpActivity extends Activity
         {
             // If exceptions happen here, will not influence app functionality.
             // Just catch it to avoid crashing.
-            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
         }
     }
 

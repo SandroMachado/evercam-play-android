@@ -141,6 +141,8 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
 
         camerasActivity.calculateLoadingTimeAndSend();
 
+        CamerasActivity.camerasPerRow = camerasActivity.recalculateCameraPerRow();
+
         if(!camerasActivity.liveViewCameraId.isEmpty())
         {
             boolean cameraIsAccessible = false;

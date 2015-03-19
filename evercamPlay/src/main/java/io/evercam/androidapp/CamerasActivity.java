@@ -57,8 +57,7 @@ public class CamerasActivity extends ParentActivity
 
     private static final String TAG = "evercam-CamerasActivity";
 
-    private int totalCamerasInGrid = 0;
-    private static int camerasPerRow = 2;
+    public static int camerasPerRow = 2;
     public boolean reloadCameraList = false;
 
     public CustomProgressDialog reloadProgressDialog;
@@ -392,8 +391,6 @@ public class CamerasActivity extends ParentActivity
                     .FlowLayout) this.findViewById(R.id.cameras_flow_layout);
             camsLineView.removeAllViews();
 
-            totalCamerasInGrid = 0;
-
             return true;
         }
         catch(Exception e)
@@ -437,7 +434,6 @@ public class CamerasActivity extends ParentActivity
             int screen_width = readScreenWidth(this);
 
             int index = 0;
-            totalCamerasInGrid = 0;
 
             for(final EvercamCamera evercamCamera : AppData.evercamCameraList)
             {
@@ -488,8 +484,6 @@ public class CamerasActivity extends ParentActivity
                         }
                     }, 300);
                 }
-
-                totalCamerasInGrid++;
             }
 
             if(this.getActionBar() != null) this.getActionBar().setHomeButtonEnabled(true);
@@ -716,27 +710,36 @@ public class CamerasActivity extends ParentActivity
         return size.y;
     }
 
-    private int recalculateCameraPerRow()
+    public int recalculateCameraPerRow()
     {
-        int screenWidth = readScreenWidth(this);
-        int maxCamerasPerRow = 3;
-        int minCamerasPerRow = 1;
-        if(screenWidth != 0)
+        int totalCameras = AppData.evercamCameraList.size();
+        if(totalCameras != 0 && totalCameras <= 2)
         {
-            maxCamerasPerRow = screenWidth / 350;
+            PrefsManager.setCameraPerRow(this, 1);
+            return 1;
         }
+        else
+        {
+            int screenWidth = readScreenWidth(this);
+            int maxCamerasPerRow = 3;
+            int minCamerasPerRow = 1;
+            if(screenWidth != 0)
+            {
+                maxCamerasPerRow = screenWidth / 350;
+            }
 
-        int oldCamerasPerRow = PrefsManager.getCameraPerRow(this, 2);
-        if(maxCamerasPerRow < oldCamerasPerRow && maxCamerasPerRow != 0)
-        {
-            PrefsManager.setCameraPerRow(this, maxCamerasPerRow);
-            return maxCamerasPerRow;
+            int oldCamerasPerRow = PrefsManager.getCameraPerRow(this, 2);
+            if(maxCamerasPerRow < oldCamerasPerRow && maxCamerasPerRow != 0)
+            {
+                PrefsManager.setCameraPerRow(this, maxCamerasPerRow);
+                return maxCamerasPerRow;
+            }
+            else if(maxCamerasPerRow == 0)
+            {
+                return minCamerasPerRow;
+            }
+            return oldCamerasPerRow;
         }
-        else if(maxCamerasPerRow == 0)
-        {
-            return minCamerasPerRow;
-        }
-        return oldCamerasPerRow;
     }
 
     private Rect readLiveBoundsOfScrollView()
