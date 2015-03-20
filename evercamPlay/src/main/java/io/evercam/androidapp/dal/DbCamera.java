@@ -43,6 +43,9 @@ public class DbCamera extends DatabaseMaster
     private final String KEY_EXTERNAL_HTTP = "externalHttp";
     private final String KEY_EXTERNAL_RTSP = "externalRtsp";
 
+    //Thumbnail URL
+    private final String KEY_THUMBNAIL_URL = "thumbnailUrl";
+
     public DbCamera(Context context)
     {
         super(context);
@@ -63,8 +66,8 @@ public class DbCamera extends DatabaseMaster
                 "NULL" + "," + KEY_EXTERNAL_HOST + " TEXT NULL" + "," +
                 "" + KEY_INTERNAL_HTTP + " INTEGER NULL" + "," + KEY_EXTERNAL_HTTP + " INTEGER " +
                 "NULL" + "," + KEY_INTERNAL_RTSP + " INTEGER NULL" + "," +
-                "" + KEY_EXTERNAL_RTSP + " INTEGER NULL" + "," + KEY_REAL_OWNER + " TEXT NULL" +
-                "," + KEY_CAN_EDIT + " TEXT NULL" + "," + KEY_CAN_DELETE + " TEXT NULL" + ")";
+                "" + KEY_EXTERNAL_RTSP + " INTEGER NULL" + "," + KEY_THUMBNAIL_URL + " TEXT NULL" +
+                "," + KEY_REAL_OWNER + " TEXT NULL" + "," + KEY_CAN_EDIT + " TEXT NULL" + "," + KEY_CAN_DELETE + " TEXT NULL" + ")";
         db.execSQL(CREATE_TABLE_Cameras);
     }
 
@@ -100,7 +103,7 @@ public class DbCamera extends DatabaseMaster
                 KEY_MODEL, KEY_MAC, KEY_EXTERNAL_JPG_URL, KEY_INTERNAL_JPG_URL,
                 KEY_EXTERNAL_RTSP_URL, KEY_INTERNAL_RTSP_URL, KEY_STATUS, KEY_HAS_CREDENTIAL,
                 KEY_INTERNAL_HOST, KEY_EXTERNAL_HOST, KEY_INTERNAL_HTTP, KEY_EXTERNAL_HTTP,
-                KEY_INTERNAL_RTSP, KEY_EXTERNAL_RTSP, KEY_REAL_OWNER, KEY_CAN_EDIT,
+                KEY_INTERNAL_RTSP, KEY_EXTERNAL_RTSP, KEY_THUMBNAIL_URL, KEY_REAL_OWNER, KEY_CAN_EDIT,
                 KEY_CAN_DELETE}, KEY_ID + "=?", new String[]{String.valueOf(id)}, null, null,
                 null, null);
         if(cursor != null)
@@ -201,6 +204,7 @@ public class DbCamera extends DatabaseMaster
         values.put(KEY_EXTERNAL_HTTP, evercamCamera.getExternalHttp());
         values.put(KEY_INTERNAL_RTSP, evercamCamera.getInternalRtsp());
         values.put(KEY_EXTERNAL_RTSP, evercamCamera.getExternalRtsp());
+        values.put(KEY_THUMBNAIL_URL, evercamCamera.getThumbnailUrl());
         values.put(KEY_REAL_OWNER, evercamCamera.getRealOwner());
         values.put(KEY_CAN_EDIT, evercamCamera.getCanEditInt());
         values.put(KEY_CAN_DELETE, evercamCamera.getCanDeleteInt());
@@ -258,9 +262,10 @@ public class DbCamera extends DatabaseMaster
         evercamCamera.setExternalHttp(cursor.getInt(19));
         evercamCamera.setInternalRtsp(cursor.getInt(20));
         evercamCamera.setExternalRtsp(cursor.getInt(21));
-        evercamCamera.setRealOwner(cursor.getString(22));
-        evercamCamera.setCanEdit(cursor.getInt(23) == 1);
-        evercamCamera.setCanDelete(cursor.getInt(24) == 1);
+        evercamCamera.setThumbnailUrl(cursor.getString(22));
+        evercamCamera.setRealOwner(cursor.getString(23));
+        evercamCamera.setCanEdit(cursor.getInt(24) == 1);
+        evercamCamera.setCanDelete(cursor.getInt(25) == 1);
 
         return evercamCamera;
     }

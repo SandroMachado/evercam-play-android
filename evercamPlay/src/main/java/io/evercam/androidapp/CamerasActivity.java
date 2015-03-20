@@ -470,6 +470,7 @@ public class CamerasActivity extends ParentActivity
                  */
                 if(reloadImages)
                 {
+                    evercamCamera.loadingStatus = ImageLoadingStatus.not_started;
                     new Handler().postDelayed(new Runnable()
                     {
                         @Override
