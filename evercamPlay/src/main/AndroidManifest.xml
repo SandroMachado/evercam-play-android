@@ -37,6 +37,10 @@
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
     <!-- Necessary for authentication - remove account-->
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <!-- For camera list synchronizing -->
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_STATS"/>
 
     <application
         android:name=".EvercamPlayApplication"
@@ -46,6 +50,11 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme">
 
+        <provider android:name=".sync.DummyProvider"
+                  android:authorities="@string/content_provider_authorities"
+                  android:syncable="true"
+                  android:label="Camera list" />
+
         <service android:name=".authentication.EvercamAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
@@ -53,6 +62,17 @@
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authentication"/>
+        </service>
+
+        <service
+            android:name=".sync.CameraListSyncService"
+            android:exported="true"
+            android:process=":sync">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data android:name="android.content.SyncAdapter"
+                       android:resource="@xml/sync_adapter" />
         </service>
 
         <!-- Theme.Black.NoTitleBar previous value -->

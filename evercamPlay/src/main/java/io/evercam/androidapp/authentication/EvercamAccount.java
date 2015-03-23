@@ -3,7 +3,9 @@ package io.evercam.androidapp.authentication;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.os.Bundle;
 
 import java.util.ArrayList;
 
@@ -72,30 +74,7 @@ public class EvercamAccount
     public AppUser retrieveUserByEmail(String email)
     {
         Account account = getAccountByEmail(email);
-        String apiKey = mAccountManager.peekAuthToken(account, KEY_API_KEY);
-        String apiId = mAccountManager.peekAuthToken(account, KEY_API_ID);
-        String username = mAccountManager.getUserData(account, KEY_USERNAME);
-        String country = mAccountManager.getUserData(account, KEY_COUNTRY);
-        String firstName = mAccountManager.getUserData(account, KEY_FIRSTNAME);
-        String lastName = mAccountManager.getUserData(account, KEY_LASTNAME);
-
-        String isDefaultString = mAccountManager.getUserData(account, KEY_IS_DEFAULT);
-
-        AppUser appUser = new AppUser();
-        appUser.setEmail(email);
-        appUser.setApiKeyPair(apiKey, apiId);
-        appUser.setUsername(username);
-        appUser.setCountry(country);
-        appUser.setFirstName(firstName);
-        appUser.setLastName(lastName);
-
-        if(isDefaultString != null && isDefaultString.equals(TRUE))
-        {
-            appUser.setIsDefault(true);
-            AppData.defaultUser = appUser;
-        }
-
-        return appUser;
+        return retrieveUserDetailFromAccount(account);
     }
 
     public ArrayList<AppUser> retrieveUserList()
@@ -131,6 +110,37 @@ public class EvercamAccount
 
         AppData.appUsers = userList;
         return userList;
+    }
+
+    public AppUser retrieveUserDetailFromAccount(Account account)
+    {
+        //Start to sync camera list
+        startSync(account);
+
+        String apiKey = mAccountManager.peekAuthToken(account, KEY_API_KEY);
+        String apiId = mAccountManager.peekAuthToken(account, KEY_API_ID);
+        String username = mAccountManager.getUserData(account, KEY_USERNAME);
+        String country = mAccountManager.getUserData(account, KEY_COUNTRY);
+        String firstName = mAccountManager.getUserData(account, KEY_FIRSTNAME);
+        String lastName = mAccountManager.getUserData(account, KEY_LASTNAME);
+
+        String isDefaultString = mAccountManager.getUserData(account, KEY_IS_DEFAULT);
+
+        AppUser appUser = new AppUser();
+        appUser.setEmail(account.name);
+        appUser.setApiKeyPair(apiKey, apiId);
+        appUser.setUsername(username);
+        appUser.setCountry(country);
+        appUser.setFirstName(firstName);
+        appUser.setLastName(lastName);
+
+        if(isDefaultString != null && isDefaultString.equals(TRUE))
+        {
+            appUser.setIsDefault(true);
+            AppData.defaultUser = appUser;
+        }
+
+        return appUser;
     }
 
     public AppUser getDefaultUser()
@@ -171,5 +181,14 @@ public class EvercamAccount
                 }
             }
         }
+    }
+
+    private void startSync(Account account)
+    {
+        final int SYNC_INTERVAL = 60;
+        ContentResolver.setSyncAutomatically(account, mContext.getString(R.string
+                .content_provider_authorities), true);
+        ContentResolver.addPeriodicSync(account, mContext.getString(R.string
+                .content_provider_authorities), Bundle.EMPTY, SYNC_INTERVAL);
     }
 }

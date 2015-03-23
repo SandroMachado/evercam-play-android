@@ -10,5 +10,6 @@
 
     <string name="account_name">Evercam</string>
     <string name="account_type">io.evercam.android.account</string>
+    <string name="content_provider_authorities">io.evercam.android.account.provider</string>
 
 </resources>
