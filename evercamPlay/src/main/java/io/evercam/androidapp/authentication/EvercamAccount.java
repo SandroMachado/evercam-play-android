@@ -3,9 +3,11 @@ package io.evercam.androidapp.authentication;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
+import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -74,6 +76,10 @@ public class EvercamAccount
     public AppUser retrieveUserByEmail(String email)
     {
         Account account = getAccountByEmail(email);
+
+        //Start to sync camera list
+        startSync(account);
+
         return retrieveUserDetailFromAccount(account);
     }
 
@@ -114,9 +120,6 @@ public class EvercamAccount
 
     public AppUser retrieveUserDetailFromAccount(Account account)
     {
-        //Start to sync camera list
-        startSync(account);
-
         String apiKey = mAccountManager.peekAuthToken(account, KEY_API_KEY);
         String apiId = mAccountManager.peekAuthToken(account, KEY_API_ID);
         String username = mAccountManager.getUserData(account, KEY_USERNAME);
@@ -185,10 +188,16 @@ public class EvercamAccount
 
     private void startSync(Account account)
     {
-        final int SYNC_INTERVAL = 60;
-        ContentResolver.setSyncAutomatically(account, mContext.getString(R.string
-                .content_provider_authorities), true);
-        ContentResolver.addPeriodicSync(account, mContext.getString(R.string
-                .content_provider_authorities), Bundle.EMPTY, SYNC_INTERVAL);
+        final int SYNC_INTERVAL = 3600 * 6;
+        final String AUTHORITY = mContext.getString(R.string
+                        .content_provider_authorities);
+
+        //Force request a sync and also enable the auto sync
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        ContentResolver.requestSync(account,AUTHORITY, bundle);
+        ContentResolver.setSyncAutomatically(account, AUTHORITY, true);
+        ContentResolver.addPeriodicSync(account, AUTHORITY, Bundle.EMPTY, SYNC_INTERVAL);
     }
 }
