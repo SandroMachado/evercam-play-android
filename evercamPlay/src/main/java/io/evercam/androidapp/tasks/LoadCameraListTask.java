@@ -61,7 +61,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
             ArrayList<EvercamCamera> databaseCameralist = new DbCamera(camerasActivity
                     .getApplicationContext()).getCamerasByOwner(user.getUsername(), 500);
 
-            ArrayList<Camera> cameras = Camera.getAll(user.getUsername(), true, true);
+            ArrayList<Camera> cameras = Camera.getAll(user.getUsername(), true, false);
 
             ArrayList<EvercamCamera> evercamCameras = new ArrayList<>();
             for(io.evercam.Camera camera : cameras)
@@ -143,37 +143,38 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
 
         CamerasActivity.camerasPerRow = camerasActivity.recalculateCameraPerRow();
 
-        if(!camerasActivity.liveViewCameraId.isEmpty())
-        {
-            boolean cameraIsAccessible = false;
-            for(EvercamCamera camera : AppData.evercamCameraList)
-            {
-                if(camera.getCameraId().equals(camerasActivity.liveViewCameraId))
-                {
-                    cameraIsAccessible = true;
-                    break;
-                }
-            }
-
-            if(cameraIsAccessible)
-            {
-                camerasActivity.removeAllCameraViews();
-                camerasActivity.addAllCameraViews(false, true);
-
-                VideoActivity.startPlayingVideoForCamera(camerasActivity,
-                        camerasActivity.liveViewCameraId);
-            }
-            else
-            {
-                camerasActivity.removeAllCameraViews();
-                camerasActivity.addAllCameraViews(true, true);
-                CustomToast.showSuperToastShort(camerasActivity, camerasActivity.getString(R
-                        .string.msg_can_not_access_camera));
-            }
-            camerasActivity.liveViewCameraId = "";
-        }
-        else
-        {
+//        if(!camerasActivity.liveViewCameraId.isEmpty())
+//        {
+//            //TODO Reconsider this
+//            boolean cameraIsAccessible = false;
+//            for(EvercamCamera camera : AppData.evercamCameraList)
+//            {
+//                if(camera.getCameraId().equals(camerasActivity.liveViewCameraId))
+//                {
+//                    cameraIsAccessible = true;
+//                    break;
+//                }
+//            }
+//
+//            if(cameraIsAccessible)
+//            {
+//                camerasActivity.removeAllCameraViews();
+//                camerasActivity.addAllCameraViews(false, true);
+//
+//                VideoActivity.startPlayingVideoForCamera(camerasActivity,
+//                        camerasActivity.liveViewCameraId);
+//            }
+//            else
+//            {
+//                camerasActivity.removeAllCameraViews();
+//                camerasActivity.addAllCameraViews(true, true);
+//                CustomToast.showSuperToastShort(camerasActivity, camerasActivity.getString(R
+//                        .string.msg_can_not_access_camera));
+//            }
+//            camerasActivity.liveViewCameraId = "";
+//        }
+//        else
+//        {
             if(canLoad[0])
             {
                 if(reload)
@@ -186,7 +187,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
             {
                 //This should never happen because there is no publishProgress(false)
             }
-        }
+//        }
         if(camerasActivity.reloadProgressDialog != null)
         {
             camerasActivity.reloadProgressDialog.dismiss();
