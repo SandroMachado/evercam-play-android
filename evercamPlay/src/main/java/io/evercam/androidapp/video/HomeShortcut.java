@@ -84,7 +84,8 @@ public class HomeShortcut
 
             //Append Evercam logo as overlay
             Bitmap logoBitmap = BitmapFactory.decodeResource(context.getResources(),
-                    R.drawable.icon_40x40);
+                    R.drawable.icon_50x50);
+            logoBitmap = Bitmap.createScaledBitmap(logoBitmap, 80, 80, false);
             appendOverlay(bitmap, logoBitmap);
         }
         catch(EvercamException e)
@@ -98,17 +99,8 @@ public class HomeShortcut
     private static Bitmap getThumbnailFor(Context context, EvercamCamera evercamCamera) throws
             EvercamException
     {
-        if(evercamCamera.camera != null)
-        {
-            //Load thumbnail from Evercam camera object if not null
-            byte[] snapshotByte = evercamCamera.camera.getThumbnailData();
-            return BitmapFactory.decodeByteArray(snapshotByte, 0, snapshotByte.length);
-        }
-        else
-        {
-            //Otherwise load from cache
-            return EvercamFile.loadBitmapForCamera(context, evercamCamera.getCameraId());
-        }
+         // Load from cache
+         return EvercamFile.loadBitmapForCamera(context, evercamCamera.getCameraId());
     }
 
     /**
