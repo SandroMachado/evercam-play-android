@@ -87,6 +87,18 @@
             android:label=""
             android:theme="@style/ActionBarOverlayTheme"
             android:screenOrientation="unspecified">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <!-- Accepts URIs that begin with "evercam://cameras/streams” -->
+                <data
+                    android:scheme="@string/data_scheme"
+                    android:host="@string/data_host"
+                    android:pathPrefix="@string/data_path"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CamerasActivity" />
         </activity>
         <activity
             android:name=".SlideActivity"
@@ -101,15 +113,6 @@
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <!-- Accepts URIs that begin with "evercam://cameras/streams” -->
-                <data
-                    android:scheme="@string/data_scheme"
-                    android:host="@string/data_host"
-                    android:pathPrefix="@string/data_path"/>
             </intent-filter>
         </activity>
         <activity
@@ -180,8 +183,10 @@
             android:name=".recordings.RecordingWebActivity"
             android:icon="@drawable/icon_evercam"
             android:label="@string/title_activity_recording_web"
-            android:configChanges="keyboard|keyboardHidden|screenSize|orientation"
-            android:parentActivityName=".video.VideoActivity">
+            android:configChanges="keyboard|keyboardHidden|screenSize|orientation">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".video.VideoActivity" />
         </activity>
     </application>
 

@@ -3,6 +3,7 @@ package io.evercam.androidapp.video;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
+import android.app.TaskStackBuilder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -18,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -54,9 +56,11 @@ import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
 import io.evercam.Camera;
+import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.FeedbackActivity;
 import io.evercam.androidapp.LocalStorageActivity;
+import io.evercam.androidapp.MainActivity;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.ViewCameraActivity;
@@ -64,6 +68,7 @@ import io.evercam.androidapp.custom.CameraListAdapter;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.custom.ProgressView;
+import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.feedback.StreamFeedbackItem;
@@ -85,6 +90,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     public static EvercamCamera evercamCamera;
 
     private final static String TAG = "VideoActivity";
+    private String liveViewCameraId = "";
 
     private static List<MediaURL> mediaUrls = null;
     private static int mrlIndex = -1;
@@ -165,7 +171,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private Date startTime;
     private AndroidLogger logger;
     private KeenClient client;
-    private KeenProject keenProject;
     private String username = "";
 
     @Override
@@ -181,6 +186,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             }
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+            readShortcutCameraId();
+
+            if(!liveViewCameraId.isEmpty())
+            {
+                startingCameraID = liveViewCameraId;
+            }
 
             launchSleepTimer();
 
@@ -198,11 +210,32 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             if(AppData.defaultUser != null)
             {
                 username = AppData.defaultUser.getUsername();
+                if(AppData.evercamCameraList.size() == 0)
+                {
+                    AppData.evercamCameraList = new DbCamera(this).getCamerasByOwner(username, 500);
+                }
             }
+            else
+            {
+                if(MainActivity.isUserLogged(this))
+                {
+                    username = AppData.defaultUser.getUsername();
+                    if(AppData.evercamCameraList.size() == 0)
+                    {
+                        AppData.evercamCameraList = new DbCamera(this).getCamerasByOwner(username, 500);
+                    }
+                }
+                else
+                {
+                    //TODO Consider if no user account logged in
+                    Log.e(TAG, "No default user account for live view!");
+                }
+            }  
+
             logger = AndroidLogger.getLogger(getApplicationContext(), Constants.LOGENTRIES_TOKEN,
                     false);
             client = new AndroidKeenClientBuilder(this).build();
-            keenProject = new KeenProject(Constants.KEEN_PROJECT_ID, Constants.KEEN_WRITE_KEY,
+            KeenProject keenProject = new KeenProject(Constants.KEEN_PROJECT_ID, Constants.KEEN_WRITE_KEY,
                     Constants.KEEN_READ_KEY);
             client.setDefaultProject(keenProject);
 
@@ -492,8 +525,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         {
             if(itemId == R.id.video_menu_delete_camera)
             {
-                CustomedDialog.getConfirmRemoveDialog(VideoActivity.this,
-                        new DialogInterface.OnClickListener()
+                CustomedDialog.getConfirmRemoveDialog(VideoActivity.this, new DialogInterface.OnClickListener()
                         {
 
                             @Override
@@ -501,17 +533,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                             {
                                 if(evercamCamera.canDelete())
                                 {
-                                    new DeleteCameraTask(evercamCamera.getCameraId(),
-                                            VideoActivity.this,
-                                            DeleteType.DELETE_OWNED).executeOnExecutor(AsyncTask
-                                            .THREAD_POOL_EXECUTOR);
+                                    new DeleteCameraTask(evercamCamera.getCameraId(), VideoActivity.this, DeleteType.DELETE_OWNED).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                 }
                                 else
                                 {
-                                    new DeleteCameraTask(evercamCamera.getCameraId(),
-                                            VideoActivity.this,
-                                            DeleteType.DELETE_SHARE).executeOnExecutor(AsyncTask
-                                            .THREAD_POOL_EXECUTOR);
+                                    new DeleteCameraTask(evercamCamera.getCameraId(), VideoActivity.this, DeleteType.DELETE_SHARE).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                 }
                             }
                         }, R.string.msg_confirm_remove_camera).show();
@@ -528,14 +554,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             }
             else if(itemId == android.R.id.home)
             {
-                finish();
+                navigateBackToCameraList();
             }
             else if(itemId == R.id.video_menu_feedback)
             {
                 feedbackStarted = true;
                 Intent feedbackIntent = new Intent(VideoActivity.this, FeedbackActivity.class);
-                feedbackIntent.putExtra(Constants.BUNDLE_KEY_CAMERA_ID,
-                        evercamCamera.getCameraId());
+                feedbackIntent.putExtra(Constants.BUNDLE_KEY_CAMERA_ID, evercamCamera.getCameraId());
                 startActivityForResult(feedbackIntent, Constants.REQUEST_CODE_FEEDBACK);
             }
             else if(itemId == R.id.video_menu_view_snapshots)
@@ -550,8 +575,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             else if(itemId == R.id.video_menu_view_recordings)
             {
                 Intent recordingIntent = new Intent(this, RecordingWebActivity.class);
-                recordingIntent.putExtra(Constants.BUNDLE_KEY_CAMERA_ID,
-                        evercamCamera.getCameraId());
+                recordingIntent.putExtra(Constants.BUNDLE_KEY_CAMERA_ID, evercamCamera.getCameraId());
                 startActivity(recordingIntent);
             }
         }
@@ -568,6 +592,38 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             }
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        navigateBackToCameraList();
+    }
+
+    private void navigateBackToCameraList()
+    {
+        if(CamerasActivity.activity == null)
+        {
+            if (android.os.Build.VERSION.SDK_INT >= 16)
+            {
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                TaskStackBuilder.create(this)
+                        .addNextIntentWithParentStack(upIntent)
+                        .startActivities();
+            }
+        }
+
+        finish();
+    }
+
+
+    private void readShortcutCameraId()
+    {
+        Intent liveViewIntent = this.getIntent();
+        if(liveViewIntent != null && liveViewIntent.getExtras() != null)
+        {
+            liveViewCameraId = liveViewIntent.getExtras().getString(HomeShortcut.KEY_CAMERA_ID, "");
+        }
     }
 
     private void startPlay()

@@ -2,7 +2,6 @@ package io.evercam.androidapp;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,7 +44,6 @@ import io.evercam.androidapp.tasks.LoadCameraListTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
-import io.evercam.androidapp.video.HomeShortcut;
 import io.keen.client.android.AndroidKeenClientBuilder;
 import io.keen.client.java.KeenClient;
 import io.keen.client.java.KeenProject;
@@ -54,7 +52,6 @@ public class CamerasActivity extends ParentActivity
 {
     public static CamerasActivity activity = null;
     public MenuItem refresh;
-    public String liveViewCameraId = "";
 
     private static final String TAG = "evercam-CamerasActivity";
 
@@ -96,8 +93,6 @@ public class CamerasActivity extends ParentActivity
         setContentView(R.layout.camslayoutwithslide);
 
         initDataCollectionObjects();
-
-        readShortcutCameraId();
 
         activity = this;
         checkUser();
@@ -249,10 +244,18 @@ public class CamerasActivity extends ParentActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if(requestCode == Constants.REQUEST_CODE_ADD_CAMERA || requestCode == Constants
-                .REQUEST_CODE_DELETE_CAMERA)
+        if(requestCode == Constants.REQUEST_CODE_ADD_CAMERA)
         {
             reloadCameraList = (resultCode == Constants.RESULT_TRUE);
+        }
+        else if (requestCode == Constants.REQUEST_CODE_DELETE_CAMERA)
+        {
+            // Don't reset reload variable to false because it's possible set to TRUE when
+            // return from shortcut live view
+            if(resultCode == Constants.RESULT_TRUE)
+            {
+               reloadCameraList = true;
+            }
         }
         else if(requestCode == Constants.REQUEST_CODE_MANAGE_ACCOUNT)
         {
@@ -269,15 +272,6 @@ public class CamerasActivity extends ParentActivity
         }
 
         startCameraLoadingTask();
-    }
-
-    private void readShortcutCameraId()
-    {
-        Intent liveViewIntent = this.getIntent();
-        if(liveViewIntent != null && liveViewIntent.getExtras() != null)
-        {
-            liveViewCameraId = liveViewIntent.getExtras().getString(HomeShortcut.KEY_CAMERA_ID, "");
-        }
     }
 
     private void checkUser()
@@ -517,6 +511,7 @@ public class CamerasActivity extends ParentActivity
     protected void onDestroy()
     {
         super.onDestroy();
+        activity = null;
         removeAllCameraViews();
     }
 
@@ -804,7 +799,7 @@ public class CamerasActivity extends ParentActivity
                 }
                 else if(type == InternetCheckType.RESTART)
                 {
-                    if(reloadCameraList || !liveViewCameraId.isEmpty())
+                    if(reloadCameraList)
                     {
                         removeAllCameraViews();
                         startLoadingCameras();
