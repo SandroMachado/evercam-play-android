@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="io.evercam.androidapp"
-          android:versionCode="88"
-          android:versionName="1.3.1">
+          android:versionCode="89"
+          android:versionName="1.3.2 (Debug)">
 
-    <!-- versionCode36 - 1.1.7 - Hikvision local storage, first page loading faster -->
-    <!-- versionCode39 - 1.1.8 - Only load snapshots for cameras within screen, new offline image -->
-    <!-- versionCode42 - 1.2.0 - Faster network scan -->
-    <!-- versionCode44 - 1.2.1 - Bug fixes for scanning -->
-    <!-- versionCode46 - 1.2.2 - Return buttons, alert before leaving scanning, fix scan crash -->
-    <!-- versionCode53 - 1.2.3 - port range check, date & time, new camera title, feedback, logentries, firebase, jpg view improvements-->
-    <!-- versionCode58 - 1.2.4 - Take snapshot, show time based on timezone, force landscape-->
-    <!-- versionCode62 - 1.2.5 - back button, quit add camera warning-->
-    <!-- versionCode63 - 1.2.6 - bug fixes after holiday-->
-    <!-- versionCode71 - 1.2.7 - switch to Android Studio, scan bug fix, view camera details, naming changes-->
     <!-- versionCode74 - 1.2.8 - home shortcut, account management-->
     <!-- versionCode80 - 1.2.9 - recording widget, menu item changes, feedback improvements, global default account, account management improves-->
     <!-- versionCode85 - 1.3.0 - Picasso, Keen.io, remove latest snapshot, request snapshot from Evercam, use thumbnail_url, live view cache fixes, remove country-->
     <!-- versionCode88 - 1.3.1 - Camera per row, bug fixes-->
+    <!-- versionCode89 - 1.3.2 - Sync camera list, responsive shortcut, fix shortcut icon-->
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -53,7 +44,7 @@
         <provider android:name=".sync.DummyProvider"
                   android:authorities="@string/content_provider_authorities"
                   android:syncable="true"
-                  android:label="Camera list" />
+                  android:label="Cameras" />
 
         <service android:name=".authentication.EvercamAuthenticatorService">
             <intent-filter>

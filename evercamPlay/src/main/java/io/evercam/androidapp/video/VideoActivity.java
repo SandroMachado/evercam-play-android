@@ -192,6 +192,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             if(!liveViewCameraId.isEmpty())
             {
                 startingCameraID = liveViewCameraId;
+                liveViewCameraId = "";
             }
 
             launchSleepTimer();
@@ -207,37 +208,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
             initialPageElements();
 
-            if(AppData.defaultUser != null)
-            {
-                username = AppData.defaultUser.getUsername();
-                if(AppData.evercamCameraList.size() == 0)
-                {
-                    AppData.evercamCameraList = new DbCamera(this).getCamerasByOwner(username, 500);
-                }
-            }
-            else
-            {
-                if(MainActivity.isUserLogged(this))
-                {
-                    username = AppData.defaultUser.getUsername();
-                    if(AppData.evercamCameraList.size() == 0)
-                    {
-                        AppData.evercamCameraList = new DbCamera(this).getCamerasByOwner(username, 500);
-                    }
-                }
-                else
-                {
-                    //TODO Consider if no user account logged in
-                    Log.e(TAG, "No default user account for live view!");
-                }
-            }  
+            checkIsShortcutCameraExists();
 
-            logger = AndroidLogger.getLogger(getApplicationContext(), Constants.LOGENTRIES_TOKEN,
-                    false);
-            client = new AndroidKeenClientBuilder(this).build();
-            KeenProject keenProject = new KeenProject(Constants.KEEN_PROJECT_ID, Constants.KEEN_WRITE_KEY,
-                    Constants.KEEN_READ_KEY);
-            client.setDefaultProject(keenProject);
+            initAnalyticsObjects();
 
             startPlay();
         }
@@ -408,6 +381,40 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         return super.dispatchTouchEvent(event);
     }
 
+    private void checkIsShortcutCameraExists()
+    {
+        //It will refill global camera list in isUserLogged()
+        if(MainActivity.isUserLogged(this))
+        {
+            username = AppData.defaultUser.getUsername();
+            if(AppData.evercamCameraList.size() > 0)
+            {
+                boolean cameraIsAccessible = false;
+                for(EvercamCamera camera : AppData.evercamCameraList)
+                {
+                    if(camera.getCameraId().equals(startingCameraID))
+                    {
+                        cameraIsAccessible = true;
+                        break;
+                    }
+                }
+
+                if(!cameraIsAccessible)
+                {
+                    CustomToast.showSuperToastShort(this, getString(R
+                            .string.msg_can_not_access_camera) + " - " + username);
+                    navigateBackToCameraList();
+                }
+            }
+        }
+        else
+        {
+            //If no account signed in
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
+    }
+
     private void launchSleepTimer()
     {
         try
@@ -447,6 +454,17 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             // This should not influence user using the app
             EvercamPlayApplication.sendCaughtException(this, e);
         }
+    }
+
+    private void initAnalyticsObjects()
+    {
+
+        logger = AndroidLogger.getLogger(getApplicationContext(), Constants.LOGENTRIES_TOKEN,
+                false);
+        client = new AndroidKeenClientBuilder(this).build();
+        KeenProject keenProject = new KeenProject(Constants.KEEN_PROJECT_ID, Constants.KEEN_WRITE_KEY,
+                Constants.KEEN_READ_KEY);
+        client.setDefaultProject(keenProject);
     }
 
     private int getSleepTime()

@@ -143,51 +143,19 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
 
         CamerasActivity.camerasPerRow = camerasActivity.recalculateCameraPerRow();
 
-//        if(!camerasActivity.liveViewCameraId.isEmpty())
-//        {
-//            //TODO Reconsider this
-//            boolean cameraIsAccessible = false;
-//            for(EvercamCamera camera : AppData.evercamCameraList)
-//            {
-//                if(camera.getCameraId().equals(camerasActivity.liveViewCameraId))
-//                {
-//                    cameraIsAccessible = true;
-//                    break;
-//                }
-//            }
-//
-//            if(cameraIsAccessible)
-//            {
-//                camerasActivity.removeAllCameraViews();
-//                camerasActivity.addAllCameraViews(false, true);
-//
-//                VideoActivity.startPlayingVideoForCamera(camerasActivity,
-//                        camerasActivity.liveViewCameraId);
-//            }
-//            else
-//            {
-//                camerasActivity.removeAllCameraViews();
-//                camerasActivity.addAllCameraViews(true, true);
-//                CustomToast.showSuperToastShort(camerasActivity, camerasActivity.getString(R
-//                        .string.msg_can_not_access_camera));
-//            }
-//            camerasActivity.liveViewCameraId = "";
-//        }
-//        else
-//        {
-            if(canLoad[0])
+        if(canLoad[0])
+        {
+            if(reload)
             {
-                if(reload)
-                {
-                    camerasActivity.removeAllCameraViews();
-                    camerasActivity.addAllCameraViews(true, true);
-                }
+                camerasActivity.removeAllCameraViews();
+                camerasActivity.addAllCameraViews(true, true);
             }
-            else
-            {
-                //This should never happen because there is no publishProgress(false)
-            }
-//        }
+        }
+        else
+        {
+            //This should never happen because there is no publishProgress(false)
+        }
+
         if(camerasActivity.reloadProgressDialog != null)
         {
             camerasActivity.reloadProgressDialog.dismiss();
