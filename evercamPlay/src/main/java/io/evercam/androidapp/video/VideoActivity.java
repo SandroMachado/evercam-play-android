@@ -64,12 +64,14 @@ import io.evercam.androidapp.MainActivity;
 import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.ViewCameraActivity;
+import io.evercam.androidapp.authentication.EvercamAccount;
 import io.evercam.androidapp.custom.CameraListAdapter;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.custom.ProgressView;
 import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
+import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.feedback.StreamFeedbackItem;
 import io.evercam.androidapp.recordings.RecordingWebActivity;
@@ -401,9 +403,39 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
                 if(!cameraIsAccessible)
                 {
-                    CustomToast.showSuperToastShort(this, getString(R
-                            .string.msg_can_not_access_camera) + " - " + username);
-                    navigateBackToCameraList();
+                    EvercamAccount evercamAccount = new EvercamAccount(this);
+                    AppUser matchedUser = null;
+
+                    ArrayList<AppUser> userList = evercamAccount.retrieveUserList();
+                    for(AppUser appUser : userList)
+                    {
+                        if(!appUser.getUsername().equals(username))
+                        {
+                            ArrayList<EvercamCamera> cameraList = new DbCamera(this).getCamerasByOwner(appUser.getUsername(), 500);
+                            for(EvercamCamera camera : cameraList)
+                            {
+                                if(camera.getCameraId().equals(startingCameraID))
+                                {
+                                    matchedUser = appUser;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if(matchedUser != null)
+                    {
+                        CustomToast.showSuperToastShort(this, getString(R
+                                .string.msg_switch_account) + " - " + matchedUser.getUsername());
+                        evercamAccount.updateDefaultUser(matchedUser.getEmail());
+                        checkIsShortcutCameraExists();
+                    }
+                    else
+                    {
+                        CustomToast.showSuperToastShort(this, getString(R
+                                .string.msg_can_not_access_camera) + " - " + username);
+                        navigateBackToCameraList();
+                    }
                 }
             }
         }
