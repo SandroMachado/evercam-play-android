@@ -31,7 +31,7 @@
         Login
     </screenName>
     <screenName name="io.evercam.androidapp.SignUpctivity">
-        Sign Up
+        Create Account
     </screenName>
     <screenName name="io.evercam.androidapp.ReleaseNotesActivity">
         Release Notes
@@ -44,9 +44,6 @@
     </screenName>
     <screenName name="io.evercam.androidapp.ManageAccountsActivity">
         Manage Accounts
-    </screenName>
-    <screenName name="io.evercam.androidapp.custom.AboutDialog">
-        About Dialog
     </screenName>
     <screenName name="io.evercam.androidapp.FeedbackActivity">
         Feedback Page

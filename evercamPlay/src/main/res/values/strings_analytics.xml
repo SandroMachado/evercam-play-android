@@ -3,7 +3,7 @@
 
     <!-- Event Category -->
     <string name="category_menu">Menu</string>
-    <string name="category_sign_up">Sign Up</string>
+    <string name="category_sign_up">Create Account</string>
     <string name="category_add_camera">Add Camera</string>
     <string name="category_streaming_rtsp">RTSP Streaming</string>
     <string name="category_streaming_jpg">JPG Streaming</string>
@@ -14,7 +14,7 @@
     <string name="action_manage_account">Manage Account</string>
     <string name="action_settings">Settings</string>
     <string name="action_add_camera">Add Camera</string>
-    <string name="action_signup_success">Sign up successful</string>
+    <string name="action_signup_success">New account created</string>
     <string name="action_addcamera_success">New camera added manually</string>
     <string name="action_addcamera_success_scan">New camera from scanning</string>
     <string name="action_streaming_rtsp_success">Successfully played RTSP stream</string>
@@ -24,7 +24,7 @@
 
     <!-- Event Label -->
     <string name="label_list_refresh">Refresh Camera List</string>
-    <string name="label_user_logout">Log out from slide menu</string>
+    <string name="label_user_logout">Log out from menu</string>
     <string name="label_settings">Click on settings menu</string>
     <string name="label_account">Click on manage account</string>
     <string name="label_add_camera_manually">Click on add camera in menu, and choose manually.</string>
