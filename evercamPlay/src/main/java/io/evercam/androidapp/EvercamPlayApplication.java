@@ -46,15 +46,16 @@ public class EvercamPlayApplication extends Application
             Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(R.xml
                     .app_tracker) : analytics.newTracker(PROPERTY_ID);
             mTrackers.put(trackerId, t);
-
         }
         return mTrackers.get(trackerId);
     }
 
     private static Tracker getAppTracker(Activity activity)
     {
-        return ((EvercamPlayApplication) activity.getApplication()).getTracker(TrackerName
+        Tracker tracker = ((EvercamPlayApplication) activity.getApplication()).getTracker(TrackerName
                 .APP_TRACKER);
+        tracker.enableAdvertisingIdCollection(true);
+        return tracker;
     }
 
     /**
