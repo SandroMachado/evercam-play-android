@@ -621,6 +621,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             {
                 HomeShortcut.create(getApplicationContext(), evercamCamera);
                 CustomToast.showSuperToastShort(this, R.string.msg_shortcut_created);
+                EvercamPlayApplication.sendEventAnalytics(this, R.string.category_shortcut,
+                        R.string.action_shortcut_create, R.string.label_shortcut_create);
             }
             else if(itemId == R.id.video_menu_view_recordings)
             {
@@ -672,6 +674,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         Intent liveViewIntent = this.getIntent();
         if(liveViewIntent != null && liveViewIntent.getExtras() != null)
         {
+            EvercamPlayApplication.sendEventAnalytics(this, R.string.category_shortcut,
+                    R.string.action_shortcut_use, R.string.label_shortcut_use);
             liveViewCameraId = liveViewIntent.getExtras().getString(HomeShortcut.KEY_CAMERA_ID, "");
         }
     }

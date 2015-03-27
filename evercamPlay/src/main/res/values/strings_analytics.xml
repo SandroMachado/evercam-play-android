@@ -5,6 +5,7 @@
     <string name="category_menu">Menu</string>
     <string name="category_sign_up">Create Account</string>
     <string name="category_add_camera">Add Camera</string>
+    <string name="category_shortcut">Home Shortcut</string>
     <string name="category_streaming_rtsp">RTSP Streaming</string>
     <string name="category_streaming_jpg">JPG Streaming</string>
 
@@ -21,6 +22,8 @@
     <string name="action_streaming_rtsp_failed">Failed to play RTSP stream</string>
     <string name="action_streaming_jpg_success">Successfully played JPG stream</string>
     <string name="action_streaming_jpg_failed">Failed to play JPG stream</string>
+    <string name="action_shortcut_create">Create a shortcut</string>
+    <string name="action_shortcut_use">Use shortcut</string>
 
     <!-- Event Label -->
     <string name="label_list_refresh">Refresh Camera List</string>
@@ -36,6 +39,8 @@
     <string name="label_streaming_rtsp_failed">Failed to play RTSP stream while the camera is online and has a valid RTSP URL.</string>
     <string name="label_streaming_jpg_success">Successfully played JPG stream</string>
     <string name="label_streaming_jpg_failed">Failed to play JPG stream while the camera is online</string>
+    <string name="label_shortcut_create">Create a single camera shortcut on home screen</string>
+    <string name="label_shortcut_use">Use shortcut from desktop</string>
 
     <!-- Screen Names: Only send 'Add' and 'Edit' screen events manually because they share the same Activity -->
     <string name="screen_add_camera">Add Camera</string>
