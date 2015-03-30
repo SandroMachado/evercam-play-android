@@ -77,22 +77,12 @@ public class MainActivity extends Activity
 
     private void startCamerasActivity()
     {
-        int notificationID = 0;
-        String strNotificationID = this.getIntent().getStringExtra(Constants
-                .GCMNotificationIDString);
-
-        if(strNotificationID != null && !strNotificationID.equals(""))
-            notificationID = Integer.parseInt(strNotificationID);
-
         if(CamerasActivity.activity != null)
         {
             CamerasActivity.activity.finish();
         }
 
-        Intent intent = new Intent(this, CamerasActivity.class);
-        intent.putExtra(Constants.GCMNotificationIDString, notificationID);
-
-        this.startActivity(intent);
+        this.startActivity(new Intent(this, CamerasActivity.class));
 
         MainActivity.this.finish();
     }
