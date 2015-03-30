@@ -689,12 +689,12 @@ public class AddEditCameraActivity extends Activity
     {
         if(vendorMap == null)
         {
-            vendorMap = new TreeMap<String, String>();
+            vendorMap = new TreeMap<>();
         }
 
         if(vendorMapIdAsKey == null)
         {
-            vendorMapIdAsKey = new TreeMap<String, String>();
+            vendorMapIdAsKey = new TreeMap<>();
         }
 
         if(vendorList != null)
@@ -750,7 +750,7 @@ public class AddEditCameraActivity extends Activity
         }
         if(modelMap == null)
         {
-            modelMap = new TreeMap<String, String>();
+            modelMap = new TreeMap<>();
         }
         modelMap.clear();
 

@@ -14,12 +14,18 @@ import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
+import io.evercam.androidapp.dto.AppData;
+import io.evercam.androidapp.feedback.TestSnapshotFeedbackItem;
 import io.evercam.androidapp.utils.Commons;
+import io.evercam.androidapp.utils.Constants;
 import io.evercam.network.discovery.PortScan;
+import io.keen.client.android.AndroidKeenClientBuilder;
+import io.keen.client.java.KeenClient;
+import io.keen.client.java.KeenProject;
 
 public class TestSnapshotTask extends AsyncTask<Void, Void, Drawable>
 {
-    private final String TAG = "evercamplay-TestSnapshotTask";
+    private final String TAG = "TestSnapshotTask";
     private String url;
     private String username;
     private String password;
@@ -79,20 +85,32 @@ public class TestSnapshotTask extends AsyncTask<Void, Void, Drawable>
     {
         customProgressDialog.dismiss();
 
+        KeenClient client = new AndroidKeenClientBuilder(activity).build();
+        KeenProject keenProject = new KeenProject(Constants.KEEN_PROJECT_ID, Constants.KEEN_WRITE_KEY,
+                Constants.KEEN_READ_KEY);
+        client.setDefaultProject(keenProject);
+
         if(drawable != null)
         {
             CustomToast.showSnapshotTestResult(activity, R.string.snapshot_test_success);
             CustomedDialog.getSnapshotDialog(activity, drawable).show();
+
+            new TestSnapshotFeedbackItem(activity, AppData.defaultUser.getUsername(), true, true)
+            .setSnapshot_url(url).setCam_username(username).setCam_password(password).sendToKeenIo(client);
         }
         else
         {
             if(errorMessage == null)
             {
                 CustomToast.showInCenterLong(activity, R.string.snapshot_test_failed);
+                new TestSnapshotFeedbackItem(activity, AppData.defaultUser.getUsername(), false, true)
+                        .setSnapshot_url(url).setCam_username(username).setCam_password(password).sendToKeenIo(client);
             }
             else
             {
                 CustomToast.showInCenterLong(activity, errorMessage);
+                new TestSnapshotFeedbackItem(activity, AppData.defaultUser.getUsername(), false, false)
+                        .setSnapshot_url(url).setCam_username(username).setCam_password(password).sendToKeenIo(client);
             }
         }
     }

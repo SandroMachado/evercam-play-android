@@ -53,7 +53,7 @@ public class EvercamPlayApplication extends Application
     private static Tracker getAppTracker(Activity activity)
     {
         Tracker tracker = ((EvercamPlayApplication) activity.getApplication()).getTracker(TrackerName
-                .APP_TRACKER);
+            .APP_TRACKER);
         tracker.enableAdvertisingIdCollection(true);
         return tracker;
     }
