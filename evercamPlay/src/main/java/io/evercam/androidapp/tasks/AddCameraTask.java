@@ -77,7 +77,7 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
             else
             {
                 EvercamPlayApplication.sendEventAnalytics(activity, R.string.category_add_camera,
-                        R.string.action_addcamera_success, R.string.label_addcamera_successful);
+                        R.string.action_addcamera_success_manual, R.string.label_addcamera_successful_manual);
             }
 
             newCameraItem.sendToKeenIo(KeenHelper.getClient(activity));
