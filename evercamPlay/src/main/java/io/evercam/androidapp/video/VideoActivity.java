@@ -73,6 +73,7 @@ import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
+import io.evercam.androidapp.feedback.ShortcutFeedbackItem;
 import io.evercam.androidapp.feedback.StreamFeedbackItem;
 import io.evercam.androidapp.recordings.RecordingWebActivity;
 import io.evercam.androidapp.tasks.CaptureSnapshotRunnable;
@@ -189,6 +190,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+            initAnalyticsObjects();
+
             readShortcutCameraId();
 
             if(!liveViewCameraId.isEmpty())
@@ -211,8 +214,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             initialPageElements();
 
             checkIsShortcutCameraExists();
-
-            initAnalyticsObjects();
 
             startPlay();
         }
@@ -434,8 +435,17 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                     {
                         CustomToast.showSuperToastShort(this, getString(R
                                 .string.msg_can_not_access_camera) + " - " + username);
+                        new ShortcutFeedbackItem(this, AppData.defaultUser.getUsername(), startingCameraID,
+                                ShortcutFeedbackItem.ACTION_TYPE_USE, ShortcutFeedbackItem.RESULT_TYPE_FAILED)
+                        .sendToKeenIo(client);
                         navigateBackToCameraList();
                     }
+                }
+                else
+                {
+                    new ShortcutFeedbackItem(this, AppData.defaultUser.getUsername(), startingCameraID,
+                            ShortcutFeedbackItem.ACTION_TYPE_USE, ShortcutFeedbackItem.RESULT_TYPE_SUCCESS)
+                            .sendToKeenIo(client);;
                 }
             }
         }
@@ -623,6 +633,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 CustomToast.showSuperToastShort(this, R.string.msg_shortcut_created);
                 EvercamPlayApplication.sendEventAnalytics(this, R.string.category_shortcut,
                         R.string.action_shortcut_create, R.string.label_shortcut_create);
+                new ShortcutFeedbackItem(this, AppData.defaultUser.getUsername(), evercamCamera.getCameraId(),
+                        ShortcutFeedbackItem.ACTION_TYPE_CREATE, ShortcutFeedbackItem.RESULT_TYPE_SUCCESS)
+                        .sendToKeenIo(client);;
             }
             else if(itemId == R.id.video_menu_view_recordings)
             {

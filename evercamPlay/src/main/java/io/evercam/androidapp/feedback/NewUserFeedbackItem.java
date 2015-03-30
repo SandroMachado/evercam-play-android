@@ -27,6 +27,7 @@ public class NewUserFeedbackItem extends FeedbackItem
         return map;
     }
 
+    @Override
     public void sendToKeenIo(final KeenClient client)
     {
         final FeedbackItem feedbackItem = this;

@@ -106,6 +106,7 @@ public class StreamFeedbackItem extends FeedbackItem
         return event;
     }
 
+    @Override
     public void sendToKeenIo(final KeenClient client)
     {
         final FeedbackItem feedbackItem = this;
