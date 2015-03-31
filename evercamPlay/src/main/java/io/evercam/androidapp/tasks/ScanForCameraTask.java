@@ -4,8 +4,12 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import io.evercam.androidapp.ScanActivity;
+import io.evercam.androidapp.dto.AppData;
+import io.evercam.androidapp.feedback.ScanFeedbackItem;
+import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.NetInfo;
 import io.evercam.network.EvercamDiscover;
 import io.evercam.network.discovery.DiscoveredCamera;
@@ -13,9 +17,10 @@ import io.evercam.network.discovery.ScanRange;
 
 public class ScanForCameraTask extends AsyncTask<Void, Void, ArrayList<DiscoveredCamera>>
 {
-    private final String TAG = "evercamplay-ScanForCameraTask";
+    private final String TAG = "ScanForCameraTask";
     private ScanActivity scanActivity;
     private NetInfo netInfo;
+    private Date startTime;
 
     public ScanForCameraTask(ScanActivity scanActivity)
     {
@@ -26,6 +31,7 @@ public class ScanForCameraTask extends AsyncTask<Void, Void, ArrayList<Discovere
     @Override
     protected ArrayList<DiscoveredCamera> doInBackground(Void... params)
     {
+        startTime = new Date();
         ArrayList<DiscoveredCamera> cameraList = null;
         try
         {
@@ -45,6 +51,11 @@ public class ScanForCameraTask extends AsyncTask<Void, Void, ArrayList<Discovere
     @Override
     protected void onPostExecute(ArrayList<DiscoveredCamera> cameraList)
     {
+        Float scanningTime = Commons.calculateTimeDifferenceFrom(startTime);
+        Log.d(TAG, "Scanning time: " + scanningTime);
+
+        new ScanFeedbackItem(scanActivity, AppData.defaultUser.getUsername(), scanningTime, cameraList).sendToKeenIo();
+
         scanActivity.showProgress(false);
 
         scanActivity.showScanResults(cameraList);

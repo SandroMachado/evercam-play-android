@@ -85,12 +85,12 @@ public class ScanActivity extends Activity
         scanResultNoCameraView = findViewById(R.id.scan_result_no_camera_layout);
         cancelButton = (Button) findViewById(R.id.button_cancel_scan);
 
-        drawableArray = new SparseArray<Drawable>();
+        drawableArray = new SparseArray();
 
         cameraListView = (ListView) findViewById(R.id.scan_result_list);
         Button addManuallyButton = (Button) findViewById(R.id.button_add_camera_manually);
 
-        deviceArrayList = new ArrayList<HashMap<String, Object>>();
+        deviceArrayList = new ArrayList<>();
         deviceAdapter = new ScanResultAdapter(this, deviceArrayList, R.layout.scan_list_layout,
                 new String[]{ADAPTER_KEY_LOGO, ADAPTER_KEY_IP, ADAPTER_KEY_MODEL},
                 new int[]{R.id.camera_img, R.id.camera_ip, R.id.camera_model});
