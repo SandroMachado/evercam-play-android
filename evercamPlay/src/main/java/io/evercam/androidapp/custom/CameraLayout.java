@@ -213,8 +213,8 @@ public class CameraLayout extends LinearLayout
         else
         {
             offlineImage.setVisibility(View.VISIBLE);
-            snapshotImageView.setBackgroundColor(getResources().getColor(R.color
-                    .evercam_color_dark_gray));
+            loadingAnimation.setVisibility(View.GONE);
+            snapshotImageView.setBackgroundColor(Color.GRAY);
             gradientLayout.removeGradientShadow();
             CameraLayout.this.evercamCamera.loadingStatus = ImageLoadingStatus.live_not_received;
             handler.postDelayed(LoadImageRunnable, 0);

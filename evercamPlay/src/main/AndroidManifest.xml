@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="io.evercam.androidapp"
-          android:versionCode="91"
-          android:versionName="1.3.2 (Debug)">
+          android:versionCode="92"
+          android:versionName="1.3.3 Alpha 30/03">
 
     <!-- versionCode74 - 1.2.8 - home shortcut, account management-->
     <!-- versionCode80 - 1.2.9 - recording widget, menu item changes, feedback improvements, global default account, account management improves-->
     <!-- versionCode85 - 1.3.0 - Picasso, Keen.io, remove latest snapshot, request snapshot from Evercam, use thumbnail_url, live view cache fixes, remove country-->
     <!-- versionCode88 - 1.3.1 - Camera per row, bug fixes-->
     <!-- versionCode91 - 1.3.2 - Sync camera list, responsive shortcut, fix shortcut icon-->
+    <!-- versionCode92 - 1.3.3 - More Keen.io reports-->
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
