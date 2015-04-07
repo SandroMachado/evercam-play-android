@@ -54,7 +54,12 @@ public class ScanForCameraTask extends AsyncTask<Void, Void, ArrayList<Discovere
         Float scanningTime = Commons.calculateTimeDifferenceFrom(startTime);
         Log.d(TAG, "Scanning time: " + scanningTime);
 
-        new ScanFeedbackItem(scanActivity, AppData.defaultUser.getUsername(), scanningTime, cameraList).sendToKeenIo();
+        String username = "";
+        if(AppData.defaultUser != null)
+        {
+            username = AppData.defaultUser.getUsername();
+        }
+        new ScanFeedbackItem(scanActivity, username, scanningTime, cameraList).sendToKeenIo();
 
         scanActivity.showProgress(false);
 

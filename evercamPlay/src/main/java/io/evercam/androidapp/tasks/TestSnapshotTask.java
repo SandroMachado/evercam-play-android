@@ -100,16 +100,22 @@ public class TestSnapshotTask extends AsyncTask<Void, Void, Drawable>
         }
         else
         {
+            String username = "";
+            if(AppData.defaultUser != null)
+            {
+                username = AppData.defaultUser.getUsername();
+            }
+
             if(errorMessage == null)
             {
                 CustomToast.showInCenterLong(activity, R.string.snapshot_test_failed);
-                new TestSnapshotFeedbackItem(activity, AppData.defaultUser.getUsername(), false, true)
+                new TestSnapshotFeedbackItem(activity, username, false, true)
                         .setSnapshot_url(url).setCam_username(username).setCam_password(password).sendToKeenIo(client);
             }
             else
             {
                 CustomToast.showInCenterLong(activity, errorMessage);
-                new TestSnapshotFeedbackItem(activity, AppData.defaultUser.getUsername(), false, false)
+                new TestSnapshotFeedbackItem(activity, username, false, false)
                         .setSnapshot_url(url).setCam_username(username).setCam_password(password).sendToKeenIo(client);
             }
         }
