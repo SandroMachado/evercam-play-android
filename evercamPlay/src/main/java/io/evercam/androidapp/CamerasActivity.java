@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import com.bugsense.trace.BugSenseHandler;
 import com.logentries.android.AndroidLogger;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.RejectedExecutionException;
 
@@ -36,6 +37,7 @@ import io.evercam.androidapp.custom.CustomScrollView;
 import io.evercam.androidapp.custom.CustomScrollView.OnScrollStoppedListener;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dto.AppData;
+import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.dto.ImageLoadingStatus;
 import io.evercam.androidapp.feedback.LoadTimeFeedbackItem;
@@ -640,12 +642,12 @@ public class CamerasActivity extends ParentActivity
             {
                 dialog.dismiss();
 
-                EvercamPlayApplication.sendEventAnalytics(CamerasActivity.this,
-                        R.string.category_menu, R.string.action_add_camera,
-                        R.string.label_add_camera_manually);
+                EvercamPlayApplication.sendEventAnalytics(CamerasActivity.this, R.string
+                        .category_menu, R.string.action_add_camera, R.string
+                        .label_add_camera_manually);
 
-                startActivityForResult(new Intent(CamerasActivity.this,
-                        AddEditCameraActivity.class), Constants.REQUEST_CODE_ADD_CAMERA);
+                startActivityForResult(new Intent(CamerasActivity.this, AddEditCameraActivity
+                        .class), Constants.REQUEST_CODE_ADD_CAMERA);
             }
         });
 
@@ -656,9 +658,8 @@ public class CamerasActivity extends ParentActivity
             {
                 dialog.dismiss();
 
-                EvercamPlayApplication.sendEventAnalytics(CamerasActivity.this,
-                        R.string.category_menu, R.string.action_add_camera,
-                        R.string.label_add_camera_scan);
+                EvercamPlayApplication.sendEventAnalytics(CamerasActivity.this, R.string
+                        .category_menu, R.string.action_add_camera, R.string.label_add_camera_scan);
 
                 startActivityForResult(new Intent(CamerasActivity.this, ScanActivity.class),
                         Constants.REQUEST_CODE_ADD_CAMERA);
@@ -707,13 +708,38 @@ public class CamerasActivity extends ParentActivity
         return size.y;
     }
 
+    /**
+     * Recalculate camera per row preference for the following situations:
+     * 1. If it won't influence others and the current user only has one or two cameras,
+     * reset the value to be 1.
+     * 2. If current user only has one or two cameras, but the device has other accounts
+     * logged in, keep the value as it was without overriding it.
+     * 3. If the current user has more than two cameras, adjust the value of camera per
+     * row to be a proper number based on screen size.
+     *
+     * @return The recalculated value of camera per row
+     */
     public int recalculateCameraPerRow()
     {
         int totalCameras = AppData.evercamCameraList.size();
+        boolean isInfluencingOtherUser = false;
+        ArrayList<AppUser> userList = new EvercamAccount(this).retrieveUserList();
+        if(userList.size() > 1)
+        {
+            isInfluencingOtherUser = true;
+        }
+
         if(totalCameras != 0 && totalCameras <= 2)
         {
-            PrefsManager.setCameraPerRow(this, 1);
-            return 1;
+            if(!isInfluencingOtherUser)
+            {
+                PrefsManager.setCameraPerRow(this, 1);
+                return 1;
+            }
+            else
+            {
+                return PrefsManager.getCameraPerRow(this, 2);
+            }
         }
         else
         {

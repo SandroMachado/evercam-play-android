@@ -59,7 +59,6 @@ public class RecordingWebActivity extends Activity
         int id = item.getItemId();
         if(id == android.R.id.home)
         {
-            Log.d(TAG, "Home clicked");
             finish();
         }
         return super.onOptionsItemSelected(item);
