@@ -164,6 +164,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private boolean editStarted = false;
     private boolean feedbackStarted = false;
+    private boolean recordingsStarted = false;
 
     private Handler timerHandler = new Handler();
     private Thread timerThread;
@@ -256,6 +257,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             this.paused = false;
             editStarted = false;
             feedbackStarted = false;
+            recordingsStarted = false;
 
             if(optionsActivityStarted)
             {
@@ -309,6 +311,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             end = false;
             editStarted = false;
             feedbackStarted = false;
+            recordingsStarted = false;
 
             if(optionsActivityStarted)
             {
@@ -357,8 +360,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             {
                 this.paused = true;
             }
-            // Do not finish if user get into edit camera screen.
-            if(!editStarted && !feedbackStarted)
+            // Do not finish if user get into edit camera screen, feedback screen, or recording
+            if(!editStarted && !feedbackStarted && !recordingsStarted)
             {
                 this.finish();
             }
@@ -639,6 +642,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             }
             else if(itemId == R.id.video_menu_view_recordings)
             {
+                recordingsStarted = true;
                 Intent recordingIntent = new Intent(this, RecordingWebActivity.class);
                 recordingIntent.putExtra(Constants.BUNDLE_KEY_CAMERA_ID, evercamCamera.getCameraId());
                 startActivity(recordingIntent);
