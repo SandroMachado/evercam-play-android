@@ -9,27 +9,19 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import io.evercam.androidapp.utils.Commons;
-import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
 
 // 	This activity verifies the login and requests the cams data from the api 
 public class ReleaseNotesActivity extends ParentActivity
 {
-    public String TAG = "evercamplay-ReleaseNotesActivity";
+    public String TAG = "ReleaseNotesActivity";
     private Button btnReleaseNotes;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
-        }
 
         setContentView(R.layout.release_notes_activity_layout);
 
@@ -76,27 +68,4 @@ public class ReleaseNotesActivity extends ParentActivity
     {
         onNotesRead();
     }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.startSession(this);
-        }
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.closeSession(this);
-        }
-    }
-
 }

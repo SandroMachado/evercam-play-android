@@ -40,13 +40,14 @@ import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.dto.ImageLoadingStatus;
+import io.evercam.androidapp.feedback.KeenHelper;
 import io.evercam.androidapp.feedback.LoadTimeFeedbackItem;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.tasks.LoadCameraListTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
-import io.keen.client.android.AndroidKeenClientBuilder;
+import io.evercam.androidapp.utils.PropertyReader;
 import io.keen.client.java.KeenClient;
 import io.keen.client.java.KeenProject;
 
@@ -82,10 +83,6 @@ public class CamerasActivity extends ParentActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
-        }
 
         if(this.getActionBar() != null)
         {
@@ -598,17 +595,6 @@ public class CamerasActivity extends ParentActivity
     }
 
     @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            if(Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
-        }
-    }
-
-    @Override
     public void onStop()
     {
         super.onStop();
@@ -616,11 +602,6 @@ public class CamerasActivity extends ParentActivity
         if(AppData.defaultUser != null)
         {
             usernameOnStop = AppData.defaultUser.getUsername();
-        }
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.closeSession(this);
         }
     }
 
@@ -775,12 +756,9 @@ public class CamerasActivity extends ParentActivity
     private void initDataCollectionObjects()
     {
         startTime = new Date();
-        logger = AndroidLogger.getLogger(getApplicationContext(), Constants.LOGENTRIES_TOKEN,
-                false);
-        client = new AndroidKeenClientBuilder(this).build();
-        keenProject = new KeenProject(Constants.KEEN_PROJECT_ID, Constants.KEEN_WRITE_KEY,
-                Constants.KEEN_READ_KEY);
-        client.setDefaultProject(keenProject);
+        logger = AndroidLogger.getLogger(getApplicationContext(), getPropertyReader()
+                        .getPropertyStr(PropertyReader.KEY_LOGENTRIES_TOKEN), false);
+        client = KeenHelper.getClient(this);
     }
 
     /**

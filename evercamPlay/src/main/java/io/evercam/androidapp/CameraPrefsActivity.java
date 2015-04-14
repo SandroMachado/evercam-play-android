@@ -17,11 +17,12 @@ import io.evercam.androidapp.custom.ThemedListPreference;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.DataCollector;
 import io.evercam.androidapp.utils.PrefsManager;
+import io.evercam.androidapp.utils.PropertyReader;
 
 public class CameraPrefsActivity extends PreferenceActivity
 {
     private static int screenWidth = 0;
-    private static final String TAG = "evercamplay-CameraPrefsActivity";
+    private static final String TAG = "CameraPrefsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -30,7 +31,9 @@ public class CameraPrefsActivity extends PreferenceActivity
 
         if(Constants.isAppTrackingEnabled)
         {
-            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
+            String bugSenseCode = new PropertyReader(this).getPropertyStr(PropertyReader
+                    .KEY_BUG_SENSE);
+            BugSenseHandler.initAndStartSession(this, bugSenseCode);
         }
 
         if(this.getActionBar() != null)

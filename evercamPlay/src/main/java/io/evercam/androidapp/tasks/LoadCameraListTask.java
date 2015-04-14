@@ -12,13 +12,11 @@ import io.evercam.EvercamException;
 import io.evercam.androidapp.CamerasActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.R;
-import io.evercam.androidapp.custom.CustomToast;
 import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
-import io.evercam.androidapp.video.VideoActivity;
 
 public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
 {

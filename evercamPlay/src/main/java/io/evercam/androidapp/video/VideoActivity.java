@@ -73,6 +73,7 @@ import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.dto.EvercamCamera;
+import io.evercam.androidapp.feedback.KeenHelper;
 import io.evercam.androidapp.feedback.ShortcutFeedbackItem;
 import io.evercam.androidapp.feedback.StreamFeedbackItem;
 import io.evercam.androidapp.recordings.RecordingWebActivity;
@@ -83,10 +84,9 @@ import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.EnumConstants.DeleteType;
 import io.evercam.androidapp.utils.EvercamFile;
 import io.evercam.androidapp.utils.PrefsManager;
+import io.evercam.androidapp.utils.PropertyReader;
 import io.evercam.androidapp.video.SnapshotManager.FileType;
-import io.keen.client.android.AndroidKeenClientBuilder;
 import io.keen.client.java.KeenClient;
-import io.keen.client.java.KeenProject;
 
 public class VideoActivity extends ParentActivity implements SurfaceHolder.Callback, IVideoPlayer
 {
@@ -183,11 +183,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         try
         {
             super.onCreate(savedInstanceState);
-
-            if(Constants.isAppTrackingEnabled)
-            {
-                BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
-            }
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -339,16 +334,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     }
 
     @Override
-    public void onStart()
-    {
-        super.onStart();
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.startSession(this);
-        }
-    }
-
-    @Override
     public void onStop()
     {
         super.onStop();
@@ -371,11 +356,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         {
             timeCounter.stop();
             timeCounter = null;
-        }
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.closeSession(this);
         }
     }
 
@@ -503,13 +483,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private void initAnalyticsObjects()
     {
-
-        logger = AndroidLogger.getLogger(getApplicationContext(), Constants.LOGENTRIES_TOKEN,
-                false);
-        client = new AndroidKeenClientBuilder(this).build();
-        KeenProject keenProject = new KeenProject(Constants.KEEN_PROJECT_ID, Constants.KEEN_WRITE_KEY,
-                Constants.KEEN_READ_KEY);
-        client.setDefaultProject(keenProject);
+        logger = AndroidLogger.getLogger(getApplicationContext(), getPropertyReader()
+                .getPropertyStr(PropertyReader.KEY_LOGENTRIES_TOKEN), false);
+        client = KeenHelper.getClient(this);
     }
 
     private int getSleepTime()

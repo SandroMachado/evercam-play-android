@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 import io.evercam.API;
 import io.evercam.Camera;
-import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.authentication.EvercamAccount;
 import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppUser;

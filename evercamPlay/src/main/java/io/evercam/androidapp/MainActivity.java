@@ -1,12 +1,9 @@
 package io.evercam.androidapp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import com.bugsense.trace.BugSenseHandler;
 
 import io.evercam.API;
 import io.evercam.androidapp.authentication.EvercamAccount;
@@ -15,15 +12,13 @@ import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.tasks.CheckInternetTask;
 import io.evercam.androidapp.utils.Commons;
-import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
-import io.evercam.androidapp.video.HomeShortcut;
 
 /*
  * Main starting activity. 
  * Checks whether user should login first or load the cameras straight away
  * */
-public class MainActivity extends Activity
+public class MainActivity extends ParentActivity
 {
     private static final String TAG = "evercam-MainActivity";
 
@@ -31,11 +26,6 @@ public class MainActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
-        }
 
         setContentView(R.layout.mainactivitylayout);
 
@@ -85,28 +75,6 @@ public class MainActivity extends Activity
         this.startActivity(new Intent(this, CamerasActivity.class));
 
         MainActivity.this.finish();
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.startSession(this);
-        }
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.closeSession(this);
-        }
     }
 
     public static boolean isUserLogged(Context context)

@@ -1,6 +1,5 @@
 package io.evercam.androidapp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,7 +21,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
-import com.bugsense.trace.BugSenseHandler;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
@@ -41,9 +39,9 @@ import io.evercam.network.cambase.CambaseAPI;
 import io.evercam.network.cambase.CambaseException;
 import io.evercam.network.discovery.DiscoveredCamera;
 
-public class ScanActivity extends Activity
+public class ScanActivity extends ParentActivity
 {
-    private final String TAG = "evercamplay-ScanActivity";
+    private final String TAG = "ScanActivity";
 
     private View scanProgressView;
     private View scanResultListView;
@@ -64,7 +62,7 @@ public class ScanActivity extends Activity
     private ScanForCameraTask scanTask;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
@@ -74,11 +72,6 @@ public class ScanActivity extends Activity
         }
 
         setContentView(R.layout.activity_scan);
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
-        }
 
         scanProgressView = findViewById(R.id.scan_status_layout);
         scanResultListView = findViewById(R.id.scan_result_layout);
@@ -142,28 +135,6 @@ public class ScanActivity extends Activity
         });
 
         new ScanCheckInternetTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            if(Constants.isAppTrackingEnabled) BugSenseHandler.startSession(this);
-        }
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            if(Constants.isAppTrackingEnabled) BugSenseHandler.closeSession(this);
-        }
     }
 
     @Override

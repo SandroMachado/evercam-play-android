@@ -1,6 +1,5 @@
 package io.evercam.androidapp;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,13 +10,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.video.VideoActivity;
 
-public class ViewCameraActivity extends Activity
+public class ViewCameraActivity extends ParentActivity
 {
     private final String TAG = "evercamplay-ViewCameraActivity";
     private LinearLayout canEditDetailLayout;
@@ -44,10 +41,6 @@ public class ViewCameraActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
-        }
 
         evercamCamera = VideoActivity.evercamCamera;
 
@@ -62,28 +55,6 @@ public class ViewCameraActivity extends Activity
         initialScreen();
         fillCameraDetails(evercamCamera);
 
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.startSession(this);
-        }
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.closeSession(this);
-        }
     }
 
     @Override

@@ -1,6 +1,5 @@
 package io.evercam.androidapp;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -13,16 +12,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import io.evercam.androidapp.utils.Constants;
 
-public class SlideActivity extends Activity implements OnPageChangeListener
+public class SlideActivity extends ParentActivity implements OnPageChangeListener
 {
-    private final String TAG = "evercamplay-SlideActivity";
+    private final String TAG = "SlideActivity";
 
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
@@ -34,41 +31,14 @@ public class SlideActivity extends Activity implements OnPageChangeListener
     private int currentIndex;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.indexslide);
 
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.initAndStartSession(SlideActivity.this, Constants.bugsense_ApiKey);
-        }
-
         initSlideView();
         initDots();
         initLinks();
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.startSession(this);
-        }
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.closeSession(this);
-        }
     }
 
     @Override

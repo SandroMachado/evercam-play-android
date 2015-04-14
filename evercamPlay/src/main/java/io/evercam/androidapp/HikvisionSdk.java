@@ -19,7 +19,7 @@ import io.evercam.androidapp.dto.EvercamCamera;
 
 public class HikvisionSdk implements Callback
 {
-    private final String TAG = "evercamplay-HikvisionSdk";
+    private final String TAG = "HikvisionSdk";
 
     private EvercamCamera evercamCamera;
     private LocalStorageActivity activity;

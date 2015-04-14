@@ -3,11 +3,9 @@ package io.evercam.androidapp.authentication;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
-import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 import java.util.ArrayList;
 

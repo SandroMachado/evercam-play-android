@@ -1,6 +1,5 @@
 package io.evercam.androidapp;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -15,18 +14,16 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
-import com.bugsense.trace.BugSenseHandler;
 import com.hikvision.netsdk.NET_DVR_TIME;
 
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.ProgressView;
 import io.evercam.androidapp.dto.EvercamCamera;
-import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.video.VideoActivity;
 
-public class LocalStorageActivity extends Activity
+public class LocalStorageActivity extends ParentActivity
 {
-    private final String TAG = "evercamplay-LocalStorageActivity";
+    private final String TAG = "LocalStorageActivity";
     private final String KEY_STATE_PORT = "playPort";
 
     private EvercamCamera evercamCamera;
@@ -38,15 +35,10 @@ public class LocalStorageActivity extends Activity
     Handler handler = new Handler();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_storage);
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
-        }
 
         evercamCamera = VideoActivity.evercamCamera;
 
@@ -78,31 +70,6 @@ public class LocalStorageActivity extends Activity
         customProgressDialog.show(getString(R.string.msg_connecting_camera));
 
         new LoginTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.startSession(this);
-        }
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-
-        // finish();
-        // hikvisionSdk.cleanUp();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.closeSession(this);
-        }
     }
 
     @Override

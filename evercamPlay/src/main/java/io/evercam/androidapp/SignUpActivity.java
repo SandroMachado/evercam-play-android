@@ -1,24 +1,14 @@
 package io.evercam.androidapp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
-
-import com.bugsense.trace.BugSenseHandler;
-
-import java.util.Locale;
-import java.util.Set;
-import java.util.TreeMap;
 
 import io.evercam.API;
 import io.evercam.ApiKeyPair;
@@ -35,11 +25,10 @@ import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.feedback.KeenHelper;
 import io.evercam.androidapp.feedback.NewUserFeedbackItem;
 import io.evercam.androidapp.tasks.CheckInternetTask;
-import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.DataCollector;
 
-public class SignUpActivity extends Activity
+public class SignUpActivity extends ParentActivity
 {
     private final String TAG = "evercam-SignUpActivity";
     // Auto filled profiles
@@ -60,14 +49,9 @@ public class SignUpActivity extends Activity
     private View focusView = null;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.initAndStartSession(SignUpActivity.this, Constants.bugsense_ApiKey);
-        }
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -75,28 +59,6 @@ public class SignUpActivity extends Activity
 
         readFromAccount();
         initialPage();
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.startSession(this);
-        }
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.closeSession(this);
-        }
     }
 
     private void initialPage()

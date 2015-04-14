@@ -1,14 +1,11 @@
 package io.evercam.androidapp;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-
-import com.bugsense.trace.BugSenseHandler;
 
 import io.evercam.User;
 import io.evercam.androidapp.custom.CustomToast;
@@ -18,14 +15,14 @@ import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.feedback.FeedbackSender;
 import io.evercam.androidapp.utils.Constants;
 
-public class FeedbackActivity extends Activity
+public class FeedbackActivity extends ParentActivity
 {
     private final String TAG = "FeedbackActivity";
     private EditText feedbackEditText;
     private String cameraId;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
@@ -36,11 +33,6 @@ public class FeedbackActivity extends Activity
 
         setContentView(R.layout.activity_feedback);
 
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
-        }
-
         Bundle bundle = getIntent().getExtras();
         if(bundle != null)
         {
@@ -49,28 +41,6 @@ public class FeedbackActivity extends Activity
         feedbackEditText = (EditText) findViewById(R.id.feedback_edit_text);
 
         fillUserDetail();
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.startSession(this);
-        }
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.closeSession(this);
-        }
     }
 
     @Override

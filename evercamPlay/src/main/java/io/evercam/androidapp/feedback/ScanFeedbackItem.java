@@ -7,9 +7,7 @@ import java.util.HashMap;
 
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.network.discovery.DiscoveredCamera;
-import io.keen.client.android.AndroidKeenClientBuilder;
 import io.keen.client.java.KeenClient;
-import io.keen.client.java.KeenProject;
 
 public class ScanFeedbackItem extends FeedbackItem
 {
@@ -63,10 +61,7 @@ public class ScanFeedbackItem extends FeedbackItem
 
     public void sendToKeenIo()
     {
-        final KeenClient client = new AndroidKeenClientBuilder(context).build();
-        KeenProject keenProject = new KeenProject(Constants.KEEN_PROJECT_ID, Constants.KEEN_WRITE_KEY,
-                Constants.KEEN_READ_KEY);
-        client.setDefaultProject(keenProject);
+        final KeenClient client = KeenHelper.getClient(context);
 
         final FeedbackItem feedbackItem = this;
         new Thread(new Runnable()
