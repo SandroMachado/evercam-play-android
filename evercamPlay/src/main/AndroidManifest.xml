@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="io.evercam.androidapp"
           android:versionCode="98"
-          android:versionName="1.3.4">
+          android:versionName="1.3.4 (Debug)">
 
     <!-- versionCode74 - 1.2.8 - home shortcut, account management-->
     <!-- versionCode80 - 1.2.9 - recording widget, menu item changes, feedback improvements, global default account, account management improves-->

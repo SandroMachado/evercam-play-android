@@ -18,8 +18,8 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center"/>
 
-        <SurfaceView
-            android:id="@+id/surface1"
+        <io.evercam.androidapp.video.GStreamerSurfaceView
+            android:id="@+id/surface_view"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_centerInParent="true"

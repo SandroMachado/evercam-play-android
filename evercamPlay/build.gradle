@@ -10,7 +10,7 @@ android {
         targetSdkVersion 22
 
         ndk {
-            moduleName "libvlcjni"
+            moduleName "android_launch"
         }
     }
 

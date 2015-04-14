@@ -81,8 +81,8 @@ public class EvercamCamera
             mac = camera.getMacAddress();
             externalSnapshotUrl = camera.getExternalJpgUrl();
             internalSnapshotUrl = camera.getInternalJpgUrl();
-            externalRtspUrl = camera.getExternalH264UrlWithCredential();
-            internalRtspUrl = camera.getInternalH264UrlWithCredential();
+            externalRtspUrl = camera.getExternalH264Url();
+            internalRtspUrl = camera.getInternalH264Url();
             if(camera.isOnline())
             {
                 status = CameraStatus.ACTIVE;
@@ -462,6 +462,11 @@ public class EvercamCamera
             return true;
         }
         return false;
+    }
+
+    public boolean hasRtspUrl()
+    {
+        return !getExternalRtspUrl().isEmpty();
     }
 
     @Override
