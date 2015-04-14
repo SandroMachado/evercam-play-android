@@ -12,13 +12,16 @@ public class PropertyReader
 {
     private Context context;
     private Properties properties;
-    private final String TAG = "evercamplay-PropertyReader";
+    private final String TAG = "PropertyReader";
     private final String LOCAL_PROPERTY_FILE = "local.properties";
-    public final static String KEY_API_KEY = "ApiKey";
-    public final static String KEY_API_ID = "ApiId";
     public static final String KEY_BUG_SENSE = "BugSenseCode";
     public static final String KEY_SENDGRID_USERNAME = "SendgridUsername";
     public static final String KEY_SENDGRID_PASSWORD = "SendgridPassword";
+    public static final String KEY_LOGENTRIES_TOKEN = "LogentriesToken";
+
+    public static final String KEY_KEEN_PROJECT_ID = "KeenProjectId";
+    public static final String KEY_KEEN_WRITE_KEY = "KeenWriteKey";
+    public static final String KEY_KEEN_READ_KEY = "KeenReadKey";
 
     public PropertyReader(Context context)
     {
@@ -46,7 +49,7 @@ public class PropertyReader
     {
         if(isPropertyExist(propertyName))
         {
-            return properties.getProperty(propertyName).toString();
+            return properties.getProperty(propertyName);
         }
         else
         {
@@ -62,5 +65,4 @@ public class PropertyReader
         }
         return false;
     }
-
 }

@@ -21,8 +21,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -52,11 +50,6 @@ public class ManageAccountsActivity extends ParentActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
-        }
 
         if(this.getActionBar() != null)
         {
@@ -178,28 +171,6 @@ public class ManageAccountsActivity extends ParentActivity
                 });
             }
         });
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.startSession(this);
-        }
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.closeSession(this);
-        }
     }
 
     @Override

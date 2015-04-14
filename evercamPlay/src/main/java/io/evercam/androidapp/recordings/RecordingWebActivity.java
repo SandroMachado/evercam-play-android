@@ -2,15 +2,10 @@ package io.evercam.androidapp.recordings;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-
-import com.bugsense.trace.BugSenseHandler;
 
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
-import io.evercam.androidapp.custom.CustomToast;
-import io.evercam.androidapp.feedback.FeedbackSender;
 import io.evercam.androidapp.utils.Constants;
 
 
@@ -24,11 +19,6 @@ public class RecordingWebActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
-        }
 
         setContentView(R.layout.activity_recording_web);
 
@@ -62,25 +52,5 @@ public class RecordingWebActivity extends Activity
             finish();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.startSession(this);
-        }
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.closeSession(this);
-        }
     }
 }

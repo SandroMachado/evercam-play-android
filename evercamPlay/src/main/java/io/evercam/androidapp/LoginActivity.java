@@ -19,8 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import io.evercam.API;
 import io.evercam.ApiKeyPair;
 import io.evercam.EvercamException;
@@ -57,16 +55,9 @@ public class LoginActivity extends ParentActivity
 
         customProgressDialog = new CustomProgressDialog(this);
 
-        launchBugsense();
-
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.login);
         setUnderLine();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
-        }
 
         Button btnLogin = (Button) findViewById(R.id.btnLogin);
 
@@ -279,28 +270,6 @@ public class LoginActivity extends ParentActivity
     }
 
     @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.startSession(this);
-        }
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.closeSession(this);
-        }
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if(requestCode == Constants.REQUEST_CODE_SIGN_UP)
@@ -311,14 +280,6 @@ public class LoginActivity extends ParentActivity
 
                 finish();
             }
-        }
-    }
-
-    private void launchBugsense()
-    {
-        if(Constants.isAppTrackingEnabled)
-        {
-            BugSenseHandler.initAndStartSession(this, Constants.bugsense_ApiKey);
         }
     }
 
