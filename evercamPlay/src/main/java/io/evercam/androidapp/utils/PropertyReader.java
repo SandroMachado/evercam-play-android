@@ -23,6 +23,8 @@ public class PropertyReader
     public static final String KEY_KEEN_WRITE_KEY = "KeenWriteKey";
     public static final String KEY_KEEN_READ_KEY = "KeenReadKey";
 
+    public static final String KEY_MIXPANEL = "MixpanelToken";
+
     public PropertyReader(Context context)
     {
         this.context = context;

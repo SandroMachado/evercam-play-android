@@ -70,12 +70,6 @@ public class AddEditCameraActivity extends ParentActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        if(Constants.isAppTrackingEnabled)
-        {
-            String bugSenseCode = new PropertyReader(this).getPropertyStr(PropertyReader
-                    .KEY_BUG_SENSE);
-            BugSenseHandler.initAndStartSession(this, bugSenseCode);
-        }
 
         Bundle bundle = getIntent().getExtras();
         // Edit Camera

@@ -5,13 +5,18 @@ import android.os.Bundle;
 import android.view.Window;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import org.json.JSONObject;
+
+import io.evercam.androidapp.feedback.MixpanelHelper;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PropertyReader;
 
 public class ParentActivity extends Activity
 {
     private PropertyReader propertyReader;
+    private MixpanelHelper mixpanelHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -21,15 +26,9 @@ public class ParentActivity extends Activity
 
         propertyReader = new PropertyReader(this);
 
-        if(Constants.isAppTrackingEnabled)
-        {
-            if(propertyReader.isPropertyExist(PropertyReader.KEY_BUG_SENSE))
-            {
-                String bugSenseCode = propertyReader.getPropertyStr(PropertyReader
-                        .KEY_BUG_SENSE);
-                BugSenseHandler.initAndStartSession(this,bugSenseCode);
-            }
-        }
+        initBugSense();
+
+        mixpanelHelper = new MixpanelHelper(this, propertyReader);
     }
 
     @Override
@@ -58,10 +57,33 @@ public class ParentActivity extends Activity
                 BugSenseHandler.closeSession(this);
             }
         }
+
+        getMixpanel().flush();
     }
 
     public PropertyReader getPropertyReader()
     {
         return propertyReader;
+    }
+
+    /**
+     * @return the Mixpanel helper class
+     */
+    public MixpanelHelper getMixpanel()
+    {
+        return mixpanelHelper;
+    }
+
+    private void initBugSense()
+    {
+        if(Constants.isAppTrackingEnabled)
+        {
+            if(propertyReader.isPropertyExist(PropertyReader.KEY_BUG_SENSE))
+            {
+                String bugSenseCode = propertyReader.getPropertyStr(PropertyReader
+                        .KEY_BUG_SENSE);
+                BugSenseHandler.initAndStartSession(this,bugSenseCode);
+            }
+        }
     }
 }

@@ -243,6 +243,9 @@ public class LoginActivity extends ParentActivity
 
                 setResult(Constants.RESULT_TRUE);
                 startCamerasActivity();
+
+                getMixpanel().identifyUser(newUser.getUsername());
+                getMixpanel().sendEvent(R.string.mixpanel_event_sign_in, null);
             }
             else
             {
