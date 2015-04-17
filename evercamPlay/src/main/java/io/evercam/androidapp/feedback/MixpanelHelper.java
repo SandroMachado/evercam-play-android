@@ -6,6 +6,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.json.JSONObject;
 
+import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.utils.PropertyReader;
 
@@ -18,6 +19,19 @@ public class MixpanelHelper
     {
         this.context = context;
 
+        initMixpanel(context, propertyReader);
+    }
+
+    public MixpanelHelper(Context context)
+    {
+        this.context = context;
+
+        PropertyReader propertyReader = new PropertyReader(context);
+        initMixpanel(context, propertyReader);
+    }
+
+    private void initMixpanel(Context context, PropertyReader propertyReader)
+    {
         if(propertyReader.isPropertyExist(PropertyReader.KEY_MIXPANEL))
         {
             final String MIXPANEL_TOKEN = propertyReader.getPropertyStr(PropertyReader
@@ -41,6 +55,11 @@ public class MixpanelHelper
     {
         if(mixpanel != null)
         {
+            if(AppData.defaultUser != null)
+            {
+                mixpanel.identify(AppData.defaultUser.getUsername());
+            }
+
             String eventName = context.getString(eventNameId);
             mixpanel.track(eventName, eventJsonObject);
         }
@@ -59,9 +78,9 @@ public class MixpanelHelper
         if(mixpanel != null)
         {
             mixpanel.getPeople().identify(user.getUsername());
-            mixpanel.getPeople().set("Email", user.getEmail());
-            mixpanel.getPeople().set("Username", user.getUsername());
-            mixpanel.getPeople().set("Name", user.getFirstName() + " " + user.getLastName());
+            mixpanel.getPeople().set("$email", user.getEmail());
+            mixpanel.getPeople().set("$first_name", user.getFirstName());
+            mixpanel.getPeople().set("$last_name",  user.getLastName());
         }
     }
 }

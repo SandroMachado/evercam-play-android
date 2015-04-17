@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.bugsense.trace.BugSenseHandler;
 import com.logentries.android.AndroidLogger;
 
+import org.json.JSONObject;
 import org.videolan.libvlc.EventHandler;
 import org.videolan.libvlc.IVideoPlayer;
 import org.videolan.libvlc.LibVLC;
@@ -610,11 +611,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             {
                 HomeShortcut.create(getApplicationContext(), evercamCamera);
                 CustomToast.showSuperToastShort(this, R.string.msg_shortcut_created);
-                EvercamPlayApplication.sendEventAnalytics(this, R.string.category_shortcut,
-                        R.string.action_shortcut_create, R.string.label_shortcut_create);
+                EvercamPlayApplication.sendEventAnalytics(this, R.string.category_shortcut, R
+                        .string.action_shortcut_create, R.string.label_shortcut_create);
                 new ShortcutFeedbackItem(this, AppData.defaultUser.getUsername(), evercamCamera.getCameraId(),
                         ShortcutFeedbackItem.ACTION_TYPE_CREATE, ShortcutFeedbackItem.RESULT_TYPE_SUCCESS)
-                        .sendToKeenIo(client);;
+                        .sendToKeenIo(client);
+                getMixpanel().sendEvent(R.string.mixpanel_event_create_shortcut, new JSONObject().put("Camera ID", evercamCamera.getCameraId()));
             }
             else if(itemId == R.id.video_menu_view_recordings)
             {

@@ -104,6 +104,9 @@ public class ManageAccountsActivity extends ParentActivity
                         progressDialog.show(ManageAccountsActivity.this.getString(R.string
                                 .switching_account));
                         updateDefaultUser(user.getEmail(), true, dialog);
+
+                        getMixpanel().identifyUser(user.getUsername());
+
                         ed_dialog_layout.setEnabled(false);
                         ed_dialog_layout.setClickable(false);
                     }
@@ -314,6 +317,8 @@ public class ManageAccountsActivity extends ParentActivity
         evercamAccount.updateDefaultUser(userEmail);
         AppData.appUsers = evercamAccount.retrieveUserList();
 
+        getMixpanel().identifyUser(AppData.defaultUser.getUsername());
+
         if(closeActivity)
         {
             if(!AppData.defaultUser.getUsername().equals(oldDefaultUser))
@@ -418,6 +423,8 @@ public class ManageAccountsActivity extends ParentActivity
             {
                 showAllAccounts();
                 alertDialog.dismiss();
+
+                getMixpanel().identifyUser(newUser.getUsername());
             }
         }
     }
