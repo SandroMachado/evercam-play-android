@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.bugsense.trace.BugSenseHandler;
 import com.logentries.android.AndroidLogger;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.videolan.libvlc.EventHandler;
 import org.videolan.libvlc.IVideoPlayer;
@@ -671,6 +672,16 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         {
             EvercamPlayApplication.sendEventAnalytics(this, R.string.category_shortcut,
                     R.string.action_shortcut_use, R.string.label_shortcut_use);
+
+            try
+            {
+                getMixpanel().sendEvent(R.string.mixpanel_event_use_shortcut, new JSONObject().put("Camera ID", evercamCamera.getCameraId()));
+            }
+            catch(JSONException e)
+            {
+                e.printStackTrace();
+            }
+
             liveViewCameraId = liveViewIntent.getExtras().getString(HomeShortcut.KEY_CAMERA_ID, "");
         }
     }
