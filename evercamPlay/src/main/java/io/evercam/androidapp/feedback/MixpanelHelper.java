@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.evercam.androidapp.dto.AppData;
@@ -80,7 +81,24 @@ public class MixpanelHelper
             mixpanel.getPeople().identify(user.getUsername());
             mixpanel.getPeople().set("$email", user.getEmail());
             mixpanel.getPeople().set("$first_name", user.getFirstName());
-            mixpanel.getPeople().set("$last_name",  user.getLastName());
+            mixpanel.getPeople().set("$last_name", user.getLastName());
+        }
+    }
+
+    public void registerSuperProperty(String propertyName, String propertyValue)
+    {
+        if(mixpanel != null)
+        {
+            JSONObject props = new JSONObject();
+            try
+            {
+                props.put(propertyName, propertyValue);
+                mixpanel.registerSuperPropertiesOnce(props);
+            }
+            catch(JSONException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 }

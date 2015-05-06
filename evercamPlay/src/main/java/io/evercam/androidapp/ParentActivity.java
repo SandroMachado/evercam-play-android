@@ -8,6 +8,7 @@ import android.view.Window;
 import com.bugsense.trace.BugSenseHandler;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.evercam.androidapp.feedback.MixpanelHelper;
@@ -72,6 +73,8 @@ public class ParentActivity extends Activity
      */
     public MixpanelHelper getMixpanel()
     {
+        mixpanelHelper.registerSuperProperty("Client-Type", "Play");
+
         return mixpanelHelper;
     }
 
