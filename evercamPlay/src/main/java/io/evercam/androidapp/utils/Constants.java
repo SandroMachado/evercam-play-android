@@ -37,4 +37,10 @@ public final class Constants
 
     //Bundle key
     public static final String BUNDLE_KEY_CAMERA_ID = "cameraId";
+
+    /**
+     * Regular Expressions
+     */
+    //Username should only contains lower case letters, numbers, dashes & underscores
+    public static final String REGULAR_EXPRESSION_USERNAME = "^[A-Za-z0-9_-]*$";
 }

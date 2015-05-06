@@ -41,7 +41,6 @@ public class LoginActivity extends ParentActivity
     private LoginTask loginTask;
     private String TAG = "evercamplay-LoginActivity";
     private CustomProgressDialog customProgressDialog;
-    private TextView signUpLink;
 
     private enum InternetCheckType
     {
@@ -57,10 +56,10 @@ public class LoginActivity extends ParentActivity
 
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.login);
-        setUnderLine();
 
         Button btnLogin = (Button) findViewById(R.id.btnLogin);
 
+        TextView signUpLink = (TextView) findViewById(R.id.signupLink);
         usernameEdit = (EditText) findViewById(R.id.editUsername);
         passwordEdit = (EditText) findViewById(R.id.editPassword);
 
@@ -154,7 +153,7 @@ public class LoginActivity extends ParentActivity
             focusView = usernameEdit;
             cancel = true;
         }
-        else if(username.contains(" "))
+        else if(!username.matches(Constants.REGULAR_EXPRESSION_USERNAME))
         {
             CustomToast.showInCenter(getApplicationContext(), R.string.error_invalid_username);
             focusView = usernameEdit;
@@ -284,15 +283,6 @@ public class LoginActivity extends ParentActivity
                 finish();
             }
         }
-    }
-
-    private void setUnderLine()
-    {
-        signUpLink = (TextView) findViewById(R.id.signupLink);
-        SpannableString spanString = new SpannableString(this.getResources().getString(R.string
-                .create_account));
-        spanString.setSpan(new UnderlineSpan(), 0, spanString.length(), 0);
-        signUpLink.setText(spanString);
     }
 
     private void startCamerasActivity()

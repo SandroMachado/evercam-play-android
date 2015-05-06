@@ -675,7 +675,11 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
             try
             {
-                getMixpanel().sendEvent(R.string.mixpanel_event_use_shortcut, new JSONObject().put("Camera ID", evercamCamera.getCameraId()));
+                if(evercamCamera != null)
+                {
+                    getMixpanel().sendEvent(R.string.mixpanel_event_use_shortcut, new JSONObject().put("Camera ID", evercamCamera.getCameraId()));
+
+                }
             }
             catch(JSONException e)
             {

@@ -63,6 +63,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:textColor="@drawable/txt_selector"
+            android:text="@string/create_account"
             android:textSize="16sp"/>
     </RelativeLayout>
 

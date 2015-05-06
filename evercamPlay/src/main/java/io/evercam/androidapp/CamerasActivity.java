@@ -773,8 +773,13 @@ public class CamerasActivity extends ParentActivity
                     " to load camera list");
             startTime = null;
 
+            String username = "";
+            if(AppData.defaultUser != null)
+            {
+                username = AppData.defaultUser.getUsername();
+            }
             LoadTimeFeedbackItem feedbackItem = new LoadTimeFeedbackItem(this,
-                    AppData.defaultUser.getUsername(), databaseLoadTime, timeDifferenceFloat);
+                    username, databaseLoadTime, timeDifferenceFloat);
             databaseLoadTime = 0;
             logger.info(feedbackItem.toJson());
 
