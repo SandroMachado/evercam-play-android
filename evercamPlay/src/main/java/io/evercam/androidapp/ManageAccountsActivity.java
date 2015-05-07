@@ -7,9 +7,11 @@ import android.accounts.OperationCanceledException;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -101,14 +103,26 @@ public class ManageAccountsActivity extends ParentActivity
                     @Override
                     public void onClick(View v)
                     {
-                        progressDialog.show(ManageAccountsActivity.this.getString(R.string
-                                .switching_account));
-                        updateDefaultUser(user.getEmail(), true, dialog);
+                        //Check if stored API key and ID before switching account
+                        if(MainActivity.isApiKeyExpired(user.getUsername(), user.getApiKey(), user.getApiId()))
+                        {
+                            new EvercamAccount(ManageAccountsActivity.this).remove(user.getEmail(), null);
 
-                        getMixpanel().identifyUser(user.getUsername());
+                            finish();
+                            Intent slideIntent = new Intent(ManageAccountsActivity.this, SlideActivity.class);
+                            startActivity(slideIntent);
+                        }
+                        else
+                        {
+                            progressDialog.show(ManageAccountsActivity.this.getString(R.string.switching_account));
 
-                        ed_dialog_layout.setEnabled(false);
-                        ed_dialog_layout.setClickable(false);
+                            updateDefaultUser(user.getEmail(), true, dialog);
+
+                            getMixpanel().identifyUser(user.getUsername());
+
+                            ed_dialog_layout.setEnabled(false);
+                            ed_dialog_layout.setClickable(false);
+                        }
                     }
                 });
 

@@ -32,15 +32,18 @@ public final class Constants
     public static final int RESULT_FALSE = 0;
     public static final int RESULT_ACCOUNT_CHANGED = 1;
 
-    // Values for intent bundle
-    public static final String KEY_IS_EDIT = "isEdit";
-
-    //Bundle key
+    /**
+     * Bundle keys
+     */
     public static final String BUNDLE_KEY_CAMERA_ID = "cameraId";
+    public static final String KEY_IS_EDIT = "isEdit";
 
     /**
      * Regular Expressions
      */
     //Username should only contains lower case letters, numbers, dashes & underscores
     public static final String REGULAR_EXPRESSION_USERNAME = "^[A-Za-z0-9_-]*$";
+
+    public static final String API_MESSAGE_UNAUTHORIZED = "Unauthenticated";
+
 }
