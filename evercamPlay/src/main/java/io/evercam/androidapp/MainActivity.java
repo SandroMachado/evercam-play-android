@@ -14,6 +14,7 @@ import io.evercam.androidapp.dal.DbCamera;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
+import io.evercam.androidapp.tasks.CheckKeyExpirationTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.PrefsManager;
@@ -109,7 +110,8 @@ public class MainActivity extends ParentActivity
         }
         catch(EvercamException e)
         {
-            if(e.getMessage().equals(Constants.API_MESSAGE_UNAUTHORIZED))
+            if(e.getMessage().equals(Constants.API_MESSAGE_UNAUTHORIZED) ||
+                    e.getMessage().equals(Constants.API_MESSAGE_INVALID_API_KEY))
             {
                 return true;
             }
@@ -132,21 +134,10 @@ public class MainActivity extends ParentActivity
             {
                 if(isUserLogged(MainActivity.this))
                 {
-                    //If API key and ID is no longer valid, show the login page
-                    if(isApiKeyExpired(AppData.defaultUser.getUsername(),
-                            AppData.defaultUser.getApiKey(), AppData.defaultUser.getApiId()))
-                    {
-                        new EvercamAccount(MainActivity.this).remove(AppData.defaultUser.getEmail(), null);
-
-                        finish();
-                        Intent slideIntent = new Intent(MainActivity.this, SlideActivity.class);
-                        startActivity(slideIntent);
-                    }
-                    else
-                    {
-                        finish();
-                        startCamerasActivity();
-                    }
+                    AppUser defaultUser = AppData.defaultUser;
+                    new CheckKeyExpirationTaskMain(defaultUser.getUsername(),
+                            defaultUser.getApiKey(), defaultUser.getApiId())
+                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 else
                 {
@@ -158,6 +149,33 @@ public class MainActivity extends ParentActivity
             else
             {
                 CustomedDialog.showInternetNotConnectDialog(MainActivity.this);
+            }
+        }
+    }
+
+    class CheckKeyExpirationTaskMain extends CheckKeyExpirationTask
+    {
+        public CheckKeyExpirationTaskMain(String username, String apiKey, String apiId)
+        {
+            super(username, apiKey, apiId);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean isExpired)
+        {
+            //If API key and ID is no longer valid, show the login page
+            if(isExpired)
+            {
+                new EvercamAccount(MainActivity.this).remove(AppData.defaultUser.getEmail(), null);
+
+                finish();
+                Intent slideIntent = new Intent(MainActivity.this, SlideActivity.class);
+                startActivity(slideIntent);
+            }
+            else
+            {
+                finish();
+                startCamerasActivity();
             }
         }
     }

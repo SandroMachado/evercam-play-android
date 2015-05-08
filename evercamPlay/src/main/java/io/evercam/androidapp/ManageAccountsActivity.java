@@ -38,6 +38,7 @@ import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
+import io.evercam.androidapp.tasks.CheckKeyExpirationTask;
 import io.evercam.androidapp.utils.Constants;
 
 public class ManageAccountsActivity extends ParentActivity
@@ -88,15 +89,15 @@ public class ManageAccountsActivity extends ParentActivity
                     return;
                 }
 
-                final View ed_dialog_layout = getLayoutInflater().inflate(R.layout
+                final View optionListView = getLayoutInflater().inflate(R.layout
                         .manage_account_option_list, null);
 
                 final AlertDialog dialog = CustomedDialog.getAlertDialogNoTitle
-                        (ManageAccountsActivity.this, ed_dialog_layout);
+                        (ManageAccountsActivity.this, optionListView );
                 dialog.show();
 
-                Button openDefault = (Button) ed_dialog_layout.findViewById(R.id.btn_open_account);
-                Button delete = (Button) ed_dialog_layout.findViewById(R.id.btn_delete_account);
+                Button openDefault = (Button) optionListView .findViewById(R.id.btn_open_account);
+                Button delete = (Button) optionListView.findViewById(R.id.btn_delete_account);
 
                 openDefault.setOnClickListener(new OnClickListener()
                 {
@@ -104,25 +105,8 @@ public class ManageAccountsActivity extends ParentActivity
                     public void onClick(View v)
                     {
                         //Check if stored API key and ID before switching account
-                        if(MainActivity.isApiKeyExpired(user.getUsername(), user.getApiKey(), user.getApiId()))
-                        {
-                            new EvercamAccount(ManageAccountsActivity.this).remove(user.getEmail(), null);
-
-                            finish();
-                            Intent slideIntent = new Intent(ManageAccountsActivity.this, SlideActivity.class);
-                            startActivity(slideIntent);
-                        }
-                        else
-                        {
-                            progressDialog.show(ManageAccountsActivity.this.getString(R.string.switching_account));
-
-                            updateDefaultUser(user.getEmail(), true, dialog);
-
-                            getMixpanel().identifyUser(user.getUsername());
-
-                            ed_dialog_layout.setEnabled(false);
-                            ed_dialog_layout.setClickable(false);
-                        }
+                        new CheckKeyExpirationTaskAccount(user, optionListView, dialog)
+                                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 });
 
@@ -471,6 +455,39 @@ public class ManageAccountsActivity extends ParentActivity
             else
             {
                 CustomedDialog.showInternetNotConnectDialog(ManageAccountsActivity.this);
+            }
+        }
+    }
+
+    class CheckKeyExpirationTaskAccount extends CheckKeyExpirationTask
+    {
+        public CheckKeyExpirationTaskAccount(AppUser appUser, View viewToDismiss, AlertDialog
+                dialogToDismiss)
+        {
+            super(appUser, viewToDismiss, dialogToDismiss);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean isExpired)
+        {
+            if(isExpired)
+            {
+                new EvercamAccount(ManageAccountsActivity.this).remove(appUser.getEmail(), null);
+
+                finish();
+                Intent slideIntent = new Intent(ManageAccountsActivity.this, SlideActivity.class);
+                startActivity(slideIntent);
+            }
+            else
+            {
+                progressDialog.show(ManageAccountsActivity.this.getString(R.string.switching_account));
+
+                updateDefaultUser(appUser.getEmail(), true, dialogToDismiss);
+
+                getMixpanel().identifyUser(appUser.getUsername());
+
+                viewToDismiss.setEnabled(false);
+                viewToDismiss.setClickable(false);
             }
         }
     }

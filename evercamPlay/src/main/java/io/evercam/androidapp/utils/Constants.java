@@ -45,5 +45,6 @@ public final class Constants
     public static final String REGULAR_EXPRESSION_USERNAME = "^[A-Za-z0-9_-]*$";
 
     public static final String API_MESSAGE_UNAUTHORIZED = "Unauthenticated";
+    public static final String API_MESSAGE_INVALID_API_KEY = "Invalid user api key/id";
 
 }
