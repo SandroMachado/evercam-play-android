@@ -73,7 +73,7 @@ public class ParentActivity extends Activity
      */
     public MixpanelHelper getMixpanel()
     {
-        mixpanelHelper.registerSuperProperty("Client-Type", "Play");
+        mixpanelHelper.registerSuperProperty("Client-Type", "Play-Android");
 
         return mixpanelHelper;
     }

@@ -82,6 +82,7 @@ public class MixpanelHelper
             mixpanel.getPeople().set("$email", user.getEmail());
             mixpanel.getPeople().set("$first_name", user.getFirstName());
             mixpanel.getPeople().set("$last_name", user.getLastName());
+            mixpanel.getPeople().set("Username", user.getUsername());
         }
     }
 
