@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
@@ -50,7 +51,7 @@ public class CameraLayout extends LinearLayout
     private ImageView snapshotImageView;
     private ImageView offlineImage = null;
     private GradientTitleLayout gradientLayout;
-
+    public boolean showOfflineIconAsFloat = false;
 
     /**
      * Handler for the handling the next request. It will call the image loading
@@ -153,6 +154,13 @@ public class CameraLayout extends LinearLayout
         }
     }
 
+    public Rect getOfflineIconBounds()
+    {
+        Rect bounds = new Rect();
+        gradientLayout.getOfflineImageView().getHitRect(bounds);
+        return bounds;
+    }
+
     public void updateTitleIfDifferent()
     {
         for(EvercamCamera camera : AppData.evercamCameraList)
@@ -201,7 +209,7 @@ public class CameraLayout extends LinearLayout
             if(!evercamCamera.isActive())
             {
                 showGreyImage();
-                gradientLayout.showOfflineIcon(true);
+                showOfflineIcon();
             }
 
             //Save the thumbnail, it will be showing before live view get loaded
@@ -212,6 +220,7 @@ public class CameraLayout extends LinearLayout
         }
         else
         {
+            showOfflineIcon();
             offlineImage.setVisibility(View.VISIBLE);
             loadingAnimation.setVisibility(View.GONE);
             snapshotImageView.setBackgroundColor(Color.GRAY);
@@ -220,6 +229,17 @@ public class CameraLayout extends LinearLayout
             handler.postDelayed(LoadImageRunnable, 0);
         }
         return false;
+    }
+
+    private void showOfflineIcon()
+    {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run()
+            {
+                gradientLayout.showOfflineIcon(true, showOfflineIconAsFloat);
+            }
+        }, 300);
     }
 
     // Image not received form cache, Evercam nor camera side. Set the controls
@@ -236,7 +256,7 @@ public class CameraLayout extends LinearLayout
         {
             showGreyImage();
 
-            gradientLayout.showOfflineIcon(true);
+            showOfflineIcon();
         }
 
         // animation must have been stopped when image loaded from cache

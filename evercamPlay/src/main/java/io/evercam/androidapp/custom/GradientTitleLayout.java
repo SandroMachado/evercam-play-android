@@ -2,6 +2,8 @@ package io.evercam.androidapp.custom;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.app.NotificationCompatSideChannelService;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,6 +14,7 @@ import io.evercam.androidapp.R;
 
 public class GradientTitleLayout extends RelativeLayout
 {
+    private final String TAG = "GradientTitleLayout";
 
     public GradientTitleLayout(Context context)
     {
@@ -27,16 +30,35 @@ public class GradientTitleLayout extends RelativeLayout
         textView.setText(title);
     }
 
-    public void showOfflineIcon(boolean show)
+    public ImageView getOfflineImageView()
     {
+        return (ImageView) findViewById(R.id.offline_image_view);
+    }
+
+    public void showOfflineIcon(boolean show, boolean isFloat)
+    {
+        Log.e(TAG, "Is float:" + String.valueOf(isFloat));
+
         ImageView imageView = (ImageView) findViewById(R.id.offline_image_view);
+        ImageView floatImageView = (ImageView) findViewById(R.id.float_image_view);
+
         if(show)
         {
-            imageView.setVisibility(View.VISIBLE);
+            if(isFloat)
+            {
+                floatImageView.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.INVISIBLE);
+            }
+            else
+            {
+                floatImageView.setVisibility(View.INVISIBLE);
+                imageView.setVisibility(View.VISIBLE);
+            }
         }
         else
         {
-            imageView.setVisibility(View.GONE);
+            imageView.setVisibility(View.INVISIBLE);
+            floatImageView.setVisibility(View.INVISIBLE);
         }
     }
 

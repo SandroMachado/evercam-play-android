@@ -56,7 +56,7 @@ public class CamerasActivity extends ParentActivity
     public static CamerasActivity activity = null;
     public MenuItem refresh;
 
-    private static final String TAG = "evercam-CamerasActivity";
+    private static final String TAG = "CamerasActivity";
 
     public static int camerasPerRow = 2;
     public boolean reloadCameraList = false;
@@ -479,6 +479,31 @@ public class CamerasActivity extends ParentActivity
                         }
                     }, 300);
                 }
+
+                new Handler().postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+
+                        Rect cameraBounds = new Rect();
+                        cameraListLayout.getHitRect(cameraBounds);
+
+                        Rect offlineIconBounds = cameraLayout.getOfflineIconBounds();
+                        int layoutWidth = cameraBounds.right - cameraBounds.left;
+                        int offlineStartsAt = offlineIconBounds.left;
+                        int offlineIconWidth = offlineIconBounds.right - offlineIconBounds.left;
+
+                        if(layoutWidth > offlineStartsAt + offlineIconWidth*2)
+                        {
+                            cameraLayout.showOfflineIconAsFloat = false;
+                        }
+                        else
+                        {
+                            cameraLayout.showOfflineIconAsFloat = true;
+                        }
+                    }
+                }, 200);
             }
 
             if(this.getActionBar() != null) this.getActionBar().setHomeButtonEnabled(true);
