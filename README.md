@@ -1,14 +1,13 @@
 # Evercam Play
 
+Evercam Play allows connect your own IP cameras, public webcams and any Android devices that you use as an IP camera. It connects you to Evercam dashboard so that you can see all your cameras on your desktop as well. 
+
 | Name   | Evercam Play  |
 | --- | --- |
 | Owner   | [@liutingdu](https://github.com/liutingdu)   |
-| Version  | 1.3.6  |
+| Version  | 1.3 |
 | Evercam API Version  | 1.0  |
 | Licence | [AGPL](https://tldrlegal.com/license/gnu-affero-general-public-license-v3-%28agpl-3.0%29) |
-
-
-Evercam Play allows connect your own IP cameras, public webcams and any Android devices that you use as an IP camera. It connects you to Evercam dashboard so that you can see all your cameras on your desktop as well. 
 
 ## Features
 
@@ -28,8 +27,16 @@ Evercam Play allows connect your own IP cameras, public webcams and any Android 
     # Checkout from Git
     git clone https://github.com/evercam/evercam-play-android.git
 
-## About
+## Help make it better
 
-The best starting point for Evercam is http://www.evercam.io/open-source
+The entire Evercam codebase is open source, see details: http://www.evercam.io/open-source
 
-Any questions, drop us a line: http://www.evercam.io/contact
+If you have experience with Android SDK and IP cameras, we look forward to your pull requests!
+
+Any questions or sugestions, drop us a line: http://www.evercam.io/contact
+
+
+
+
+
+
