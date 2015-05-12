@@ -2,14 +2,9 @@ package io.evercam.androidapp;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 
 import com.bugsense.trace.BugSenseHandler;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import io.evercam.androidapp.feedback.MixpanelHelper;
 import io.evercam.androidapp.utils.Constants;

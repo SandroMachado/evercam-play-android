@@ -15,8 +15,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Set;
@@ -37,7 +35,6 @@ import io.evercam.androidapp.tasks.PatchCameraTask;
 import io.evercam.androidapp.tasks.TestSnapshotTask;
 import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
-import io.evercam.androidapp.utils.PropertyReader;
 import io.evercam.androidapp.video.VideoActivity;
 import io.evercam.network.discovery.DiscoveredCamera;
 
