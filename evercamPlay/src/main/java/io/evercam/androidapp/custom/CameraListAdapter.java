@@ -7,6 +7,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.EvercamCamera;
@@ -16,14 +18,14 @@ import io.evercam.androidapp.dto.EvercamCamera;
  */
 public class CameraListAdapter extends ArrayAdapter<String>
 {
-    private final String TAG = "evercamplay-CameraListAdapter";
-    private Context context;
+    private final String TAG = "CameraListAdapter";
+    private ArrayList<EvercamCamera> cameraList;
 
     public CameraListAdapter(Context context, int resource, int textViewResourceId,
-                             String[] objects)
+                             String[] objects, ArrayList<EvercamCamera> cameraList)
     {
         super(context, resource, textViewResourceId, objects);
-        this.context = context;
+        this.cameraList = cameraList;
     }
 
     /**
@@ -51,7 +53,7 @@ public class CameraListAdapter extends ArrayAdapter<String>
     {
         View view = super.getDropDownView(position, convertView, parent);
         ImageView offlineIcon = (ImageView) view.findViewById(R.id.spinner_offline_icon);
-        EvercamCamera evercamCamera = AppData.evercamCameraList.get(position);
+        EvercamCamera evercamCamera = cameraList.get(position);
 
         if(evercamCamera.isOffline())
         {

@@ -678,7 +678,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 if(evercamCamera != null)
                 {
                     getMixpanel().sendEvent(R.string.mixpanel_event_use_shortcut, new JSONObject().put("Camera ID", evercamCamera.getCameraId()));
-
                 }
             }
             catch(JSONException e)
@@ -1850,14 +1849,16 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         }
     }
 
-    private String[] getCameraNameArray()
+    private String[] getCameraNameArray(ArrayList<EvercamCamera> cameraList)
     {
         ArrayList<String> cameraNames = new ArrayList<>();
 
-        for(int count = 0; count < AppData.evercamCameraList.size(); count++)
+        for(int count = 0; count < cameraList.size(); count++)
         {
-            cameraNames.add(AppData.evercamCameraList.get(count).getName());
-            if(AppData.evercamCameraList.get(count).getCameraId().equals(startingCameraID))
+            EvercamCamera camera = cameraList.get(count);
+
+            cameraNames.add(camera.getName());
+            if(cameraList.get(count).getCameraId().equals(startingCameraID))
             {
                 defaultCameraIndex = cameraNames.size() - 1;
             }
@@ -1871,10 +1872,33 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private void loadCamerasToActionBar()
     {
-        String[] cameraNames = getCameraNameArray();
+        String[] cameraNames;
+
+        final ArrayList<EvercamCamera> onlineCameraList = new ArrayList<>();
+        final ArrayList<EvercamCamera> cameraList;
+
+        //If is not showing offline cameras, the offline cameras should be excluded from list
+        if(PrefsManager.showOfflineCameras(VideoActivity.this))
+        {
+            cameraList = AppData.evercamCameraList;
+        }
+        else
+        {
+            for(EvercamCamera evercamCamera : AppData.evercamCameraList)
+            {
+                if(!evercamCamera.isOffline())
+                {
+                    onlineCameraList.add(evercamCamera);
+                }
+            }
+
+            cameraList = onlineCameraList;
+        }
+
+        cameraNames = getCameraNameArray(cameraList);
+
         CameraListAdapter adapter = new CameraListAdapter(VideoActivity.this,
-                //		android.R.layout.simple_spinner_dropdown_item, cameraNames);
-                R.layout.live_view_spinner, R.id.spinner_camera_name_text, cameraNames);
+                R.layout.live_view_spinner, R.id.spinner_camera_name_text, cameraNames, cameraList);
         VideoActivity.this.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         OnNavigationListener navigationListener = new OnNavigationListener()
         {
@@ -1896,7 +1920,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 mrlPlaying = null;
                 showImagesVideo = false;
 
-                evercamCamera = AppData.evercamCameraList.get(itemPosition);
+                evercamCamera = cameraList.get(itemPosition);
+
 
                 if(evercamCamera.isOffline())
                 {
@@ -1912,7 +1937,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 else
                 {
                     offlineTextView.setVisibility(View.GONE);
-                    setCameraForPlaying(AppData.evercamCameraList.get(itemPosition));
+                    setCameraForPlaying(cameraList.get(itemPosition));
                     createPlayer(getCurrentMRL());
                 }
                 return false;

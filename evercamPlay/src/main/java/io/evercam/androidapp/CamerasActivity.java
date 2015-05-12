@@ -70,7 +70,6 @@ public class CamerasActivity extends ParentActivity
     private float databaseLoadTime = 0;
     private AndroidLogger logger;
     private KeenClient client;
-    private KeenProject keenProject;
 
     private enum InternetCheckType
     {
@@ -78,6 +77,7 @@ public class CamerasActivity extends ParentActivity
     }
 
     private String usernameOnStop = "";
+    private boolean showOfflineOnStop;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -117,14 +117,11 @@ public class CamerasActivity extends ParentActivity
                  * so check it's returned or not before
                  * the first load to avoid loading it twice.
                  */
-                io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp
-                        .custom.FlowLayout) CamerasActivity.this.findViewById(R.id
-                        .cameras_flow_layout);
+                io.evercam.androidapp.custom.FlowLayout camsLineView = (io.evercam.androidapp.custom.FlowLayout) CamerasActivity.this.findViewById(R.id.cameras_flow_layout);
                 if(!(camsLineView.getChildCount() > 0))
                 {
                     addAllCameraViews(false, false);
-                    if(camsLineView.getChildCount() > 0 && databaseLoadTime == 0 && startTime !=
-                            null)
+                    if(camsLineView.getChildCount() > 0 && databaseLoadTime == 0 && startTime != null)
                     {
                         databaseLoadTime = Commons.calculateTimeDifferenceFrom(startTime);
                     }
@@ -134,8 +131,7 @@ public class CamerasActivity extends ParentActivity
 
         // Start loading camera list after menu created(because need the menu
         // showing as animation)
-        new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.START)
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.START).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -159,8 +155,7 @@ public class CamerasActivity extends ParentActivity
         int itemId = item.getItemId();
         if(itemId == R.id.menurefresh)
         {
-            EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
-                    R.string.action_refresh, R.string.label_list_refresh);
+            EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu, R.string.action_refresh, R.string.label_list_refresh);
 
             if(refresh != null) refresh.setActionView(R.layout.actionbar_indeterminate_progress);
 
@@ -173,18 +168,15 @@ public class CamerasActivity extends ParentActivity
         }
         else if(itemId == R.id.menu_settings)
         {
-            EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
-                    R.string.action_settings, R.string.label_settings);
+            EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu, R.string.action_settings, R.string.label_settings);
 
             startActivity(new Intent(CamerasActivity.this, CameraPrefsActivity.class));
         }
         else if(itemId == R.id.menu_manage_accounts)
         {
-            EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu,
-                    R.string.action_manage_account, R.string.label_account);
+            EvercamPlayApplication.sendEventAnalytics(this, R.string.category_menu, R.string.action_manage_account, R.string.label_account);
 
-            startActivityForResult(new Intent(CamerasActivity.this, ManageAccountsActivity.class)
-                    , Constants.REQUEST_CODE_MANAGE_ACCOUNT);
+            startActivityForResult(new Intent(CamerasActivity.this, ManageAccountsActivity.class), Constants.REQUEST_CODE_MANAGE_ACCOUNT);
         }
         else if(itemId == R.id.menu_logout)
         {
@@ -209,35 +201,40 @@ public class CamerasActivity extends ParentActivity
 
         if(MainActivity.isUserLogged(this))
         {
-            String restartedUsername = AppData.defaultUser.getUsername();
-
-            //Reload camera list if default user has been changed
-            if(!usernameOnStop.isEmpty() && !usernameOnStop.equals(restartedUsername))
+            //Reload camera list if default user has been changed, or offline settings has been changed
+            if(isUserChanged() || isOfflineSettingChanged())
             {
-                new CamerasCheckInternetTask(CamerasActivity.this,
-                        InternetCheckType.START).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.START).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
             else
             {
                 try
                 {
-                    new CamerasCheckInternetTask(CamerasActivity.this,
-                            InternetCheckType.RESTART).executeOnExecutor(AsyncTask
-                            .THREAD_POOL_EXECUTOR);
+                    new CamerasCheckInternetTask(CamerasActivity.this, InternetCheckType.RESTART).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 }
                 catch(RejectedExecutionException e)
                 {
                     EvercamPlayApplication.sendCaughtExceptionNotImportant(activity, e);
                 }
-            }
-            usernameOnStop = "";
+            } usernameOnStop = "";
         }
         else
         {
             startActivity(new Intent(this, SlideActivity.class));
             finish();
         }
+    }
+
+    private boolean isUserChanged()
+    {
+        String restartedUsername = AppData.defaultUser.getUsername();
+        return !usernameOnStop.isEmpty() && !usernameOnStop.equals(restartedUsername);
+    }
+
+    private boolean isOfflineSettingChanged()
+    {
+        return showOfflineOnStop != PrefsManager.showOfflineCameras(this);
     }
 
     @Override
@@ -431,6 +428,12 @@ public class CamerasActivity extends ParentActivity
 
             for(final EvercamCamera evercamCamera : AppData.evercamCameraList)
             {
+                //Don't show offline camera
+                if(!PrefsManager.showOfflineCameras(this) && !evercamCamera.isActive())
+                {
+                    continue;
+                }
+
                 final LinearLayout cameraListLayout = new LinearLayout(this);
 
                 int indexPlus = index + 1;
@@ -628,6 +631,8 @@ public class CamerasActivity extends ParentActivity
         {
             usernameOnStop = AppData.defaultUser.getUsername();
         }
+
+        showOfflineOnStop = PrefsManager.showOfflineCameras(this);
     }
 
     private void showAddCameraOptionsDialog()

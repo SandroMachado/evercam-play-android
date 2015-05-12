@@ -18,6 +18,11 @@
             android:key="prefsForceLandscape"
             android:title="@string/title_force_landscape"
             android:defaultValue="false"/>
+
+        <CheckBoxPreference
+            android:key="prefsShowOfflineCameras"
+            android:title="@string/show_offline_camera"
+            android:defaultValue="true"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/category_about">

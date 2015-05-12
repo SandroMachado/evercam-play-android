@@ -37,8 +37,6 @@ public class GradientTitleLayout extends RelativeLayout
 
     public void showOfflineIcon(boolean show, boolean isFloat)
     {
-        Log.e(TAG, "Is float:" + String.valueOf(isFloat));
-
         ImageView imageView = (ImageView) findViewById(R.id.offline_image_view);
         ImageView floatImageView = (ImageView) findViewById(R.id.float_image_view);
 
