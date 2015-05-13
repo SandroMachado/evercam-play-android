@@ -22,7 +22,7 @@
         <CheckBoxPreference
             android:key="prefsShowOfflineCameras"
             android:title="@string/show_offline_camera"
-            android:defaultValue="true"/>
+            android:defaultValue="false"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/category_about">
