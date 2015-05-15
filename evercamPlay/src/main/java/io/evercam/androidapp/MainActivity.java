@@ -47,7 +47,7 @@ public class MainActivity extends ParentActivity
     private void launch()
     {
         int versionCode = Commons.getAppVersionCode(this);
-        boolean isReleaseNotesShown = PrefsManager.isRleaseNotesShown(this, versionCode);
+        boolean isReleaseNotesShown = PrefsManager.isReleaseNotesShown(this, versionCode);
 
         if(versionCode > 0)
         {

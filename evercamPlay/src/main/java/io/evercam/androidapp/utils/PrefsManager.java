@@ -46,7 +46,7 @@ public class PrefsManager
         return sharedPrefs.getBoolean(KEY_SHOW_OFFLINE_CAMERA, false);
     }
 
-    public static boolean isRleaseNotesShown(Context context, int versionCode)
+    public static boolean isReleaseNotesShown(Context context, int versionCode)
     {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
