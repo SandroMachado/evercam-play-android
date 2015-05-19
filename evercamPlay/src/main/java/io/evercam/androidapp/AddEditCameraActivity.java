@@ -12,6 +12,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -46,6 +47,7 @@ public class AddEditCameraActivity extends ParentActivity
     private EditText cameraNameEdit;
     private Spinner vendorSpinner;
     private Spinner modelSpinner;
+    private ImageView modelExplanationImageButton;
     private EditText usernameEdit;
     private EditText passwordEdit;
     private EditText externalHostEdit;
@@ -158,6 +160,7 @@ public class AddEditCameraActivity extends ParentActivity
         cameraNameEdit = (EditText) findViewById(R.id.add_name_edit);
         vendorSpinner = (Spinner) findViewById(R.id.vendor_spinner);
         modelSpinner = (Spinner) findViewById(R.id.model_spinner);
+        modelExplanationImageButton = (ImageView) findViewById(R.id.model_explanation_btn);
         usernameEdit = (EditText) findViewById(R.id.add_username_edit);
         passwordEdit = (EditText) findViewById(R.id.add_password_edit);
         externalHostEdit = (EditText) findViewById(R.id.add_external_host_edit);
@@ -185,8 +188,8 @@ public class AddEditCameraActivity extends ParentActivity
         vendorSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
         {
             @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView,
-                                       int position, long id)
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int
+                    position, long id)
             {
                 if(position == 0)
                 {
@@ -233,8 +236,7 @@ public class AddEditCameraActivity extends ParentActivity
                         String vendorId = getVendorIdFromSpinner();
                         String modelName = getModelNameFromSpinner();
 
-                        new RequestDefaultsTask(vendorId, modelName).executeOnExecutor(AsyncTask
-                                .THREAD_POOL_EXECUTOR);
+                        new RequestDefaultsTask(vendorId, modelName).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 }
             }
@@ -244,6 +246,16 @@ public class AddEditCameraActivity extends ParentActivity
             {
             }
         });
+
+        modelExplanationImageButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                CustomedDialog.getMessageDialog(AddEditCameraActivity.this,
+                        R.string.msg_model_explanation).show();
+            }
+        });
+
         addEditButton.setOnClickListener(new OnClickListener()
         {
             @Override
