@@ -5,17 +5,16 @@
     <string name="friendly_name">Name*</string>
     <string name="vendor">Vendor</string>
     <string name="model">Model</string>
-    <string name="select_model">Select Model</string>
-    <string name="select_vendor">Select Make</string>
+    <string name="select_model">Unknown/Other</string>
+    <string name="select_vendor">Unknown/Other</string>
     <string name="credentials">Credentials</string>
-    <string name="external_host">IP address</string>
-    <string name="internal_host">IP address</string>
+    <string name="external_host">IP address*</string>
     <string name="colon">:</string>
     <string name="external_title">External</string>
     <string name="internal_title">Internal</string>
     <string name="jpg_url">Snapshot URL</string>
-    <string name="http_port">HTTP</string>
-    <string name="rtsp_port">RTSP</string>
+    <string name="http_port">HTTP port*</string>
+    <string name="rtsp_port">RTSP port</string>
     <string name="finish_and_add">Finish &amp; Add</string>
     <string name="save_changes">Save Changes</string>
     <string name="test">Test</string>
@@ -26,11 +25,8 @@
     <string name="hint_camera_password">Password</string>
     <string name="hint_jpg_path">/snapshot.jpg</string>
     <string name="hint_external_host">149.5.43.10</string>
-    <string name="hint_external_http">External HTTP Port</string>
-    <string name="hint_external_rtsp">External RTSP Port</string>
-    <string name="hint_internal_host">192.168.1.122</string>
-    <string name="hint_internal_http">Internal HTTP Port</string>
-    <string name="hint_internal_rtsp">Internal RTSP Port</string>
+    <string name="hint_external_http">80</string>
+    <string name="hint_external_rtsp">554</string>
     <string name="vendor_other">Other</string>
     <string name="model_default">Default</string>
 
@@ -43,9 +39,8 @@
     <string name="create_success">Camera created successfully!</string>
     <string name="patch_success">Settings updated successfully!</string>
     <string name="unknown_error">Unknown error, please contact support.</string>
-    <string name="host_required">Please specify either an internal or external IP address.</string>
+    <string name="host_required">Please specify IP address</string>
     <string name="external_http_required">Please specify external HTTP port</string>
-    <string name="internal_http_required">Please specify internal HTTP port</string>
     <string name="msg_port_range_error">Port range must between 1 and 65535!</string>
     <string name="snapshot_test_port_closed">The IP address provided is not reachable at the port provided.</string>
     <string name="snapshot_test_failed">The port and URL are open but we can\'t seem to connect.  Check that the username and password are correct and the snapshot ending</string>
@@ -58,7 +53,6 @@
     <string name="scan_for_cameras">Scan for cameras (beta)</string>
 
     <!-- Test snapshot options -->
-    <string name="test_internal_text">Internal</string>
     <string name="test_external_text">External</string>
     <string name="test_snapshot_title">Please choose IP address</string>
 
