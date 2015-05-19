@@ -36,6 +36,7 @@ public final class Constants
      * Bundle keys
      */
     public static final String BUNDLE_KEY_CAMERA_ID = "cameraId";
+    public static final String BUNDLE_KEY_URL= "webUrl";
     public static final String KEY_IS_EDIT = "isEdit";
 
     /**

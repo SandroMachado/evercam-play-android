@@ -8,29 +8,28 @@ import android.webkit.WebViewClient;
 
 import io.evercam.API;
 import io.evercam.androidapp.R;
+import io.evercam.androidapp.WebActivity;
 
 public class RecordingWebView extends WebView
 {
     private final String TAG = "RecordingWebView";
-    private Context mContext;
+    public WebActivity webActivity;
 
     public RecordingWebView(Context context)
     {
         super(context);
-        this.mContext = context;
     }
 
     public RecordingWebView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
-        this.mContext = context;
     }
 
     public void loadRecordingWidget(String cameraId)
     {
         getSettings().setJavaScriptEnabled(true);
 
-        setWebViewClient(getWebViewClient());
+        setWebViewClient(webActivity.getWebViewClient());
 
         //TODO remove <body style='margin:0;padding:0;'>, it's here only to overwrite the widget
         // margin
@@ -46,20 +45,4 @@ public class RecordingWebView extends WebView
         loadData(customHtml, "text/html", "UTF-8");
     }
 
-    private WebViewClient getWebViewClient()
-    {
-        WebViewClient client = new WebViewClient()
-        {
-            public void onPageStarted(WebView view, String url, Bitmap favicon)
-            {
-                RecordingWebActivity.progressDialog.show(mContext.getString(R.string.msg_loading));
-            }
-
-            public void onPageFinished(WebView view, String url)
-            {
-                RecordingWebActivity.progressDialog.dismiss();
-            }
-        };
-        return client;
-    }
 }

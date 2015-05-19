@@ -58,6 +58,8 @@
     <string name="prefs_title_version">Version</string>
     <string name="prefs_title_about">About Evercam</string>
     <string name="evercam_url">http://www.evercam.io</string>
+    <string name="title_activity_recording_web">Recordings</string>
+    <string name="title_activity_about_web">About Evercam</string>
 
     <!-- Menu -->
     <string name="menu_settings">Settings</string>
@@ -95,7 +97,6 @@
     <string name="data_scheme">evercam</string>
     <string name="data_host">cameras</string>
     <string name="data_path">/streams</string>
-    <string name="title_activity_recording_web">Recordings</string>
 
 </resources>
 

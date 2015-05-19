@@ -1,6 +1,7 @@
 package io.evercam.androidapp;
 
 import android.content.Intent;
+import android.graphics.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -14,6 +15,7 @@ import com.splunk.mint.Mint;
 import java.util.ArrayList;
 
 import io.evercam.androidapp.custom.ThemedListPreference;
+import io.evercam.androidapp.recordings.RecordingWebActivity;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.DataCollector;
 import io.evercam.androidapp.utils.PrefsManager;
@@ -172,9 +174,9 @@ public class CameraPrefsActivity extends PreferenceActivity
                 @Override
                 public boolean onPreferenceClick(Preference preference)
                 {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string
-                            .evercam_url)));
-                    startActivity(intent);
+                    Intent aboutIntent = new Intent(getActivity(), AboutWebActivity.class);
+                    aboutIntent.putExtra(Constants.BUNDLE_KEY_URL, getString(R.string.evercam_url));
+                    startActivity(aboutIntent);
                     return false;
                 }
             });

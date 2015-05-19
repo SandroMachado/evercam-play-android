@@ -171,6 +171,15 @@
             android:icon="@drawable/icon_evercam"
             android:label="@string/title_activity_recording_web"
             android:configChanges="keyboard|keyboardHidden|screenSize|orientation">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".video.VideoActivity" />
+        </activity>
+        <activity
+            android:name=".AboutWebActivity"
+            android:icon="@drawable/icon_evercam"
+            android:label="@string/title_activity_about_web"
+            android:configChanges="keyboard|keyboardHidden|screenSize|orientation">
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".video.VideoActivity" />
