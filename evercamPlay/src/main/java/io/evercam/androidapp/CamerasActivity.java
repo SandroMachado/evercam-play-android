@@ -23,7 +23,7 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.bugsense.trace.BugSenseHandler;
+import com.splunk.mint.Mint;
 import com.logentries.android.AndroidLogger;
 
 import java.util.ArrayList;
@@ -337,10 +337,8 @@ public class CamerasActivity extends ParentActivity
         catch(Exception e)
         {
             Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-            if(Constants.isAppTrackingEnabled)
-            {
-                BugSenseHandler.sendException(e);
-            }
+
+            sendToMint(e);
 
             EvercamPlayApplication.sendCaughtException(this, e);
             CustomedDialog.showUnexpectedErrorDialog(CamerasActivity.this);
@@ -386,10 +384,8 @@ public class CamerasActivity extends ParentActivity
         catch(Exception e)
         {
             Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-            if(Constants.isAppTrackingEnabled)
-            {
-                BugSenseHandler.sendException(e);
-            }
+
+            sendToMint(e);
 
             EvercamPlayApplication.sendCaughtException(this, e);
             CustomedDialog.showUnexpectedErrorDialog(CamerasActivity.this);
@@ -522,10 +518,8 @@ public class CamerasActivity extends ParentActivity
         catch(Exception e)
         {
             Log.e(TAG, e.toString(), e);
-            if(Constants.isAppTrackingEnabled)
-            {
-                BugSenseHandler.sendException(e);
-            }
+
+            sendToMint(e);
 
             EvercamPlayApplication.sendCaughtException(this, e);
             CustomedDialog.showUnexpectedErrorDialog(CamerasActivity.this);

@@ -9,7 +9,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.view.MenuItem;
 
-import com.bugsense.trace.BugSenseHandler;
+import com.splunk.mint.Mint;
 
 import java.util.ArrayList;
 
@@ -32,8 +32,8 @@ public class CameraPrefsActivity extends PreferenceActivity
         if(Constants.isAppTrackingEnabled)
         {
             String bugSenseCode = new PropertyReader(this).getPropertyStr(PropertyReader
-                    .KEY_BUG_SENSE);
-            BugSenseHandler.initAndStartSession(this, bugSenseCode);
+                    .KEY_SPLUNK_MINT);
+            Mint.initAndStartSession(this, bugSenseCode);
         }
 
         if(this.getActionBar() != null)
@@ -55,7 +55,7 @@ public class CameraPrefsActivity extends PreferenceActivity
 
         if(Constants.isAppTrackingEnabled)
         {
-            BugSenseHandler.startSession(this);
+            Mint.startSession(this);
         }
     }
 
@@ -65,7 +65,7 @@ public class CameraPrefsActivity extends PreferenceActivity
         super.onStop();
         if(Constants.isAppTrackingEnabled)
         {
-            BugSenseHandler.closeSession(this);
+            Mint.closeSession(this);
         }
     }
 

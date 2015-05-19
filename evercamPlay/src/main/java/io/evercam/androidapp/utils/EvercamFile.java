@@ -5,9 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.bugsense.trace.BugSenseHandler;
+import com.splunk.mint.Mint;
 
 import java.io.File;
+
+import io.evercam.androidapp.ParentActivity;
 
 public class EvercamFile
 {
@@ -54,10 +56,8 @@ public class EvercamFile
         catch(Exception e)
         {
             Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-            if(Constants.isAppTrackingEnabled)
-            {
-                BugSenseHandler.sendException(e);
-            }
+
+            ParentActivity.sendToMint(e);
         }
         return null;
     }

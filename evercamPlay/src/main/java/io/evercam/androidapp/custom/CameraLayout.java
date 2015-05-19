@@ -16,13 +16,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.bugsense.trace.BugSenseHandler;
+import com.splunk.mint.Mint;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
 
 import io.evercam.Camera;
 import io.evercam.EvercamException;
+import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.CameraStatus;
@@ -137,10 +138,8 @@ public class CameraLayout extends LinearLayout
         catch(Exception e)
         {
             Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-            if(Constants.isAppTrackingEnabled)
-            {
-                BugSenseHandler.sendException(e);
-            }
+
+            ParentActivity.sendToMint(e);
         }
     }
 

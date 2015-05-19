@@ -39,7 +39,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bugsense.trace.BugSenseHandler;
+import com.splunk.mint.Mint;
 import com.logentries.android.AndroidLogger;
 
 import org.json.JSONException;
@@ -290,10 +290,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         catch(Exception e)
         {
             Log.e(TAG, e.toString());
-            if(Constants.isAppTrackingEnabled)
-            {
-                BugSenseHandler.sendException(e);
-            }
+
+            sendToMint(e);
         }
     }
 
@@ -634,10 +632,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         catch(Exception e)
         {
             Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-            if(Constants.isAppTrackingEnabled)
-            {
-                BugSenseHandler.sendException(e);
-            }
+
+            sendToMint(e);
         }
         return true;
     }
@@ -765,7 +761,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         catch(Exception e)
         {
             Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-            BugSenseHandler.sendException(e);
+            sendToMint(e);
             EvercamPlayApplication.sendCaughtException(this, e);
             CustomedDialog.showUnexpectedErrorDialog(VideoActivity.this);
         }
@@ -1105,10 +1101,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         catch(Exception e)
         {
             EvercamPlayApplication.sendCaughtException(this, e);
-            if(Constants.isAppTrackingEnabled)
-            {
-                BugSenseHandler.sendException(e);
-            }
+            sendToMint(e);
         }
     }
 
@@ -1485,7 +1478,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 {
                     downloadStartCount--;
                     Log.e(TAG, ex.toString() + "-::::-" + Log.getStackTraceString(ex));
-                    if(Constants.isAppTrackingEnabled) BugSenseHandler.sendException(ex);
+                    sendToMint(ex);
                 }
                 try
                 {
@@ -1839,10 +1832,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             catch(Exception e)
             {
                 if(enableLogs) Log.e(TAG, e.toString());
-                if(Constants.isAppTrackingEnabled)
-                {
-                    BugSenseHandler.sendException(e);
-                }
+                sendToMint(e);
             }
 
             startDownloading = true;

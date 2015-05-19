@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 
-import com.bugsense.trace.BugSenseHandler;
+import com.splunk.mint.Mint;
 
 import io.evercam.androidapp.feedback.MixpanelHelper;
 import io.evercam.androidapp.utils.Constants;
@@ -35,9 +35,9 @@ public class ParentActivity extends Activity
 
         if(Constants.isAppTrackingEnabled)
         {
-            if(propertyReader.isPropertyExist(PropertyReader.KEY_BUG_SENSE))
+            if(propertyReader.isPropertyExist(PropertyReader.KEY_SPLUNK_MINT))
             {
-                BugSenseHandler.startSession(this);
+                Mint.startSession(this);
             }
         }
     }
@@ -49,9 +49,9 @@ public class ParentActivity extends Activity
 
         if(Constants.isAppTrackingEnabled)
         {
-            if(propertyReader.isPropertyExist(PropertyReader.KEY_BUG_SENSE))
+            if(propertyReader.isPropertyExist(PropertyReader.KEY_SPLUNK_MINT))
             {
-                BugSenseHandler.closeSession(this);
+                Mint.closeSession(this);
             }
         }
 
@@ -77,12 +77,25 @@ public class ParentActivity extends Activity
     {
         if(Constants.isAppTrackingEnabled)
         {
-            if(propertyReader.isPropertyExist(PropertyReader.KEY_BUG_SENSE))
+            if(propertyReader.isPropertyExist(PropertyReader.KEY_SPLUNK_MINT))
             {
                 String bugSenseCode = propertyReader.getPropertyStr(PropertyReader
-                        .KEY_BUG_SENSE);
-                BugSenseHandler.initAndStartSession(this,bugSenseCode);
+                        .KEY_SPLUNK_MINT);
+                Mint.initAndStartSession(this,bugSenseCode);
             }
         }
+    }
+
+    public static void sendToMint(Exception e)
+    {
+        if(Constants.isAppTrackingEnabled)
+        {
+            Mint.logException(e);
+        }
+    }
+
+    public static void sendWithMsgToMint(String messageName, String message, Exception e)
+    {
+        Mint.logExceptionMessage(messageName, message, e);
     }
 }
