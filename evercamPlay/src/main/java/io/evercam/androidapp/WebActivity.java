@@ -7,7 +7,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import io.evercam.androidapp.custom.CustomProgressDialog;
-import io.evercam.androidapp.recordings.RecordingWebActivity;
 
 public abstract class WebActivity  extends ParentActivity
 {

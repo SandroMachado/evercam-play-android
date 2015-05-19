@@ -39,7 +39,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.splunk.mint.Mint;
 import com.logentries.android.AndroidLogger;
 
 import org.json.JSONException;

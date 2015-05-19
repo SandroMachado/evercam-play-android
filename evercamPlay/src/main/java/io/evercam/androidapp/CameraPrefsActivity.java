@@ -1,8 +1,6 @@
 package io.evercam.androidapp;
 
 import android.content.Intent;
-import android.graphics.Camera;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -15,7 +13,6 @@ import com.splunk.mint.Mint;
 import java.util.ArrayList;
 
 import io.evercam.androidapp.custom.ThemedListPreference;
-import io.evercam.androidapp.recordings.RecordingWebActivity;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.utils.DataCollector;
 import io.evercam.androidapp.utils.PrefsManager;

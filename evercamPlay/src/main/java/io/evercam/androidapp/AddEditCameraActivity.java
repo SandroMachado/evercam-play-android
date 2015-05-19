@@ -1,6 +1,5 @@
 package io.evercam.androidapp;
 
-import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;

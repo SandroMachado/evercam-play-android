@@ -1,13 +1,10 @@
 package io.evercam.androidapp.recordings;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import io.evercam.API;
-import io.evercam.androidapp.R;
 import io.evercam.androidapp.WebActivity;
 
 public class RecordingWebView extends WebView

@@ -23,7 +23,6 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.splunk.mint.Mint;
 import com.logentries.android.AndroidLogger;
 
 import java.util.ArrayList;

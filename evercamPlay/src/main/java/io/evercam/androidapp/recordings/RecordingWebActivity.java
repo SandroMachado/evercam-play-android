@@ -1,6 +1,7 @@
 package io.evercam.androidapp.recordings;
 
 import android.os.Bundle;
+
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.WebActivity;
 import io.evercam.androidapp.utils.Constants;

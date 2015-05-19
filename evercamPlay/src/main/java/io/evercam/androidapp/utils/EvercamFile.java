@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import java.io.File;
 
 import io.evercam.androidapp.ParentActivity;

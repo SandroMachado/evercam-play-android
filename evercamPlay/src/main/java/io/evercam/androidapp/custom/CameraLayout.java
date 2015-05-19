@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.splunk.mint.Mint;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
@@ -30,7 +29,6 @@ import io.evercam.androidapp.dto.CameraStatus;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.dto.ImageLoadingStatus;
 import io.evercam.androidapp.tasks.SaveImageRunnable;
-import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.video.VideoActivity;
 
 public class CameraLayout extends LinearLayout
