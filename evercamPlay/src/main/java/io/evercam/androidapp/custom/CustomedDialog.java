@@ -309,4 +309,25 @@ public class CustomedDialog
 
         return snapshotDialog;
     }
+
+    /**
+     * A dialog without title, with a message and an 'OK' button
+     *
+     * @param message Message to show in the dialog
+     */
+    public static AlertDialog getMessageDialog(Activity activity, int message)
+    {
+        AlertDialog messageDialog = new AlertDialog.Builder(activity)
+
+                .setMessage(message).setNegativeButton(R.string.ok,
+                        new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                return;
+                            }
+                        }).create();
+        return messageDialog;
+    }
 }

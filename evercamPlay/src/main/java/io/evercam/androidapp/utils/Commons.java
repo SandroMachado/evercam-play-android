@@ -120,7 +120,10 @@ public class Commons
             Log.d(TAG, e.toString());
             e.printStackTrace();
         }
-
+        catch(OutOfMemoryError error)
+        {
+            error.printStackTrace();
+        }
         return drawable;
     }
 

@@ -10,6 +10,7 @@ public class PrefsManager
     public final static String KEY_RELEASE_NOTES_SHOWN = "isReleaseNotesShown";
     public static final String KEY_AWAKE_TIME = "prefsAwakeTime";
     public static final String KEY_FORCE_LANDSCAPE = "prefsForceLandscape";
+    public static final String KEY_SHOW_OFFLINE_CAMERA = "prefsShowOfflineCameras";
     public static final String KEY_VERSION = "version_preference";
     public static final String KEY_ABOUT = "about_preference";
 
@@ -39,7 +40,13 @@ public class PrefsManager
         return sharedPrefs.getBoolean(KEY_FORCE_LANDSCAPE, false);
     }
 
-    public static boolean isRleaseNotesShown(Context context, int versionCode)
+    public static boolean showOfflineCameras(Context context)
+    {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPrefs.getBoolean(KEY_SHOW_OFFLINE_CAMERA, false);
+    }
+
+    public static boolean isReleaseNotesShown(Context context, int versionCode)
     {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 

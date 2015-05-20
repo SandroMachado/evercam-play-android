@@ -1,7 +1,6 @@
 package io.evercam.androidapp;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -9,7 +8,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.view.MenuItem;
 
-import com.bugsense.trace.BugSenseHandler;
+import com.splunk.mint.Mint;
 
 import java.util.ArrayList;
 
@@ -32,8 +31,8 @@ public class CameraPrefsActivity extends PreferenceActivity
         if(Constants.isAppTrackingEnabled)
         {
             String bugSenseCode = new PropertyReader(this).getPropertyStr(PropertyReader
-                    .KEY_BUG_SENSE);
-            BugSenseHandler.initAndStartSession(this, bugSenseCode);
+                    .KEY_SPLUNK_MINT);
+            Mint.initAndStartSession(this, bugSenseCode);
         }
 
         if(this.getActionBar() != null)
@@ -55,7 +54,7 @@ public class CameraPrefsActivity extends PreferenceActivity
 
         if(Constants.isAppTrackingEnabled)
         {
-            BugSenseHandler.startSession(this);
+            Mint.startSession(this);
         }
     }
 
@@ -65,7 +64,7 @@ public class CameraPrefsActivity extends PreferenceActivity
         super.onStop();
         if(Constants.isAppTrackingEnabled)
         {
-            BugSenseHandler.closeSession(this);
+            Mint.closeSession(this);
         }
     }
 
@@ -172,9 +171,9 @@ public class CameraPrefsActivity extends PreferenceActivity
                 @Override
                 public boolean onPreferenceClick(Preference preference)
                 {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string
-                            .evercam_url)));
-                    startActivity(intent);
+                    Intent aboutIntent = new Intent(getActivity(), AboutWebActivity.class);
+                    aboutIntent.putExtra(Constants.BUNDLE_KEY_URL, getString(R.string.evercam_url));
+                    startActivity(aboutIntent);
                     return false;
                 }
             });

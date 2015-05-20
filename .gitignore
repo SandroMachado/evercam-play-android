@@ -36,3 +36,7 @@ lint.xml
 *.ipr
 *.iws
 .idea/
+
+# Exclude Hikvision SDK
+HCNetSDK.jar
+PlayerSDK.jar

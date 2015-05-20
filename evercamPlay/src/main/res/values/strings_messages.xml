@@ -20,7 +20,7 @@
     <string name="msg_confirm_remove_camera">Are you sure you want to remove this camera?</string>
     <string name="msg_confirm_cancel_scan">We\'re still scanning your network, are you sure you want to cancel?</string>
     <string name="msg_offline">Camera is offline.</string>
-    <string name="msg_feedback_sent">Thanks for the feedback. We take all our feedback seriously, so we\'ll be in contact</string>
+    <string name="msg_feedback_sent">Thanks for the feedback</string>
     <string name="msg_feedback">We\'re always looking to improve Evercam Play, so let us know if you have any suggestions.</string>
     <string name="feedback_hint">Write your feedback</string>
     <string name="msg_confirm_quit_feedback">Are you sure you want to leave this page? Hitting back will lose any feedback you have entered</string>
@@ -34,5 +34,8 @@
     <string name="msg_can_not_access_camera">This camera is not accessible from account</string>
     <string name="msg_switch_account">Switching to account</string>
     <string name="msg_loading">Loading&#8230;</string>
+
+    <string name="msg_model_explanation">If you dont know the Vendor and Model of the camera you can leave it as unknown. \n\nIf you know the Vendor but not the model - use the default option.
+        \n\nFrom the Vendor &amp; Model we will try to work out the Snapshot URL ending. \n\n If you want to report a new vendor/model, please send us a feedback from the main menu.</string>
 
 </resources>

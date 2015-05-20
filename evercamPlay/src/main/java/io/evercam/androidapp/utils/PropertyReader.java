@@ -14,7 +14,7 @@ public class PropertyReader
     private Properties properties;
     private final String TAG = "PropertyReader";
     private final String LOCAL_PROPERTY_FILE = "local.properties";
-    public static final String KEY_BUG_SENSE = "BugSenseCode";
+    public static final String KEY_SPLUNK_MINT = "SplunkApiKey";
     public static final String KEY_SENDGRID_USERNAME = "SendgridUsername";
     public static final String KEY_SENDGRID_PASSWORD = "SendgridPassword";
     public static final String KEY_LOGENTRIES_TOKEN = "LogentriesToken";
@@ -22,6 +22,8 @@ public class PropertyReader
     public static final String KEY_KEEN_PROJECT_ID = "KeenProjectId";
     public static final String KEY_KEEN_WRITE_KEY = "KeenWriteKey";
     public static final String KEY_KEEN_READ_KEY = "KeenReadKey";
+
+    public static final String KEY_MIXPANEL = "MixpanelToken";
 
     public PropertyReader(Context context)
     {

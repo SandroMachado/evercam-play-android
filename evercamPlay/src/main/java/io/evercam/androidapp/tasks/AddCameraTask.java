@@ -1,6 +1,5 @@
 package io.evercam.androidapp.tasks;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -36,7 +35,7 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
 {
     private final String TAG = "AddCameraTask";
     private CameraDetail cameraDetail;
-    private Activity activity;
+    private AddEditCameraActivity activity;
     private CustomProgressDialog customProgressDialog;
     private String errorMessage = null;
     private boolean isReachableExternally = false;
@@ -44,7 +43,7 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
     private Boolean readyToCreateCamera = null;
     private boolean isFromScan;
 
-    public AddCameraTask(CameraDetail cameraDetail, Activity activity, boolean isFromScan)
+    public AddCameraTask(CameraDetail cameraDetail, AddEditCameraActivity activity, boolean isFromScan)
     {
         this.cameraDetail = cameraDetail;
         this.activity = activity;
@@ -79,6 +78,8 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
                 EvercamPlayApplication.sendEventAnalytics(activity, R.string.category_add_camera,
                         R.string.action_addcamera_success_manual, R.string.label_addcamera_successful_manual);
             }
+
+            activity.getMixpanel().sendEvent(R.string.mixpanel_event_create_camera, null);
 
             newCameraItem.sendToKeenIo(KeenHelper.getClient(activity));
 

@@ -280,6 +280,9 @@ public class SignUpActivity extends ParentActivity
                 new NewUserFeedbackItem(SignUpActivity.this, newUser.getUsername(),
                         newUser.getEmail()).sendToKeenIo(KeenHelper.getClient(SignUpActivity.this));
 
+                getMixpanel().identifyNewUser(newUser);
+                getMixpanel().sendEvent(R.string.mixpanel_event_sign_up, null);
+
                 new EvercamAccount(SignUpActivity.this).add(newUser);
                 AppData.defaultUser = newUser;
 
@@ -330,6 +333,8 @@ public class SignUpActivity extends ParentActivity
             }
             catch(EvercamException e)
             {
+                sendWithMsgToMint("User details" , filledFirstname + " " + filledLastname
+                        + ", " + filledEmail, e);
                 return e.getMessage();
             }
         }

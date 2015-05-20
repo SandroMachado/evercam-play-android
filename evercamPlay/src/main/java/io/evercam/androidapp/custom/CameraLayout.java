@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
@@ -15,20 +16,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.bugsense.trace.BugSenseHandler;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
 
 import io.evercam.Camera;
 import io.evercam.EvercamException;
+import io.evercam.androidapp.ParentActivity;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.CameraStatus;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.dto.ImageLoadingStatus;
 import io.evercam.androidapp.tasks.SaveImageRunnable;
-import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.video.VideoActivity;
 
 public class CameraLayout extends LinearLayout
@@ -50,7 +50,7 @@ public class CameraLayout extends LinearLayout
     private ImageView snapshotImageView;
     private ImageView offlineImage = null;
     private GradientTitleLayout gradientLayout;
-
+    public boolean showOfflineIconAsFloat = false;
 
     /**
      * Handler for the handling the next request. It will call the image loading
@@ -136,10 +136,8 @@ public class CameraLayout extends LinearLayout
         catch(Exception e)
         {
             Log.e(TAG, e.toString() + "::" + Log.getStackTraceString(e));
-            if(Constants.isAppTrackingEnabled)
-            {
-                BugSenseHandler.sendException(e);
-            }
+
+            ParentActivity.sendToMint(e);
         }
     }
 
@@ -151,6 +149,13 @@ public class CameraLayout extends LinearLayout
         {
             handler.postDelayed(LoadImageRunnable, 0);
         }
+    }
+
+    public Rect getOfflineIconBounds()
+    {
+        Rect bounds = new Rect();
+        gradientLayout.getOfflineImageView().getHitRect(bounds);
+        return bounds;
     }
 
     public void updateTitleIfDifferent()
@@ -201,7 +206,7 @@ public class CameraLayout extends LinearLayout
             if(!evercamCamera.isActive())
             {
                 showGreyImage();
-                gradientLayout.showOfflineIcon(true);
+                showOfflineIcon();
             }
 
             //Save the thumbnail, it will be showing before live view get loaded
@@ -212,6 +217,7 @@ public class CameraLayout extends LinearLayout
         }
         else
         {
+            showOfflineIcon();
             offlineImage.setVisibility(View.VISIBLE);
             loadingAnimation.setVisibility(View.GONE);
             snapshotImageView.setBackgroundColor(Color.GRAY);
@@ -220,6 +226,17 @@ public class CameraLayout extends LinearLayout
             handler.postDelayed(LoadImageRunnable, 0);
         }
         return false;
+    }
+
+    private void showOfflineIcon()
+    {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run()
+            {
+                gradientLayout.showOfflineIcon(true, showOfflineIconAsFloat);
+            }
+        }, 300);
     }
 
     // Image not received form cache, Evercam nor camera side. Set the controls
@@ -236,7 +253,7 @@ public class CameraLayout extends LinearLayout
         {
             showGreyImage();
 
-            gradientLayout.showOfflineIcon(true);
+            showOfflineIcon();
         }
 
         // animation must have been stopped when image loaded from cache

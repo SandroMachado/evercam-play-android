@@ -40,6 +40,7 @@ public class FeedbackSender
         AppUser user = AppData.defaultUser;
         String fullName = "";
         String userEmail = "";
+
         sendgrid.setFrom(user.getEmail());
         if(user != null)
         {

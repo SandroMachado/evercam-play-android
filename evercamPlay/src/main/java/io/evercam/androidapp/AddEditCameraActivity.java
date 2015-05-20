@@ -1,6 +1,5 @@
 package io.evercam.androidapp;
 
-import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,10 +11,9 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.bugsense.trace.BugSenseHandler;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -49,14 +47,12 @@ public class AddEditCameraActivity extends ParentActivity
     private EditText cameraNameEdit;
     private Spinner vendorSpinner;
     private Spinner modelSpinner;
+    private ImageView modelExplanationImageButton;
     private EditText usernameEdit;
     private EditText passwordEdit;
     private EditText externalHostEdit;
     private EditText externalHttpEdit;
     private EditText externalRtspEdit;
-    private EditText internalHostEdit;
-    private EditText internalHttpEdit;
-    private EditText internalRtspEdit;
     private EditText jpgUrlEdit;
     private Button addEditButton;
     private TreeMap<String, String> vendorMap;
@@ -70,12 +66,6 @@ public class AddEditCameraActivity extends ParentActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        if(Constants.isAppTrackingEnabled)
-        {
-            String bugSenseCode = new PropertyReader(this).getPropertyStr(PropertyReader
-                    .KEY_BUG_SENSE);
-            BugSenseHandler.initAndStartSession(this, bugSenseCode);
-        }
 
         Bundle bundle = getIntent().getExtras();
         // Edit Camera
@@ -147,15 +137,11 @@ public class AddEditCameraActivity extends ParentActivity
             String externalHost = externalHostEdit.getText().toString();
             String externalHttp = externalHttpEdit.getText().toString();
             String externalRtsp = externalRtspEdit.getText().toString();
-            String internalHost = internalHostEdit.getText().toString();
-            String internalHttp = internalHttpEdit.getText().toString();
-            String internalRtsp = internalRtspEdit.getText().toString();
             String jpgUrl = jpgUrlEdit.getText().toString();
 
             if(!(cameraId.isEmpty() && cameraName.isEmpty() && username.isEmpty() && password
                     .isEmpty() && externalHost.isEmpty() && externalHttp.isEmpty() &&
-                    externalRtsp.isEmpty() && internalHost.isEmpty() && internalHttp.isEmpty() &&
-                    internalRtsp.isEmpty() && jpgUrl.isEmpty()))
+                    externalRtsp.isEmpty() && jpgUrl.isEmpty()))
             {
                 CustomedDialog.getConfirmCancleAddCameraDialog(this).show();
             }
@@ -174,14 +160,12 @@ public class AddEditCameraActivity extends ParentActivity
         cameraNameEdit = (EditText) findViewById(R.id.add_name_edit);
         vendorSpinner = (Spinner) findViewById(R.id.vendor_spinner);
         modelSpinner = (Spinner) findViewById(R.id.model_spinner);
+        modelExplanationImageButton = (ImageView) findViewById(R.id.model_explanation_btn);
         usernameEdit = (EditText) findViewById(R.id.add_username_edit);
         passwordEdit = (EditText) findViewById(R.id.add_password_edit);
         externalHostEdit = (EditText) findViewById(R.id.add_external_host_edit);
         externalHttpEdit = (EditText) findViewById(R.id.add_external_http_edit);
         externalRtspEdit = (EditText) findViewById(R.id.add_external_rtsp_edit);
-        internalHostEdit = (EditText) findViewById(R.id.add_internal_host_edit);
-        internalHttpEdit = (EditText) findViewById(R.id.add_internal_http_edit);
-        internalRtspEdit = (EditText) findViewById(R.id.add_internal_rtsp_edit);
         jpgUrlEdit = (EditText) findViewById(R.id.add_jpg_edit);
         addEditButton = (Button) findViewById(R.id.button_add_edit_camera);
         Button testButton = (Button) findViewById(R.id.button_test_snapshot);
@@ -204,8 +188,8 @@ public class AddEditCameraActivity extends ParentActivity
         vendorSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
         {
             @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView,
-                                       int position, long id)
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int
+                    position, long id)
             {
                 if(position == 0)
                 {
@@ -252,8 +236,7 @@ public class AddEditCameraActivity extends ParentActivity
                         String vendorId = getVendorIdFromSpinner();
                         String modelName = getModelNameFromSpinner();
 
-                        new RequestDefaultsTask(vendorId, modelName).executeOnExecutor(AsyncTask
-                                .THREAD_POOL_EXECUTOR);
+                        new RequestDefaultsTask(vendorId, modelName).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 }
             }
@@ -263,6 +246,16 @@ public class AddEditCameraActivity extends ParentActivity
             {
             }
         });
+
+        modelExplanationImageButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                CustomedDialog.getMessageDialog(AddEditCameraActivity.this,
+                        R.string.msg_model_explanation).show();
+            }
+        });
+
         addEditButton.setOnClickListener(new OnClickListener()
         {
             @Override
@@ -326,15 +319,6 @@ public class AddEditCameraActivity extends ParentActivity
             {
                 externalRtspEdit.setText(String.valueOf(camera.getExtrtsp()));
             }
-            internalHostEdit.setText(camera.getIP());
-            if(camera.hasHTTP())
-            {
-                internalHttpEdit.setText(String.valueOf(camera.getHttp()));
-            }
-            if(camera.hasRTSP())
-            {
-                internalRtspEdit.setText(String.valueOf(camera.getRtsp()));
-            }
         }
     }
 
@@ -349,11 +333,8 @@ public class AddEditCameraActivity extends ParentActivity
             passwordEdit.setText(camera.getPassword());
             jpgUrlEdit.setText(camera.getJpgPath());
             externalHostEdit.setText(camera.getExternalHost());
-            internalHostEdit.setText(camera.getInternalHost());
             int externalHttp = camera.getExternalHttp();
             int externalRtsp = camera.getExternalRtsp();
-            int internalHttp = camera.getInternalHttp();
-            int internalRtsp = camera.getInternalRtsp();
             if(externalHttp != 0)
             {
                 externalHttpEdit.setText(String.valueOf(externalHttp));
@@ -361,14 +342,6 @@ public class AddEditCameraActivity extends ParentActivity
             if(externalRtsp != 0)
             {
                 externalRtspEdit.setText(String.valueOf(externalRtsp));
-            }
-            if(internalHttp != 0)
-            {
-                internalHttpEdit.setText(String.valueOf(camera.getInternalHttp()));
-            }
-            if(internalRtsp != 0)
-            {
-                internalRtspEdit.setText(String.valueOf(camera.getInternalRtsp()));
             }
         }
     }
@@ -427,46 +400,13 @@ public class AddEditCameraActivity extends ParentActivity
         }
 
         String externalHost = externalHostEdit.getText().toString();
-        String internalHost = internalHostEdit.getText().toString();
-        if(externalHost.isEmpty() && internalHost.isEmpty())
+        if(externalHost.isEmpty())
         {
             CustomToast.showInCenter(this, getString(R.string.host_required));
             return null;
         }
         else
         {
-            if(!internalHost.isEmpty())
-            {
-                cameraBuilder.setInternalHost(internalHost);
-
-                String internalHttp = internalHttpEdit.getText().toString();
-                if(!internalHttp.isEmpty())
-                {
-                    int internalHttpInt = getPortIntByString(internalHttp);
-                    if(internalHttpInt != 0)
-                    {
-                        cameraBuilder.setInternalHttpPort(internalHttpInt);
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-
-                String internalRtsp = internalRtspEdit.getText().toString();
-                if(!internalRtsp.isEmpty())
-                {
-                    int internalRtspInt = getPortIntByString(internalRtsp);
-                    if(internalRtspInt != 0)
-                    {
-                        cameraBuilder.setInternalRtspPort(internalRtspInt);
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-            }
             if(!externalHost.isEmpty())
             {
                 cameraBuilder.setExternalHost(externalHost);
@@ -587,44 +527,13 @@ public class AddEditCameraActivity extends ParentActivity
         }
 
         String externalHost = externalHostEdit.getText().toString();
-        String internalHost = internalHostEdit.getText().toString();
-        if(externalHost.isEmpty() && internalHost.isEmpty())
+        if(externalHost.isEmpty())
         {
             CustomToast.showInCenter(this, getString(R.string.host_required));
             return null;
         }
         else
         {
-            patchCameraBuilder.setInternalHost(internalHost);
-
-            String internalHttp = internalHttpEdit.getText().toString();
-            if(!internalHttp.isEmpty())
-            {
-                int internalHttpInt = getPortIntByString(internalHttp);
-                if(internalHttpInt != 0)
-                {
-                    patchCameraBuilder.setInternalHttpPort(internalHttpInt);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-
-            String internalRtsp = internalRtspEdit.getText().toString();
-            if(!internalRtsp.isEmpty())
-            {
-                int internalRtspInt = getPortIntByString(internalRtsp);
-                if(internalRtspInt != 0)
-                {
-                    patchCameraBuilder.setInternalRtspPort(internalRtspInt);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-
             patchCameraBuilder.setExternalHost(externalHost);
 
             String externalHttp = externalHttpEdit.getText().toString();
@@ -877,10 +786,9 @@ public class AddEditCameraActivity extends ParentActivity
 
     private void launchTestSnapshot()
     {
-        String internalHost = internalHostEdit.getText().toString();
         String externalHost = externalHostEdit.getText().toString();
 
-        if(internalHost.isEmpty() && externalHost.isEmpty())
+        if(externalHost.isEmpty())
         {
             CustomToast.showInCenter(this, getString(R.string.host_required));
         }
@@ -891,101 +799,12 @@ public class AddEditCameraActivity extends ParentActivity
             String jpgUrlString = jpgUrlEdit.getText().toString();
             final String jpgUrl = buildJpgUrlWithSlash(jpgUrlString);
 
-            // Internal is empty, test external only
-            if(internalHost.isEmpty())
+            String externalFullUrl = getExternalUrl(jpgUrl);
+            if(externalFullUrl != null)
             {
-                String externalFullUrl = getExternalUrl(jpgUrl);
-                if(externalFullUrl != null)
-                {
-                    new TestSnapshotTask(externalFullUrl, username, password,
-                            this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-            }
-            // External is empty, test internal only.
-            else if(externalHost.isEmpty())
-            {
-                String internalFullUrl = getInternalUrl(jpgUrl);
-                if(internalFullUrl != null)
-                {
-                    new TestSnapshotTask(internalFullUrl, username, password,
-                            this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-            }
-            // Both not empty, give options to choose
-            else
-            {
-                final View optionsView = getLayoutInflater().inflate(R.layout
-                        .test_snapshot_options_list, null);
-                final AlertDialog dialog = new AlertDialog.Builder(this).setView(optionsView)
-                        .setCancelable(true).setNegativeButton(R.string.cancel, null).create();
-                dialog.show();
-
-                Button internalButton = (Button) optionsView.findViewById(R.id.btn_test_internal);
-                Button externalButton = (Button) optionsView.findViewById(R.id.btn_test_external);
-                internalButton.setText(internalButton.getText() + " (" + internalHostEdit.getText
-                        ().toString() + ")");
-                externalButton.setText(externalButton.getText() + " (" + externalHostEdit.getText
-                        ().toString() + ")");
-
-                internalButton.setOnClickListener(new OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        dialog.dismiss();
-                        String internalFullUrl = getInternalUrl(jpgUrl);
-                        if(internalFullUrl != null)
-                        {
-                            new TestSnapshotTask(internalFullUrl, username, password,
-                                    AddEditCameraActivity.this).executeOnExecutor(AsyncTask
-                                    .THREAD_POOL_EXECUTOR);
-                        }
-                    }
-                });
-
-                externalButton.setOnClickListener(new OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        dialog.dismiss();
-                        String externalFullUrl = getExternalUrl(jpgUrl);
-                        if(externalFullUrl != null)
-                        {
-                            new TestSnapshotTask(externalFullUrl, username, password,
-                                    AddEditCameraActivity.this).executeOnExecutor(AsyncTask
-                                    .THREAD_POOL_EXECUTOR);
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    /**
-     * Check internal HTTP port is filled or not and return internal URL with
-     * snapshot ending.
-     */
-    private String getInternalUrl(String jpgEnding)
-    {
-        String internalHost = internalHostEdit.getText().toString();
-        String internalHttp = internalHttpEdit.getText().toString();
-        if(internalHttp.isEmpty())
-        {
-            CustomToast.showInCenter(this, getString(R.string.internal_http_required));
-            return null;
-        }
-        else
-        {
-            int internalHttpInt = getPortIntByString(internalHttp);
-            if(internalHttpInt != 0)
-            {
-                return getString(R.string.prefix_http) + internalHost + ":" + internalHttp +
-                        jpgEnding;
-            }
-            else
-            {
-                return null;
+                new TestSnapshotTask(externalFullUrl, username, password,
+                        AddEditCameraActivity.this).executeOnExecutor(AsyncTask
+                        .THREAD_POOL_EXECUTOR);
             }
         }
     }

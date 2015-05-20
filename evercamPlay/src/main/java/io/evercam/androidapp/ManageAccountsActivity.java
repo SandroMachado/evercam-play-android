@@ -7,6 +7,7 @@ import android.accounts.OperationCanceledException;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -36,6 +37,7 @@ import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.dto.AppUser;
 import io.evercam.androidapp.tasks.CheckInternetTask;
+import io.evercam.androidapp.tasks.CheckKeyExpirationTask;
 import io.evercam.androidapp.utils.Constants;
 
 public class ManageAccountsActivity extends ParentActivity
@@ -86,26 +88,24 @@ public class ManageAccountsActivity extends ParentActivity
                     return;
                 }
 
-                final View ed_dialog_layout = getLayoutInflater().inflate(R.layout
+                final View optionListView = getLayoutInflater().inflate(R.layout
                         .manage_account_option_list, null);
 
                 final AlertDialog dialog = CustomedDialog.getAlertDialogNoTitle
-                        (ManageAccountsActivity.this, ed_dialog_layout);
+                        (ManageAccountsActivity.this, optionListView );
                 dialog.show();
 
-                Button openDefault = (Button) ed_dialog_layout.findViewById(R.id.btn_open_account);
-                Button delete = (Button) ed_dialog_layout.findViewById(R.id.btn_delete_account);
+                Button openDefault = (Button) optionListView .findViewById(R.id.btn_open_account);
+                Button delete = (Button) optionListView.findViewById(R.id.btn_delete_account);
 
                 openDefault.setOnClickListener(new OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
                     {
-                        progressDialog.show(ManageAccountsActivity.this.getString(R.string
-                                .switching_account));
-                        updateDefaultUser(user.getEmail(), true, dialog);
-                        ed_dialog_layout.setEnabled(false);
-                        ed_dialog_layout.setClickable(false);
+                        //Check if stored API key and ID before switching account
+                        new CheckKeyExpirationTaskAccount(user, optionListView, dialog)
+                                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 });
 
@@ -314,6 +314,8 @@ public class ManageAccountsActivity extends ParentActivity
         evercamAccount.updateDefaultUser(userEmail);
         AppData.appUsers = evercamAccount.retrieveUserList();
 
+        getMixpanel().identifyUser(AppData.defaultUser.getUsername());
+
         if(closeActivity)
         {
             if(!AppData.defaultUser.getUsername().equals(oldDefaultUser))
@@ -418,6 +420,8 @@ public class ManageAccountsActivity extends ParentActivity
             {
                 showAllAccounts();
                 alertDialog.dismiss();
+
+                getMixpanel().identifyUser(newUser.getUsername());
             }
         }
     }
@@ -450,6 +454,39 @@ public class ManageAccountsActivity extends ParentActivity
             else
             {
                 CustomedDialog.showInternetNotConnectDialog(ManageAccountsActivity.this);
+            }
+        }
+    }
+
+    class CheckKeyExpirationTaskAccount extends CheckKeyExpirationTask
+    {
+        public CheckKeyExpirationTaskAccount(AppUser appUser, View viewToDismiss, AlertDialog
+                dialogToDismiss)
+        {
+            super(appUser, viewToDismiss, dialogToDismiss);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean isExpired)
+        {
+            if(isExpired)
+            {
+                new EvercamAccount(ManageAccountsActivity.this).remove(appUser.getEmail(), null);
+
+                finish();
+                Intent slideIntent = new Intent(ManageAccountsActivity.this, SlideActivity.class);
+                startActivity(slideIntent);
+            }
+            else
+            {
+                progressDialog.show(ManageAccountsActivity.this.getString(R.string.switching_account));
+
+                updateDefaultUser(appUser.getEmail(), true, dialogToDismiss);
+
+                getMixpanel().identifyUser(appUser.getUsername());
+
+                viewToDismiss.setEnabled(false);
+                viewToDismiss.setClickable(false);
             }
         }
     }

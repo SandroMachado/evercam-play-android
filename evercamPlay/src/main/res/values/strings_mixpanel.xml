@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mixpanel_event_sign_in">Sign In</string>
+    <string name="mixpanel_event_sign_up">Create Account</string>
+    <string name="mixpanel_event_create_camera">Create a camera</string>
+    <string name="mixpanel_event_create_shortcut">Create a shortcut</string>
+    <string name="mixpanel_event_use_shortcut">Use shortcut</string>
+</resources>
