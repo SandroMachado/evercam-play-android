@@ -1,5 +1,6 @@
 package io.evercam.androidapp;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -235,7 +236,8 @@ public class AddEditCameraActivity extends ParentActivity
                         String vendorId = getVendorIdFromSpinner();
                         String modelName = getModelNameFromSpinner();
 
-                        new RequestDefaultsTask(vendorId, modelName).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        new RequestDefaultsTask(vendorId, modelName).executeOnExecutor(AsyncTask
+                                .THREAD_POOL_EXECUTOR);
                     }
                 }
             }
@@ -246,12 +248,24 @@ public class AddEditCameraActivity extends ParentActivity
             }
         });
 
-        modelExplanationImageButton.setOnClickListener(new OnClickListener() {
+        modelExplanationImageButton.setOnClickListener(new OnClickListener()
+        {
             @Override
             public void onClick(View v)
             {
-                CustomedDialog.getMessageDialog(AddEditCameraActivity.this,
-                        R.string.msg_model_explanation).show();
+                CustomedDialog.getMessageDialog(AddEditCameraActivity.this, R.string
+                        .msg_model_explanation).show();
+            }
+        });
+
+        jpgUrlEdit.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if(!jpgUrlEdit.isFocusable())
+                {
+                    CustomedDialog.getMessageDialog(AddEditCameraActivity.this, R.string.msg_url_ending_not_editable).show();
+                }
             }
         });
 
@@ -406,36 +420,33 @@ public class AddEditCameraActivity extends ParentActivity
         }
         else
         {
-            if(!externalHost.isEmpty())
+            cameraBuilder.setExternalHost(externalHost);
+
+            String externalHttp = externalHttpEdit.getText().toString();
+            if(!externalHttp.isEmpty())
             {
-                cameraBuilder.setExternalHost(externalHost);
-
-                String externalHttp = externalHttpEdit.getText().toString();
-                if(!externalHttp.isEmpty())
+                int externalHttpInt = getPortIntByString(externalHttp);
+                if(externalHttpInt != 0)
                 {
-                    int externalHttpInt = getPortIntByString(externalHttp);
-                    if(externalHttpInt != 0)
-                    {
-                        cameraBuilder.setExternalHttpPort(externalHttpInt);
-                    }
-                    else
-                    {
-                        return null;
-                    }
+                    cameraBuilder.setExternalHttpPort(externalHttpInt);
                 }
-
-                String externalRtsp = externalRtspEdit.getText().toString();
-                if(!externalRtsp.isEmpty())
+                else
                 {
-                    int externalRtspInt = getPortIntByString(externalRtsp);
-                    if(externalRtspInt != 0)
-                    {
-                        cameraBuilder.setExternalRtspPort(externalRtspInt);
-                    }
-                    else
-                    {
-                        return null;
-                    }
+                    return null;
+                }
+            }
+
+            String externalRtsp = externalRtspEdit.getText().toString();
+            if(!externalRtsp.isEmpty())
+            {
+                int externalRtspInt = getPortIntByString(externalRtsp);
+                if(externalRtspInt != 0)
+                {
+                    cameraBuilder.setExternalRtspPort(externalRtspInt);
+                }
+                else
+                {
+                    return null;
                 }
             }
         }
@@ -712,6 +723,18 @@ public class AddEditCameraActivity extends ParentActivity
                 passwordEdit.setText(basicAuth.getPassword());
             }
             jpgUrlEdit.setText(defaults.getJpgURL());
+
+            //If user specified a specific model, make it not editable
+            if(!model.getName().equals(Model.DEFAULT_MODEL_NAME))
+            {
+                jpgUrlEdit.setFocusable(false);
+                jpgUrlEdit.setClickable(true);
+            }
+            else
+            {
+                jpgUrlEdit.setFocusable(true);
+                jpgUrlEdit.setClickable(true);
+            }
         }
         catch(EvercamException e)
         {
