@@ -1,5 +1,6 @@
 package io.evercam.androidapp;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -47,7 +48,6 @@ public class AddEditCameraActivity extends ParentActivity
     private EditText cameraNameEdit;
     private Spinner vendorSpinner;
     private Spinner modelSpinner;
-    private ImageView modelExplanationImageButton;
     private EditText usernameEdit;
     private EditText passwordEdit;
     private EditText externalHostEdit;
@@ -143,7 +143,7 @@ public class AddEditCameraActivity extends ParentActivity
                     .isEmpty() && externalHost.isEmpty() && externalHttp.isEmpty() &&
                     externalRtsp.isEmpty() && jpgUrl.isEmpty()))
             {
-                CustomedDialog.getConfirmCancleAddCameraDialog(this).show();
+                CustomedDialog.getConfirmCancelAddCameraDialog(this).show();
             }
             else
             {
@@ -160,7 +160,7 @@ public class AddEditCameraActivity extends ParentActivity
         cameraNameEdit = (EditText) findViewById(R.id.add_name_edit);
         vendorSpinner = (Spinner) findViewById(R.id.vendor_spinner);
         modelSpinner = (Spinner) findViewById(R.id.model_spinner);
-        modelExplanationImageButton = (ImageView) findViewById(R.id.model_explanation_btn);
+        ImageView modelExplanationImageButton = (ImageView) findViewById(R.id.model_explanation_btn);
         usernameEdit = (EditText) findViewById(R.id.add_username_edit);
         passwordEdit = (EditText) findViewById(R.id.add_password_edit);
         externalHostEdit = (EditText) findViewById(R.id.add_external_host_edit);
@@ -274,33 +274,22 @@ public class AddEditCameraActivity extends ParentActivity
             @Override
             public void onClick(View v)
             {
-                if(addEditButton.getText().equals(getString(R.string.save_changes)))
+
+                String externalHost = externalHostEdit.getText().toString();
+                if(Commons.isLocalIp(externalHost))
                 {
-                    PatchCameraBuilder patchCameraBuilder = buildPatchCameraWithLocalCheck();
-                    if(patchCameraBuilder != null)
+                    CustomedDialog.getStandardAlertDialog(AddEditCameraActivity.this, new DialogInterface.OnClickListener()
                     {
-                        new PatchCameraTask(patchCameraBuilder.build(),
-                                AddEditCameraActivity.this).executeOnExecutor(AsyncTask
-                                .THREAD_POOL_EXECUTOR);
-                    }
-                    else
-                    {
-                        Log.e(TAG, "Camera to patch is null");
-                    }
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            performAddEdit();
+                        }
+                    }, R.string.msg_local_ip_warning).show();
                 }
                 else
                 {
-                    CameraBuilder cameraBuilder = buildCameraWithLocalCheck();
-                    if(cameraBuilder != null)
-                    {
-                        boolean isFromScan = discoveredCamera != null;
-                        new AddCameraTask(cameraBuilder.build(), AddEditCameraActivity.this,
-                                isFromScan).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    }
-                    else
-                    {
-                        Log.e(TAG, "Camera to add is null");
-                    }
+                    performAddEdit();
                 }
             }
         });
@@ -310,9 +299,56 @@ public class AddEditCameraActivity extends ParentActivity
             @Override
             public void onClick(View v)
             {
-                launchTestSnapshot();
+                String externalHost = externalHostEdit.getText().toString();
+                if(Commons.isLocalIp(externalHost))
+                {
+                    CustomedDialog.getStandardAlertDialog(AddEditCameraActivity.this, new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            launchTestSnapshot();
+                        }
+                    }, R.string.msg_local_ip_warning).show();
+                }
+                else
+                {
+                    launchTestSnapshot();
+                }
             }
         });
+    }
+
+    private void performAddEdit()
+    {
+        if(addEditButton.getText().equals(getString(R.string.save_changes)))
+        {
+            PatchCameraBuilder patchCameraBuilder = buildPatchCameraWithLocalCheck();
+            if(patchCameraBuilder != null)
+            {
+                new PatchCameraTask(patchCameraBuilder.build(),
+                        AddEditCameraActivity.this).executeOnExecutor(AsyncTask
+                        .THREAD_POOL_EXECUTOR);
+            }
+            else
+            {
+                Log.e(TAG, "Camera to patch is null");
+            }
+        }
+        else
+        {
+            CameraBuilder cameraBuilder = buildCameraWithLocalCheck();
+            if(cameraBuilder != null)
+            {
+                boolean isFromScan = discoveredCamera != null;
+                new AddCameraTask(cameraBuilder.build(), AddEditCameraActivity.this,
+                        isFromScan).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+            else
+            {
+                Log.e(TAG, "Camera to add is null");
+            }
+        }
     }
 
     private void fillDiscoveredCameraDetails(DiscoveredCamera camera)

@@ -87,9 +87,7 @@ public class CustomedDialog
         titleTextView.setText(title);
         messageTextView.setText(message);
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity).setView
-                (dialogLayout).setCancelable(false).setPositiveButton(positiveButton,
-                positiveListener);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity).setView(dialogLayout).setCancelable(false).setPositiveButton(positiveButton, positiveListener);
         if(negativeButton != 0)
         {
             dialogBuilder.setNegativeButton(negativeButton, negativeListener);
@@ -115,17 +113,17 @@ public class CustomedDialog
                                                      DialogInterface.OnClickListener
                                                              negativeListener)
     {
-        AlertDialog comfirmCreateDialog = getStandardStyledDialog(activity,
+        AlertDialog confirmCreateDialog = getStandardStyledDialog(activity,
                 R.string.dialog_title_warning, R.string.msg_confirm_create, positiveListener,
                 negativeListener, R.string.yes, R.string.no);
-        return comfirmCreateDialog;
+        return confirmCreateDialog;
     }
 
     public static AlertDialog getConfirmQuitFeedbackDialog(Activity activity,
                                                            DialogInterface.OnClickListener
                                                                    positiveListener)
     {
-        AlertDialog comfirmFeedbackDialog = getStandardStyledDialog(activity,
+        AlertDialog confirmFeedbackDialog = getStandardStyledDialog(activity,
                 R.string.dialog_title_warning, R.string.msg_confirm_quit_feedback,
                 positiveListener, new DialogInterface.OnClickListener()
                 {
@@ -135,7 +133,7 @@ public class CustomedDialog
 
                     }
                 }, R.string.yes, R.string.cancel);
-        return comfirmFeedbackDialog;
+        return confirmFeedbackDialog;
     }
 
     /**
@@ -182,7 +180,7 @@ public class CustomedDialog
     public static AlertDialog getConfirmLogoutDialog(Activity activity,
                                                      DialogInterface.OnClickListener listener)
     {
-        AlertDialog comfirmLogoutDialog = new AlertDialog.Builder(activity)
+        AlertDialog confirmLogoutDialog = new AlertDialog.Builder(activity)
 
                 .setMessage(R.string.msg_confirm_sign_out).setPositiveButton(R.string.yes,
                         listener).setNegativeButton(R.string.no,
@@ -194,13 +192,13 @@ public class CustomedDialog
                                 return;
                             }
                         }).create();
-        return comfirmLogoutDialog;
+        return confirmLogoutDialog;
     }
 
     public static AlertDialog getConfirmCancelScanDialog(Activity activity,
                                                          DialogInterface.OnClickListener listener)
     {
-        AlertDialog comfirmCancelDialog = new AlertDialog.Builder(activity)
+        AlertDialog confirmCancelDialog = new AlertDialog.Builder(activity)
 
                 .setMessage(R.string.msg_confirm_cancel_scan).setPositiveButton(R.string.yes,
                         listener).setNegativeButton(R.string.no,
@@ -212,12 +210,12 @@ public class CustomedDialog
                                 return;
                             }
                         }).create();
-        return comfirmCancelDialog;
+        return confirmCancelDialog;
     }
 
-    public static AlertDialog getConfirmCancleAddCameraDialog(final Activity activity)
+    public static AlertDialog getConfirmCancelAddCameraDialog(final Activity activity)
     {
-        AlertDialog comfirmCancelDialog = new AlertDialog.Builder(activity)
+        AlertDialog confirmCancelDialog = new AlertDialog.Builder(activity)
 
                 .setMessage(R.string.msg_confirm_cancel_add_camera).setPositiveButton(R.string
                         .yes, new DialogInterface.OnClickListener()
@@ -235,14 +233,14 @@ public class CustomedDialog
                         return;
                     }
                 }).create();
-        return comfirmCancelDialog;
+        return confirmCancelDialog;
     }
 
     public static AlertDialog getConfirmRemoveDialog(Activity activity,
                                                      DialogInterface.OnClickListener listener,
                                                      int message)
     {
-        AlertDialog comfirmLogoutDialog = new AlertDialog.Builder(activity)
+        AlertDialog confirmLogoutDialog = new AlertDialog.Builder(activity)
 
                 .setMessage(message).setPositiveButton(R.string.remove,
                         listener).setNegativeButton(R.string.cancel,
@@ -254,7 +252,7 @@ public class CustomedDialog
                                 return;
                             }
                         }).create();
-        return comfirmLogoutDialog;
+        return confirmLogoutDialog;
     }
 
     /**
@@ -329,5 +327,30 @@ public class CustomedDialog
                             }
                         }).create();
         return messageDialog;
+    }
+
+    /**
+     * The standard alert dialog that ask the user for a yes or no choice
+     * @param listener The callback that perform a option when user choose yes
+     * @param message The message resource to show in the dialog
+     * @return
+     */
+    public static AlertDialog getStandardAlertDialog(Activity activity,
+                                                     DialogInterface.OnClickListener listener,
+                                                     int message)
+    {
+        AlertDialog alertDialog = new AlertDialog.Builder(activity)
+
+                .setMessage(message).setPositiveButton(R.string.yes,
+                        listener).setNegativeButton(R.string.no,
+                        new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                return;
+                            }
+                        }).create();
+        return alertDialog;
     }
 }

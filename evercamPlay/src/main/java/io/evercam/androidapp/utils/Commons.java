@@ -474,4 +474,16 @@ public class Commons
         long timeDifferenceLong = (new Date()).getTime() - startTime.getTime();
         return (float) timeDifferenceLong / 1000;
     }
+
+    public static boolean isLocalIp(String ip)
+    {
+        if(ip != null && !ip.isEmpty())
+        {
+            if(ip.matches(Constants.REGULAR_EXPRESSION_LOCAL_IP))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

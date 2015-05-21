@@ -37,4 +37,5 @@
     <string name="msg_model_explanation">If you dont know the Vendor and Model of the camera you can leave it as unknown. \n\nIf you know the Vendor but not the model - use the default option.
         \n\nFrom the Vendor &amp; Model we will try to work out the Snapshot URL ending. \n\n If you want to report a new vendor/model, please send us a feedback from the main menu.</string>
     <string name="msg_url_ending_not_editable">The URL ending is not editable for the selected model. \n\n If you want to modify the URL ending, please select \'Unknown/Other\' as vendor name or select \'Default\' as model name. </string>
+    <string name="msg_local_ip_warning">The IP address you provided is a local IP address, we support external IP addresses only.\n\nDo you still want to precede?</string>
 </resources>
