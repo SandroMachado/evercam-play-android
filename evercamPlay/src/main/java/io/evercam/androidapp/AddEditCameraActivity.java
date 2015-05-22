@@ -857,10 +857,10 @@ public class AddEditCameraActivity extends ParentActivity
             String jpgUrlString = jpgUrlEdit.getText().toString();
             final String jpgUrl = buildJpgUrlWithSlash(jpgUrlString);
 
-            String externalFullUrl = getExternalUrl(jpgUrl);
-            if(externalFullUrl != null)
+            String externalUrl = getExternalUrl();
+            if(externalUrl != null)
             {
-                new TestSnapshotTask(externalFullUrl, username, password,
+                new TestSnapshotTask(externalUrl, jpgUrl, username, password,
                         AddEditCameraActivity.this).executeOnExecutor(AsyncTask
                         .THREAD_POOL_EXECUTOR);
             }
@@ -871,7 +871,7 @@ public class AddEditCameraActivity extends ParentActivity
      * Check external HTTP port is filled or not and return external URL with
      * snapshot ending.
      */
-    private String getExternalUrl(String jpgEnding)
+    private String getExternalUrl()
     {
         String externalHost = externalHostEdit.getText().toString();
         String externalHttp = externalHttpEdit.getText().toString();
@@ -885,8 +885,7 @@ public class AddEditCameraActivity extends ParentActivity
             int externalHttpInt = getPortIntByString(externalHttp);
             if(externalHttpInt != 0)
             {
-                return getString(R.string.prefix_http) + externalHost + ":" + externalHttp +
-                        jpgEnding;
+                return getString(R.string.prefix_http) + externalHost + ":" + externalHttp;
             }
             else
             {
