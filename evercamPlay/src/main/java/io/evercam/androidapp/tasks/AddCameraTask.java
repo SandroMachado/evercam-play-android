@@ -3,18 +3,14 @@ package io.evercam.androidapp.tasks;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import org.apache.http.cookie.Cookie;
-
-import java.util.ArrayList;
 
 import io.evercam.Camera;
 import io.evercam.CameraDetail;
 import io.evercam.EvercamException;
+import io.evercam.Snapshot;
 import io.evercam.androidapp.AddEditCameraActivity;
 import io.evercam.androidapp.EvercamPlayApplication;
 import io.evercam.androidapp.R;
@@ -27,7 +23,6 @@ import io.evercam.androidapp.dto.CameraStatus;
 import io.evercam.androidapp.dto.EvercamCamera;
 import io.evercam.androidapp.feedback.KeenHelper;
 import io.evercam.androidapp.feedback.NewCameraFeedbackItem;
-import io.evercam.androidapp.utils.Commons;
 import io.evercam.androidapp.utils.Constants;
 import io.evercam.androidapp.video.VideoActivity;
 
@@ -39,7 +34,6 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
     private CustomProgressDialog customProgressDialog;
     private String errorMessage = null;
     private boolean isReachableExternally = false;
-    private boolean isReachableInternally = false;
     private Boolean readyToCreateCamera = null;
     private boolean isFromScan;
 
@@ -116,12 +110,8 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
         // camera
         // If neither of the urls return a snapshot, warn the user.
         isReachableExternally = isSnapshotReachableExternally();
-        if(!isReachableExternally)
-        {
-            isReachableInternally = isSnapshotReachableInternally();
-        }
 
-        if(isReachableExternally || isReachableInternally)
+        if(isReachableExternally)
         {
             publishProgress(true);
         }
@@ -173,6 +163,7 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
+                                customProgressDialog.setMessage(activity.getString(R.string.creating_camera));
                                 readyToCreateCamera = true;
                                 return;
                             }
@@ -202,17 +193,18 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
         if(externalHost != null && !externalHost.isEmpty())
         {
             String portString = String.valueOf(cameraDetail.getExternalHttpPort());
-            String externalFullUrl = buildFullHttpUrl(externalHost, portString, jpgUrl);
+            String externalUrl = buildHttpUrl(externalHost, portString);
 
-            ArrayList<Cookie> cookies = new ArrayList<Cookie>();
             try
             {
-                Drawable drawable = Commons.getDrawablefromUrlAuthenticated(externalFullUrl,
-                        username, password, cookies, 5000);
-                if(drawable != null)
+                Snapshot snapshot = Camera.testSnapshot(externalUrl, jpgUrl, username, password);
+                byte[] snapshotData = snapshot.getData();
+                Bitmap bitmap = BitmapFactory.decodeByteArray(snapshotData, 0, snapshotData.length);
+
+
+                if(bitmap != null)
                 {
                     // Save this image.
-                    Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
                     new Thread(new SaveImageRunnable(activity, bitmap,
                             cameraDetail.getId())).start();
                     return true;
@@ -226,50 +218,13 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
         return false;
     }
 
-    private boolean isSnapshotReachableInternally()
-    {
-        String internalHost = cameraDetail.getInternalHost();
-
-        final String username = cameraDetail.getCameraUsername();
-        final String password = cameraDetail.getCameraPassword();
-        String jpgUrlString = cameraDetail.getJpgUrl();
-
-        final String jpgUrl = AddEditCameraActivity.buildJpgUrlWithSlash(jpgUrlString);
-
-        if(internalHost != null && !internalHost.isEmpty())
-        {
-            String portString = String.valueOf(cameraDetail.getInternalHttpPort());
-            String internalFullUrl = buildFullHttpUrl(internalHost, portString, jpgUrl);
-
-            ArrayList<Cookie> cookies = new ArrayList<Cookie>();
-            try
-            {
-                Drawable drawable = Commons.getDrawablefromUrlAuthenticated(internalFullUrl,
-                        username, password, cookies, 5000);
-                if(drawable != null)
-                {
-                    // Save this image.
-                    Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-                    new Thread(new SaveImageRunnable(activity, bitmap,
-                            cameraDetail.getId())).start();
-                    return true;
-                }
-            }
-            catch(Exception e)
-            {
-                Log.e(TAG, e.toString());
-            }
-        }
-        return false;
-    }
-
-    private String buildFullHttpUrl(String host, String portString, String jpgEnding)
+    private String buildHttpUrl(String host, String portString)
     {
         if(portString == null || portString.isEmpty() || portString.equals("0"))
         {
             portString = "80";
         }
-        return activity.getString(R.string.prefix_http) + host + ":" + portString + jpgEnding;
+        return activity.getString(R.string.prefix_http) + host + ":" + portString;
     }
 
     private EvercamCamera createCamera(CameraDetail detail)
@@ -279,7 +234,7 @@ public class AddCameraTask extends AsyncTask<Void, Boolean, EvercamCamera>
             Camera camera = Camera.create(detail);
             // Camera camera = Camera.getById(detail.getId(), false);
             EvercamCamera evercamCamera = new EvercamCamera().convertFromEvercam(camera);
-            if(isReachableExternally || isReachableInternally)
+            if(isReachableExternally)
             {
                 evercamCamera.setStatus(CameraStatus.ACTIVE);
             }

@@ -44,6 +44,8 @@ public final class Constants
      */
     //Username should only contains lower case letters, numbers, dashes & underscores
     public static final String REGULAR_EXPRESSION_USERNAME = "^[A-Za-z0-9_-]*$";
+    //Private IP address
+    public static final String REGULAR_EXPRESSION_LOCAL_IP = "(127.0.0.1)|(192.168.*$)|(172.1[6-9].*$)|(172.2[0-9].*$)|(172.3[0-1].*$)|(10.*$)";
 
     public static final String API_MESSAGE_UNAUTHORIZED = "Unauthenticated";
     public static final String API_MESSAGE_INVALID_API_KEY = "Invalid user api key/id";

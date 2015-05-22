@@ -1,15 +1,16 @@
 package io.evercam.androidapp.tasks;
 
 import android.app.Activity;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.apache.http.cookie.Cookie;
-
 import java.net.URL;
-import java.util.ArrayList;
 
+import io.evercam.Camera;
+import io.evercam.Snapshot;
 import io.evercam.androidapp.R;
 import io.evercam.androidapp.custom.CustomProgressDialog;
 import io.evercam.androidapp.custom.CustomToast;
@@ -17,7 +18,6 @@ import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.feedback.KeenHelper;
 import io.evercam.androidapp.feedback.TestSnapshotFeedbackItem;
-import io.evercam.androidapp.utils.Commons;
 import io.evercam.network.discovery.PortScan;
 import io.keen.client.java.KeenClient;
 
@@ -25,15 +25,17 @@ public class TestSnapshotTask extends AsyncTask<Void, Void, Drawable>
 {
     private final String TAG = "TestSnapshotTask";
     private String url;
+    private String ending;
     private String username;
     private String password;
     private Activity activity;
     private CustomProgressDialog customProgressDialog;
     private String errorMessage = null;
 
-    public TestSnapshotTask(String url, String username, String password, Activity activity)
+    public TestSnapshotTask(String url, String ending, String username, String password, Activity activity)
     {
         this.url = url;
+        this.ending = ending;
         this.username = username;
         this.password = password;
         this.activity = activity;
@@ -66,10 +68,11 @@ public class TestSnapshotTask extends AsyncTask<Void, Void, Drawable>
             return null;
         }
 
-        ArrayList<Cookie> cookies = new ArrayList<Cookie>();
         try
         {
-            return Commons.getDrawablefromUrlAuthenticated(url, username, password, cookies, 5000);
+            Snapshot snapshot = Camera.testSnapshot(url, ending, username, password);
+            byte[] snapshotData = snapshot.getData();
+            return new BitmapDrawable(BitmapFactory.decodeByteArray(snapshotData, 0, snapshotData.length));
         }
         catch(Exception e)
         {

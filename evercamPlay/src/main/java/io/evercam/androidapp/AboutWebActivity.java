@@ -15,7 +15,14 @@ public class AboutWebActivity extends WebActivity
 
         setContentView(R.layout.activity_web);
 
-        loadPage();
+        if(bundle != null)
+        {
+            loadPage();
+        }
+        else
+        {
+            finish();
+        }
     }
 
     @Override
