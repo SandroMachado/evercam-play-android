@@ -3,8 +3,6 @@ package io.evercam.androidapp.test.utils;
 import android.content.Context;
 import android.test.AndroidTestCase;
 
-import io.evercam.androidapp.utils.Commons;
-
 public class CommonsTest extends AndroidTestCase
 {
     Context mContext;

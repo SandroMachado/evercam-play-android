@@ -7,10 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.apache.http.cookie.Cookie;
-
 import java.net.URL;
-import java.util.ArrayList;
 
 import io.evercam.Camera;
 import io.evercam.Snapshot;
@@ -21,7 +18,6 @@ import io.evercam.androidapp.custom.CustomedDialog;
 import io.evercam.androidapp.dto.AppData;
 import io.evercam.androidapp.feedback.KeenHelper;
 import io.evercam.androidapp.feedback.TestSnapshotFeedbackItem;
-import io.evercam.androidapp.utils.Commons;
 import io.evercam.network.discovery.PortScan;
 import io.keen.client.java.KeenClient;
 
