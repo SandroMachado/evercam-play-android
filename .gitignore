@@ -40,3 +40,10 @@ lint.xml
 # Exclude Hikvision SDK
 HCNetSDK.jar
 PlayerSDK.jar
+
+# Gstreamer sources
+evercamPlay/src/main/assets/
+evercamPlay/src/main/gst-build-armeabi/
+evercamPlay/src/main/jniLibs/
+evercamPlay/src/main/obj/
+evercamPlay/src/main/src/
