@@ -778,8 +778,13 @@ public class CamerasActivity extends ParentActivity
     private void initDataCollectionObjects()
     {
         startTime = new Date();
-        logger = AndroidLogger.getLogger(getApplicationContext(), getPropertyReader()
-                        .getPropertyStr(PropertyReader.KEY_LOGENTRIES_TOKEN), false);
+        String logentriesToken = getPropertyReader()
+                .getPropertyStr(PropertyReader.KEY_LOGENTRIES_TOKEN);
+        if(!logentriesToken.isEmpty())
+        {
+            logger = AndroidLogger.getLogger(getApplicationContext(), logentriesToken, false);
+        }
+
         client = KeenHelper.getClient(this);
     }
 
@@ -803,7 +808,7 @@ public class CamerasActivity extends ParentActivity
             LoadTimeFeedbackItem feedbackItem = new LoadTimeFeedbackItem(this,
                     username, databaseLoadTime, timeDifferenceFloat);
             databaseLoadTime = 0;
-            logger.info(feedbackItem.toJson());
+            sendToLogentries(logger, feedbackItem.toJson());
 
             feedbackItem.sendToKeenIo(client);
         }

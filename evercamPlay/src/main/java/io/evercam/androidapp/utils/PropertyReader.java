@@ -44,12 +44,16 @@ public class PropertyReader
         {
             Log.e(TAG, e.toString());
         }
+        catch(Exception e)
+        {
+            Log.e(TAG, e.getMessage());
+        }
         return properties;
     }
 
     public String getPropertyStr(String propertyName)
     {
-        if(isPropertyExist(propertyName))
+        if(properties != null && isPropertyExist(propertyName))
         {
             return properties.getProperty(propertyName);
         }
@@ -61,9 +65,12 @@ public class PropertyReader
 
     public boolean isPropertyExist(String key)
     {
-        if(properties.containsKey(key))
+        if(properties != null)
         {
-            return true;
+            if(properties.containsKey(key))
+            {
+                return true;
+            }
         }
         return false;
     }

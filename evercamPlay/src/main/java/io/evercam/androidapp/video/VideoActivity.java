@@ -482,8 +482,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private void initAnalyticsObjects()
     {
-        logger = AndroidLogger.getLogger(getApplicationContext(), getPropertyReader()
-                .getPropertyStr(PropertyReader.KEY_LOGENTRIES_TOKEN), false);
+        String logentriesToken = getPropertyReader()
+                .getPropertyStr(PropertyReader.KEY_LOGENTRIES_TOKEN);
+        if(!logentriesToken.isEmpty())
+        {
+            logger = AndroidLogger.getLogger(getApplicationContext(), logentriesToken, false);
+        }
+
         client = KeenHelper.getClient(this);
     }
 
@@ -686,7 +691,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private void startPlay()
     {
-        logger.info("User: " + username + " is viewing camera: " + startingCameraID);
+        sendToLogentries(logger, "User: " + username + " is viewing camera: " + startingCameraID);
 
         paused = false;
         end = false;
@@ -1581,7 +1586,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                 failedItem.setCameraId(evercamCamera.getCameraId());
                                 failedItem.setUrl(player.getCurrentMRL());
                                 failedItem.setType(StreamFeedbackItem.TYPE_RTSP);
-                                logger.info(failedItem.toJson());
+                                sendToLogentries(logger, failedItem.toJson());
                                 failedItem.sendToKeenIo(client);
                             }
                             isPlayingJpg = true;
@@ -1629,7 +1634,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                             startTime = null;
                         }
 
-                        logger.info(successItem.toJson());
+                        sendToLogentries(logger, successItem.toJson());
                         successItem.sendToKeenIo(client);
 
                         break;
@@ -1774,7 +1779,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                     successItem.setCameraId(evercamCamera.getCameraId());
                                     successItem.setUrl(successUrl);
                                     successItem.setType(StreamFeedbackItem.TYPE_JPG);
-                                    logger.info(successItem.toJson());
+                                    sendToLogentries(logger, successItem.toJson());
                                     successItem.sendToKeenIo(client);
                                 }
                                 else
@@ -1813,7 +1818,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                 failedItem.setCameraId(evercamCamera.getCameraId());
                                 failedItem.setUrl(evercamCamera.getExternalSnapshotUrl());
                                 failedItem.setType(StreamFeedbackItem.TYPE_JPG);
-                                logger.info(failedItem.toJson());
+                                sendToLogentries(logger, failedItem.toJson());
                                 failedItem.sendToKeenIo(client);
                             }
                         }
