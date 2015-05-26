@@ -109,16 +109,19 @@ public class StreamFeedbackItem extends FeedbackItem
     @Override
     public void sendToKeenIo(final KeenClient client)
     {
-        final FeedbackItem feedbackItem = this;
-        new Thread(new Runnable()
+        if(client != null)
         {
-
-            @Override
-            public void run()
+            final FeedbackItem feedbackItem = this;
+            new Thread(new Runnable()
             {
-                client.addEvent(Constants.KEEN_COLLECTION_STREAM_LOADING_TIME,
-                        feedbackItem.toHashMap());
-            }
-        }).start();
+
+                @Override
+                public void run()
+                {
+                    client.addEvent(Constants.KEEN_COLLECTION_STREAM_LOADING_TIME, feedbackItem.toHashMap());
+
+                }
+            }).start();
+        }
     }
 }
