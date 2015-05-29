@@ -18,7 +18,14 @@ public class RecordingWebActivity extends WebActivity
 
         setContentView(R.layout.activity_recording_web);
 
-        loadPage();
+        if(bundle != null)
+        {
+            loadPage();
+        }
+        else
+        {
+            finish();
+        }
     }
 
     @Override

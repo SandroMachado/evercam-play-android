@@ -523,8 +523,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private void initAnalyticsObjects()
     {
-        logger = AndroidLogger.getLogger(getApplicationContext(), getPropertyReader()
-                .getPropertyStr(PropertyReader.KEY_LOGENTRIES_TOKEN), false);
+        String logentriesToken = getPropertyReader()
+                .getPropertyStr(PropertyReader.KEY_LOGENTRIES_TOKEN);
+        if(!logentriesToken.isEmpty())
+        {
+            logger = AndroidLogger.getLogger(getApplicationContext(), logentriesToken, false);
+        }
+
         client = KeenHelper.getClient(this);
     }
 
@@ -728,7 +733,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private void startPlay()
     {
-        logger.info("User: " + username + " is viewing camera: " + startingCameraID);
+        sendToLogentries(logger, "User: " + username + " is viewing camera: " + startingCameraID);
 
         paused = false;
         end = false;
@@ -1567,8 +1572,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 //        }
 //    }
 
-
-
     private class DownloadImageTask extends AsyncTask<Void, Void, Drawable>
     {
         private long myStartImageTime;
@@ -1678,7 +1681,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                     successItem.setCameraId(evercamCamera.getCameraId());
                                     successItem.setUrl(successUrl);
                                     successItem.setType(StreamFeedbackItem.TYPE_JPG);
-                                    logger.info(successItem.toJson());
+                                    sendToLogentries(logger, successItem.toJson());
                                     successItem.sendToKeenIo(client);
                                 }
                                 else
@@ -1717,7 +1720,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                 failedItem.setCameraId(evercamCamera.getCameraId());
                                 failedItem.setUrl(evercamCamera.getExternalSnapshotUrl());
                                 failedItem.setType(StreamFeedbackItem.TYPE_JPG);
-                                logger.info(failedItem.toJson());
+                                sendToLogentries(logger, failedItem.toJson());
                                 failedItem.sendToKeenIo(client);
                             }
                         }

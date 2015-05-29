@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 
+import com.logentries.android.AndroidLogger;
 import com.splunk.mint.Mint;
 
 import io.evercam.androidapp.feedback.MixpanelHelper;
@@ -92,6 +93,14 @@ public class ParentActivity extends Activity
         if(Constants.isAppTrackingEnabled)
         {
             Mint.logException(e);
+        }
+    }
+
+    public void sendToLogentries(AndroidLogger logger, String message)
+    {
+        if(logger != null)
+        {
+            logger.info(message);
         }
     }
 

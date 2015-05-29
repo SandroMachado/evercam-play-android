@@ -63,26 +63,28 @@ public class ScanFeedbackItem extends FeedbackItem
     {
         final KeenClient client = KeenHelper.getClient(context);
 
-        final FeedbackItem feedbackItem = this;
-        new Thread(new Runnable()
+        if(client != null)
         {
-
-            @Override
-            public void run()
+            final FeedbackItem feedbackItem = this;
+            new Thread(new Runnable()
             {
-                client.addEvent(Constants.KEEN_COLLECTION_SCANNING_METRIC,
-                        feedbackItem.toHashMap());
 
-                if(cameraList.size() != 0)
+                @Override
+                public void run()
                 {
-                    for(DiscoveredCamera camera : cameraList)
-                    {
-                        client.addEvent(Constants.KEEN_COLLECTION_DISCOVERED_CAMERAS,
-                                toCameraHashMap(camera));
-                    }
-                }
+                    client.addEvent(Constants.KEEN_COLLECTION_SCANNING_METRIC, feedbackItem.toHashMap());
 
-            }
-        }).start();
+
+                    if(cameraList.size() != 0)
+                    {
+                        for(DiscoveredCamera camera : cameraList)
+                        {
+                            client.addEvent(Constants.KEEN_COLLECTION_DISCOVERED_CAMERAS, toCameraHashMap(camera));
+                        }
+                    }
+
+                }
+            }).start();
+        }
     }
 }
