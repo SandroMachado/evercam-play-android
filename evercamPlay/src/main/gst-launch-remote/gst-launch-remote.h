@@ -26,6 +26,14 @@
 #include <gst/video/video.h>
 
 #define PORT 9123
+#define USER_DATA_LENGTH 256
+
+#ifdef __ANDROID__
+#include <android/log.h>
+
+#undef GST_DEBUG
+#define GST_DEBUG(...) __android_log_print(ANDROID_LOG_INFO, "gstreamer-debug", __VA_ARGS__);
+#endif
 
 typedef struct {
   gpointer app;
@@ -36,7 +44,7 @@ typedef struct {
 } GstLaunchRemoteAppContext;
 
 typedef struct {
-  GThread *thread;
+  //GThread *thread;
   GMainContext *context;
   GMainLoop *main_loop;
 
@@ -45,6 +53,8 @@ typedef struct {
   gboolean initialized;
 
   gchar *pipeline_string;
+  gchar username[USER_DATA_LENGTH];
+  gchar password[USER_DATA_LENGTH];
   GstElement *pipeline;
   GstElement *video_sink;
   GstState target_state;
@@ -68,7 +78,11 @@ GstLaunchRemote * gst_launch_remote_new               (const GstLaunchRemoteAppC
 void              gst_launch_remote_free              (GstLaunchRemote * self);
 void              gst_launch_remote_play              (GstLaunchRemote * self);
 void              gst_launch_remote_pause             (GstLaunchRemote * self);
+void              gst_launch_remote_stop              (GstLaunchRemote * self);
 void              gst_launch_remote_set_window_handle (GstLaunchRemote * self, guintptr handle);
 void              gst_launch_remote_call_set_pipeline (GstLaunchRemote * self, const gchar * pipeline_string);
+// src stuff
+void              gst_launch_remote_set_username (GstLaunchRemote * self, const gchar * username);
+void              gst_launch_remote_set_password (GstLaunchRemote * self, const gchar * password);
 
 #endif

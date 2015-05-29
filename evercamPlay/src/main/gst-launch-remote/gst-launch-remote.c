@@ -27,6 +27,9 @@
 GST_DEBUG_CATEGORY_STATIC (debug_category);
 #define GST_CAT_DEFAULT debug_category
 
+// source stuff
+static void source_setup (GstElement *pipeline, GstElement *source, GstLaunchRemote *data);
+
 static void gst_launch_remote_set_pipeline (GstLaunchRemote * self,
    const gchar * pipeline_string);
 
@@ -84,8 +87,8 @@ priv_glib_printerr_handler (const gchar * string)
 
 /* Based on GLib's default handler */
 #define CHAR_IS_SAFE(wc) (!((wc < 0x20 && wc != '\t' && wc != '\n' && wc != '\r') || \
-			    (wc == 0x7f) || \
-			    (wc >= 0x80 && wc < 0xa0)))
+                            (wc == 0x7f) || \
+                            (wc >= 0x80 && wc < 0xa0)))
 #define FORMAT_UNSIGNED_BUFSIZE ((GLIB_SIZEOF_LONG * 3) + 3)
 #define	STRING_BUFFER_SIZE	(FORMAT_UNSIGNED_BUFSIZE + 32)
 #define	ALERT_LEVELS		(G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL | G_LOG_LEVEL_WARNING)
@@ -108,7 +111,7 @@ escape_string (GString * string)
 
       pos = p - string->str;
 
-      /* Emit invalid UTF-8 as hex escapes 
+      /* Emit invalid UTF-8 as hex escapes
        */
       tmp = g_strdup_printf ("\\x%02x", (guint) (guchar) * p);
       g_string_erase (string, pos, 1);
@@ -713,6 +716,8 @@ gst_launch_remote_set_pipeline (GstLaunchRemote * self, const gchar * pipeline_s
     return;
   }
 
+  g_signal_connect (self->pipeline, "source-setup", G_CALLBACK (source_setup), self);
+
   bus = gst_element_get_bus (self->pipeline);
   bus_source = gst_bus_create_watch (bus);
   g_source_set_callback (bus_source, (GSourceFunc) gst_bus_async_signal_func,
@@ -902,13 +907,15 @@ GstLaunchRemote *
 gst_launch_remote_new (const GstLaunchRemoteAppContext * ctx)
 {
   GstLaunchRemote *self = g_slice_new0 (GstLaunchRemote);
+  memset(self->username, 0, USER_DATA_LENGTH);
+  memset(self->password, 0, USER_DATA_LENGTH);
   static GOnce once = G_ONCE_INIT;
 
   g_once (&once, gst_launch_remote_init, NULL);
 
   self->app_context = *ctx;
   self->base_time = GST_CLOCK_TIME_NONE;
-  self->thread = g_thread_new ("gst-launch-remote", gst_launch_remote_main, self);
+  //self->thread = g_thread_new ("gst-launch-remote", gst_launch_remote_main, self);
 
   return self;
 }
@@ -917,14 +924,14 @@ void
 gst_launch_remote_free (GstLaunchRemote * self)
 {
   g_main_loop_quit (self->main_loop);
-  g_thread_join (self->thread);
+  //g_thread_join (self->thread);
   g_slice_free (GstLaunchRemote, self);
 }
 
 void
 gst_launch_remote_call_set_pipeline(GstLaunchRemote * self, const gchar * pipeline_string)
 {
-	gst_launch_remote_set_pipeline (self, pipeline_string);
+        gst_launch_remote_set_pipeline (self, pipeline_string);
 }
 
 void
@@ -979,6 +986,32 @@ gst_launch_remote_pause (GstLaunchRemote * self)
 }
 
 void
+gst_launch_remote_stop (GstLaunchRemote * self)
+{
+    GstStateChangeReturn state_ret;
+
+    if (!self || !self->pipeline_string)
+      return;
+
+    if (!self->pipeline) {
+      gchar *pipeline_string = g_strdup (self->pipeline_string);
+      gst_launch_remote_set_pipeline (self, pipeline_string);
+      g_free (pipeline_string);
+    }
+
+    GST_DEBUG ("Setting state to NULL");
+
+    self->target_state = GST_STATE_NULL;
+    state_ret = gst_element_set_state (self->pipeline,  GST_STATE_NULL);
+    self->is_live = (state_ret == GST_STATE_CHANGE_NO_PREROLL);
+
+    if (state_ret == GST_STATE_CHANGE_FAILURE) {
+      GST_ERROR ("Failed to set pipeline to NULL");
+      set_message (self, "Failed to set pipeline to NULL");
+    }
+}
+
+void
 gst_launch_remote_set_window_handle (GstLaunchRemote * self, guintptr handle)
 {
   if (!self)
@@ -1016,4 +1049,23 @@ gst_launch_remote_set_window_handle (GstLaunchRemote * self, guintptr handle)
   }
 
   check_initialization_complete (self);
+}
+
+// Source callbacks
+
+/* This function is called when playbin has created the rtsprc element, so we have
+ * a chance to configure it. */
+static void source_setup (GstElement *pipeline, GstElement *source, GstLaunchRemote *data)
+{
+    g_object_set (G_OBJECT (source), "latency", 0, NULL);
+    g_object_set (G_OBJECT (source), "drop-on-latency", 1, NULL);
+
+    if (strlen(data->username))
+        g_object_set (G_OBJECT (source), "user-id", data->username, NULL);
+
+    if (strlen(data->password))
+        g_object_set (G_OBJECT (source), "user-pw", data->password, NULL);
+
+    g_object_set (G_OBJECT (source), "protocols", 4, NULL);
+    g_object_set (G_OBJECT (source), "buffer-size", 0, NULL);
 }

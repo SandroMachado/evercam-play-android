@@ -179,7 +179,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private native void nativeFinalize();
     private native void nativePlay();
     private native void nativeSetPipeline(String pipelineString);
+    private native void nativeSetUsername(String username);
+    private native void nativeSetPassword(String password);
     private native void nativePause();
+    private native void nativeStop();
     private static native boolean nativeClassInit();
     private native void nativeSurfaceInit(Object surface);
     private native void nativeSurfaceFinalize();
@@ -388,9 +391,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     @Override
     protected void onDestroy()
     {
+        Log.d(TAG, "onDestroy");
         super.onDestroy();
         //The nativeFinalize() crashes the app and give the error: Fatal signal 6 (SIGABRT)
-        //nativeFinalize();
+        nativeStop();
+        nativeFinalize();
+        nativeSurfaceFinalize();
     }
 
     @Override
@@ -876,14 +882,14 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
         onMediaSizeChanged(width, height);
 
-        nativeSurfaceInit (surfaceholder.getSurface());
+        nativeSurfaceInit(surfaceholder.getSurface());
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceholder)
     {
         Log.d("GStreamer", "Surface destroyed");
-        nativeSurfaceFinalize ();
+        nativeSurfaceFinalize();
     }
 
     private void setSize(int width, int height)
@@ -937,7 +943,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         if(evercamCamera.hasRtspUrl())
         {
             nativeSetPipeline(getPipelineFromCamera(camera));
-            nativePlay();
+            play(camera);
 
             surfaceView.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.GONE);
@@ -951,14 +957,16 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         }
     }
 
+    private void play(EvercamCamera camera)
+    {
+        nativeSetUsername(camera.getUsername());
+        nativeSetPassword(camera.getPassword());
+        nativePlay();
+    }
+
     private String getPipelineFromCamera(EvercamCamera camera)
     {
-        String url = camera.getExternalRtspUrl();
-        String username = camera.getUsername();
-        String password = camera.getPassword();
-
-        String pipeline = "rtspsrc protocols=4 location=" + url + " user-id=" + username + " user-pw=" + password + " latency=0 drop-on-latency=1 ! decodebin ! videoconvert ! autovideosink";
-
+        String pipeline = "playbin uri=" + camera.getExternalRtspUrl();
         Log.d(TAG, "Launching pipeline: " + pipeline + "\n" + evercamCamera.toString());
 
         return pipeline;
@@ -972,7 +980,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private void restartPlay(EvercamCamera camera)
     {
         nativeSetPipeline(getPipelineFromCamera(camera));
-        nativePlay();
+        play(camera);
     }
 
     private void pausePlayer()

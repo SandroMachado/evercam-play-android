@@ -208,14 +208,37 @@ android_launch_finalize (JNIEnv * env, jobject thiz)
 void
 Java_io_evercam_androidapp_video_VideoActivity_nativeSetPipeline(JNIEnv * env, jobject thiz, jstring pipeline)
 {
-	  AndroidLaunch *app = GET_CUSTOM_DATA (env, thiz, app_data_field_id);
+    AndroidLaunch *app = GET_CUSTOM_DATA (env, thiz, app_data_field_id);
 
-	  if (!app)
-	    return;
+    if (!app)
+        return;
 
-	  const char* p_pipeline = (*env)->GetStringUTFChars(env, pipeline, 0);
+    const char* p_pipeline = (*env)->GetStringUTFChars(env, pipeline, 0);
+    gst_launch_remote_call_set_pipeline (app->launch, p_pipeline);
+}
 
-	  gst_launch_remote_call_set_pipeline (app->launch, p_pipeline);
+void
+Java_io_evercam_androidapp_video_VideoActivity_nativeSetUsername(JNIEnv * env, jobject thiz, jstring username)
+{
+    AndroidLaunch *app = GET_CUSTOM_DATA (env, thiz, app_data_field_id);
+
+    if (!app)
+        return;
+
+    const char* uname = (*env)->GetStringUTFChars(env, username, 0);
+    strcpy(app->launch->username, uname);
+}
+
+void
+Java_io_evercam_androidapp_video_VideoActivity_nativeSetPassword(JNIEnv * env, jobject thiz, jstring password)
+{
+    AndroidLaunch *app = GET_CUSTOM_DATA (env, thiz, app_data_field_id);
+
+    if (!app)
+      return;
+
+    const char* pw = (*env)->GetStringUTFChars(env, password, 0);
+    strcpy(app->launch->password, pw);
 }
 
 static void
@@ -238,6 +261,17 @@ android_launch_pause (JNIEnv * env, jobject thiz)
     return;
 
   gst_launch_remote_pause (app->launch);
+}
+
+static void
+android_launch_stop (JNIEnv * env, jobject thiz)
+{
+  AndroidLaunch *app = GET_CUSTOM_DATA (env, thiz, app_data_field_id);
+
+  if (!app)
+    return;
+
+  gst_launch_remote_stop (app->launch);
 }
 
 static jboolean
@@ -310,6 +344,7 @@ static JNINativeMethod native_methods[] = {
   {"nativeFinalize", "()V", (void *) android_launch_finalize},
   {"nativePlay", "()V", (void *) android_launch_play},
   {"nativePause", "()V", (void *) android_launch_pause},
+  {"nativeStop", "()V", (void *) android_launch_stop},
   {"nativeSurfaceInit", "(Ljava/lang/Object;)V",
       (void *) android_launch_surface_init},
   {"nativeSurfaceFinalize", "()V", (void *) android_launch_surface_finalize},
