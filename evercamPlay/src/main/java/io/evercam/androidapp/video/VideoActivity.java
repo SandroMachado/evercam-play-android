@@ -181,11 +181,14 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private native void nativeSetUri(String uri);
     private native void nativeSetUsername(String username);
     private native void nativeSetPassword(String password);
+    private native void nativeSetTcpTimeout(int value);
     private native void nativePause();
     private native void nativeStop();
     private static native boolean nativeClassInit();
     private native void nativeSurfaceInit(Object surface);
     private native void nativeSurfaceFinalize();
+
+    private final int TCP_TIMEOUT = 3 * 10000; // 3 seconds
 
     static
     {
@@ -236,6 +239,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 return;
             }
             nativeInit();
+
+            nativeSetTcpTimeout(TCP_TIMEOUT);
 
             setContentView(R.layout.video_activity_layout);
 

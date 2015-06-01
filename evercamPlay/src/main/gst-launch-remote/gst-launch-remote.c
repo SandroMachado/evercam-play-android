@@ -915,6 +915,7 @@ gst_launch_remote_new (const GstLaunchRemoteAppContext * ctx)
 
   self->app_context = *ctx;
   self->base_time = GST_CLOCK_TIME_NONE;
+  self->tcp_timeout = 20000000;
   //self->thread = g_thread_new ("gst-launch-remote", gst_launch_remote_main, self);
 
   return self;
@@ -1068,4 +1069,5 @@ static void source_setup (GstElement *pipeline, GstElement *source, GstLaunchRem
 
     g_object_set (G_OBJECT (source), "protocols", 4, NULL);
     g_object_set (G_OBJECT (source), "buffer-size", 0, NULL);
+    g_object_set (G_OBJECT (source), "tcp-timeout", data->tcp_timeout, NULL);
 }

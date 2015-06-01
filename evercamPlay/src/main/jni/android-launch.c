@@ -261,6 +261,17 @@ Java_io_evercam_androidapp_video_VideoActivity_nativeSetUri(JNIEnv * env, jobjec
     (*env)->ReleaseStringUTFChars (env, arg_uri, uri);
 }
 
+void
+Java_io_evercam_androidapp_video_VideoActivity_nativeSetTcpTimeout(JNIEnv * env, jobject thiz, jint value)
+{
+    AndroidLaunch *app = GET_CUSTOM_DATA (env, thiz, app_data_field_id);
+
+    if (!app)
+      return;
+
+    app->launch->tcp_timeout = value;
+}
+
 static void
 android_launch_play (JNIEnv * env, jobject thiz)
 {

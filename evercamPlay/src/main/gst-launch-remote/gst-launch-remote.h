@@ -59,6 +59,7 @@ typedef struct {
   GstState target_state;
   gboolean is_live;
   gchar *last_message;
+  guint64 tcp_timeout;
 
   GstClock *net_clock;
   GstClockTime base_time;
