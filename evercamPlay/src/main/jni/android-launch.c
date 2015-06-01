@@ -272,6 +272,56 @@ Java_io_evercam_androidapp_video_VideoActivity_nativeSetTcpTimeout(JNIEnv * env,
     app->launch->tcp_timeout = value;
 }
 
+void
+Java_io_evercam_androidapp_video_VideoActivity_nativeRequestSample(JNIEnv * env, jobject thiz)
+{
+    AndroidLaunch *app = GET_CUSTOM_DATA (env, thiz, app_data_field_id);
+
+    if (!app)
+      return;
+
+    GstSample *sample = NULL;
+    g_object_get (G_OBJECT (app->launch->pipeline), "sample", &sample, NULL);
+    GstCaps *caps = gst_sample_get_caps(sample);
+    GstBuffer *buffer = gst_sample_get_buffer (sample);
+    GstMapInfo map;
+    gst_buffer_map (buffer, &map, GST_MAP_READ);
+    FILE *f = fopen("/sdcard/sample.dat", "wb");
+    fwrite(map.data, map.size, 1, f);
+    fclose(f);
+    gst_buffer_unmap (buffer, &map);
+    GST_DEBUG("sample caps %s", gst_caps_to_string(caps));
+    gst_caps_unref(caps);
+    gst_sample_unref(sample);
+
+    /*GstCaps *caps = gst_caps_new_simple ("image/jpeg", NULL);
+    g_signal_emit_by_name(app->launch->pipeline, "convert-sample", caps, &sample);
+    gst_caps_unref(caps);
+
+    if (sample) {
+        caps = gst_sample_get_caps(sample);
+        GstStructure *s = gst_caps_get_structure (caps, 0);
+        int width, height;
+        // we need to get the final caps on the buffer to get the size
+        gboolean res = gst_structure_get_int (s, "width", &width);
+        res = gst_structure_get_int (s, "height", &height);
+        GST_DEBUG("Java_io_evercam_androidapp_video_VideoActivity_nativeRequestSample: width %d height %d", width, height);
+        GstBuffer *buffer = gst_sample_get_buffer (sample);
+        //GstMemory  *memory = gst_buffer_get_memory (buffer, 0);
+        GstMapInfo map;
+        gst_buffer_map (buffer, &map, GST_MAP_READ);
+        //gst_memory_map (memory, &map, GST_MAP_READ);
+        FILE *f = fopen("/sdcard/sample.jpeg", "wb");
+        //fwrite(map.data, sizeof(map.data[0]), map.size, f);
+        fwrite(map.data, map.size, 1, f);
+        fclose(f);
+        gst_buffer_unmap (buffer, &map);
+        //gst_memory_unmap (memory, &map);
+        gst_caps_unref(caps);
+        gst_sample_unref(sample);
+    }*/
+}
+
 static void
 android_launch_play (JNIEnv * env, jobject thiz)
 {

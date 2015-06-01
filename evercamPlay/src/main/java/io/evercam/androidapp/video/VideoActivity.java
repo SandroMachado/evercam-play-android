@@ -187,6 +187,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private static native boolean nativeClassInit();
     private native void nativeSurfaceInit(Object surface);
     private native void nativeSurfaceFinalize();
+    private native void nativeRequestSample();
 
     private final int TCP_TIMEOUT = 3 * 10000; // 3 seconds
 
@@ -981,7 +982,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private void restartPlay(EvercamCamera camera)
     {
-        play(camera);
+        nativePlay();
     }
 
     private void pausePlayer()
@@ -1279,6 +1280,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 }
                 else if(surfaceView.getVisibility() == View.VISIBLE)
                 {
+                    nativeRequestSample();
 //                    CustomToast.showSuperToastShort(VideoActivity.this,
 //                            R.string.msg_taking_snapshot);
 //

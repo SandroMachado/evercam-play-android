@@ -29,6 +29,8 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 
 // source stuff
 static void source_setup (GstElement *pipeline, GstElement *source, GstLaunchRemote *data);
+// sample stuff
+static GstSample* handle_convert_sample (GstElement *playbin, GstCaps *caps, gpointer data);
 
 static void gst_launch_remote_set_pipeline (GstLaunchRemote * self,
    const gchar * pipeline_string);
@@ -717,6 +719,7 @@ gst_launch_remote_set_pipeline (GstLaunchRemote * self, const gchar * pipeline_s
   }
 
   g_signal_connect (self->pipeline, "source-setup", G_CALLBACK (source_setup), self);
+
 
   bus = gst_element_get_bus (self->pipeline);
   bus_source = gst_bus_create_watch (bus);
