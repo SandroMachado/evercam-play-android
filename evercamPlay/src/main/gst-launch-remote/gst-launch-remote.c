@@ -907,8 +907,8 @@ GstLaunchRemote *
 gst_launch_remote_new (const GstLaunchRemoteAppContext * ctx)
 {
   GstLaunchRemote *self = g_slice_new0 (GstLaunchRemote);
-  memset(self->username, 0, USER_DATA_LENGTH);
-  memset(self->password, 0, USER_DATA_LENGTH);
+  self->username = NULL;
+  self->password = NULL;
   static GOnce once = G_ONCE_INIT;
 
   g_once (&once, gst_launch_remote_init, NULL);
@@ -1060,10 +1060,10 @@ static void source_setup (GstElement *pipeline, GstElement *source, GstLaunchRem
     g_object_set (G_OBJECT (source), "latency", 0, NULL);
     g_object_set (G_OBJECT (source), "drop-on-latency", 1, NULL);
 
-    if (strlen(data->username))
+    if (data->username != NULL && strlen(data->username))
         g_object_set (G_OBJECT (source), "user-id", data->username, NULL);
 
-    if (strlen(data->password))
+    if (data->password != NULL && strlen(data->password))
         g_object_set (G_OBJECT (source), "user-pw", data->password, NULL);
 
     g_object_set (G_OBJECT (source), "protocols", 4, NULL);

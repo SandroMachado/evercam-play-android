@@ -20,6 +20,7 @@
 
 #include <string.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <jni.h>
 #include <android/log.h>
 #include <android/native_window.h>
@@ -33,6 +34,18 @@
 
 GST_DEBUG_CATEGORY_STATIC (debug_category);
 #define GST_CAT_DEFAULT debug_category
+
+#define FREE_NON_NULL_STR(str) \
+    if (str != NULL) {         \
+        g_free(str);           \
+        str = NULL;            \
+    }
+
+#define DUP_STRING(dest, src) \
+    FREE_NON_NULL_STR(dest)   \
+    dest = g_strdup(src)
+
+#define PIPELINE_MAX_LEN 4096
 
 /*
  * These macros provide a way to store the native pointer to AndroidLaunch, which might be 32 or 64 bits, into
@@ -185,6 +198,7 @@ android_launch_init (JNIEnv * env, jobject thiz)
   GST_DEBUG ("Created AndroidLaunch at %p", app);
   app->app = (*env)->NewGlobalRef (env, thiz);
   GST_DEBUG ("Created GlobalRef for app object at %p", app->app);
+  gst_launch_remote_call_set_pipeline(app->launch, "playbin uri=rtsp://admin:hikteam@149.5.36.19:9200/h264/ch1/main/av_stream");
 }
 
 static void
@@ -196,6 +210,8 @@ android_launch_finalize (JNIEnv * env, jobject thiz)
     return;
 
   GST_DEBUG ("Quitting main loop...");
+  FREE_NON_NULL_STR(app->launch->username);
+  FREE_NON_NULL_STR(app->launch->password);
   gst_launch_remote_free (app->launch);
   GST_DEBUG ("Deleting GlobalRef for app object at %p", app->app);
   (*env)->DeleteGlobalRef (env, app->app);
@@ -203,18 +219,6 @@ android_launch_finalize (JNIEnv * env, jobject thiz)
   g_slice_free (AndroidLaunch, app);
   SET_CUSTOM_DATA (env, thiz, app_data_field_id, NULL);
   GST_DEBUG ("Done finalizing");
-}
-
-void
-Java_io_evercam_androidapp_video_VideoActivity_nativeSetPipeline(JNIEnv * env, jobject thiz, jstring pipeline)
-{
-    AndroidLaunch *app = GET_CUSTOM_DATA (env, thiz, app_data_field_id);
-
-    if (!app)
-        return;
-
-    const char* p_pipeline = (*env)->GetStringUTFChars(env, pipeline, 0);
-    gst_launch_remote_call_set_pipeline (app->launch, p_pipeline);
 }
 
 void
@@ -226,7 +230,8 @@ Java_io_evercam_androidapp_video_VideoActivity_nativeSetUsername(JNIEnv * env, j
         return;
 
     const char* uname = (*env)->GetStringUTFChars(env, username, 0);
-    strcpy(app->launch->username, uname);
+    DUP_STRING(app->launch->username, uname);
+    (*env)->ReleaseStringUTFChars (env, username, uname);
 }
 
 void
@@ -238,7 +243,22 @@ Java_io_evercam_androidapp_video_VideoActivity_nativeSetPassword(JNIEnv * env, j
       return;
 
     const char* pw = (*env)->GetStringUTFChars(env, password, 0);
-    strcpy(app->launch->password, pw);
+    DUP_STRING(app->launch->password, pw);
+    (*env)->ReleaseStringUTFChars (env, password, pw);
+}
+
+void
+Java_io_evercam_androidapp_video_VideoActivity_nativeSetUri(JNIEnv * env, jobject thiz, jstring arg_uri)
+{
+    AndroidLaunch *app = GET_CUSTOM_DATA (env, thiz, app_data_field_id);
+
+    if (!app)
+      return;
+
+    const char* uri = (*env)->GetStringUTFChars(env, arg_uri, 0);
+    GST_DEBUG("uri == %s", uri);
+    g_object_set(app->launch->pipeline, "uri", uri, NULL);
+    (*env)->ReleaseStringUTFChars (env, arg_uri, uri);
 }
 
 static void
