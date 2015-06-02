@@ -189,7 +189,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private native void nativeSurfaceFinalize();
     private native void nativeRequestSample();
 
-    private final int TCP_TIMEOUT = 3 * 1000; // 3 seconds
+    private final int TCP_TIMEOUT = 3 * 1000000; // 3 seconds in microsecs
 
     static
     {
