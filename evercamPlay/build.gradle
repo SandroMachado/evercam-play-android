@@ -51,7 +51,7 @@ repositories {
 
 dependencies {
     compile project(':supertoasts')
-    compile 'com.android.support:support-v4:22.0.0'
+    compile 'com.android.support:support-v4:22.1.1'
     compile 'joda-time:joda-time:2.6'
     compile files('libs/HCNetSDK.jar')
     compile files('libs/PlayerSDK.jar')
@@ -65,7 +65,7 @@ dependencies {
     compile 'io.keen:keen-client-api-android:2.1.1@aar'
     compile 'com.squareup.okhttp:okhttp:2.2.0'
     compile "com.mixpanel.android:mixpanel-android:4.5.3"
-    compile 'com.google.android.gms:play-services:7.0.0'
+    compile 'com.google.android.gms:play-services:7.3.0'
     compile "com.splunk.mint:mint:4.2"
 
     //Test dependencies
