@@ -40,6 +40,7 @@ typedef struct {
   void (*set_current_position) (gint position, gint duration, gpointer app);
   void (*initialized) (gpointer app);
   void (*media_size_changed) (gint width, gint height, gpointer app);
+  void (*on_video_loaded) (gpointer app);
 } GstLaunchRemoteAppContext;
 
 typedef struct {

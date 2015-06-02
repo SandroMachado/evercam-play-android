@@ -29,8 +29,8 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 
 // source stuff
 static void source_setup (GstElement *pipeline, GstElement *source, GstLaunchRemote *data);
-// sample stuff
-static GstSample* handle_convert_sample (GstElement *playbin, GstCaps *caps, gpointer data);
+// handle video channel setup
+static void handle_video_changed(GstElement *playbin, GstLaunchRemote *data);
 
 static void gst_launch_remote_set_pipeline (GstLaunchRemote * self,
    const gchar * pipeline_string);
@@ -719,6 +719,7 @@ gst_launch_remote_set_pipeline (GstLaunchRemote * self, const gchar * pipeline_s
   }
 
   g_signal_connect (self->pipeline, "source-setup", G_CALLBACK (source_setup), self);
+  g_signal_connect (self->pipeline, "video-changed", G_CALLBACK (handle_video_changed), self);
 
 
   bus = gst_element_get_bus (self->pipeline);
@@ -1073,4 +1074,10 @@ static void source_setup (GstElement *pipeline, GstElement *source, GstLaunchRem
     g_object_set (G_OBJECT (source), "protocols", 4, NULL);
     g_object_set (G_OBJECT (source), "buffer-size", 0, NULL);
     g_object_set (G_OBJECT (source), "tcp-timeout", data->tcp_timeout, NULL);
+}
+
+// handle video channel setup
+static void handle_video_changed(GstElement *playbin, GstLaunchRemote *data)
+{
+    data->app_context.on_video_loaded(data->app_context.app);
 }

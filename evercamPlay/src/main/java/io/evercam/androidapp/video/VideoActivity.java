@@ -1023,11 +1023,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     {
         if(!Commons.isOnline(this))
         {
-            CustomedDialog.getNoInternetDialog(this, new DialogInterface.OnClickListener()
-            {
+            CustomedDialog.getNoInternetDialog(this, new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
+                public void onClick(DialogInterface dialog, int which) {
                     paused = true;
                     dialog.dismiss();
                     hideProgressView();
@@ -1289,6 +1287,14 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         {
             timeCounter.start();
         }
+    }
+
+    private void onVideoLoaded()
+    {
+        Log.d(TAG, "video loaded!");
+        isPlayingJpg = false;
+        //View gets played, show time count, and start buffering
+        startTimeCounter();
     }
 
     public class BrowseJpgTask extends AsyncTask<String, String, String>

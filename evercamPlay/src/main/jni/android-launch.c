@@ -74,6 +74,7 @@ static jmethodID set_message_method_id;
 static jmethodID set_current_position_method_id;
 static jmethodID on_gstreamer_initialized_method_id;
 static jmethodID on_media_size_changed_method_id;
+static jmethodID on_video_loaded_method_id;
 
 /* Register this thread with the VM */
 static JNIEnv *
@@ -161,6 +162,19 @@ media_size_changed (gint width, gint height, gpointer user_data)
   }
 }
 
+static void notify_about_video_loaded(gpointer user_data)
+{
+    GST_DEBUG("notify_about_video_loaded");
+    AndroidLaunch *app = user_data;
+    JNIEnv *env = get_jni_env ();
+
+    (*env)->CallVoidMethod (env, app->app, on_video_loaded_method_id);
+    if ((*env)->ExceptionCheck (env)) {
+      GST_ERROR ("Failed to call Java method");
+      (*env)->ExceptionClear (env);
+    }
+}
+
 static void
 initialized (gpointer user_data)
 {
@@ -191,6 +205,7 @@ android_launch_init (JNIEnv * env, jobject thiz)
   app_context.set_current_position = set_current_position;
   app_context.initialized = initialized;
   app_context.media_size_changed = media_size_changed;
+  app_context.on_video_loaded = notify_about_video_loaded;
   app->launch = gst_launch_remote_new (&app_context);
 
   SET_CUSTOM_DATA (env, thiz, app_data_field_id, app);
@@ -367,6 +382,8 @@ android_launch_class_init (JNIEnv * env, jclass klass)
       (*env)->GetMethodID (env, klass, "onGStreamerInitialized", "()V");
   on_media_size_changed_method_id =
       (*env)->GetMethodID (env, klass, "onMediaSizeChanged", "(II)V");
+  on_video_loaded_method_id =
+          (*env)->GetMethodID (env, klass, "onVideoLoaded", "()V");
 
   if (!app_data_field_id || !set_message_method_id
       || !on_gstreamer_initialized_method_id || !on_media_size_changed_method_id
