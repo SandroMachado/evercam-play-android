@@ -29,6 +29,8 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 
 // source stuff
 static void source_setup (GstElement *pipeline, GstElement *source, GstLaunchRemote *data);
+// sample stuff
+static GstSample* handle_convert_sample (GstElement *playbin, GstCaps *caps, gpointer data);
 
 static void gst_launch_remote_set_pipeline (GstLaunchRemote * self,
    const gchar * pipeline_string);
@@ -718,6 +720,7 @@ gst_launch_remote_set_pipeline (GstLaunchRemote * self, const gchar * pipeline_s
 
   g_signal_connect (self->pipeline, "source-setup", G_CALLBACK (source_setup), self);
 
+
   bus = gst_element_get_bus (self->pipeline);
   bus_source = gst_bus_create_watch (bus);
   g_source_set_callback (bus_source, (GSourceFunc) gst_bus_async_signal_func,
@@ -907,14 +910,15 @@ GstLaunchRemote *
 gst_launch_remote_new (const GstLaunchRemoteAppContext * ctx)
 {
   GstLaunchRemote *self = g_slice_new0 (GstLaunchRemote);
-  memset(self->username, 0, USER_DATA_LENGTH);
-  memset(self->password, 0, USER_DATA_LENGTH);
+  self->username = NULL;
+  self->password = NULL;
   static GOnce once = G_ONCE_INIT;
 
   g_once (&once, gst_launch_remote_init, NULL);
 
   self->app_context = *ctx;
   self->base_time = GST_CLOCK_TIME_NONE;
+  self->tcp_timeout = 20000000;
   //self->thread = g_thread_new ("gst-launch-remote", gst_launch_remote_main, self);
 
   return self;
@@ -1060,12 +1064,13 @@ static void source_setup (GstElement *pipeline, GstElement *source, GstLaunchRem
     g_object_set (G_OBJECT (source), "latency", 0, NULL);
     g_object_set (G_OBJECT (source), "drop-on-latency", 1, NULL);
 
-    if (strlen(data->username))
+    if (data->username != NULL && strlen(data->username))
         g_object_set (G_OBJECT (source), "user-id", data->username, NULL);
 
-    if (strlen(data->password))
+    if (data->password != NULL && strlen(data->password))
         g_object_set (G_OBJECT (source), "user-pw", data->password, NULL);
 
     g_object_set (G_OBJECT (source), "protocols", 4, NULL);
     g_object_set (G_OBJECT (source), "buffer-size", 0, NULL);
+    g_object_set (G_OBJECT (source), "tcp-timeout", data->tcp_timeout, NULL);
 }

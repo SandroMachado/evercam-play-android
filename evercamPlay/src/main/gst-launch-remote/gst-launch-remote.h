@@ -26,7 +26,6 @@
 #include <gst/video/video.h>
 
 #define PORT 9123
-#define USER_DATA_LENGTH 256
 
 #ifdef __ANDROID__
 #include <android/log.h>
@@ -53,13 +52,14 @@ typedef struct {
   gboolean initialized;
 
   gchar *pipeline_string;
-  gchar username[USER_DATA_LENGTH];
-  gchar password[USER_DATA_LENGTH];
+  gchar *username;
+  gchar *password;
   GstElement *pipeline;
   GstElement *video_sink;
   GstState target_state;
   gboolean is_live;
   gchar *last_message;
+  guint64 tcp_timeout;
 
   GstClock *net_clock;
   GstClockTime base_time;

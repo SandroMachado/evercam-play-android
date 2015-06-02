@@ -178,14 +178,18 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private native void nativeInit();
     private native void nativeFinalize();
     private native void nativePlay();
-    private native void nativeSetPipeline(String pipelineString);
+    private native void nativeSetUri(String uri);
     private native void nativeSetUsername(String username);
     private native void nativeSetPassword(String password);
+    private native void nativeSetTcpTimeout(int value);
     private native void nativePause();
     private native void nativeStop();
     private static native boolean nativeClassInit();
     private native void nativeSurfaceInit(Object surface);
     private native void nativeSurfaceFinalize();
+    private native void nativeRequestSample();
+
+    private final int TCP_TIMEOUT = 3 * 1000000; // 3 seconds in microsecs
 
     static
     {
@@ -236,6 +240,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 return;
             }
             nativeInit();
+
+            nativeSetTcpTimeout(TCP_TIMEOUT);
 
             setContentView(R.layout.video_activity_layout);
 
@@ -947,7 +953,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
         if(evercamCamera.hasRtspUrl())
         {
-            nativeSetPipeline(getPipelineFromCamera(camera));
+            nativeSetUri(camera.getExternalRtspUrl());
             play(camera);
 
             surfaceView.setVisibility(View.VISIBLE);
@@ -969,14 +975,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         nativePlay();
     }
 
-    private String getPipelineFromCamera(EvercamCamera camera)
-    {
-        String pipeline = "playbin uri=" + camera.getExternalRtspUrl();
-        Log.d(TAG, "Launching pipeline: " + pipeline + "\n" + evercamCamera.toString());
-
-        return pipeline;
-    }
-
     private void releasePlayer()
     {
         nativePause();
@@ -984,8 +982,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private void restartPlay(EvercamCamera camera)
     {
-        nativeSetPipeline(getPipelineFromCamera(camera));
-        play(camera);
+        nativePlay();
     }
 
     private void pausePlayer()
@@ -1283,6 +1280,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 }
                 else if(surfaceView.getVisibility() == View.VISIBLE)
                 {
+                    nativeRequestSample();
 //                    CustomToast.showSuperToastShort(VideoActivity.this,
 //                            R.string.msg_taking_snapshot);
 //
