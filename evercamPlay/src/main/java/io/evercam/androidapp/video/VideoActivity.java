@@ -109,16 +109,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private ImageView snapshotMenuView;
     private Animation fadeInAnimation = null;
 
-    /**
-     * Media player
-     */
-//    private LibVLC libvlc;
-    private int mVideoWidth;
-    private int mVideoHeight;
-    private final static int videoSizeChanged = -1;
-
-    private int media_width = 0, media_height = 0;
-
     private long downloadStartCount = 0;
     private long downloadEndCount = 0;
     private BrowseJpgTask browseJpgTask;
@@ -883,17 +873,16 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     public void surfaceCreated(SurfaceHolder surfaceHolder)
     {
         Log.d("GStreamer", "Surface created: " + surfaceHolder.getSurface());
+
+        nativeSurfaceInit(surfaceHolder.getSurface());
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder surfaceholder, int format, int width, int height)
     {
-        Log.d("GStreamer", "Surface changed to format " + format + " width "
-                + width + " height " + height);
+        Log.d("GStreamer", "Surface changed to format " + format + " width " + width + " height " + height);
 
         onMediaSizeChanged(width, height);
-
-        nativeSurfaceInit(surfaceholder.getSurface());
     }
 
     @Override
@@ -901,44 +890,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     {
         Log.d("GStreamer", "Surface destroyed");
         nativeSurfaceFinalize();
-    }
-
-    private void setSize(int width, int height)
-    {
-        mVideoWidth = width;
-        mVideoHeight = height;
-        if(mVideoWidth * mVideoHeight <= 1) return;
-
-        // get screen size
-        int w = getWindow().getDecorView().getWidth();
-        int h = getWindow().getDecorView().getHeight();
-
-        // getWindow().getDecorView() doesn't always take orientation into
-        // account, we have to correct the values
-        boolean isPortrait = getResources().getConfiguration().orientation == Configuration
-                .ORIENTATION_PORTRAIT;
-        if(w > h && isPortrait || w < h && !isPortrait)
-        {
-            int i = w;
-            w = h;
-            h = i;
-        }
-
-        float videoAR = (float) mVideoWidth / (float) mVideoHeight;
-        float screenAR = (float) w / (float) h;
-
-        if(screenAR < videoAR) h = (int) (w / videoAR);
-        else w = (int) (h * videoAR);
-
-        // force surface buffer size
-        surfaceHolder.setFixedSize(mVideoWidth, mVideoHeight);
-
-        // set display size
-        LayoutParams lp = surfaceView.getLayoutParams();
-        lp.width = w;
-        lp.height = h;
-        surfaceView.setLayoutParams(lp);
-        surfaceView.invalidate();
     }
 
     /**
@@ -1017,23 +968,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             }
 
             this.invalidateOptionsMenu();
-
-            mVideoWidth = surfaceView.getWidth();
-            mVideoHeight = surfaceView.getHeight() - this.getActionBar().getHeight();
-            setSize(mVideoWidth, mVideoHeight);
         }
         catch(Exception e)
         {
             EvercamPlayApplication.sendCaughtException(this, e);
             sendToMint(e);
         }
-    }
-
-    private void showToast(String text)
-    {
-        Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-        toast.show();
     }
 
     private void showMediaFailureDialog()
@@ -1859,6 +1799,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 //        final Activity activity = this;
 //        runOnUiThread(new Runnable() {
 //            public void run() {
+//                activity.findViewById(R.id.button_play).setEnabled(true);
 //                activity.findViewById(R.id.button_play).setEnabled(true);
 //                activity.findViewById(R.id.button_pause).setEnabled(true);
 //            }
