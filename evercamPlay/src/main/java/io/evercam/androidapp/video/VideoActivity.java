@@ -1835,4 +1835,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             }
         });
     }
+
+    private void onError(String message, int code)
+    {
+        Log.e(TAG, "error with code " + code + " and message " + message);
+    }
 }

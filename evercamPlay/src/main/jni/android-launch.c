@@ -75,6 +75,7 @@ static jmethodID set_current_position_method_id;
 static jmethodID on_gstreamer_initialized_method_id;
 static jmethodID on_media_size_changed_method_id;
 static jmethodID on_video_loaded_method_id;
+static jmethodID on_error_method_id;
 
 /* Register this thread with the VM */
 static JNIEnv *
@@ -127,6 +128,22 @@ set_message (const gchar * message, gpointer user_data)
 
   GST_DEBUG ("Setting message to: %s", message);
   (*env)->CallVoidMethod (env, app->app, set_message_method_id, jmessage);
+  if ((*env)->ExceptionCheck (env)) {
+    GST_ERROR ("Failed to call Java method");
+    (*env)->ExceptionClear (env);
+  }
+  (*env)->DeleteLocalRef (env, jmessage);
+}
+
+static void
+set_error (const gchar * message, gint code, gpointer user_data)
+{
+  AndroidLaunch *app = user_data;
+  JNIEnv *env = get_jni_env ();
+  jstring jmessage = (*env)->NewStringUTF (env, message);
+
+  GST_DEBUG ("Setting error with message %s and code %d", message, code);
+  (*env)->CallVoidMethod (env, app->app, on_error_method_id, jmessage, code);
   if ((*env)->ExceptionCheck (env)) {
     GST_ERROR ("Failed to call Java method");
     (*env)->ExceptionClear (env);
@@ -202,6 +219,7 @@ android_launch_init (JNIEnv * env, jobject thiz)
 
   app_context.app = app;
   app_context.set_message = set_message;
+  app_context.set_error = set_error;
   app_context.set_current_position = set_current_position;
   app_context.initialized = initialized;
   app_context.media_size_changed = media_size_changed;
@@ -383,6 +401,8 @@ android_launch_class_init (JNIEnv * env, jclass klass)
       (*env)->GetMethodID (env, klass, "onMediaSizeChanged", "(II)V");
   on_video_loaded_method_id =
           (*env)->GetMethodID (env, klass, "onVideoLoaded", "()V");
+  on_error_method_id =
+          (*env)->GetMethodID (env, klass, "onError", "(Ljava/lang/String;I)V");
 
   if (!app_data_field_id || !set_message_method_id
       || !on_gstreamer_initialized_method_id || !on_media_size_changed_method_id

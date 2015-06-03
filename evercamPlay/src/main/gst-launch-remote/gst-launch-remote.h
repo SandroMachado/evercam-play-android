@@ -36,6 +36,7 @@
 
 typedef struct {
   gpointer app;
+  void (*set_error) (const gchar *message, gint code, gpointer app);
   void (*set_message) (const gchar *message, gpointer app);
   void (*set_current_position) (gint position, gint duration, gpointer app);
   void (*initialized) (gpointer app);

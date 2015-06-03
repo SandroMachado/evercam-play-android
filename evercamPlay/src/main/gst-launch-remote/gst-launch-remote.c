@@ -339,6 +339,10 @@ error_cb (GstBus * bus, GstMessage * msg, GstLaunchRemote * self)
   gst_message_parse_error (msg, &err, &debug_info);
   set_message (self, "Error received from element %s: %s",
       GST_OBJECT_NAME (msg->src), err->message);
+
+  if (self->app_context.set_error)
+    self->app_context.set_error (err->message, err->code, self->app_context.app);
+
   g_clear_error (&err);
   g_free (debug_info);
 
@@ -822,7 +826,6 @@ gst_launch_remote_main (gpointer user_data)
   g_object_unref (bind_addr);
   g_object_unref (bind_iaddr);
 
-  //gst_launch_remote_set_pipeline (self, "fakesrc ! fakesink");
   gst_launch_remote_set_pipeline (self, "playbin");
 
   timeout_source = g_timeout_source_new (250);
