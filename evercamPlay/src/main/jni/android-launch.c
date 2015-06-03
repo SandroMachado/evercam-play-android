@@ -213,7 +213,6 @@ android_launch_init (JNIEnv * env, jobject thiz)
   GST_DEBUG ("Created AndroidLaunch at %p", app);
   app->app = (*env)->NewGlobalRef (env, thiz);
   GST_DEBUG ("Created GlobalRef for app object at %p", app->app);
-  gst_launch_remote_call_set_pipeline(app->launch, "playbin uri=rtsp://admin:hikteam@149.5.36.19:9200/h264/ch1/main/av_stream");
 }
 
 static void

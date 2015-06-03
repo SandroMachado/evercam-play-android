@@ -822,7 +822,8 @@ gst_launch_remote_main (gpointer user_data)
   g_object_unref (bind_addr);
   g_object_unref (bind_iaddr);
 
-  gst_launch_remote_set_pipeline (self, "fakesrc ! fakesink");
+  //gst_launch_remote_set_pipeline (self, "fakesrc ! fakesink");
+  gst_launch_remote_set_pipeline (self, "playbin");
 
   timeout_source = g_timeout_source_new (250);
   g_source_set_callback (timeout_source, (GSourceFunc) update_position_cb, self,
@@ -920,7 +921,7 @@ gst_launch_remote_new (const GstLaunchRemoteAppContext * ctx)
   self->app_context = *ctx;
   self->base_time = GST_CLOCK_TIME_NONE;
   self->tcp_timeout = 20000000;
-  //self->thread = g_thread_new ("gst-launch-remote", gst_launch_remote_main, self);
+  self->thread = g_thread_new ("gst-launch-remote", gst_launch_remote_main, self);
 
   return self;
 }
@@ -929,7 +930,7 @@ void
 gst_launch_remote_free (GstLaunchRemote * self)
 {
   g_main_loop_quit (self->main_loop);
-  //g_thread_join (self->thread);
+  g_thread_join (self->thread);
   g_slice_free (GstLaunchRemote, self);
 }
 

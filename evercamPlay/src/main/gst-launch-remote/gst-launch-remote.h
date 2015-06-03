@@ -44,7 +44,7 @@ typedef struct {
 } GstLaunchRemoteAppContext;
 
 typedef struct {
-  //GThread *thread;
+  GThread *thread;
   GMainContext *context;
   GMainLoop *main_loop;
 
