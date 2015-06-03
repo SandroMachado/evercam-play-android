@@ -904,8 +904,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
         if(evercamCamera.hasRtspUrl())
         {
+            nativeSetUsername(camera.getUsername());
+            nativeSetPassword(camera.getPassword());
             nativeSetUri(camera.getExternalRtspUrl());
-            play(camera);
+            play();
 
             surfaceView.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.GONE);
@@ -919,10 +921,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         }
     }
 
-    private void play(EvercamCamera camera)
+    private void play()
     {
-        nativeSetUsername(camera.getUsername());
-        nativeSetPassword(camera.getPassword());
         nativePlay();
     }
 

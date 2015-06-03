@@ -917,6 +917,7 @@ gst_launch_remote_new (const GstLaunchRemoteAppContext * ctx)
   GstLaunchRemote *self = g_slice_new0 (GstLaunchRemote);
   self->username = NULL;
   self->password = NULL;
+  self->uri = NULL;
   static GOnce once = G_ONCE_INIT;
 
   g_once (&once, gst_launch_remote_init, NULL);
@@ -932,6 +933,15 @@ gst_launch_remote_new (const GstLaunchRemoteAppContext * ctx)
 void
 gst_launch_remote_free (GstLaunchRemote * self)
 {
+  if (self->username != NULL)
+      g_free(self->username);
+
+  if (self->password != NULL)
+      g_free(self->password);
+
+  if (self->uri != NULL)
+      g_free(self->uri);
+
   g_main_loop_quit (self->main_loop);
   g_thread_join (self->thread);
   g_slice_free (GstLaunchRemote, self);
@@ -959,6 +969,10 @@ gst_launch_remote_play (GstLaunchRemote * self)
   GST_DEBUG ("Setting state to PLAYING");
 
   self->target_state = GST_STATE_PLAYING;
+
+  if (self->uri != NULL)
+      g_object_set (G_OBJECT (self->pipeline), "uri", self->uri, NULL);
+
   state_ret = gst_element_set_state (self->pipeline, GST_STATE_PLAYING);
   self->is_live = (state_ret == GST_STATE_CHANGE_NO_PREROLL);
 
@@ -985,6 +999,7 @@ gst_launch_remote_pause (GstLaunchRemote * self)
   GST_DEBUG ("Setting state to PAUSED");
 
   self->target_state = GST_STATE_PAUSED;
+
   state_ret = gst_element_set_state (self->pipeline, GST_STATE_PAUSED);
   self->is_live = (state_ret == GST_STATE_CHANGE_NO_PREROLL);
 

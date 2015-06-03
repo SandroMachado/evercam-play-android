@@ -56,6 +56,7 @@ typedef struct {
   gchar *pipeline_string;
   gchar *username;
   gchar *password;
+  gchar* uri;
   GstElement *pipeline;
   GstElement *video_sink;
   GstState target_state;

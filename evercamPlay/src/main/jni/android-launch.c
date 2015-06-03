@@ -289,7 +289,7 @@ Java_io_evercam_androidapp_video_VideoActivity_nativeSetUri(JNIEnv * env, jobjec
 
     const char* uri = (*env)->GetStringUTFChars(env, arg_uri, 0);
     GST_DEBUG("uri == %s", uri);
-    g_object_set(app->launch->pipeline, "uri", uri, NULL);
+    DUP_STRING(app->launch->uri, uri);
     (*env)->ReleaseStringUTFChars (env, arg_uri, uri);
 }
 
