@@ -366,17 +366,6 @@ android_launch_play (JNIEnv * env, jobject thiz)
 }
 
 static void
-android_launch_pause (JNIEnv * env, jobject thiz)
-{
-  AndroidLaunch *app = GET_CUSTOM_DATA (env, thiz, app_data_field_id);
-
-  if (!app)
-    return;
-
-  gst_launch_remote_pause (app->launch);
-}
-
-static void
 android_launch_stop (JNIEnv * env, jobject thiz)
 {
   AndroidLaunch *app = GET_CUSTOM_DATA (env, thiz, app_data_field_id);
@@ -460,7 +449,6 @@ static JNINativeMethod native_methods[] = {
   {"nativeInit", "()V", (void *) android_launch_init},
   {"nativeFinalize", "()V", (void *) android_launch_finalize},
   {"nativePlay", "()V", (void *) android_launch_play},
-  {"nativePause", "()V", (void *) android_launch_pause},
   {"nativeStop", "()V", (void *) android_launch_stop},
   {"nativeSurfaceInit", "(Ljava/lang/Object;)V",
       (void *) android_launch_surface_init},

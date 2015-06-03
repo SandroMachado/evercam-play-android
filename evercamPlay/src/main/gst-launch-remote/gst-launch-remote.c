@@ -339,6 +339,7 @@ error_cb (GstBus * bus, GstMessage * msg, GstLaunchRemote * self)
   gst_message_parse_error (msg, &err, &debug_info);
   set_message (self, "Error received from element %s: %s",
       GST_OBJECT_NAME (msg->src), err->message);
+  GST_DEBUG("Error debug info: %s", debug_info);
 
   if (self->app_context.set_error)
     self->app_context.set_error (err->message, err->code, self->app_context.app);
@@ -465,6 +466,7 @@ state_changed_cb (GstBus * bus, GstMessage * msg, GstLaunchRemote * self)
   GstState old_state, new_state, pending_state;
 
   gst_message_parse_state_changed (msg, &old_state, &new_state, &pending_state);
+
   /* Only pay attention to messages coming from the pipeline, not its children */
   if (GST_MESSAGE_SRC (msg) == GST_OBJECT (self->pipeline)) {
     set_message (self, "State changed to %s",

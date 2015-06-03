@@ -172,7 +172,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private native void nativeSetUsername(String username);
     private native void nativeSetPassword(String password);
     private native void nativeSetTcpTimeout(int value);
-    private native void nativePause();
     private native void nativeStop();
     private static native boolean nativeClassInit();
     private native void nativeSurfaceInit(Object surface);
@@ -928,7 +927,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private void releasePlayer()
     {
-        nativePause();
+        nativeStop();
     }
 
     private void restartPlay(EvercamCamera camera)
@@ -938,7 +937,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private void pausePlayer()
     {
-        nativePause();
+        nativeStop();
     }
 
     // when screen gets rotated
