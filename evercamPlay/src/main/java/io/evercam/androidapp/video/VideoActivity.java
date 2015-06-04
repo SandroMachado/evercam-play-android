@@ -166,7 +166,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private long native_app_data;
 
     private native void nativeRequestSample(String fileName);
-    private native void nativeSetUri(String uri);
+    private native void nativeSetUri(String uri, int connectionTimeout);
     private native void nativeInit();     // Initialize native code, build pipeline, etc
     private native void nativeFinalize(); // Destroy pipeline and shutdown native code
     private native void nativePlay();     // Set pipeline to PLAYING
@@ -174,7 +174,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private static native boolean nativeClassInit(); // Initialize native class: cache Method IDs for callbacks
     private native void nativeSurfaceInit(Object surface);
     private native void nativeSurfaceFinalize();
-    private native void nativeSetTcpTimeout(int value);
     private long native_custom_data;      // Native code will use this to keep private data
 
     private final int TCP_TIMEOUT = 3 * 1000000; // 3 seconds in microsecs
@@ -228,8 +227,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 return;
             }
             nativeInit();
-
-            //nativeSetTcpTimeout(TCP_TIMEOUT);
 
             setContentView(R.layout.video_activity_layout);
 
@@ -905,7 +902,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         if(evercamCamera.hasRtspUrl())
         {
             Log.e(TAG, "uri " + createUri(camera));
-            nativeSetUri(createUri(camera));
+            nativeSetUri(createUri(camera), TCP_TIMEOUT);
             play(camera);
 
             surfaceView.setVisibility(View.VISIBLE);
