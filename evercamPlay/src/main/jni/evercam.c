@@ -325,13 +325,15 @@ void gst_native_set_uri (JNIEnv* env, jobject thiz, jstring uri, jint timeout) {
 }
 
 /* Set playbin's URI */
-void gst_native_request_sample (JNIEnv* env, jobject thiz, jstring filename) {
+int gst_native_request_sample (JNIEnv* env, jobject thiz, jstring filename) {
     CustomData *data = GET_CUSTOM_DATA (env, thiz, custom_data_field_id);
     if (!data || !data->pipeline) return;
     const jbyte *fname = (*env)->GetStringUTFChars (env, filename, NULL);
+    GST_DEBUG("File name %s", fname);
 
+    int res = -1;
     GstSample *sample;
-    GstCaps *caps = gst_caps_new_simple ("image/jpeg", NULL);
+    GstCaps *caps = gst_caps_new_simple ("image/png", NULL);
 
     g_signal_emit_by_name(data->pipeline, "convert-sample", caps, &sample);
     gst_caps_unref(caps);
@@ -341,13 +343,55 @@ void gst_native_request_sample (JNIEnv* env, jobject thiz, jstring filename) {
     gst_buffer_map (buf, &info, GST_MAP_READ);
 
     FILE *f = fopen(fname, "wb");
-    fwrite(info.data, info.size, sizeof(char), f);
+    res = fwrite(info.data, info.size, sizeof(char), f);
     fclose(f);
 
     gst_buffer_unmap (buf, &info);
     gst_sample_unref(sample);
+    return res;
+
+    /*int res = -1;
+    int width = 0,  height = 0;
+
+    GstPad *pad;
+    g_signal_emit_by_name(data->pipeline, "get-video-pad", 0, &pad);
+
+    if (pad == NULL) {
+        GstCaps *caps = gst_pad_get_current_caps(pad);
+        const GstStructure *str = gst_caps_get_structure (caps, 0);
+        gst_structure_get_int (str, "width", &width);
+        gst_structure_get_int (str, "height", &height);
+        gst_caps_unref(caps);
+
+        GstSample *sample;
+        caps = gst_caps_new_simple ("image/png",
+                                    "width", G_TYPE_INT, width,
+                                    "height", G_TYPE_INT, height,
+                                    NULL);
+
+        g_signal_emit_by_name(data->pipeline, "convert-sample", caps, &sample);
+        gst_caps_unref(caps);
+
+        if (sample != NULL) {
+            GstBuffer *buf = gst_sample_get_buffer(sample);
+            GstMapInfo info;
+            gst_buffer_map (buf, &info, GST_MAP_READ);
+
+            FILE *fp = fopen(fname, "wb");
+
+            if (fp != NULL) {
+                res = fwrite(info.data, info.size, sizeof(char), fp);
+                fclose(fp);
+            } else
+                GST_DEBUG("Can't open file for write %s", fname);
+
+            gst_buffer_unmap (buf, &info);
+            gst_sample_unref(sample);
+        }
+    }
 
     (*env)->ReleaseStringUTFChars (env, filename, fname);
+    return res;*/
 }
 
 /* Static class initializer: retrieve method and field IDs */
@@ -416,7 +460,7 @@ static JNINativeMethod native_methods[] = {
     { "nativeFinalize", "()V", (void *) gst_native_finalize},
     { "nativePlay", "()V", (void *) gst_native_play},
     { "nativePause", "()V", (void *) gst_native_pause},
-    { "nativeRequestSample", "(Ljava/lang/String;)V", (void *) gst_native_request_sample},
+    { "nativeRequestSample", "(Ljava/lang/String;)I", (void *) gst_native_request_sample},
     { "nativeSetUri", "(Ljava/lang/String;I)V", (void *) gst_native_set_uri},
     { "nativeSurfaceInit", "(Ljava/lang/Object;)V", (void *) gst_native_surface_init},
     { "nativeSurfaceFinalize", "()V", (void *) gst_native_surface_finalize},
