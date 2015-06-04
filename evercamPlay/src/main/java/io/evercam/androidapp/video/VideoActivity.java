@@ -165,6 +165,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
      */
     private long native_app_data;
 
+<<<<<<< HEAD
     private native void nativeRequestSample(String fileName);
     private native void nativeSetUri(String uri, int connectionTimeout);
     private native void nativeInit();     // Initialize native code, build pipeline, etc
@@ -172,6 +173,17 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private native void nativePlay();     // Set pipeline to PLAYING
     private native void nativePause();    // Set pipeline to PAUSED
     private static native boolean nativeClassInit(); // Initialize native class: cache Method IDs for callbacks
+=======
+    private native void nativeInit();
+    private native void nativeFinalize();
+    private native void nativePlay();
+    private native void nativeSetUri(String uri);
+    private native void nativeSetUsername(String username);
+    private native void nativeSetPassword(String password);
+    private native void nativeSetTcpTimeout(int value);
+    private native void nativeStop();
+    private static native boolean nativeClassInit();
+>>>>>>> a14c80e19cdf29ea1de341b943c22dc0917264bd
     private native void nativeSurfaceInit(Object surface);
     private native void nativeSurfaceFinalize();
     private long native_custom_data;      // Native code will use this to keep private data
@@ -901,9 +913,16 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
         if(evercamCamera.hasRtspUrl())
         {
+<<<<<<< HEAD
             Log.e(TAG, "uri " + createUri(camera));
             nativeSetUri(createUri(camera), TCP_TIMEOUT);
             play(camera);
+=======
+            nativeSetUsername(camera.getUsername());
+            nativeSetPassword(camera.getPassword());
+            nativeSetUri(camera.getExternalRtspUrl());
+            play();
+>>>>>>> a14c80e19cdf29ea1de341b943c22dc0917264bd
 
             surfaceView.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.GONE);
@@ -917,14 +936,14 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         }
     }
 
-    private void play(EvercamCamera camera)
+    private void play()
     {
         nativePlay();
     }
 
     private void releasePlayer()
     {
-        nativePause();
+        nativeStop();
     }
 
     private void restartPlay(EvercamCamera camera)
@@ -934,7 +953,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private void pausePlayer()
     {
-        nativePause();
+        nativeStop();
     }
 
     // when screen gets rotated
@@ -1845,5 +1864,10 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 gstreamerSurfaceView.requestLayout();
             }
         });
+    }
+
+    private void onError(String message, int code)
+    {
+        Log.e(TAG, "error with code " + code + " and message " + message);
     }
 }
