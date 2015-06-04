@@ -1297,6 +1297,16 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         });
     }
 
+    private void onVideoLoadFailed()
+    {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Log.d(TAG, "video loading failed!");
+                isPlayingJpg = true;
+            }
+        });
+    }
+
     public class BrowseJpgTask extends AsyncTask<String, String, String>
     {
         @Override

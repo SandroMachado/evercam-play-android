@@ -35,6 +35,7 @@ typedef struct _CustomData {
     GstElement *video_sink; /* The video sink element which receives XOverlay commands */
     ANativeWindow *native_window; /* The Android native window where video will be rendered */
     gint tcp_timeout; /* tcp timeout for rtspsrc */
+    GstState target_state;
 } CustomData;
 
 /* These global variables cache values which are not changing during execution */
@@ -45,7 +46,7 @@ static jfieldID custom_data_field_id;
 static jmethodID set_message_method_id;
 static jmethodID on_gstreamer_initialized_method_id;
 static jmethodID on_stream_loaded_method_id;
-//static jmethodID on_error_method_id;
+static jmethodID on_stream_load_failed_method_id;
 
 
 /*
@@ -141,6 +142,19 @@ static void error_cb (GstBus *bus, GstMessage *msg, CustomData *data) {
     g_free (debug_info);
     set_ui_message (message_string, data);
     g_free (message_string);
+
+    if (data->target_state == GST_STATE_PLAYING) {
+        JNIEnv *env = get_jni_env ();
+
+        (*env)->CallVoidMethod (env, data->app, on_stream_load_failed_method_id);
+
+        if ((*env)->ExceptionCheck (env)) {
+            GST_ERROR ("Failed to call Java method");
+            (*env)->ExceptionClear (env);
+        }
+    }
+
+    data->target_state = GST_STATE_NULL;
     gst_element_set_state (data->pipeline, GST_STATE_NULL);
 }
 
@@ -182,6 +196,7 @@ static void *app_function (void *userdata) {
     GstBus *bus;
     CustomData *data = (CustomData *)userdata;
     data->tcp_timeout = 0;
+    data->target_state = GST_STATE_NULL;
     GSource *bus_source;
     GError *error = NULL;
 
@@ -206,6 +221,7 @@ static void *app_function (void *userdata) {
     g_object_set (G_OBJECT (data->pipeline), "buffer-size", 0, NULL);
 
     /* Set the pipeline to READY, so it can already accept a window handle, if we have one */
+    data->target_state = GST_STATE_READY;
     gst_element_set_state(data->pipeline, GST_STATE_READY);
 
     data->video_sink = gst_bin_get_by_interface(GST_BIN(data->pipeline), GST_TYPE_VIDEO_OVERLAY);
@@ -236,6 +252,7 @@ static void *app_function (void *userdata) {
     /* Free resources */
     g_main_context_pop_thread_default(data->context);
     g_main_context_unref (data->context);
+    data->target_state = GST_STATE_NULL;
     gst_element_set_state (data->pipeline, GST_STATE_NULL);
     gst_object_unref (data->video_sink);
     gst_object_unref (data->pipeline);
@@ -280,7 +297,9 @@ static void gst_native_play (JNIEnv* env, jobject thiz) {
     CustomData *data = GET_CUSTOM_DATA (env, thiz, custom_data_field_id);
     if (!data) return;
     GST_DEBUG ("Setting state to PLAYING");
+    data->target_state = GST_STATE_PLAYING;
     gst_element_set_state (data->pipeline, GST_STATE_PLAYING);
+
 }
 
 /* Set pipeline to PAUSED state */
@@ -288,6 +307,7 @@ static void gst_native_pause (JNIEnv* env, jobject thiz) {
     CustomData *data = GET_CUSTOM_DATA (env, thiz, custom_data_field_id);
     if (!data) return;
     GST_DEBUG ("Setting state to PAUSED");
+    data->target_state = GST_STATE_PAUSED;
     gst_element_set_state (data->pipeline, GST_STATE_PAUSED);
 }
 
@@ -299,6 +319,7 @@ void gst_native_set_uri (JNIEnv* env, jobject thiz, jstring uri, jint timeout) {
     data->tcp_timeout = timeout;
     GST_DEBUG("Set tcp timeout to %d", data->tcp_timeout);
     g_object_set(data->pipeline, "uri", char_uri, NULL);
+    data->target_state = GST_STATE_READY;
     gst_element_set_state (data->pipeline, GST_STATE_READY);
     (*env)->ReleaseStringUTFChars (env, uri, char_uri);
 }
@@ -335,8 +356,10 @@ static jboolean gst_native_class_init (JNIEnv* env, jclass klass) {
     set_message_method_id = (*env)->GetMethodID (env, klass, "setMessage", "(Ljava/lang/String;)V");
     on_gstreamer_initialized_method_id = (*env)->GetMethodID (env, klass, "onGStreamerInitialized", "()V");
     on_stream_loaded_method_id = (*env)->GetMethodID (env, klass, "onVideoLoaded", "()V");
+    on_stream_load_failed_method_id = (*env)->GetMethodID (env, klass, "onVideoLoadFailed", "()V");
 
-    if (!custom_data_field_id || !set_message_method_id || !on_gstreamer_initialized_method_id || on_stream_loaded_method_id) {
+    if (!custom_data_field_id || !set_message_method_id || !on_gstreamer_initialized_method_id || on_stream_loaded_method_id
+            || on_stream_load_failed_method_id) {
         /* We emit this message through the Android log instead of the GStreamer log because the later
          * has not been initialized yet.
          */
@@ -378,6 +401,7 @@ static void gst_native_surface_finalize (JNIEnv *env, jobject thiz) {
 
     if (data->video_sink) {
         gst_video_overlay_set_window_handle (GST_VIDEO_OVERLAY (data->video_sink), (guintptr)NULL);
+        data->target_state = GST_STATE_READY;
         gst_element_set_state (data->pipeline, GST_STATE_READY);
     }
 
