@@ -56,7 +56,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
 
             // Step 1: Load camera list from Evercam
             Log.d(TAG, "Step 1: Load camera list from Evercam");
-            ArrayList<EvercamCamera> databaseCameralist = new DbCamera(camerasActivity
+            ArrayList<EvercamCamera> databaseCameraList = new DbCamera(camerasActivity
                     .getApplicationContext()).getCamerasByOwner(user.getUsername(), 500);
 
             ArrayList<Camera> cameras = Camera.getAll(user.getUsername(), true, false);
@@ -75,7 +75,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
             this.publishProgress(true);
 
             //Simply check total camera number matches or not
-            if(databaseCameralist.size() != cameras.size())
+            if(databaseCameraList.size() != cameras.size())
             {
                 updateDB = true;
             }
@@ -85,7 +85,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
             Log.d(TAG, "Step 2: Check if any new cameras different from local saved cameras.");
             for(EvercamCamera camera : evercamCameras)
             {
-                if(!databaseCameralist.contains(camera))
+                if(!databaseCameraList.contains(camera))
                 {
                     Log.d(TAG, "new camera detected!" + camera.toString() + "\n");
                     updateDB = true;
@@ -97,7 +97,7 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
             Log.d(TAG, "Step 3: Check if any local camera no longer exists in Evercam");
             if(!updateDB)
             {
-                for(EvercamCamera camera : databaseCameralist)
+                for(EvercamCamera camera : databaseCameraList)
                 {
                     if(!evercamCameras.contains(camera))
                     {
@@ -116,10 +116,9 @@ public class LoadCameraListTask extends AsyncTask<Void, Boolean, Boolean>
                 DbCamera dbCamera = new DbCamera(camerasActivity);
                 dbCamera.deleteCameraByOwner(user.getUsername());
 
-                Iterator<EvercamCamera> iterator = AppData.evercamCameraList.iterator();
-                while(iterator.hasNext())
+                for (EvercamCamera evercamCamera : AppData.evercamCameraList)
                 {
-                    dbCamera.addCamera(iterator.next());
+                    dbCamera.addCamera(evercamCamera);
                 }
             }
 
