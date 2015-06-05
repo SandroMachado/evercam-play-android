@@ -165,26 +165,23 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
      */
     private long native_app_data;
 
-    private native void nativeInit();
-    private native void nativeFinalize();
-    private native void nativePlay();
-    private native void nativeSetUri(String uri);
-    private native void nativeSetUsername(String username);
-    private native void nativeSetPassword(String password);
-    private native void nativeSetTcpTimeout(int value);
-    private native void nativePause();
-    private native void nativeStop();
-    private static native boolean nativeClassInit();
+    private native int nativeRequestSample(String fileName);
+    private native void nativeSetUri(String uri, int connectionTimeout);
+    private native void nativeInit();     // Initialize native code, build pipeline, etc
+    private native void nativeFinalize(); // Destroy pipeline and shutdown native code
+    private native void nativePlay();     // Set pipeline to PLAYING
+    private native void nativePause();    // Set pipeline to PAUSED
+    private static native boolean nativeClassInit(); // Initialize native class: cache Method IDs for callbacks
     private native void nativeSurfaceInit(Object surface);
     private native void nativeSurfaceFinalize();
-    private native void nativeRequestSample();
+    private long native_custom_data;      // Native code will use this to keep private data
 
     private final int TCP_TIMEOUT = 3 * 1000000; // 3 seconds in microsecs
 
     static
     {
         System.loadLibrary("gstreamer_android");
-        System.loadLibrary("android_launch");
+        System.loadLibrary("evercam");
         nativeClassInit();
     }
 
@@ -230,8 +227,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 return;
             }
             nativeInit();
-
-            nativeSetTcpTimeout(TCP_TIMEOUT);
 
             setContentView(R.layout.video_activity_layout);
 
@@ -387,12 +382,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     @Override
     protected void onDestroy()
     {
-        Log.d(TAG, "onDestroy");
-        super.onDestroy();
-        //The nativeFinalize() crashes the app and give the error: Fatal signal 6 (SIGABRT)
-        nativeStop();
         nativeFinalize();
-        nativeSurfaceFinalize();
+        super.onDestroy();
     }
 
     @Override
@@ -456,7 +447,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                                 .string.msg_can_not_access_camera) + " - " + username);
                         new ShortcutFeedbackItem(this, AppData.defaultUser.getUsername(), startingCameraID,
                                 ShortcutFeedbackItem.ACTION_TYPE_USE, ShortcutFeedbackItem.RESULT_TYPE_FAILED)
-                        .sendToKeenIo(client);
+                                .sendToKeenIo(client);
                         navigateBackToCameraList();
                     }
                 }
@@ -606,21 +597,21 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             if(itemId == R.id.video_menu_delete_camera)
             {
                 CustomedDialog.getConfirmRemoveDialog(VideoActivity.this, new DialogInterface.OnClickListener()
-                        {
+                {
 
-                            @Override
-                            public void onClick(DialogInterface warningDialog, int which)
-                            {
-                                if(evercamCamera.canDelete())
-                                {
-                                    new DeleteCameraTask(evercamCamera.getCameraId(), VideoActivity.this, DeleteType.DELETE_OWNED).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                                }
-                                else
-                                {
-                                    new DeleteCameraTask(evercamCamera.getCameraId(), VideoActivity.this, DeleteType.DELETE_SHARE).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                                }
-                            }
-                        }, R.string.msg_confirm_remove_camera).show();
+                    @Override
+                    public void onClick(DialogInterface warningDialog, int which)
+                    {
+                        if(evercamCamera.canDelete())
+                        {
+                            new DeleteCameraTask(evercamCamera.getCameraId(), VideoActivity.this, DeleteType.DELETE_OWNED).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        }
+                        else
+                        {
+                            new DeleteCameraTask(evercamCamera.getCameraId(), VideoActivity.this, DeleteType.DELETE_SHARE).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        }
+                    }
+                }, R.string.msg_confirm_remove_camera).show();
             }
             else if(itemId == R.id.video_menu_view_camera)
             {
@@ -881,7 +872,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     public void surfaceChanged(SurfaceHolder surfaceholder, int format, int width, int height)
     {
         Log.d("GStreamer", "Surface changed to format " + format + " width " + width + " height " + height);
-
         onMediaSizeChanged(width, height);
     }
 
@@ -898,13 +888,21 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
      * ***********
      */
 
+    private String createUri(EvercamCamera camera)
+    {
+        String uri = "rtsp://" + camera.getUsername() + ":" + camera.getPassword() + "@"
+                + camera.getExternalRtspUrl().replaceFirst("rtsp://","");
+        return uri;
+    }
+
     private void createPlayer(EvercamCamera camera)
     {
         startTime = new Date();
 
         if(evercamCamera.hasRtspUrl())
         {
-            nativeSetUri(camera.getExternalRtspUrl());
+            Log.e(TAG, "uri " + createUri(camera));
+            nativeSetUri(createUri(camera), TCP_TIMEOUT);
             play(camera);
 
             surfaceView.setVisibility(View.VISIBLE);
@@ -921,8 +919,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     private void play(EvercamCamera camera)
     {
-        nativeSetUsername(camera.getUsername());
-        nativeSetPassword(camera.getPassword());
         nativePlay();
     }
 
@@ -1023,11 +1019,9 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     {
         if(!Commons.isOnline(this))
         {
-            CustomedDialog.getNoInternetDialog(this, new DialogInterface.OnClickListener()
-            {
+            CustomedDialog.getNoInternetDialog(this, new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
+                public void onClick(DialogInterface dialog, int which) {
                     paused = true;
                     dialog.dismiss();
                     hideProgressView();
@@ -1220,35 +1214,15 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 }
                 else if(surfaceView.getVisibility() == View.VISIBLE)
                 {
-                    nativeRequestSample();
-//                    CustomToast.showSuperToastShort(VideoActivity.this,
-//                            R.string.msg_taking_snapshot);
-//
-//                    new Handler().postDelayed(new Runnable()
-//                    {
-//                        @Override
-//                        public void run()
-//                        {
-//                            try
-//                            {
-//                                String path = SnapshotManager.createFilePath(evercamCamera
-//                                        .getCameraId(), FileType.PNG);
-//                                if(libvlc.takeSnapShot(path, mVideoWidth, mVideoHeight))
-//                                {
-//                                    SnapshotManager.updateGallery(path, VideoActivity.this);
-//                                }
-//                                else
-//                                {
-//                                    CustomToast.showInBottom(VideoActivity.this,
-//                                            R.string.msg_snapshot_saved_failed);
-//                                }
-//                            }
-//                            catch(Exception e)
-//                            {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }, 500);
+                    CustomToast.showSuperToastShort(VideoActivity.this,
+                            R.string.msg_taking_snapshot);
+
+                    String path = SnapshotManager.createFilePath(evercamCamera.getCameraId(), FileType.PNG);
+
+                    if(nativeRequestSample(path) > 0)
+                        SnapshotManager.updateGallery(path, VideoActivity.this);
+                    else
+                        CustomToast.showInBottom(VideoActivity.this, R.string.msg_snapshot_saved_failed);
                 }
             }
         });
@@ -1289,6 +1263,28 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         {
             timeCounter.start();
         }
+    }
+
+    private void onVideoLoaded()
+    {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Log.d(TAG, "video loaded!");
+                isPlayingJpg = false;
+                //View gets played, show time count, and start buffering
+                startTimeCounter();
+            }
+        });
+    }
+
+    private void onVideoLoadFailed()
+    {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Log.d(TAG, "video loading failed!");
+                isPlayingJpg = true;
+            }
+        });
     }
 
     public class BrowseJpgTask extends AsyncTask<String, String, String>
@@ -1784,6 +1780,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     //Copied the following methods from Gstreamer demo app to get rid of 'NoSuchMethodError'
     private void setMessage(final String message) {
+        Log.d(TAG, "message " + message);
 //        final TextView tv = (TextView) this.findViewById(R.id.textview_message);
 //        runOnUiThread(new Runnable()
 //        {
