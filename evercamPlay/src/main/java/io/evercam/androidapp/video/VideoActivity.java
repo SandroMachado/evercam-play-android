@@ -165,7 +165,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
      */
     private long native_app_data;
 
-    private native int nativeRequestSample(String fileName);
+    private native void nativeRequestSample(String fileName);
     private native void nativeSetUri(String uri, int connectionTimeout);
     private native void nativeInit();     // Initialize native code, build pipeline, etc
     private native void nativeFinalize(); // Destroy pipeline and shutdown native code
@@ -1214,7 +1214,8 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 }
                 else if(surfaceView.getVisibility() == View.VISIBLE)
                 {
-                    CustomToast.showSuperToastShort(VideoActivity.this,
+                    nativeRequestSample("jpeg");
+                    /*CustomToast.showSuperToastShort(VideoActivity.this,
                             R.string.msg_taking_snapshot);
 
                     String path = SnapshotManager.createFilePath(evercamCamera.getCameraId(), FileType.PNG);
@@ -1222,7 +1223,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                     if(nativeRequestSample(path) > 0)
                         SnapshotManager.updateGallery(path, VideoActivity.this);
                     else
-                        CustomToast.showInBottom(VideoActivity.this, R.string.msg_snapshot_saved_failed);
+                        CustomToast.showInBottom(VideoActivity.this, R.string.msg_snapshot_saved_failed);*/
                 }
             }
         });

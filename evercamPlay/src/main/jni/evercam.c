@@ -26,17 +26,26 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 
 /* Structure to contain all our information, so we can pass it to callbacks */
 typedef struct _CustomData {
-    jobject app;            /* Application instance, used to call its methods. A global reference is kept. */
-    GstElement *pipeline;   /* The running pipeline */
-    GstElement *rtspsrc;   /* The rtspsrc */
-    GMainContext *context;  /* GLib context used to run the main loop */
-    GMainLoop *main_loop;   /* GLib main loop */
-    gboolean initialized;   /* To avoid informing the UI multiple times about the initialization */
-    GstElement *video_sink; /* The video sink element which receives XOverlay commands */
+    jobject app;                  /* Application instance, used to call its methods. A global reference is kept. */
+    GstElement *pipeline;         /* The running pipeline */
+    GstElement *rtspsrc;          /* The rtspsrc */
+    GMainContext *context;        /* GLib context used to run the main loop */
+    GMainLoop *main_loop;         /* GLib main loop */
+    gboolean initialized;         /* To avoid informing the UI multiple times about the initialization */
+    GstElement *video_sink;       /* The video sink element which receives XOverlay commands */
     ANativeWindow *native_window; /* The Android native window where video will be rendered */
-    gint tcp_timeout; /* tcp timeout for rtspsrc */
-    GstState target_state;
+    gint tcp_timeout;             /* tcp timeout for rtspsrc */
+    GstState target_state;        /* Target pipeline state for playing errors detection */
+    gboolean busy_in_conversion;  /* TRUE if sample conversion in progress */
 } CustomData;
+
+typedef struct {
+    GMainLoop  *loop;             /* Event loop for conversion thread */
+    GstCaps    *caps;             /* Target frame caps */
+    GstSample  *sample;           /* Sample for conversion */
+    CustomData *data;             /* Global data for using CustomData::busy_in_conversion */
+} ConvertSampleContext;
+
 
 /* These global variables cache values which are not changing during execution */
 static pthread_t gst_app_thread;
@@ -170,6 +179,67 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, CustomData *data) {
     }
 }
 
+/* Handle sample conversion */
+static void convert_sample_async_cb(GstSample *sample, GError *err, ConvertSampleContext *data)
+{
+    if (err == NULL) {
+        if (sample != NULL) {
+            GstBuffer *buf = gst_sample_get_buffer(sample);
+            GstMapInfo info;
+            gst_buffer_map (buf, &info, GST_MAP_READ);
+
+            FILE *fp = fopen("/sdcard/snapshot.jpeg", "wb");
+
+            if (fp != NULL) {
+                fwrite(info.data, info.size, sizeof(char), fp);
+                fclose(fp);
+            }
+
+            gst_buffer_unmap (buf, &info);
+        }
+    }
+
+    g_print("Quit from event loop\n");
+    g_main_loop_quit (data->loop);
+    gst_sample_unref(sample);
+}
+
+/* Clean sample conversion context */
+static void clean_conversion_context_cb(ConvertSampleContext* ctx)
+{
+    gst_caps_unref(ctx->caps);
+    gst_sample_unref(ctx->sample);
+    g_main_loop_unref(ctx->loop);
+    ctx->data->busy_in_conversion = FALSE;
+    g_free(ctx);
+}
+
+/* Clean sample pthread function */
+
+static void *convert_thread_func(void *arg)
+{
+    ConvertSampleContext *data = (ConvertSampleContext*) arg;
+    data->loop = g_main_loop_new (NULL, FALSE);
+
+    gst_video_convert_sample_async (data->sample, data->caps,
+                                    GST_CLOCK_TIME_NONE,
+                                    (GstVideoConvertSampleCallback) convert_sample_async_cb, data,
+                                    (GDestroyNotify) clean_conversion_context_cb);
+
+    g_main_loop_run (data->loop);
+    return NULL;
+}
+
+/* Asynchronous function for converting frame */
+static void convert_sample(ConvertSampleContext *ctx)
+{
+    ctx->data->busy_in_conversion = TRUE;
+    pthread_t thread;
+
+    if (pthread_create(&thread, NULL, convert_thread_func, ctx) != 0)
+        GST_DEBUG("Strange, but can't create sample conversion thread");
+}
+
 /* Check if all conditions are met to report GStreamer as initialized.
  * These conditions will change depending on the application */
 static void check_initialization_complete (CustomData *data) {
@@ -197,6 +267,7 @@ static void *app_function (void *userdata) {
     CustomData *data = (CustomData *)userdata;
     data->tcp_timeout = 0;
     data->target_state = GST_STATE_NULL;
+    data->busy_in_conversion = FALSE;
     GSource *bus_source;
     GError *error = NULL;
 
@@ -266,6 +337,7 @@ static void *app_function (void *userdata) {
 
 /* Instruct the native code to create its internal data structure, pipeline and thread */
 static void gst_native_init (JNIEnv* env, jobject thiz) {
+    gst_init(NULL, NULL);
     CustomData *data = g_new0 (CustomData, 1);
     SET_CUSTOM_DATA (env, thiz, custom_data_field_id, data);
     GST_DEBUG_CATEGORY_INIT (debug_category, "evercam", 0, "Android evercam");
@@ -325,73 +397,41 @@ void gst_native_set_uri (JNIEnv* env, jobject thiz, jstring uri, jint timeout) {
 }
 
 /* Set playbin's URI */
-int gst_native_request_sample (JNIEnv* env, jobject thiz, jstring filename) {
+void gst_native_request_sample (JNIEnv* env, jobject thiz, jstring format) {
+
     CustomData *data = GET_CUSTOM_DATA (env, thiz, custom_data_field_id);
     if (!data || !data->pipeline) return;
-    const jbyte *fname = (*env)->GetStringUTFChars (env, filename, NULL);
-    GST_DEBUG("File name %s", fname);
 
-    int res = -1;
-    GstSample *sample;
-    GstCaps *caps = gst_caps_new_simple ("image/png", NULL);
-
-    g_signal_emit_by_name(data->pipeline, "convert-sample", caps, &sample);
-    gst_caps_unref(caps);
-
-    GstBuffer *buf = gst_sample_get_buffer(sample);
-    GstMapInfo info;
-    gst_buffer_map (buf, &info, GST_MAP_READ);
-
-    FILE *f = fopen(fname, "wb");
-    res = fwrite(info.data, info.size, sizeof(char), f);
-    fclose(f);
-
-    gst_buffer_unmap (buf, &info);
-    gst_sample_unref(sample);
-    return res;
-
-    /*int res = -1;
-    int width = 0,  height = 0;
-
-    GstPad *pad;
-    g_signal_emit_by_name(data->pipeline, "get-video-pad", 0, &pad);
-
-    if (pad == NULL) {
-        GstCaps *caps = gst_pad_get_current_caps(pad);
-        const GstStructure *str = gst_caps_get_structure (caps, 0);
-        gst_structure_get_int (str, "width", &width);
-        gst_structure_get_int (str, "height", &height);
-        gst_caps_unref(caps);
-
-        GstSample *sample;
-        caps = gst_caps_new_simple ("image/png",
-                                    "width", G_TYPE_INT, width,
-                                    "height", G_TYPE_INT, height,
-                                    NULL);
-
-        g_signal_emit_by_name(data->pipeline, "convert-sample", caps, &sample);
-        gst_caps_unref(caps);
-
-        if (sample != NULL) {
-            GstBuffer *buf = gst_sample_get_buffer(sample);
-            GstMapInfo info;
-            gst_buffer_map (buf, &info, GST_MAP_READ);
-
-            FILE *fp = fopen(fname, "wb");
-
-            if (fp != NULL) {
-                res = fwrite(info.data, info.size, sizeof(char), fp);
-                fclose(fp);
-            } else
-                GST_DEBUG("Can't open file for write %s", fname);
-
-            gst_buffer_unmap (buf, &info);
-            gst_sample_unref(sample);
-        }
+    /* If conversion in process, do nothing */
+    if (data->busy_in_conversion == TRUE) { /* No spin locks */
+        GST_DEBUG("Currently busy with previous sample conversion, plase try later");
+        return;
     }
 
-    (*env)->ReleaseStringUTFChars (env, filename, fname);
-    return res;*/
+    const jbyte *fmt = (*env)->GetStringUTFChars (env, format, NULL);
+
+    if (strcmp(fmt, "png") != 0 && strcmp(fmt, "jpeg") != 0 && strcmp(fmt, "jpg") != 0) {
+        GST_DEBUG("Unsupported image format %s", fmt);
+        (*env)->ReleaseStringUTFChars (env, format, fmt);
+        return;
+    }
+
+    GstSample *sample;
+    g_object_get(data->pipeline, "sample", &sample, NULL);
+
+    if (sample != NULL) {
+        ConvertSampleContext *ctx = g_malloc( sizeof(ConvertSampleContext) );
+        memset(ctx, 0, sizeof(ConvertSampleContext));
+        gchar *img_fmt = g_strdup_printf("image/%s", fmt);
+        GST_DEBUG("img fmt == %s", img_fmt);
+        ctx->caps = gst_caps_new_simple (img_fmt, NULL);
+        g_free(img_fmt);
+        ctx->sample = sample;
+        ctx->data = data;
+        convert_sample(ctx);
+    }
+
+    (*env)->ReleaseStringUTFChars (env, format, fmt);
 }
 
 /* Static class initializer: retrieve method and field IDs */
@@ -460,7 +500,7 @@ static JNINativeMethod native_methods[] = {
     { "nativeFinalize", "()V", (void *) gst_native_finalize},
     { "nativePlay", "()V", (void *) gst_native_play},
     { "nativePause", "()V", (void *) gst_native_pause},
-    { "nativeRequestSample", "(Ljava/lang/String;)I", (void *) gst_native_request_sample},
+    { "nativeRequestSample", "(Ljava/lang/String;)V", (void *) gst_native_request_sample},
     { "nativeSetUri", "(Ljava/lang/String;I)V", (void *) gst_native_set_uri},
     { "nativeSurfaceInit", "(Ljava/lang/Object;)V", (void *) gst_native_surface_init},
     { "nativeSurfaceFinalize", "()V", (void *) gst_native_surface_finalize},
