@@ -40,10 +40,9 @@ typedef struct _CustomData {
 } CustomData;
 
 typedef struct {
-    GMainLoop  *loop;             /* Event loop for conversion thread */
     GstCaps    *caps;             /* Target frame caps */
     GstSample  *sample;           /* Sample for conversion */
-    CustomData *data;             /* Global data for using CustomData::busy_in_conversion */
+    CustomData *data;             /* Global data for using CustomData::busy_in_conversion and call java stuff */
 } ConvertSampleContext;
 
 
@@ -56,7 +55,8 @@ static jmethodID set_message_method_id;
 static jmethodID on_gstreamer_initialized_method_id;
 static jmethodID on_stream_loaded_method_id;
 static jmethodID on_stream_load_failed_method_id;
-
+static jmethodID on_request_sample_failed_method_id;
+static jmethodID on_request_sample_seccess_method_id;
 
 /*
  * Private methods
@@ -124,6 +124,14 @@ static void handle_video_changed(GstElement *playbin, CustomData *data)
         GST_ERROR ("Failed to call Java method");
         (*env)->ExceptionClear (env);
     }
+
+    GstElement *video_sink;
+    g_object_get(playbin, "video-sink", &video_sink, NULL);
+
+    if (video_sink != NULL)
+        g_object_set(video_sink, "sync", FALSE, NULL);
+    else
+        GST_DEBUG("Could not to get video_sink");
 }
 
 /* Change the content of the UI's TextView */
@@ -179,54 +187,63 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, CustomData *data) {
     }
 }
 
-/* Handle sample conversion */
-static void convert_sample_async_cb(GstSample *sample, GError *err, ConvertSampleContext *data)
+static void notify_about_get_sample_failed(CustomData *data)
 {
+    JNIEnv *env = get_jni_env ();
+
+    (*env)->CallVoidMethod (env, data->app, on_request_sample_failed_method_id);
+
+    if ((*env)->ExceptionCheck (env)) {
+        GST_ERROR ("Failed to call Java method");
+        (*env)->ExceptionClear (env);
+    }
+}
+
+/* Handle sample conversion */
+static void process_converted_sample(GstSample *sample, GError *err, ConvertSampleContext *data)
+{
+    gst_caps_unref(data->caps);
+
     if (err == NULL) {
         if (sample != NULL) {
             GstBuffer *buf = gst_sample_get_buffer(sample);
             GstMapInfo info;
             gst_buffer_map (buf, &info, GST_MAP_READ);
 
-            FILE *fp = fopen("/sdcard/snapshot.jpeg", "wb");
+            JNIEnv *env = get_jni_env ();
+            jbyteArray array = (*env)->NewByteArray(env, info.size);
+            (*env)->SetByteArrayRegion(env, array, 0, info.size, info.data);
+            (*env)->CallVoidMethod (env, data->data->app, on_request_sample_seccess_method_id, array, info.size);
 
-            if (fp != NULL) {
-                fwrite(info.data, info.size, sizeof(char), fp);
-                fclose(fp);
+            if ((*env)->ExceptionCheck (env)) {
+                GST_ERROR ("Failed to call Java method");
+                (*env)->ExceptionClear (env);
             }
 
             gst_buffer_unmap (buf, &info);
+            gst_sample_unref(sample);
         }
     }
+    else {
+        g_error_free(err);
+        notify_about_get_sample_failed(data->data);
+    }
 
-    g_print("Quit from event loop\n");
-    g_main_loop_quit (data->loop);
     gst_sample_unref(sample);
+    gst_sample_unref(data->sample);
+    gst_caps_unref(data->caps);
 }
 
-/* Clean sample conversion context */
-static void clean_conversion_context_cb(ConvertSampleContext* ctx)
-{
-    gst_caps_unref(ctx->caps);
-    gst_sample_unref(ctx->sample);
-    g_main_loop_unref(ctx->loop);
-    ctx->data->busy_in_conversion = FALSE;
-    g_free(ctx);
-}
-
-/* Clean sample pthread function */
+/* Sample pthread function */
 
 static void *convert_thread_func(void *arg)
 {
     ConvertSampleContext *data = (ConvertSampleContext*) arg;
-    data->loop = g_main_loop_new (NULL, FALSE);
-
-    gst_video_convert_sample_async (data->sample, data->caps,
-                                    GST_CLOCK_TIME_NONE,
-                                    (GstVideoConvertSampleCallback) convert_sample_async_cb, data,
-                                    (GDestroyNotify) clean_conversion_context_cb);
-
-    g_main_loop_run (data->loop);
+    GError *err = NULL;
+    GstSample *sample = gst_video_convert_sample(data->sample, data->caps, GST_CLOCK_TIME_NONE, &err);
+    process_converted_sample(sample, err, data);
+    g_free(data);
+    data->data->busy_in_conversion = FALSE;
     return NULL;
 }
 
@@ -337,11 +354,11 @@ static void *app_function (void *userdata) {
 
 /* Instruct the native code to create its internal data structure, pipeline and thread */
 static void gst_native_init (JNIEnv* env, jobject thiz) {
-    gst_init(NULL, NULL);
+    //gst_init(NULL, NULL);
     CustomData *data = g_new0 (CustomData, 1);
     SET_CUSTOM_DATA (env, thiz, custom_data_field_id, data);
     GST_DEBUG_CATEGORY_INIT (debug_category, "evercam", 0, "Android evercam");
-    gst_debug_set_threshold_for_name("evercam", GST_LEVEL_DEBUG);
+    gst_debug_set_threshold_for_name("evercam", GST_LEVEL_LOG);
     GST_DEBUG ("Created CustomData at %p", data);
     data->app = (*env)->NewGlobalRef (env, thiz);
     GST_DEBUG ("Created GlobalRef for app object at %p", data->app);
@@ -403,10 +420,11 @@ void gst_native_request_sample (JNIEnv* env, jobject thiz, jstring format) {
     if (!data || !data->pipeline) return;
 
     /* If conversion in process, do nothing */
-    if (data->busy_in_conversion == TRUE) { /* No spin locks */
+    /*if (data->busy_in_conversion == TRUE) {
         GST_DEBUG("Currently busy with previous sample conversion, plase try later");
+        notify_about_get_sample_failed(data);
         return;
-    }
+    }*/
 
     const jbyte *fmt = (*env)->GetStringUTFChars (env, format, NULL);
 
@@ -429,7 +447,8 @@ void gst_native_request_sample (JNIEnv* env, jobject thiz, jstring format) {
         ctx->sample = sample;
         ctx->data = data;
         convert_sample(ctx);
-    }
+    } else
+        notify_about_get_sample_failed(data);
 
     (*env)->ReleaseStringUTFChars (env, format, fmt);
 }
@@ -441,9 +460,12 @@ static jboolean gst_native_class_init (JNIEnv* env, jclass klass) {
     on_gstreamer_initialized_method_id = (*env)->GetMethodID (env, klass, "onGStreamerInitialized", "()V");
     on_stream_loaded_method_id = (*env)->GetMethodID (env, klass, "onVideoLoaded", "()V");
     on_stream_load_failed_method_id = (*env)->GetMethodID (env, klass, "onVideoLoadFailed", "()V");
+    on_request_sample_failed_method_id = (*env)->GetMethodID (env, klass, "onSampleRequestFailed", "()V");
+    on_request_sample_seccess_method_id = (*env)->GetMethodID (env, klass, "onSampleRequestSuccess", "([BI)V");
 
-    if (!custom_data_field_id || !set_message_method_id || !on_gstreamer_initialized_method_id || on_stream_loaded_method_id
-            || on_stream_load_failed_method_id) {
+
+    if (!custom_data_field_id || !set_message_method_id || !on_gstreamer_initialized_method_id || !on_stream_loaded_method_id
+            || !on_stream_load_failed_method_id || !on_request_sample_failed_method_id || !on_request_sample_seccess_method_id) {
         /* We emit this message through the Android log instead of the GStreamer log because the later
          * has not been initialized yet.
          */

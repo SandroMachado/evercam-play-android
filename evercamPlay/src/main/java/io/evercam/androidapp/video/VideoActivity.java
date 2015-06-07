@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -1195,36 +1196,12 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                         Canvas canvas = new Canvas(bitmap);
                         drawable.draw(canvas);
                     }
-                    if(bitmap != null)
-                    {
-                        CustomedDialog.getConfirmSnapshotDialog(VideoActivity.this, bitmap,
-                                new DialogInterface.OnClickListener()
-                                {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which)
-                                    {
-                                        String path = SnapshotManager.createFilePath
-                                                (evercamCamera.getCameraId(), FileType.JPG);
 
-                                        new Thread(new CaptureSnapshotRunnable(VideoActivity
-                                                .this, path, bitmap)).start();
-                                    }
-                                }).show();
-                    }
+                    processSnapshot(bitmap, FileType.JPG);
                 }
                 else if(surfaceView.getVisibility() == View.VISIBLE)
-                {
                     nativeRequestSample("jpeg");
-                    /*CustomToast.showSuperToastShort(VideoActivity.this,
-                            R.string.msg_taking_snapshot);
 
-                    String path = SnapshotManager.createFilePath(evercamCamera.getCameraId(), FileType.PNG);
-
-                    if(nativeRequestSample(path) > 0)
-                        SnapshotManager.updateGallery(path, VideoActivity.this);
-                    else
-                        CustomToast.showInBottom(VideoActivity.this, R.string.msg_snapshot_saved_failed);*/
-                }
             }
         });
     }
@@ -1265,25 +1242,69 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             timeCounter.start();
         }
     }
+    private void processSnapshot(Bitmap btm, SnapshotManager.FileType type)
+    {
+        final Bitmap bitmap = btm;
+        final SnapshotManager.FileType fileType = type;
 
+        if (bitmap != null)
+        {
+            CustomedDialog.getConfirmSnapshotDialog(VideoActivity.this, bitmap,
+                new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        String path = SnapshotManager.createFilePath
+                            (evercamCamera.getCameraId(), fileType);
+
+                        new Thread(new CaptureSnapshotRunnable(VideoActivity
+                                  .this, path, bitmap)).start();
+                        }
+                }).show();
+        }
+    }
+
+    // Handle stream loaded
     private void onVideoLoaded()
     {
         runOnUiThread(new Runnable() {
             public void run() {
-                Log.d(TAG, "video loaded!");
                 isPlayingJpg = false;
                 //View gets played, show time count, and start buffering
                 startTimeCounter();
             }
         });
     }
-
+    // Handle stream loading failed
     private void onVideoLoadFailed()
     {
         runOnUiThread(new Runnable() {
             public void run() {
-                Log.d(TAG, "video loading failed!");
                 isPlayingJpg = true;
+            }
+        });
+    }
+
+    private void onSampleRequestSuccess(byte[] data, int size)
+    {
+        final byte [] imageData = data;
+        final int imageSize = size;
+
+        runOnUiThread(new Runnable() {
+            public void run() {
+                final Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageSize);
+                processSnapshot(bitmap, FileType.JPG);
+            }
+        });
+    }
+
+    private void onSampleRequestFailed()
+    {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Log.d(TAG, "onSampleRequestFailed");
+                CustomToast.showInCenterLong(VideoActivity.this, "Requesting snapshot failed");
             }
         });
     }
