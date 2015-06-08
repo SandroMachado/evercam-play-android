@@ -116,6 +116,7 @@ static void handle_source_setup (GstElement *pipeline, GstElement *source, Custo
 // handle video channel setup
 static void handle_video_changed(GstElement *playbin, CustomData *data)
 {
+    data->target_state = GST_STATE_NULL;
     JNIEnv *env = get_jni_env ();
 
     (*env)->CallVoidMethod (env, data->app, on_stream_loaded_method_id);
