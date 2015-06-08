@@ -51,8 +51,6 @@ static pthread_t gst_app_thread;
 static pthread_key_t current_jni_env;
 static JavaVM *java_vm;
 static jfieldID custom_data_field_id;
-//static jmethodID set_message_method_id;
-static jmethodID on_gstreamer_initialized_method_id;
 static jmethodID on_stream_loaded_method_id;
 static jmethodID on_stream_load_failed_method_id;
 static jmethodID on_request_sample_failed_method_id;
@@ -116,15 +114,18 @@ static void handle_source_setup (GstElement *pipeline, GstElement *source, Custo
 // handle video channel setup
 static void handle_video_changed(GstElement *playbin, CustomData *data)
 {
-    data->target_state = GST_STATE_NULL;
-    JNIEnv *env = get_jni_env ();
+    if (data->target_state == GST_STATE_PLAYING) {
+        JNIEnv *env = get_jni_env ();
 
-    (*env)->CallVoidMethod (env, data->app, on_stream_loaded_method_id);
+        (*env)->CallVoidMethod (env, data->app, on_stream_loaded_method_id);
 
-    if ((*env)->ExceptionCheck (env)) {
-        GST_ERROR ("Failed to call Java method");
-        (*env)->ExceptionClear (env);
+        if ((*env)->ExceptionCheck (env)) {
+            GST_ERROR ("Failed to call Java method");
+            (*env)->ExceptionClear (env);
+        }
     }
+
+    data->target_state = GST_STATE_NULL;
 
     GstElement *video_sink;
     g_object_get(playbin, "video-sink", &video_sink, NULL);
@@ -269,11 +270,6 @@ static void check_initialization_complete (CustomData *data) {
         if (data->native_window != 0)
             gst_video_overlay_set_window_handle (GST_VIDEO_OVERLAY (data->video_sink), (guintptr)data->native_window);
 
-        (*env)->CallVoidMethod (env, data->app, on_gstreamer_initialized_method_id);
-        if ((*env)->ExceptionCheck (env)) {
-            GST_ERROR ("Failed to call Java method");
-            (*env)->ExceptionClear (env);
-        }
         data->initialized = TRUE;
     }
 }
@@ -457,16 +453,13 @@ void gst_native_request_sample (JNIEnv* env, jobject thiz, jstring format) {
 /* Static class initializer: retrieve method and field IDs */
 static jboolean gst_native_class_init (JNIEnv* env, jclass klass) {
     custom_data_field_id = (*env)->GetFieldID (env, klass, "native_custom_data", "J");
-    //set_message_method_id = (*env)->GetMethodID (env, klass, "setMessage", "(Ljava/lang/String;)V");
-    on_gstreamer_initialized_method_id = (*env)->GetMethodID (env, klass, "onGStreamerInitialized", "()V");
     on_stream_loaded_method_id = (*env)->GetMethodID (env, klass, "onVideoLoaded", "()V");
     on_stream_load_failed_method_id = (*env)->GetMethodID (env, klass, "onVideoLoadFailed", "()V");
     on_request_sample_failed_method_id = (*env)->GetMethodID (env, klass, "onSampleRequestFailed", "()V");
     on_request_sample_seccess_method_id = (*env)->GetMethodID (env, klass, "onSampleRequestSuccess", "([BI)V");
 
 
-    if (!custom_data_field_id /*|| !set_message_method_id */|| !on_gstreamer_initialized_method_id || !on_stream_loaded_method_id
-            || !on_stream_load_failed_method_id || !on_request_sample_failed_method_id || !on_request_sample_seccess_method_id) {
+    if (!custom_data_field_id || !on_stream_loaded_method_id || !on_stream_load_failed_method_id || !on_request_sample_failed_method_id || !on_request_sample_seccess_method_id) {
         /* We emit this message through the Android log instead of the GStreamer log because the later
          * has not been initialized yet.
          */
