@@ -901,7 +901,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     {
         startTime = new Date();
 
-        if(evercamCamera.hasRtspUrl())
+        if(camera.hasRtspUrl())
         {
             Log.e(TAG, "uri " + createUri(camera));
             nativeSetUri(createUri(camera), TCP_TIMEOUT);
@@ -925,7 +925,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         nativePause();
     }
 
-    private void restartPlay(EvercamCamera camera)
+    private void restartPlay()
     {
         nativePlay();
     }
@@ -1081,7 +1081,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                     //If playing url is not null, resume rtsp stream
                     if(evercamCamera != null && !evercamCamera.getExternalRtspUrl().isEmpty())
                     {
-                        restartPlay(evercamCamera);
+                        restartPlay();
                     }
                     //Otherwise restart jpg view
                     else
@@ -1276,6 +1276,29 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
                 surfaceView.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.GONE);
                 startTimeCounter();
+
+                //And send to Google Analytics
+                EvercamPlayApplication.sendEventAnalytics(VideoActivity.this,
+                        R.string.category_streaming_rtsp,
+                        R.string.action_streaming_rtsp_success,
+                        R.string.label_streaming_rtsp_success);
+
+                StreamFeedbackItem successItem = new StreamFeedbackItem(VideoActivity
+                        .this, AppData.defaultUser.getUsername(), true);
+                successItem.setCameraId(evercamCamera.getCameraId());
+                successItem.setUrl(createUri(evercamCamera));
+                successItem.setType(StreamFeedbackItem.TYPE_RTSP);
+                if(startTime != null)
+                {
+                    float timeDifferenceFloat = Commons.calculateTimeDifferenceFrom
+                            (startTime);
+                    Log.d(TAG, "Time difference: " + timeDifferenceFloat + " seconds");
+                    successItem.setLoadTime(timeDifferenceFloat);
+                    startTime = null;
+                }
+
+                logger.info(successItem.toJson());
+                successItem.sendToKeenIo(client);
             }
         });
     }
@@ -1283,8 +1306,23 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private void onVideoLoadFailed()
     {
         Log.d(TAG, "onVideoLoadFailed()");
-        runOnUiThread(new Runnable() {
-            public void run() {
+        runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                EvercamPlayApplication.sendEventAnalytics(VideoActivity.this,
+                        R.string.category_streaming_rtsp,
+                        R.string.action_streaming_rtsp_failed,
+                        R.string.label_streaming_rtsp_failed);
+                StreamFeedbackItem failedItem = new StreamFeedbackItem
+                        (VideoActivity.this, AppData.defaultUser.getUsername(),
+                                false);
+                failedItem.setCameraId(evercamCamera.getCameraId());
+                failedItem.setUrl(createUri(evercamCamera));
+                failedItem.setType(StreamFeedbackItem.TYPE_RTSP);
+                logger.info(failedItem.toJson());
+                failedItem.sendToKeenIo(client);
+
                 isPlayingJpg = true;
                 CustomToast.showInBottom(VideoActivity.this, R.string.msg_switch_to_jpg);
                 showImagesVideo = true;
@@ -1384,156 +1422,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             return null;
         }
     }
-
-//    /**
-//     * **********
-//     * Events
-//     * ***********
-//     */
-//
-//    private class MyHandler extends Handler
-//    {
-//        private WeakReference<VideoActivity> videoActivity;
-//
-//        public MyHandler(VideoActivity owner)
-//        {
-//            videoActivity = new WeakReference<>(owner);
-//        }
-//
-//        @Override
-//        public void handleMessage(Message msg)
-//        {
-//            try
-//            {
-//                final VideoActivity player = videoActivity.get();
-//
-//                // SamplePlayer events
-//                if(msg.what == videoSizeChanged)
-//                {
-//                    player.setSize(msg.arg1, msg.arg2);
-//                    return;
-//                }
-//
-//                // Libvlc events
-//                Bundle bundle = msg.getData();
-//                int event = bundle.getInt("event");
-//
-//                switch(event)
-//                {
-//                    case EventHandler.MediaPlayerEndReached:
-//
-//                        player.restartPlay(player.mrlPlaying);
-//                        break;
-//                    case EventHandler.MediaPlayerPlaying:
-//
-//                        isPlayingJpg = false;
-//
-//                        player.mrlPlaying = player.getCurrentMRL();
-//
-//                        //View gets played, show time count, and start buffering
-//                        startTimeCounter();
-//
-//                        break;
-//
-//                    case EventHandler.MediaPlayerPaused:
-//                        break;
-//
-//                    case EventHandler.MediaPlayerStopped:
-//                        break;
-//
-//                    case EventHandler.MediaPlayerEncounteredError:
-//
-//                        if(evercamCamera != null)
-//                        {
-//                            player.loadImageFromCache(evercamCamera.getCameraId());
-//                        }
-//
-//                        if(player.mrlPlaying == null && player.isNextMRLValid())
-//                        {
-//                            player.restartPlay(player.getNextMRL());
-//                        }
-//                        else if(player.mrlPlaying != null && !player.mrlPlaying.isEmpty())
-//                        {
-//                            player.restartPlay(player.mrlPlaying);
-//                        }
-//                        else
-//                        {
-//                            //Failed to play RTSP stream, send an event to Google Analytics
-//                            Log.d(TAG, "Failed to play video stream");
-//                            if(!player.isNextMRLValid())
-//                            {
-//                                EvercamPlayApplication.sendEventAnalytics(VideoActivity.this,
-//                                        R.string.category_streaming_rtsp,
-//                                        R.string.action_streaming_rtsp_failed,
-//                                        R.string.label_streaming_rtsp_failed);
-//                                StreamFeedbackItem failedItem = new StreamFeedbackItem
-//                                        (VideoActivity.this, AppData.defaultUser.getUsername(),
-//                                                false);
-//                                failedItem.setCameraId(evercamCamera.getCameraId());
-//                                failedItem.setUrl(player.getCurrentMRL());
-//                                failedItem.setType(StreamFeedbackItem.TYPE_RTSP);
-//                                logger.info(failedItem.toJson());
-//                                failedItem.sendToKeenIo(client);
-//                            }
-//                            isPlayingJpg = true;
-//                            player.showToast(videoActivity.get().getString(R.string
-//                                    .msg_switch_to_jpg));
-//                            player.showImagesVideo = true;
-//                            player.createBrowseJpgTask();
-//                        }
-//
-//                        break;
-//
-//                    case EventHandler.MediaPlayerVout:
-//                        Log.v(TAG, "EventHandler.MediaPlayerVout");
-//
-//                        //Delay for 1 sec for video buffering
-//                        new Handler().postDelayed(new Runnable()
-//                        {
-//                            @Override
-//                            public void run()
-//                            {
-//                                //Buffering finished and start to show the video
-//                                player.surfaceView.setVisibility(View.VISIBLE);
-//                                player.imageView.setVisibility(View.GONE);
-//                                player.hideProgressView();
-//                            }
-//                        }, 1000);
-//
-//                        //And send to Google Analytics
-//                        EvercamPlayApplication.sendEventAnalytics(player,
-//                                R.string.category_streaming_rtsp,
-//                                R.string.action_streaming_rtsp_success,
-//                                R.string.label_streaming_rtsp_success);
-//
-//                        StreamFeedbackItem successItem = new StreamFeedbackItem(VideoActivity
-//                                .this, AppData.defaultUser.getUsername(), true);
-//                        successItem.setCameraId(evercamCamera.getCameraId());
-//                        successItem.setUrl(player.mrlPlaying);
-//                        successItem.setType(StreamFeedbackItem.TYPE_RTSP);
-//                        if(startTime != null)
-//                        {
-//                            float timeDifferenceFloat = Commons.calculateTimeDifferenceFrom
-//                                    (startTime);
-//                            Log.d(TAG, "Time difference: " + timeDifferenceFloat + " seconds");
-//                            successItem.setLoadTime(timeDifferenceFloat);
-//                            startTime = null;
-//                        }
-//
-//                        logger.info(successItem.toJson());
-//                        successItem.sendToKeenIo(client);
-//
-//                        break;
-//                    default:
-//                        break;
-//                }
-//            }
-//            catch(Exception e)
-//            {
-//                Log.e(TAG, e.getMessage());
-//            }
-//        }
-//    }
 
     private class DownloadImageTask extends AsyncTask<Void, Void, Drawable>
     {
@@ -1832,20 +1720,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 //            }
 //        });
     }
-    private void setCurrentPosition(final int position, final int duration) {
-        Log.d(TAG, "setCurrentPosition");
-//        final SeekBar sb = (SeekBar) this.findViewById(R.id.seek_bar);
-//
-//        if (sb.isPressed()) return;
-//
-//        runOnUiThread (new Runnable() {
-//            public void run() {
-//                sb.setMax(duration);
-//                sb.setProgress(position);
-//                updateTimeWidget();
-//            }
-//        });
-    }
+
     private void onMediaSizeChanged (int width, int height) {
         Log.i ("GStreamer", "Media size changed to " + width + "x" + height);
         final GStreamerSurfaceView gstreamerSurfaceView = (GStreamerSurfaceView) this.findViewById(R.id.surface_view);
