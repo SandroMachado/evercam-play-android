@@ -50,7 +50,7 @@ repositories {
 
 dependencies {
     compile project(':supertoasts')
-    compile 'com.android.support:support-v4:22.1.1'
+    compile 'com.android.support:support-v4:22.2.0'
     compile 'joda-time:joda-time:2.6'
     compile files('libs/HCNetSDK.jar')
     compile files('libs/PlayerSDK.jar')
