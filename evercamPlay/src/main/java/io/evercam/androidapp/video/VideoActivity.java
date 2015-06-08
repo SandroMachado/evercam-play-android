@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -177,7 +178,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     private native void nativeSurfaceFinalize();
     private long native_custom_data;      // Native code will use this to keep private data
 
-    private final int TCP_TIMEOUT = 3 * 1000000; // 3 seconds in microsecs
+    private final int TCP_TIMEOUT = 10 * 1000000; // 3 seconds in microsecs
 
     static
     {
@@ -905,10 +906,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
             Log.e(TAG, "uri " + createUri(camera));
             nativeSetUri(createUri(camera), TCP_TIMEOUT);
             play(camera);
-
-            surfaceView.setVisibility(View.VISIBLE);
-            imageView.setVisibility(View.GONE);
-            hideProgressView();
         }
         else
         {
@@ -1268,10 +1265,16 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     // Handle stream loaded
     private void onVideoLoaded()
     {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                isPlayingJpg = false;
+        Log.d(TAG, "onVideoLoaded()");
+        runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
                 //View gets played, show time count, and start buffering
+                isPlayingJpg = false;
+                hideProgressView();
+                surfaceView.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.GONE);
                 startTimeCounter();
             }
         });
@@ -1279,9 +1282,13 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
     // Handle stream loading failed
     private void onVideoLoadFailed()
     {
+        Log.d(TAG, "onVideoLoadFailed()");
         runOnUiThread(new Runnable() {
             public void run() {
                 isPlayingJpg = true;
+                CustomToast.showInBottom(VideoActivity.this, R.string.msg_switch_to_jpg);
+                showImagesVideo = true;
+                createBrowseJpgTask();
             }
         });
     }
@@ -1802,7 +1809,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 
     //Copied the following methods from Gstreamer demo app to get rid of 'NoSuchMethodError'
     private void setMessage(final String message) {
-        Log.d(TAG, "message " + message);
+        Log.d(TAG, "setMessage() " + message);
 //        final TextView tv = (TextView) this.findViewById(R.id.textview_message);
 //        runOnUiThread(new Runnable()
 //        {
@@ -1813,6 +1820,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 //        });
     }
     private void onGStreamerInitialized () {
+        Log.d(TAG, "onGStreamerInitialized ()");
 //        Log.i ("GStreamer", "GStreamer initialized:");
 //
 //        final Activity activity = this;
@@ -1825,6 +1833,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
 //        });
     }
     private void setCurrentPosition(final int position, final int duration) {
+        Log.d(TAG, "setCurrentPosition");
 //        final SeekBar sb = (SeekBar) this.findViewById(R.id.seek_bar);
 //
 //        if (sb.isPressed()) return;
