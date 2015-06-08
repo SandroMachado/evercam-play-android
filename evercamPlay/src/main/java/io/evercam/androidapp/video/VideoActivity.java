@@ -166,7 +166,7 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
      */
     private long native_app_data;
 
-    private native void nativeRequestSample(String fileName);
+    private native void nativeRequestSample(String fromat); // supported values are png and jpeg
     private native void nativeSetUri(String uri, int connectionTimeout);
     private native void nativeInit();     // Initialize native code, build pipeline, etc
     private native void nativeFinalize(); // Destroy pipeline and shutdown native code
