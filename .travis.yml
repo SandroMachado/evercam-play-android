@@ -3,8 +3,8 @@ android:
   components:
     # Uncomment the lines below if you want to
     # use the latest revision of Android SDK Tools
-    - platform-tools
-    - tools
+    - build-tools-21.1.2
+    - android-22
 
     # Additional components
     - extra-google-google_play_services
