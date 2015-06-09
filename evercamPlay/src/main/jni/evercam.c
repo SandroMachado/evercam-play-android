@@ -105,8 +105,8 @@ static void handle_source_setup (GstElement *pipeline, GstElement *source, Custo
     if (data->tcp_timeout > 0)
         g_object_set (G_OBJECT (source), "tcp-timeout", data->tcp_timeout, NULL);
 
-    //g_object_set (G_OBJECT (source), "latency", 0, NULL);
-    //g_object_set (G_OBJECT (source), "drop-on-latency", 1, NULL);
+    g_object_set (G_OBJECT (source), "latency", 0, NULL);
+    g_object_set (G_OBJECT (source), "drop-on-latency", 1, NULL);
     g_object_set (G_OBJECT (source), "protocols", 4, NULL);
 
 }
