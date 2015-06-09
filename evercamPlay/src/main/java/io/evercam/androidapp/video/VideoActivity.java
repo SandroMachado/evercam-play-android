@@ -1695,32 +1695,6 @@ public class VideoActivity extends ParentActivity implements SurfaceHolder.Callb
         getActionBar().setSelectedNavigationItem(defaultCameraIndex);
     }
 
-    //Copied the following methods from Gstreamer demo app to get rid of 'NoSuchMethodError'
-    private void setMessage(final String message) {
-        Log.d(TAG, "setMessage() " + message);
-//        final TextView tv = (TextView) this.findViewById(R.id.textview_message);
-//        runOnUiThread(new Runnable()
-//        {
-//            public void run()
-//            {
-//                tv.setText(message);
-//            }
-//        });
-    }
-    private void onGStreamerInitialized () {
-        Log.d(TAG, "onGStreamerInitialized ()");
-//        Log.i ("GStreamer", "GStreamer initialized:");
-//
-//        final Activity activity = this;
-//        runOnUiThread(new Runnable() {
-//            public void run() {
-//                activity.findViewById(R.id.button_play).setEnabled(true);
-//                activity.findViewById(R.id.button_play).setEnabled(true);
-//                activity.findViewById(R.id.button_pause).setEnabled(true);
-//            }
-//        });
-    }
-
     private void onMediaSizeChanged (int width, int height) {
         Log.i ("GStreamer", "Media size changed to " + width + "x" + height);
         final GStreamerSurfaceView gstreamerSurfaceView = (GStreamerSurfaceView) this.findViewById(R.id.surface_view);
