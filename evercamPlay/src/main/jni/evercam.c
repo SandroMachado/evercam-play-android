@@ -35,14 +35,13 @@ typedef struct _CustomData {
     GstElement *video_sink;       /* The video sink element which receives XOverlay commands */
     ANativeWindow *native_window; /* The Android native window where video will be rendered */
     gint tcp_timeout;             /* tcp timeout for rtspsrc */
-    GstState target_state;        /* Target pipeline state for playing errors detection */
-    gboolean busy_in_conversion;  /* TRUE if sample conversion in progress */
+    GstState target_state;        /* Target pipeline state for playing errors detection */    
 } CustomData;
 
 typedef struct {
     GstCaps    *caps;             /* Target frame caps */
     GstSample  *sample;           /* Sample for conversion */
-    CustomData *data;             /* Global data for using CustomData::busy_in_conversion and call java stuff */
+    CustomData *data;             /* Global data for call java stuff */
 } ConvertSampleContext;
 
 
@@ -242,17 +241,19 @@ static void *convert_thread_func(void *arg)
 {
     ConvertSampleContext *data = (ConvertSampleContext*) arg;
     GError *err = NULL;
-    GstSample *sample = gst_video_convert_sample(data->sample, data->caps, GST_CLOCK_TIME_NONE, &err);
-    process_converted_sample(sample, err, data);
-    g_free(data);
-    data->data->busy_in_conversion = FALSE;
+
+    if (data->caps != NULL && data->sample != NULL) {
+        GstSample *sample = gst_video_convert_sample(data->sample, data->caps, GST_CLOCK_TIME_NONE, &err);
+        process_converted_sample(sample, err, data);
+        g_free(data);
+    }
+
     return NULL;
 }
 
 /* Asynchronous function for converting frame */
 static void convert_sample(ConvertSampleContext *ctx)
-{
-    ctx->data->busy_in_conversion = TRUE;
+{    
     pthread_t thread;
 
     if (pthread_create(&thread, NULL, convert_thread_func, ctx) != 0)
@@ -280,8 +281,7 @@ static void *app_function (void *userdata) {
     GstBus *bus;
     CustomData *data = (CustomData *)userdata;
     data->tcp_timeout = 0;
-    data->target_state = GST_STATE_NULL;
-    data->busy_in_conversion = FALSE;
+    data->target_state = GST_STATE_NULL;    
     GSource *bus_source;
     GError *error = NULL;
 
@@ -415,13 +415,6 @@ void gst_native_request_sample (JNIEnv* env, jobject thiz, jstring format) {
 
     CustomData *data = GET_CUSTOM_DATA (env, thiz, custom_data_field_id);
     if (!data || !data->pipeline) return;
-
-    /* If conversion in process, do nothing */
-    /*if (data->busy_in_conversion == TRUE) {
-        GST_DEBUG("Currently busy with previous sample conversion, plase try later");
-        notify_about_get_sample_failed(data);
-        return;
-    }*/
 
     const jbyte *fmt = (*env)->GetStringUTFChars (env, format, NULL);
 
